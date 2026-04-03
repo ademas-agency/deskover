@@ -1,0 +1,937 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Deskover — Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --terracotta: #AA4C4D;
+  --cream: #FAF7F2;
+  --linen: #F3EDE4;
+  --parchment: #E8DFD0;
+  --espresso: #2C2825;
+  --roast: #6B5B4E;
+  --steam: #A89888;
+  --monstera: #5B7A5E;
+  --edison: #D4A84B;
+}
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+body { font-family:'Plus Jakarta Sans',sans-serif; background:#111; display:flex; justify-content:center; min-height:100vh; }
+#app { width:390px; position:relative; overflow-x:hidden; min-height:100vh; background:#111; }
+.screen { display:none; opacity:0; transition:opacity 200ms ease; }
+.screen.active { display:block; opacity:1; }
+.modal-overlay { display:none; position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,0.5); z-index:100; opacity:0; transition:opacity 200ms; justify-content:center; align-items:flex-end; }
+.modal-overlay.active { display:flex; opacity:1; }
+.modal-sheet { background:white; border-radius:24px 24px 0 0; width:390px; max-height:85vh; overflow-y:auto; transform:translateY(100%); transition:transform 300ms ease-out; padding-bottom:36px; }
+.modal-overlay.active .modal-sheet { transform:translateY(0); }
+.modal-handle { width:40px; height:4px; background:var(--parchment); border-radius:2px; margin:12px auto 16px; }
+
+.no-scrollbar::-webkit-scrollbar { display:none; }
+.no-scrollbar { -ms-overflow-style:none; scrollbar-width:none; }
+
+@keyframes heroZoom { 0%{transform:scale(1)} 100%{transform:scale(1.15)} }
+@keyframes fadeInUp { 0%{opacity:0;transform:translateY(24px)} 100%{opacity:1;transform:translateY(0)} }
+@keyframes scrollDown { 0%,100%{opacity:0;transform:translateY(0)} 50%{opacity:1;transform:translateY(6px)} }
+
+.hero-img { animation: heroZoom 25s ease-in-out infinite alternate; }
+.card-anim { animation: fadeInUp 0.5s ease both; }
+.card-anim:nth-child(2) { animation-delay:0.05s; }
+.card-anim:nth-child(3) { animation-delay:0.15s; }
+.card-anim:nth-child(4) { animation-delay:0.25s; }
+.card-anim:nth-child(5) { animation-delay:0.35s; }
+
+svg { flex-shrink:0; }
+</style>
+</head>
+<body>
+<div id="app">
+
+<!-- ============================================================ -->
+<!-- SCREEN 1: HOME -->
+<!-- ============================================================ -->
+<div id="home" class="screen active">
+  <!-- Hero -->
+  <div style="position:relative;height:85vh;overflow:hidden;">
+    <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=1200&fit=crop" class="hero-img" style="width:100%;height:100%;object-fit:cover;display:block;">
+    <div style="position:absolute;inset:0;background:linear-gradient(to bottom,transparent 30%,rgba(17,17,17,0.92) 100%);"></div>
+    <!-- Top bar -->
+    <div style="position:absolute;top:52px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-family:Anton,sans-serif;font-size:16px;color:white;letter-spacing:0.15em;">DESKOVER</span>
+      <div onclick="goTo('search')" style="cursor:pointer;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </div>
+    </div>
+    <!-- Bottom text -->
+    <div style="position:absolute;bottom:48px;left:16px;right:16px;">
+      <div style="font-size:12px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:0.12em;margin-bottom:10px;">Paris</div>
+      <div style="font-family:Anton,sans-serif;font-size:44px;color:white;line-height:1.05;">LES MEILLEURS<br>SPOTS POUR<br>BOSSER</div>
+      <div style="font-size:13px;color:rgba(255,255,255,0.5);font-style:italic;margin-top:10px;">S&eacute;lection Deskover</div>
+    </div>
+    <!-- Scroll indicator -->
+    <div style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="animation:scrollDown 2s infinite;"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+    </div>
+  </div>
+
+  <!-- Classement section -->
+  <div style="background:var(--cream);border-radius:24px 24px 0 0;margin-top:-24px;position:relative;z-index:10;padding-bottom:40px;">
+
+    <!-- Filtres -->
+    <div class="no-scrollbar" style="display:flex;gap:8px;padding:20px 16px 0;overflow-x:auto;align-items:center;">
+      <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);white-space:nowrap;cursor:pointer;">WiFi</span>
+      <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);white-space:nowrap;cursor:pointer;">Prises</span>
+      <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);white-space:nowrap;cursor:pointer;">Food</span>
+      <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);white-space:nowrap;cursor:pointer;">Style</span>
+      <span style="width:1px;height:20px;background:var(--parchment);flex-shrink:0;"></span>
+      <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:var(--terracotta);color:white;white-space:nowrap;cursor:pointer;">Caf&eacute;s</span>
+      <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);white-space:nowrap;cursor:pointer;">Biblioth&egrave;ques</span>
+      <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);white-space:nowrap;cursor:pointer;">Coworking</span>
+      <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);white-space:nowrap;cursor:pointer;">Calme</span>
+    </div>
+
+    <!-- Titre -->
+    <div style="padding:20px 16px 4px;font-family:Anton,sans-serif;font-size:20px;color:var(--espresso);">NOS COUPS DE COEUR</div>
+    <div style="padding:0 16px 16px;font-size:13px;color:var(--steam);">pr&egrave;s de toi</div>
+
+    <!-- Card 1 -->
+    <div class="card-anim" onclick="goTo('lieu')" style="background:white;border-radius:20px;overflow:hidden;margin:0 16px 20px;box-shadow:0 4px 16px rgba(44,40,37,0.08);cursor:pointer;transition:transform 0.2s;">
+      <div style="position:relative;height:200px;overflow:hidden;">
+        <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div style="position:absolute;top:12px;left:12px;background:var(--terracotta);color:white;display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:8px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z"/><rect x="5" y="18" width="14" height="2" rx="1"/></svg>
+          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">Number one</span>
+        </div>
+        <div style="position:absolute;top:12px;right:12px;background:rgba(91,122,94,0.92);color:white;font-size:10px;font-weight:700;text-transform:uppercase;padding:4px 10px;border-radius:8px;backdrop-filter:blur(6px);">Ouvert</div>
+      </div>
+      <div style="padding:18px;">
+        <div style="font-family:Anton,sans-serif;font-size:20px;color:var(--espresso);">L'ANTICAF&Eacute; BEAUBOURG</div>
+        <div style="font-size:12px;color:var(--steam);margin-top:3px;">Caf&eacute; &middot; Beaubourg, Paris 3e &middot; 350m</div>
+        <div style="margin-top:14px;background:var(--linen);border-radius:14px;padding:14px 0;display:flex;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="var(--monstera)"/></svg>
+            <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">WIFI</span>
+            <span style="font-size:11px;font-weight:700;color:var(--monstera);">Rapide</span>
+          </div>
+          <div style="width:1px;background:var(--parchment);"></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">PRISES</span>
+            <span style="font-size:11px;font-weight:700;color:var(--monstera);">Partout</span>
+          </div>
+          <div style="width:1px;background:var(--parchment);"></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+            <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">FOOD</span>
+            <span style="font-size:11px;font-weight:700;color:var(--monstera);">Complet</span>
+          </div>
+          <div style="width:1px;background:var(--parchment);"></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z"/></svg>
+            <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">STYLE</span>
+            <span style="font-size:11px;font-weight:700;color:var(--monstera);">Canon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="card-anim" onclick="goTo('lieu')" style="background:white;border-radius:20px;overflow:hidden;margin:0 16px 20px;box-shadow:0 4px 16px rgba(44,40,37,0.08);cursor:pointer;transition:transform 0.2s;">
+      <div style="position:relative;height:200px;overflow:hidden;">
+        <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=600&h=400&fit=crop" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div style="position:absolute;top:12px;left:12px;background:rgba(170,76,77,0.85);color:white;display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:8px;">
+          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">Coup de coeur</span>
+        </div>
+        <div style="position:absolute;top:12px;right:12px;background:rgba(91,122,94,0.92);color:white;font-size:10px;font-weight:700;text-transform:uppercase;padding:4px 10px;border-radius:8px;backdrop-filter:blur(6px);">Ouvert</div>
+      </div>
+      <div style="padding:18px;">
+        <div style="font-family:Anton,sans-serif;font-size:20px;color:var(--espresso);">BIBLIOTH&Egrave;QUE SAINTE-GENEVI&Egrave;VE</div>
+        <div style="font-size:12px;color:var(--steam);margin-top:3px;">Biblioth&egrave;que &middot; Quartier Latin, Paris 5e &middot; 800m</div>
+        <div style="margin-top:14px;background:var(--linen);border-radius:14px;padding:14px 0;display:flex;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="var(--monstera)"/></svg>
+            <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">WIFI</span>
+            <span style="font-size:11px;font-weight:700;color:var(--monstera);">Bon</span>
+          </div>
+          <div style="width:1px;background:var(--parchment);"></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--edison)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">PRISES</span>
+            <span style="font-size:11px;font-weight:700;color:var(--edison);">Rares</span>
+          </div>
+          <div style="width:1px;background:var(--parchment);"></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+            <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">FOOD</span>
+            <span style="font-size:11px;font-weight:700;color:var(--steam);">&mdash;</span>
+          </div>
+          <div style="width:1px;background:var(--parchment);"></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z"/></svg>
+            <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">STYLE</span>
+            <span style="font-size:11px;font-weight:700;color:var(--monstera);">Superbe</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="card-anim" onclick="goTo('lieu')" style="background:white;border-radius:20px;overflow:hidden;margin:0 16px 20px;box-shadow:0 4px 16px rgba(44,40,37,0.08);cursor:pointer;transition:transform 0.2s;">
+      <div style="position:relative;height:200px;overflow:hidden;">
+        <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=400&fit=crop" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div style="position:absolute;top:12px;right:12px;background:rgba(91,122,94,0.92);color:white;font-size:10px;font-weight:700;text-transform:uppercase;padding:4px 10px;border-radius:8px;backdrop-filter:blur(6px);">Ouvert</div>
+      </div>
+      <div style="padding:18px;">
+        <div style="font-family:Anton,sans-serif;font-size:20px;color:var(--espresso);">THE HUB CANAL SAINT-MARTIN</div>
+        <div style="font-size:12px;color:var(--steam);margin-top:3px;">Coworking &middot; Canal St-Martin, Paris 10e &middot; 1.2km</div>
+        <div style="margin-top:14px;background:var(--linen);border-radius:14px;padding:14px 0;display:flex;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="var(--monstera)"/></svg>
+            <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">WIFI</span>
+            <span style="font-size:11px;font-weight:700;color:var(--monstera);">Rapide</span>
+          </div>
+          <div style="width:1px;background:var(--parchment);"></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">PRISES</span>
+            <span style="font-size:11px;font-weight:700;color:var(--monstera);">Partout</span>
+          </div>
+          <div style="width:1px;background:var(--parchment);"></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--edison)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+            <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">FOOD</span>
+            <span style="font-size:11px;font-weight:700;color:var(--edison);">Snacks</span>
+          </div>
+          <div style="width:1px;background:var(--parchment);"></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--edison)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z"/></svg>
+            <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">STYLE</span>
+            <span style="font-size:11px;font-weight:700;color:var(--edison);">Sympa</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div class="card-anim" onclick="goTo('lieu')" style="background:white;border-radius:20px;overflow:hidden;margin:0 16px 20px;box-shadow:0 4px 16px rgba(44,40,37,0.08);cursor:pointer;transition:transform 0.2s;">
+      <div style="position:relative;height:200px;overflow:hidden;">
+        <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=600&h=400&fit=crop" style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div style="position:absolute;top:12px;right:12px;background:rgba(170,76,77,0.92);color:white;font-size:10px;font-weight:700;text-transform:uppercase;padding:4px 10px;border-radius:8px;backdrop-filter:blur(6px);">Ferm&eacute;</div>
+      </div>
+      <div style="padding:18px;">
+        <div style="font-family:Anton,sans-serif;font-size:20px;color:var(--espresso);">CAF&Eacute; CRAFT OBERKAMPF</div>
+        <div style="font-size:12px;color:var(--steam);margin-top:3px;">Caf&eacute; &middot; Oberkampf, Paris 11e &middot; 1.5km</div>
+        <div style="margin-top:14px;background:var(--linen);border-radius:14px;padding:14px 0;display:flex;">
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="var(--monstera)"/></svg>
+            <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">WIFI</span>
+            <span style="font-size:11px;font-weight:700;color:var(--monstera);">Rapide</span>
+          </div>
+          <div style="width:1px;background:var(--parchment);"></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+            <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">PRISES</span>
+            <span style="font-size:11px;font-weight:700;color:var(--monstera);">Partout</span>
+          </div>
+          <div style="width:1px;background:var(--parchment);"></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+            <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">FOOD</span>
+            <span style="font-size:11px;font-weight:700;color:var(--monstera);">Complet</span>
+          </div>
+          <div style="width:1px;background:var(--parchment);"></div>
+          <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z"/></svg>
+            <span style="font-size:9px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">STYLE</span>
+            <span style="font-size:11px;font-weight:700;color:var(--monstera);">Canon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VU DANS (en bas apres les cards) -->
+    <div style="padding:0 16px;margin-top:4px;">
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;text-transform:uppercase;letter-spacing:0.1em;color:var(--steam);margin-bottom:10px;">VU DANS</div>
+      <div class="no-scrollbar" style="display:flex;gap:10px;overflow-x:auto;padding-bottom:8px;">
+        <div style="background:white;border-radius:12px;padding:12px 14px;min-width:200px;box-shadow:0 2px 8px rgba(44,40,37,0.06);flex-shrink:0;">
+          <div style="font-size:10px;color:var(--terracotta);font-weight:700;text-transform:uppercase;">LE BONBON</div>
+          <div style="font-size:13px;color:var(--espresso);font-weight:600;margin-top:4px;">Top 10 caf&eacute;s WiFi &agrave; Paris</div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:12px 14px;min-width:200px;box-shadow:0 2px 8px rgba(44,40,37,0.06);flex-shrink:0;">
+          <div style="font-size:10px;color:var(--terracotta);font-weight:700;text-transform:uppercase;">TIME OUT</div>
+          <div style="font-size:13px;color:var(--espresso);font-weight:600;margin-top:4px;">Les meilleurs coworkings</div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:12px 14px;min-width:200px;box-shadow:0 2px 8px rgba(44,40,37,0.06);flex-shrink:0;">
+          <div style="font-size:10px;color:var(--terracotta);font-weight:700;text-transform:uppercase;">KONBINI</div>
+          <div style="font-size:13px;color:var(--espresso);font-weight:600;margin-top:4px;">O&ugrave; bosser &agrave; Paris ?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation bas -->
+    <div style="padding:20px 16px 40px;display:flex;gap:10px;">
+      <div onclick="goTo('carte')" style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--espresso);color:var(--cream);font-size:13px;font-weight:600;padding:14px;border-radius:14px;cursor:pointer;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+        Voir la carte
+      </div>
+      <div onclick="goTo('search')" style="flex:1;display:flex;align-items:center;justify-content:center;gap:8px;background:var(--terracotta);color:var(--cream);font-size:13px;font-weight:600;padding:14px;border-radius:14px;cursor:pointer;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        Rechercher
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN 2: RECHERCHE -->
+<!-- ============================================================ -->
+<div id="search" class="screen">
+  <div style="background:var(--cream);min-height:100vh;padding-bottom:200px;">
+    <!-- Header -->
+    <div style="padding:52px 16px 0;display:flex;justify-content:space-between;align-items:center;">
+      <div onclick="goTo('home')" style="cursor:pointer;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--espresso)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </div>
+      <div onclick="goTo('home')" style="cursor:pointer;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </div>
+    </div>
+
+    <!-- Search bar -->
+    <div style="margin:20px 16px 0;position:relative;">
+      <div style="position:absolute;left:20px;top:50%;transform:translateY(-50%);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      </div>
+      <div style="background:white;border-radius:16px;padding:16px 20px 16px 50px;box-shadow:0 2px 8px rgba(44,40,37,0.06);font-size:15px;font-weight:500;color:var(--espresso);">Paris 11e</div>
+    </div>
+
+    <!-- Criteres -->
+    <div style="margin:28px 16px 0;">
+      <div style="font-family:Anton,sans-serif;font-size:18px;color:var(--espresso);">CE QUI COMPTE POUR TOI</div>
+      <div style="font-size:13px;color:var(--steam);margin-top:4px;">S&eacute;lectionne tes crit&egrave;res</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 16px 0;">
+      <!-- WiFi selected -->
+      <div style="background:#FFF0EF;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(44,40,37,0.06);display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--terracotta)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="var(--terracotta)"/></svg>
+        <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--terracotta);">WiFi</span>
+        <span style="font-size:12px;color:var(--terracotta);">Important</span>
+      </div>
+      <!-- Prises selected -->
+      <div style="background:#FFF0EF;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(44,40,37,0.06);display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--terracotta)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--terracotta);">Prises</span>
+        <span style="font-size:12px;color:var(--terracotta);">Important</span>
+      </div>
+      <!-- Food not selected -->
+      <div style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(44,40,37,0.06);display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+        <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--steam);">Food</span>
+        <span style="font-size:12px;color:var(--steam);">Indiff&eacute;rent</span>
+      </div>
+      <!-- Style not selected -->
+      <div style="background:white;border-radius:16px;padding:16px;box-shadow:0 2px 8px rgba(44,40,37,0.06);display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;">
+        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z"/></svg>
+        <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:var(--steam);">Style</span>
+        <span style="font-size:12px;color:var(--steam);">Indiff&eacute;rent</span>
+      </div>
+    </div>
+
+    <!-- Type de lieu -->
+    <div style="margin:24px 16px 0;">
+      <div style="font-family:Anton,sans-serif;font-size:18px;color:var(--espresso);">TYPE DE LIEU</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
+        <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:var(--terracotta);color:white;cursor:pointer;">Tout</span>
+        <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);cursor:pointer;">Caf&eacute;</span>
+        <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);cursor:pointer;">Biblioth&egrave;que</span>
+        <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);cursor:pointer;">Coworking</span>
+        <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);cursor:pointer;">Tiers-lieu</span>
+      </div>
+    </div>
+
+    <!-- Acces -->
+    <div style="margin:20px 16px 0;">
+      <div style="font-family:Anton,sans-serif;font-size:18px;color:var(--espresso);">ACC&Egrave;S</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
+        <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:var(--terracotta);color:white;cursor:pointer;">Tous</span>
+        <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);cursor:pointer;">Gratuit</span>
+        <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);cursor:pointer;">Payant</span>
+      </div>
+    </div>
+
+    <!-- Ouvert -->
+    <div style="margin:20px 16px 0;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:15px;color:var(--espresso);">Ouvert maintenant</span>
+        <div style="width:44px;height:24px;background:var(--monstera);border-radius:12px;position:relative;cursor:pointer;">
+          <div style="width:20px;height:20px;background:white;border-radius:50%;position:absolute;top:2px;right:2px;box-shadow:0 1px 3px rgba(0,0,0,0.15);transition:0.2s;"></div>
+        </div>
+      </div>
+      <div style="font-size:13px;color:var(--terracotta);margin-top:10px;cursor:pointer;">Choisir un autre horaire</div>
+    </div>
+
+    <!-- CTA fixed -->
+    <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:390px;padding:16px 16px 36px;background:var(--cream);z-index:50;">
+      <div onclick="goTo('home')" style="background:var(--terracotta);color:var(--cream);font-family:Anton,sans-serif;font-size:16px;text-transform:uppercase;padding:16px;border-radius:14px;text-align:center;cursor:pointer;">VOIR 127 LIEUX</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN 3: FICHE LIEU -->
+<!-- ============================================================ -->
+<div id="lieu" class="screen">
+  <div style="background:var(--cream);min-height:100vh;padding-bottom:100px;">
+    <!-- Photo hero -->
+    <div style="position:relative;height:260px;overflow:hidden;">
+      <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop" style="width:100%;height:100%;object-fit:cover;display:block;border-radius:0 0 24px 24px;">
+      <div style="position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,0.3) 0%,transparent 40%);border-radius:0 0 24px 24px;"></div>
+      <!-- Header overlay -->
+      <div style="position:absolute;top:52px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;">
+        <div onclick="goTo('home')" style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+          </div>
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.2);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+          </div>
+        </div>
+      </div>
+      <!-- Badges photo bas -->
+      <div style="position:absolute;bottom:16px;left:16px;display:flex;gap:8px;">
+        <div style="background:var(--terracotta);color:white;display:flex;align-items:center;gap:5px;padding:5px 12px;border-radius:8px;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z"/><rect x="5" y="18" width="14" height="2" rx="1"/></svg>
+          <span style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;">Number one</span>
+        </div>
+        <div style="background:rgba(91,122,94,0.92);color:white;font-size:10px;font-weight:700;text-transform:uppercase;padding:5px 10px;border-radius:8px;backdrop-filter:blur(6px);display:flex;align-items:center;">Ouvert</div>
+      </div>
+    </div>
+
+    <!-- Infos lieu -->
+    <div style="padding:14px 16px;">
+      <div style="font-family:Anton,sans-serif;font-size:22px;color:var(--espresso);">L'ANTICAF&Eacute; BEAUBOURG</div>
+      <div style="font-size:13px;color:var(--steam);margin-top:4px;">Caf&eacute; &middot; 42 Rue de Rivoli, Paris 3e</div>
+      <div style="display:inline-flex;align-items:center;gap:6px;background:var(--linen);padding:4px 12px;border-radius:8px;margin-top:8px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16v-2.38C4 11.5 2.97 10.5 3 8c.03-2.72 1.49-6 5-6 3.2 0 4 2 8 2s4.97-2 8-2c3.51 0 4.97 3.28 5 6 .03 2.5-1 3.5-1 5.62V16"/><path d="M12 20h.01"/><path d="M2 16h20"/><path d="M6 20a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v0a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2Z"/></svg>
+        <span style="font-size:12px;font-weight:500;color:var(--roast);">350m &middot; 5 min &agrave; pied</span>
+      </div>
+    </div>
+
+    <!-- Bouton itineraire -->
+    <div style="margin:14px 16px 0;">
+      <div style="background:var(--espresso);color:var(--cream);font-size:14px;font-weight:600;padding:14px;border-radius:14px;text-align:center;display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+        Itin&eacute;raire
+      </div>
+    </div>
+
+    <!-- Vitals CLIQUABLES -->
+    <div style="margin:18px 16px 0;">
+      <div style="font-family:Anton,sans-serif;font-size:13px;color:var(--steam);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">LES VITALS</div>
+      <div style="background:var(--linen);border-radius:16px;padding:16px 0;display:flex;">
+        <!-- WiFi clickable -->
+        <div onclick="goTo('speedtest')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;position:relative;">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;top:0;right:6px;"><path d="m9 18 6-6-6-6"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="var(--monstera)"/></svg>
+          <span style="font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">WIFI</span>
+          <span style="font-size:12px;font-weight:700;color:var(--monstera);">Rapide</span>
+        </div>
+        <div style="width:1px;background:var(--parchment);"></div>
+        <!-- Prises -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <span style="font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">PRISES</span>
+          <span style="font-size:12px;font-weight:700;color:var(--monstera);">Partout</span>
+        </div>
+        <div style="width:1px;background:var(--parchment);"></div>
+        <!-- Food clickable -->
+        <div onclick="goTo('menu')" style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer;position:relative;">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="position:absolute;top:0;right:6px;"><path d="m9 18 6-6-6-6"/></svg>
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+          <span style="font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">FOOD</span>
+          <span style="font-size:12px;font-weight:700;color:var(--monstera);">Complet</span>
+        </div>
+        <div style="width:1px;background:var(--parchment);"></div>
+        <!-- Style -->
+        <div style="flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z"/></svg>
+          <span style="font-size:10px;text-transform:uppercase;letter-spacing:0.06em;color:var(--steam);">STYLE</span>
+          <span style="font-size:12px;font-weight:700;color:var(--monstera);">Canon</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Infos -->
+    <div style="margin:18px 16px 0;">
+      <div style="font-family:Anton,sans-serif;font-size:13px;color:var(--steam);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:12px;">INFOS</div>
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <!-- Adresse -->
+        <div style="display:flex;align-items:center;gap:12px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span style="font-size:14px;color:var(--roast);">42 rue de Rivoli, Paris 3e</span>
+        </div>
+        <!-- Horaires cliquable -->
+        <div onclick="goTo('horaires')" style="display:flex;align-items:center;gap:12px;cursor:pointer;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span style="font-size:14px;color:var(--roast);"><span style="color:var(--monstera);font-weight:700;">Ouvert</span> &middot; Ferme &agrave; 19h00</span>
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="margin-left:auto;"><path d="m6 9 6 6 6-6"/></svg>
+        </div>
+        <!-- T&eacute;l&eacute;phone -->
+        <div style="display:flex;align-items:center;gap:12px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+          <a href="tel:+33142729210" style="font-size:14px;color:var(--roast);text-decoration:none;">01 42 72 92 10</a>
+        </div>
+        <!-- Prix -->
+        <div style="display:flex;align-items:center;gap:12px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M16 8h-6a2 2 0 1 0 0 4h4a2 2 0 1 1 0 4H8"/><path d="M12 18V6"/></svg>
+          <span style="font-size:14px;color:var(--roast);">Consommation obligatoire &middot; &euro;&euro;</span>
+        </div>
+        <!-- Instagram -->
+        <div style="display:flex;align-items:center;gap:12px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+          <a href="#" style="font-size:14px;color:var(--terracotta);font-weight:500;text-decoration:none;">@anticafe_beaubourg</a>
+        </div>
+        <!-- Photos d'ambiance -->
+        <div class="no-scrollbar" style="display:flex;gap:8px;overflow-x:auto;margin-top:4px;">
+          <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=200&h=200&fit=crop" style="width:72px;height:72px;border-radius:12px;object-fit:cover;box-shadow:0 2px 8px rgba(44,40,37,0.1);flex-shrink:0;">
+          <img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=200&h=200&fit=crop" style="width:72px;height:72px;border-radius:12px;object-fit:cover;box-shadow:0 2px 8px rgba(44,40,37,0.1);flex-shrink:0;">
+          <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=200&h=200&fit=crop" style="width:72px;height:72px;border-radius:12px;object-fit:cover;box-shadow:0 2px 8px rgba(44,40,37,0.1);flex-shrink:0;">
+          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=200&h=200&fit=crop" style="width:72px;height:72px;border-radius:12px;object-fit:cover;box-shadow:0 2px 8px rgba(44,40,37,0.1);flex-shrink:0;">
+        </div>
+      </div>
+    </div>
+
+    <!-- Separateur -->
+    <div style="text-align:center;padding:20px 0;color:var(--steam);font-size:14px;letter-spacing:4px;">&middot; &middot; &middot;</div>
+
+    <!-- Vu dans -->
+    <div style="padding:0 16px;">
+      <div style="font-family:Anton,sans-serif;font-size:13px;color:var(--steam);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">VU DANS</div>
+      <div style="background:white;border-radius:14px;padding:16px;box-shadow:0 2px 8px rgba(44,40,37,0.06);">
+        <div style="font-size:10px;color:var(--terracotta);font-weight:700;text-transform:uppercase;">LE BONBON</div>
+        <div style="font-size:14px;color:var(--espresso);font-weight:600;margin-top:4px;">Top 10 des caf&eacute;s WiFi &agrave; Paris</div>
+        <div style="font-size:12px;color:var(--terracotta);margin-top:6px;cursor:pointer;">Lire l'article
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Separateur -->
+    <div style="text-align:center;padding:20px 0;color:var(--steam);font-size:14px;letter-spacing:4px;">&middot; &middot; &middot;</div>
+
+    <!-- Dans le coin -->
+    <div style="padding:0 16px;">
+      <div style="font-family:Anton,sans-serif;font-size:13px;color:var(--steam);text-transform:uppercase;letter-spacing:0.1em;margin-bottom:10px;">DANS LE COIN</div>
+      <div class="no-scrollbar" style="display:flex;gap:12px;overflow-x:auto;padding-bottom:8px;">
+        <!-- Mini card 1 -->
+        <div onclick="goTo('lieu')" style="min-width:180px;background:white;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(44,40,37,0.06);cursor:pointer;flex-shrink:0;">
+          <img src="https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=400&h=250&fit=crop" style="width:100%;height:100px;object-fit:cover;display:block;">
+          <div style="padding:12px;">
+            <div style="font-family:Anton,sans-serif;font-size:13px;color:var(--espresso);">BSG BIBLIOTH&Egrave;QUE</div>
+            <div style="font-size:11px;color:var(--steam);margin-top:2px;">Quartier Latin &middot; 800m</div>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="var(--monstera)"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--edison)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z"/></svg>
+            </div>
+          </div>
+        </div>
+        <!-- Mini card 2 -->
+        <div onclick="goTo('lieu')" style="min-width:180px;background:white;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(44,40,37,0.06);cursor:pointer;flex-shrink:0;">
+          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=400&h=250&fit=crop" style="width:100%;height:100px;object-fit:cover;display:block;">
+          <div style="padding:12px;">
+            <div style="font-family:Anton,sans-serif;font-size:13px;color:var(--espresso);">THE HUB CSM</div>
+            <div style="font-size:11px;color:var(--steam);margin-top:2px;">Canal St-Martin &middot; 1.2km</div>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="var(--monstera)"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--edison)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--edison)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z"/></svg>
+            </div>
+          </div>
+        </div>
+        <!-- Mini card 3 -->
+        <div onclick="goTo('lieu')" style="min-width:180px;background:white;border-radius:16px;overflow:hidden;box-shadow:0 2px 8px rgba(44,40,37,0.06);cursor:pointer;flex-shrink:0;">
+          <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=400&h=250&fit=crop" style="width:100%;height:100px;object-fit:cover;display:block;">
+          <div style="padding:12px;">
+            <div style="font-family:Anton,sans-serif;font-size:13px;color:var(--espresso);">CAF&Eacute; CRAFT</div>
+            <div style="font-size:11px;color:var(--steam);margin-top:2px;">Oberkampf &middot; 1.5km</div>
+            <div style="display:flex;gap:8px;margin-top:8px;">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="var(--monstera)"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z"/></svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA sticky -->
+    <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:390px;padding:16px 16px 36px;background:linear-gradient(to top,var(--cream) 80%,transparent);z-index:50;">
+      <div onclick="goTo('contribution')" style="background:var(--terracotta);color:var(--cream);font-size:14px;font-weight:600;padding:14px;border-radius:14px;text-align:center;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+        Donner mon avis
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN 4: CARTE -->
+<!-- ============================================================ -->
+<div id="carte" class="screen">
+  <div style="background:var(--cream);min-height:100vh;">
+    <!-- Header -->
+    <div style="padding:52px 16px 16px;display:flex;justify-content:space-between;align-items:center;">
+      <div onclick="goTo('home')" style="cursor:pointer;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--espresso)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+      </div>
+      <span style="font-family:Anton,sans-serif;font-size:16px;color:var(--espresso);">PARIS</span>
+      <div onclick="goTo('search')" style="cursor:pointer;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--espresso)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>
+      </div>
+    </div>
+
+    <!-- Filtres -->
+    <div class="no-scrollbar" style="display:flex;gap:8px;padding:0 16px 16px;overflow-x:auto;align-items:center;">
+      <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);white-space:nowrap;cursor:pointer;">WiFi</span>
+      <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);white-space:nowrap;cursor:pointer;">Prises</span>
+      <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);white-space:nowrap;cursor:pointer;">Food</span>
+      <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);white-space:nowrap;cursor:pointer;">Style</span>
+      <span style="width:1px;height:20px;background:var(--parchment);flex-shrink:0;"></span>
+      <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:var(--terracotta);color:white;white-space:nowrap;cursor:pointer;">Caf&eacute;s</span>
+      <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);white-space:nowrap;cursor:pointer;">Biblioth&egrave;ques</span>
+      <span style="padding:10px 18px;border-radius:20px;font-size:13px;font-weight:600;background:white;border:1.5px solid var(--parchment);color:var(--roast);white-space:nowrap;cursor:pointer;">Coworking</span>
+    </div>
+
+    <!-- Fausse carte -->
+    <div style="background:#E8EEF4;height:60vh;border-radius:16px;margin:0 16px;position:relative;overflow:hidden;">
+      <!-- Rues -->
+      <div style="position:absolute;top:30%;left:0;right:0;height:2px;background:#D8E2EC;transform:rotate(-15deg);"></div>
+      <div style="position:absolute;top:50%;left:0;right:0;height:2px;background:#D8E2EC;"></div>
+      <div style="position:absolute;top:70%;left:0;right:0;height:2px;background:#D8E2EC;transform:rotate(8deg);"></div>
+      <div style="position:absolute;top:0;bottom:0;left:30%;width:2px;background:#D8E2EC;transform:rotate(5deg);"></div>
+      <div style="position:absolute;top:0;bottom:0;left:60%;width:2px;background:#D8E2EC;transform:rotate(-3deg);"></div>
+      <div style="position:absolute;top:0;bottom:0;left:80%;width:2px;background:#D8E2EC;transform:rotate(10deg);"></div>
+      <!-- Blocks -->
+      <div style="position:absolute;top:15%;left:10%;width:60px;height:40px;background:#D8E2EC;border-radius:4px;"></div>
+      <div style="position:absolute;top:55%;left:50%;width:80px;height:50px;background:#D8E2EC;border-radius:4px;"></div>
+      <div style="position:absolute;top:75%;left:15%;width:50px;height:35px;background:#D8E2EC;border-radius:4px;"></div>
+      <!-- Markers -->
+      <div onclick="goTo('lieu')" style="position:absolute;top:25%;left:22%;width:36px;height:36px;border-radius:50%;background:var(--terracotta);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;box-shadow:0 3px 10px rgba(170,76,77,0.4);cursor:pointer;">1</div>
+      <div onclick="goTo('lieu')" style="position:absolute;top:40%;left:55%;width:36px;height:36px;border-radius:50%;background:var(--terracotta);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;box-shadow:0 3px 10px rgba(170,76,77,0.4);cursor:pointer;">2</div>
+      <div onclick="goTo('lieu')" style="position:absolute;top:60%;left:35%;width:36px;height:36px;border-radius:50%;background:var(--terracotta);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;box-shadow:0 3px 10px rgba(170,76,77,0.4);cursor:pointer;">3</div>
+      <div onclick="goTo('lieu')" style="position:absolute;top:78%;left:65%;width:36px;height:36px;border-radius:50%;background:var(--terracotta);color:white;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:14px;box-shadow:0 3px 10px rgba(170,76,77,0.4);cursor:pointer;">4</div>
+    </div>
+
+    <!-- Bottom info -->
+    <div style="text-align:center;padding:20px 16px;">
+      <div style="font-size:13px;color:var(--steam);">4 lieux trouv&eacute;s</div>
+      <div onclick="goTo('home')" style="font-size:13px;color:var(--terracotta);margin-top:6px;cursor:pointer;">Voir le classement
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN 5: CONTRIBUTION (Modal) -->
+<!-- ============================================================ -->
+<div id="contribution" class="modal-overlay">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <!-- Header -->
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:0 20px 16px;">
+      <div style="font-family:Anton,sans-serif;font-size:16px;color:var(--espresso);">L'ANTICAF&Eacute; BEAUBOURG</div>
+      <div onclick="goTo('lieu')" style="cursor:pointer;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </div>
+    </div>
+
+    <!-- Sections -->
+    <div style="padding:0 20px;display:flex;flex-direction:column;gap:20px;">
+      <!-- WiFi -->
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="var(--steam)"/></svg>
+          <span style="font-size:15px;font-weight:600;color:var(--espresso);">WiFi</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <span class="contrib-btn" style="height:36px;padding:0 14px;border-radius:18px;font-size:12px;font-weight:600;display:flex;align-items:center;background:var(--linen);color:var(--roast);cursor:pointer;transition:all 200ms;">Faible</span>
+          <span class="contrib-btn" style="height:36px;padding:0 14px;border-radius:18px;font-size:12px;font-weight:600;display:flex;align-items:center;background:var(--linen);color:var(--roast);cursor:pointer;transition:all 200ms;">Bon</span>
+          <span class="contrib-btn" style="height:36px;padding:0 14px;border-radius:18px;font-size:12px;font-weight:600;display:flex;align-items:center;background:var(--monstera);color:white;cursor:pointer;transition:all 200ms;">Rapide</span>
+        </div>
+      </div>
+      <!-- Prises -->
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+          <span style="font-size:15px;font-weight:600;color:var(--espresso);">Prises</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <span class="contrib-btn" style="height:36px;padding:0 14px;border-radius:18px;font-size:12px;font-weight:600;display:flex;align-items:center;background:var(--linen);color:var(--roast);cursor:pointer;transition:all 200ms;">Peu</span>
+          <span class="contrib-btn" style="height:36px;padding:0 14px;border-radius:18px;font-size:12px;font-weight:600;display:flex;align-items:center;background:var(--linen);color:var(--roast);cursor:pointer;transition:all 200ms;">Rares</span>
+          <span class="contrib-btn" style="height:36px;padding:0 14px;border-radius:18px;font-size:12px;font-weight:600;display:flex;align-items:center;background:var(--monstera);color:white;cursor:pointer;transition:all 200ms;">Partout</span>
+        </div>
+      </div>
+      <!-- Food -->
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+          <span style="font-size:15px;font-weight:600;color:var(--espresso);">Food</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <span class="contrib-btn" style="height:36px;padding:0 14px;border-radius:18px;font-size:12px;font-weight:600;display:flex;align-items:center;background:var(--linen);color:var(--roast);cursor:pointer;transition:all 200ms;">Non</span>
+          <span class="contrib-btn" style="height:36px;padding:0 14px;border-radius:18px;font-size:12px;font-weight:600;display:flex;align-items:center;background:var(--linen);color:var(--roast);cursor:pointer;transition:all 200ms;">Snacks</span>
+          <span class="contrib-btn" style="height:36px;padding:0 14px;border-radius:18px;font-size:12px;font-weight:600;display:flex;align-items:center;background:var(--monstera);color:white;cursor:pointer;transition:all 200ms;">Complet</span>
+        </div>
+      </div>
+      <!-- Style -->
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z"/></svg>
+          <span style="font-size:15px;font-weight:600;color:var(--espresso);">Style</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <span class="contrib-btn" style="height:36px;padding:0 14px;border-radius:18px;font-size:12px;font-weight:600;display:flex;align-items:center;background:var(--linen);color:var(--roast);cursor:pointer;transition:all 200ms;">Bof</span>
+          <span class="contrib-btn" style="height:36px;padding:0 14px;border-radius:18px;font-size:12px;font-weight:600;display:flex;align-items:center;background:var(--linen);color:var(--roast);cursor:pointer;transition:all 200ms;">Sympa</span>
+          <span class="contrib-btn" style="height:36px;padding:0 14px;border-radius:18px;font-size:12px;font-weight:600;display:flex;align-items:center;background:var(--monstera);color:white;cursor:pointer;transition:all 200ms;">Canon</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- CTA -->
+    <div style="margin:24px 20px 36px;">
+      <div id="contribCta" onclick="submitContrib()" style="background:var(--terracotta);color:var(--cream);font-size:15px;font-weight:700;padding:16px;border-radius:14px;text-align:center;cursor:pointer;transition:all 200ms;">Envoyer</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN 6: SPEED TEST (Modal) -->
+<!-- ============================================================ -->
+<div id="speedtest" class="modal-overlay">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <!-- Header -->
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:0 20px 16px;">
+      <div style="font-family:Anton,sans-serif;font-size:16px;color:var(--espresso);">SPEED TEST WIFI</div>
+      <div onclick="goTo('lieu')" style="cursor:pointer;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </div>
+    </div>
+
+    <!-- Grand cercle -->
+    <div style="display:flex;justify-content:center;margin:20px 0;">
+      <div style="width:150px;height:150px;border-radius:50%;background:var(--linen);display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <span style="font-family:'JetBrains Mono',monospace;font-size:44px;font-weight:700;color:var(--terracotta);">45</span>
+        <span style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--steam);">Mbps</span>
+      </div>
+    </div>
+
+    <!-- Details -->
+    <div style="text-align:center;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--steam);margin-top:12px;">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+      45 Mbps &middot;
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:middle;"><path d="M12 19V5"/><path d="m5 12 7-7 7 7"/></svg>
+      12 Mbps &middot; Ping 8ms
+    </div>
+
+    <!-- Texte explicatif -->
+    <div style="margin:20px 20px 0;background:var(--linen);border-radius:14px;padding:16px;">
+      <div style="font-size:14px;font-weight:700;color:var(--monstera);">Connexion tr&egrave;s rapide</div>
+      <div style="font-size:13px;color:var(--roast);line-height:1.5;margin-top:4px;">Id&eacute;al pour la visioconf&eacute;rence, le streaming HD et le travail simultan&eacute; sur plusieurs appareils.</div>
+    </div>
+
+    <!-- Barre qualite -->
+    <div style="margin:20px 20px 0;">
+      <div style="height:4px;background:var(--parchment);border-radius:2px;overflow:hidden;">
+        <div style="width:85%;height:100%;background:var(--monstera);border-radius:2px;"></div>
+      </div>
+    </div>
+
+    <!-- Derniere mesure -->
+    <div style="text-align:center;font-size:12px;color:var(--steam);margin-top:12px;">Derni&egrave;re mesure il y a 2h</div>
+
+    <!-- Boutons -->
+    <div style="padding:0 20px;">
+      <div style="background:var(--espresso);color:var(--cream);font-size:14px;font-weight:600;padding:14px;border-radius:14px;text-align:center;cursor:pointer;margin-top:20px;">Lancer un nouveau test</div>
+      <div onclick="goTo('lieu')" style="color:var(--terracotta);font-size:14px;font-weight:600;text-align:center;cursor:pointer;margin-top:12px;padding:8px;">Fermer</div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================ -->
+<!-- SCREEN 7: MENU (Modal) -->
+<!-- ============================================================ -->
+<div id="menu" class="modal-overlay">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <!-- Header -->
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:0 20px 16px;">
+      <div style="font-family:Anton,sans-serif;font-size:16px;color:var(--espresso);">CARTE &amp; MENU</div>
+      <div onclick="goTo('lieu')" style="cursor:pointer;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </div>
+    </div>
+
+    <!-- Texte -->
+    <div style="padding:0 20px;margin-top:16px;font-size:14px;color:var(--espresso);font-weight:600;">L'Anticaf&eacute; propose</div>
+
+    <!-- Liste items -->
+    <div style="padding:0 20px;margin-top:12px;display:flex;flex-direction:column;">
+      <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--linen);">
+        <span style="font-size:14px;color:var(--espresso);">Boissons chaudes</span>
+        <span style="font-size:14px;font-family:'JetBrains Mono',monospace;color:var(--roast);">2,50 - 5&euro;</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--linen);">
+        <span style="font-size:14px;color:var(--espresso);">Boissons froides</span>
+        <span style="font-size:14px;font-family:'JetBrains Mono',monospace;color:var(--roast);">3 - 6&euro;</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--linen);">
+        <span style="font-size:14px;color:var(--espresso);">Snacks &amp; viennoiseries</span>
+        <span style="font-size:14px;font-family:'JetBrains Mono',monospace;color:var(--roast);">2 - 4&euro;</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:12px 0;">
+        <span style="font-size:14px;color:var(--espresso);">D&eacute;jeuner</span>
+        <span style="font-size:14px;font-family:'JetBrains Mono',monospace;color:var(--roast);">8 - 14&euro;</span>
+      </div>
+    </div>
+
+    <!-- Note -->
+    <div style="padding:16px 20px;font-size:12px;color:var(--steam);font-style:italic;">Paiement au temps (5&euro;/h, boissons incluses)</div>
+
+    <!-- Fermer -->
+    <div onclick="goTo('lieu')" style="color:var(--terracotta);font-size:14px;font-weight:600;text-align:center;cursor:pointer;margin-top:12px;padding:8px;">Fermer</div>
+  </div>
+</div>
+
+<!-- MODAL: HORAIRES -->
+<div id="horaires" class="modal-overlay">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:0 20px 16px;">
+      <div style="font-family:Anton,sans-serif;font-size:16px;color:var(--espresso);">HORAIRES</div>
+      <div onclick="goTo('lieu')" style="cursor:pointer;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </div>
+    </div>
+    <div style="padding:0 20px;display:flex;flex-direction:column;">
+      <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--linen);">
+        <span style="font-size:14px;color:var(--espresso);font-weight:600;">Lundi</span>
+        <span style="font-size:14px;font-family:'JetBrains Mono',monospace;color:var(--roast);">9h00 - 19h00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--linen);">
+        <span style="font-size:14px;color:var(--monstera);font-weight:700;">Mardi</span>
+        <span style="font-size:14px;font-family:'JetBrains Mono',monospace;color:var(--monstera);font-weight:600;">9h00 - 19h00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--linen);">
+        <span style="font-size:14px;color:var(--espresso);font-weight:600;">Mercredi</span>
+        <span style="font-size:14px;font-family:'JetBrains Mono',monospace;color:var(--roast);">9h00 - 19h00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--linen);">
+        <span style="font-size:14px;color:var(--espresso);font-weight:600;">Jeudi</span>
+        <span style="font-size:14px;font-family:'JetBrains Mono',monospace;color:var(--roast);">9h00 - 19h00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--linen);">
+        <span style="font-size:14px;color:var(--espresso);font-weight:600;">Vendredi</span>
+        <span style="font-size:14px;font-family:'JetBrains Mono',monospace;color:var(--roast);">9h00 - 21h00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--linen);">
+        <span style="font-size:14px;color:var(--espresso);font-weight:600;">Samedi</span>
+        <span style="font-size:14px;font-family:'JetBrains Mono',monospace;color:var(--roast);">10h00 - 21h00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding:12px 0;">
+        <span style="font-size:14px;color:var(--espresso);font-weight:600;">Dimanche</span>
+        <span style="font-size:14px;font-family:'JetBrains Mono',monospace;color:var(--terracotta);">Ferm&eacute;</span>
+      </div>
+    </div>
+    <div onclick="goTo('lieu')" style="color:var(--terracotta);font-size:14px;font-weight:600;text-align:center;cursor:pointer;margin-top:16px;padding:8px 0 24px;">Fermer</div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<script>
+let currentScreen = 'home';
+const modals = ['contribution', 'speedtest', 'menu', 'horaires'];
+
+function goTo(id) {
+  // Close any open modal first
+  modals.forEach(function(m) {
+    var el = document.getElementById(m);
+    if (el && el.classList.contains('active')) {
+      el.classList.remove('active');
+    }
+  });
+
+  if (modals.includes(id)) {
+    var modal = document.getElementById(id);
+    requestAnimationFrame(function() {
+      modal.classList.add('active');
+    });
+    return;
+  }
+
+  var oldScreen = document.getElementById(currentScreen);
+  var newScreen = document.getElementById(id);
+  if (!newScreen || id === currentScreen) return;
+
+  oldScreen.style.opacity = '0';
+  setTimeout(function() {
+    oldScreen.classList.remove('active');
+    newScreen.classList.add('active');
+    newScreen.scrollTop = 0;
+    window.scrollTo(0, 0);
+    requestAnimationFrame(function() {
+      newScreen.style.opacity = '1';
+    });
+    currentScreen = id;
+  }, 200);
+}
+
+// Contribution buttons toggle
+document.querySelectorAll('.contrib-btn').forEach(function(btn) {
+  btn.addEventListener('click', function(e) {
+    e.stopPropagation();
+    var siblings = this.parentElement.querySelectorAll('.contrib-btn');
+    siblings.forEach(function(s) {
+      s.style.background = 'var(--linen)';
+      s.style.color = 'var(--roast)';
+    });
+    this.style.background = 'var(--monstera)';
+    this.style.color = 'white';
+  });
+});
+
+function submitContrib() {
+  var cta = document.getElementById('contribCta');
+  cta.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+  cta.style.background = 'var(--monstera)';
+  setTimeout(function() {
+    cta.innerHTML = 'Envoyer';
+    cta.style.background = 'var(--terracotta)';
+    goTo('lieu');
+  }, 800);
+}
+
+// Card hover
+document.querySelectorAll('.card-anim').forEach(function(card) {
+  card.addEventListener('mouseenter', function() {
+    this.style.transform = 'translateY(-2px)';
+  });
+  card.addEventListener('mouseleave', function() {
+    this.style.transform = 'translateY(0)';
+  });
+});
+</script>
+</body>
+</html>

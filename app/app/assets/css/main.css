@@ -1,0 +1,102 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+@theme static {
+  /* Fonts */
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-display: 'Anton', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Terracotta (primary) */
+  --color-terracotta-50: #fdf2f2;
+  --color-terracotta-100: #fde3e3;
+  --color-terracotta-200: #fccbcb;
+  --color-terracotta-300: #f8a4a5;
+  --color-terracotta-400: #c46869;
+  --color-terracotta-500: #AA4C4D;
+  --color-terracotta-600: #943f40;
+  --color-terracotta-700: #7d3334;
+  --color-terracotta-800: #692d2e;
+  --color-terracotta-900: #5a2a2b;
+  --color-terracotta-950: #301213;
+
+  /* Coffee (neutral) */
+  --color-coffee-50: #FAF7F2;
+  --color-coffee-100: #F3EDE4;
+  --color-coffee-200: #E8DFD0;
+  --color-coffee-300: #D4C4AD;
+  --color-coffee-400: #A89888;
+  --color-coffee-500: #6B5B4E;
+  --color-coffee-600: #5A4B3F;
+  --color-coffee-700: #4A3D33;
+  --color-coffee-800: #3D322B;
+  --color-coffee-900: #2C2825;
+  --color-coffee-950: #1a1714;
+
+  /* Semantic colors */
+  --color-monstera: #5B7A5E;
+  --color-edison: #D4A84B;
+  --color-cream: #FAF7F2;
+  --color-linen: #F3EDE4;
+  --color-parchment: #E8DFD0;
+  --color-espresso: #2C2825;
+  --color-roast: #6B5B4E;
+  --color-steam: #A89888;
+}
+
+/* Global styles */
+body {
+  background-color: var(--color-cream);
+  color: var(--color-espresso);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Font display class */
+.font-display {
+  font-family: 'Anton', sans-serif;
+  text-transform: uppercase;
+}
+
+/* No scrollbar utility */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Paper grain texture overlay */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.025;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* Easing tokens */
+:root {
+  --ease-coffee: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --ease-coffee-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* Wood slat background (menu board) */
+.bg-wood-slat {
+  background-color: var(--color-linen);
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 47px,
+    rgba(44, 40, 37, 0.04) 47px,
+    rgba(44, 40, 37, 0.04) 48px
+  );
+}

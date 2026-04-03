@@ -1,0 +1,45 @@
+export default defineNuxtConfig({
+  modules: [
+    '@nuxt/eslint',
+    '@nuxt/ui'
+  ],
+
+  devtools: {
+    enabled: true
+  },
+
+  css: ['~/assets/css/main.css'],
+
+  app: {
+    head: {
+      title: 'Deskover — Trouve ton spot pour bosser',
+      htmlAttrs: { lang: 'fr' },
+      meta: [
+        { name: 'description', content: 'Deskover sélectionne les meilleurs endroits pour travailler : cafés, bibliothèques, coworkings. WiFi, prises, ambiance — tout est noté.' },
+        { name: 'theme-color', content: '#AA4C4D' },
+        { property: 'og:title', content: 'Deskover — Trouve ton spot pour bosser' },
+        { property: 'og:description', content: 'Les meilleurs spots pour bosser, sélectionnés pour toi.' },
+        { property: 'og:type', content: 'website' }
+      ],
+      link: [
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }
+      ]
+    },
+    pageTransition: { name: 'page', mode: 'out-in' }
+  },
+
+  routeRules: {
+    '/': { prerender: true }
+  },
+
+  compatibilityDate: '2025-01-15',
+
+  eslint: {
+    config: {
+      stylistic: {
+        commaDangle: 'never',
+        braceStyle: '1tbs'
+      }
+    }
+  }
+})
