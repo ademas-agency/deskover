@@ -2,3 +2,11 @@
 .claude/
 node_modules/
 .env
+scripts/data/photos/
+scripts/data/search-results/
+scripts/data/articles/
+scripts/data/all-articles.jsonl
+scripts/data/all-search-results.json
+scripts/data/raw-places.json
+scripts/data/articles.json
+app/public/data/enriched-places.json

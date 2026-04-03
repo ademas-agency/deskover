@@ -27,12 +27,12 @@ defineProps<{ place: Place }>()
     <div class="relative h-[200px] overflow-hidden">
       <img :src="place.image" :alt="place.name" class="w-full h-full object-cover transition-transform duration-500 hover:scale-105">
       <!-- Tag -->
-      <div v-if="place.tag" class="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-white text-[10px] font-bold uppercase tracking-wide" :class="place.tag === 'Number one' ? 'bg-[var(--color-terracotta-500)]' : 'bg-[var(--color-terracotta-500)]/85'">
+      <div v-if="place.tag" class="absolute top-3 left-3 flex items-center gap-1.5 px-3 rounded-lg text-white text-[10px] font-bold uppercase tracking-wide leading-[28px]" :style="{ background: place.tag === 'Number one' ? '#AA4C4D' : 'rgba(170,76,77,0.85)' }">
         <UIcon v-if="place.tag === 'Number one'" name="lucide:crown" class="w-3.5 h-3.5" />
         <span>{{ place.tag }}</span>
       </div>
       <!-- Status badge -->
-      <div class="absolute top-3 right-3 px-2.5 py-1 rounded-lg text-white text-[10px] font-bold uppercase backdrop-blur-md" :class="place.isOpen ? 'bg-[var(--color-monstera)]/90' : 'bg-[var(--color-terracotta-500)]/90'">
+      <div class="absolute top-3 right-3 px-2.5 h-[28px] rounded-lg text-white text-[10px] font-bold uppercase backdrop-blur-md flex items-center justify-center" :style="{ background: place.isOpen ? 'rgba(91,122,94,0.92)' : 'rgba(170,76,77,0.92)' }">
         {{ place.isOpen ? 'Ouvert' : 'Fermé' }}
       </div>
     </div>

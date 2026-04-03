@@ -1,8 +1,15 @@
 export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
-    '@nuxt/ui'
+    '@nuxt/ui',
+    '@nuxtjs/supabase'
   ],
+
+  supabase: {
+    url: process.env.SUPABASE_URL,
+    key: process.env.SUPABASE_KEY,
+    redirect: false
+  },
 
   devtools: {
     enabled: true

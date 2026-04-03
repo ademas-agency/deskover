@@ -1,12 +1,59 @@
 <script setup lang="ts">
-const { places, filters, press } = useMockData()
+import type { PlaceFilters } from '~/domain/models/Place'
 
-const activeFilters = ref(filters)
+const { getAll } = usePlaces()
+
+const activeFilters = ref([
+  { label: 'WiFi', value: 'wifi', active: false },
+  { label: 'Prises', value: 'prises', active: false },
+  { label: 'Food', value: 'food', active: false },
+  { label: 'Calme', value: 'calme', active: false },
+  { label: 'Cafés', value: 'cafe', active: false },
+  { label: 'Coffee Shops', value: 'coffee_shop', active: false },
+  { label: 'Coworking', value: 'coworking', active: false },
+  { label: 'Tiers-lieux', value: 'tiers_lieu', active: false }
+])
 
 function toggleFilter(value: string) {
   const filter = activeFilters.value.find(f => f.value === value)
   if (filter) filter.active = !filter.active
 }
+
+const computedFilters = computed<PlaceFilters>(() => {
+  const f: PlaceFilters = {}
+  const active = activeFilters.value.filter(x => x.active).map(x => x.value)
+  // Only apply filters if something is actively selected
+  if (active.includes('wifi')) f.wifi = true
+  if (active.includes('prises')) f.prises = true
+  if (active.includes('food')) f.food = true
+  if (active.includes('calme')) f.calme = true
+  const cats = active.filter(v => ['cafe', 'coffee_shop', 'coworking', 'tiers_lieu'].includes(v))
+  if (cats.length === 1) f.category = cats[0]
+  return f
+})
+
+// Empty filters = show all (no filtering)
+
+const places = ref<any[]>([])
+const loading = ref(true)
+
+async function loadPlaces() {
+  loading.value = true
+  places.value = await getAll(computedFilters.value)
+  loading.value = false
+}
+
+// Load on mount (client-side only)
+onMounted(() => loadPlaces())
+
+// Reload when filters change
+watch(computedFilters, () => loadPlaces())
+
+const press = [
+  { source: 'Le Bonbon', title: 'Top 10 cafés WiFi à Paris' },
+  { source: 'Time Out', title: 'Les meilleurs coworkings' },
+  { source: 'Konbini', title: 'Où bosser à Paris ?' }
+]
 </script>
 
 <template>
@@ -62,12 +109,22 @@ function toggleFilter(value: string) {
       <!-- Cards -->
       <div class="px-4 pt-4 flex flex-col gap-5">
         <NuxtLink
-          v-for="place in places"
+          v-for="place in (places || []).slice(0, 20)"
           :key="place.id"
           :to="`/lieu/${place.id}`"
           class="block"
         >
-          <PlaceCard :place="place" />
+          <PlaceCard :place="{
+            name: place.name,
+            type: place.category === 'coffee_shop' ? 'Coffee Shop' : place.category === 'cafe' ? 'Café' : place.category === 'coworking' ? 'Coworking' : place.category === 'tiers_lieu' ? 'Tiers-lieu' : place.category,
+            neighborhood: place.arrondissement ? `${place.city} ${place.arrondissement}e` : place.city,
+            city: place.city,
+            distance: place.distance || '',
+            isOpen: place.isOpen ?? true,
+            tag: place.tag,
+            image: place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop',
+            vitals: place.vitals
+          }" />
         </NuxtLink>
       </div>
 
