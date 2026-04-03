@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OùBosser — Classement + Mini Carte (Desktop)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Zilla+Slab:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --cream: #FAF7F2;
+    --linen: #F3EDE4;
+    --parchment: #E8DFD0;
+    --espresso: #2C2825;
+    --roast: #6B5B4E;
+    --steam: #A89888;
+    --terracotta: #C4622A;
+    --monstera: #5B7A5E;
+    --edison: #D4A84B;
+    --white: #FFFFFF;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    background: var(--cream);
+    color: var(--espresso);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ─── HEADER ─── */
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--white);
+    box-shadow: 0 1px 4px rgba(44,40,37,0.04);
+    padding: 12px 32px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+    max-width: 1440px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .header-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--white);
+    box-shadow: 0 1px 4px rgba(44,40,37,0.04);
+  }
+
+  .logo {
+    font-family: 'Zilla Slab', serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--terracotta);
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+  }
+
+  .search-bar {
+    width: 480px;
+    height: 44px;
+    background: var(--linen);
+    border-radius: 12px;
+    border: none;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    gap: 10px;
+  }
+  .search-bar svg { flex-shrink: 0; }
+  .search-bar input {
+    border: none;
+    background: transparent;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    color: var(--espresso);
+    width: 100%;
+    outline: none;
+  }
+  .search-bar input::placeholder { color: var(--steam); }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    list-style: none;
+  }
+  .nav-links a {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    color: var(--roast);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  .nav-links a.active {
+    color: var(--terracotta);
+    font-weight: 600;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+
+  /* ─── BODY GRID ─── */
+  .main-wrap {
+    max-width: 1440px;
+    margin: 0 auto;
+    width: 100%;
+  }
+  .body-grid {
+    display: grid;
+    grid-template-columns: 280px 1fr 420px;
+    gap: 0;
+    min-height: calc(100vh - 64px);
+  }
+
+  /* ─── SIDEBAR FILTRES ─── */
+  .sidebar {
+    background: var(--cream);
+    padding: 28px 24px;
+    position: sticky;
+    top: 64px;
+    height: fit-content;
+  }
+
+  .sidebar-title {
+    font-family: 'Zilla Slab', serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--steam);
+    margin-bottom: 20px;
+  }
+
+  .filter-label {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--espresso);
+    margin-bottom: 10px;
+  }
+
+  .chips-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    margin-bottom: 0;
+  }
+  .chip {
+    padding: 8px 12px;
+    border-radius: 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    text-align: center;
+    background: var(--linen);
+    color: var(--roast);
+    cursor: pointer;
+  }
+  .chip.active {
+    background: var(--terracotta);
+    color: var(--cream);
+  }
+
+  .separator { margin: 20px 0; }
+
+  .toggle-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 12px;
+  }
+  .toggle-row label {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    color: var(--espresso);
+  }
+  .toggle-track {
+    width: 40px;
+    height: 22px;
+    border-radius: 11px;
+    background: #D1D5DB;
+    position: relative;
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+  .toggle-track.active { background: var(--monstera); }
+  .toggle-knob {
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: var(--white);
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+    transition: left 0.2s;
+  }
+  .toggle-track.active .toggle-knob { left: 21px; }
+
+  .radio-group { margin-bottom: 0; }
+  .radio-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+  .radio-circle {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--steam);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .radio-circle.selected {
+    border-color: var(--terracotta);
+  }
+  .radio-circle.selected::after {
+    content: '';
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--terracotta);
+  }
+  .radio-label {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 14px;
+    color: var(--espresso);
+  }
+
+  .slider-section { margin-top: 0; }
+  .slider-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .slider-track {
+    flex: 1;
+    height: 4px;
+    background: var(--parchment);
+    border-radius: 2px;
+    position: relative;
+  }
+  .slider-fill {
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 4px;
+    width: 40%;
+    background: var(--terracotta);
+    border-radius: 2px;
+  }
+  .slider-thumb {
+    position: absolute;
+    left: 40%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--white);
+    box-shadow: 0 1px 4px rgba(44,40,37,0.2);
+    cursor: pointer;
+  }
+  .slider-value {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--espresso);
+    white-space: nowrap;
+  }
+
+  .reset-btn {
+    background: none;
+    border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    color: var(--terracotta);
+    text-decoration: underline;
+    cursor: pointer;
+    margin-top: 24px;
+    padding: 0;
+  }
+
+  /* ─── CLASSEMENT ─── */
+  .classement {
+    background: var(--cream);
+    padding: 28px 32px;
+  }
+
+  .board-header {
+    background: var(--linen);
+    padding: 24px;
+    border-radius: 16px;
+    margin-bottom: 24px;
+    position: relative;
+    overflow: hidden;
+  }
+  .board-header::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent,
+      transparent 38px,
+      rgba(168,152,136,0.10) 38px,
+      rgba(168,152,136,0.10) 39px
+    );
+    pointer-events: none;
+  }
+
+  .board-title {
+    font-family: 'Zilla Slab', serif;
+    font-size: 24px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--espresso);
+    position: relative;
+  }
+
+  .toggle-segment {
+    display: inline-flex;
+    background: var(--parchment);
+    border-radius: 10px;
+    padding: 3px;
+    margin-top: 12px;
+    position: relative;
+  }
+  .toggle-segment-btn {
+    padding: 8px 20px;
+    border-radius: 8px;
+    border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    background: transparent;
+    color: var(--roast);
+  }
+  .toggle-segment-btn.active {
+    background: var(--terracotta);
+    color: var(--cream);
+  }
+
+  .results-count {
+    font-size: 13px;
+    color: var(--steam);
+    margin-top: 8px;
+    position: relative;
+  }
+
+  /* ─── CARDS ─── */
+  .card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 16px 20px;
+    margin-bottom: 12px;
+    box-shadow: 0 2px 8px rgba(44,40,37,0.05);
+    display: flex;
+    gap: 16px;
+    align-items: center;
+  }
+
+  .card-photo {
+    width: 88px;
+    height: 64px;
+    border-radius: 10px;
+    background: var(--parchment);
+    position: relative;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+  /* fake image patterns */
+  .card-photo::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%);
+  }
+  .card-photo.photo-1 { background: linear-gradient(135deg, #d4b896, #c9a97a); }
+  .card-photo.photo-2 { background: linear-gradient(135deg, #b8c4a8, #a3b593); }
+  .card-photo.photo-3 { background: linear-gradient(135deg, #a8b8c4, #93a3b5); }
+  .card-photo.photo-4 { background: linear-gradient(135deg, #c4b8a8, #b5a393); }
+
+  .badge-rank {
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    background: var(--terracotta);
+    color: var(--cream);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    padding: 2px 7px;
+    border-radius: 5px;
+    z-index: 2;
+  }
+
+  .card-info { flex: 1; min-width: 0; }
+
+  .card-line1 {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+  .card-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--espresso);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .card-distance {
+    font-size: 13px;
+    color: var(--steam);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    white-space: nowrap;
+    flex-shrink: 0;
+    margin-left: 12px;
+  }
+
+  .card-line2 {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+    flex-wrap: wrap;
+  }
+  .card-rating {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--terracotta);
+  }
+  .card-rating-label {
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .card-rating-label.excellent { color: var(--monstera); }
+  .card-rating-label.tresbien { color: var(--monstera); }
+  .card-rating-label.bien { color: var(--edison); }
+
+  .card-mini-chip {
+    background: var(--linen);
+    font-size: 11px;
+    color: var(--roast);
+    padding: 2px 8px;
+    border-radius: 8px;
+    white-space: nowrap;
+  }
+
+  .card-line3 {
+    font-size: 12px;
+    color: var(--steam);
+  }
+  .card-line3 .open { color: var(--monstera); font-weight: 500; }
+  .card-line3 .closed { color: #B85C3A; font-weight: 500; }
+
+  .card-bookmark {
+    flex-shrink: 0;
+    cursor: pointer;
+  }
+
+  /* ─── MINI CARTE ─── */
+  .mini-map {
+    background: #E8EEF4;
+    position: sticky;
+    top: 64px;
+    height: calc(100vh - 64px);
+    box-shadow: inset 4px 0 12px rgba(44,40,37,0.04);
+    overflow: hidden;
+  }
+
+  /* fake map blocks */
+  .map-block {
+    position: absolute;
+    background: #D8E2EC;
+    border-radius: 4px;
+  }
+
+  .map-marker {
+    position: absolute;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    color: var(--cream);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(196,98,42,0.3);
+    z-index: 10;
+    cursor: pointer;
+  }
+
+  /* fake streets */
+  .map-street {
+    position: absolute;
+    background: #F0F3F7;
+  }
+  .map-street-h {
+    height: 6px;
+    border-radius: 3px;
+  }
+  .map-street-v {
+    width: 6px;
+    border-radius: 3px;
+  }
+
+  /* river */
+  .map-river {
+    position: absolute;
+    background: #C8D8E8;
+    border-radius: 20px;
+    opacity: 0.6;
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header-wrap">
+  <header class="header">
+    <div class="logo">OùBosser</div>
+    <div class="search-bar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#A89888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="11" cy="11" r="8"/>
+        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+      </svg>
+      <input type="text" placeholder="Rechercher une ville, un quartier...">
+    </div>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="#" class="active">Classement</a></li>
+        <li><a href="#">Carte</a></li>
+        <li><a href="#">Saved</a></li>
+        <li><a href="#">Profil</a></li>
+      </ul>
+    </nav>
+  </header>
+</div>
+
+<!-- BODY -->
+<div class="main-wrap">
+  <div class="body-grid">
+
+    <!-- SIDEBAR FILTRES -->
+    <aside class="sidebar">
+      <div class="sidebar-title">Filtres</div>
+
+      <!-- Type de lieu -->
+      <div class="filter-label">Type de lieu</div>
+      <div class="chips-grid">
+        <div class="chip active">&#9749; Café</div>
+        <div class="chip">&#128218; Biblio</div>
+        <div class="chip">&#127970; Cowork</div>
+        <div class="chip">&#127968; Tiers-lieu</div>
+      </div>
+
+      <div class="separator"></div>
+
+      <!-- Critères -->
+      <div class="filter-label">Critères</div>
+      <div class="toggle-row">
+        <label>Bon WiFi</label>
+        <div class="toggle-track active"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="toggle-row">
+        <label>Calme</label>
+        <div class="toggle-track"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="toggle-row">
+        <label>Prises disponibles</label>
+        <div class="toggle-track"><div class="toggle-knob"></div></div>
+      </div>
+      <div class="toggle-row">
+        <label>Restauration</label>
+        <div class="toggle-track"><div class="toggle-knob"></div></div>
+      </div>
+
+      <div class="separator"></div>
+
+      <!-- Accès -->
+      <div class="filter-label">Accès</div>
+      <div class="radio-group">
+        <div class="radio-row">
+          <div class="radio-circle"></div>
+          <span class="radio-label">Tous</span>
+        </div>
+        <div class="radio-row">
+          <div class="radio-circle selected"></div>
+          <span class="radio-label">Gratuit</span>
+        </div>
+        <div class="radio-row">
+          <div class="radio-circle"></div>
+          <span class="radio-label">Payant</span>
+        </div>
+      </div>
+
+      <div class="separator"></div>
+
+      <!-- Ouvert maintenant -->
+      <div class="filter-label">Ouvert maintenant</div>
+      <div class="toggle-row">
+        <label></label>
+        <div class="toggle-track"><div class="toggle-knob"></div></div>
+      </div>
+
+      <div class="separator"></div>
+
+      <!-- Distance max -->
+      <div class="filter-label">Distance max</div>
+      <div class="slider-row">
+        <div class="slider-track">
+          <div class="slider-fill"></div>
+          <div class="slider-thumb"></div>
+        </div>
+        <span class="slider-value">2 km</span>
+      </div>
+
+      <button class="reset-btn">Réinitialiser les filtres</button>
+    </aside>
+
+    <!-- CLASSEMENT -->
+    <main class="classement">
+      <div class="board-header">
+        <div class="board-title">Où bosser à Paris</div>
+        <div class="toggle-segment">
+          <button class="toggle-segment-btn active">Classement</button>
+          <button class="toggle-segment-btn">Carte</button>
+        </div>
+        <div class="results-count">127 lieux trouvés</div>
+      </div>
+
+      <!-- Card 1 -->
+      <div class="card">
+        <div class="card-photo photo-1">
+          <span class="badge-rank">#1</span>
+        </div>
+        <div class="card-info">
+          <div class="card-line1">
+            <span class="card-name">L'Anticafé Beaubourg</span>
+            <span class="card-distance">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A89888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 C4 20 8 4 12 4 C16 4 20 20 20 20"/><circle cx="8" cy="16" r="2"/><circle cx="16" cy="16" r="2"/></svg>
+              350m
+            </span>
+          </div>
+          <div class="card-line2">
+            <span class="card-rating">&#9733; 4.6</span>
+            <span class="card-rating-label excellent">Excellent</span>
+            <span class="card-mini-chip">Bon WiFi</span>
+            <span class="card-mini-chip">Prises</span>
+            <span class="card-mini-chip">Resto</span>
+          </div>
+          <div class="card-line3">Café · <span class="open">Ouvert</span></div>
+        </div>
+        <div class="card-bookmark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A89888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card">
+        <div class="card-photo photo-2">
+          <span class="badge-rank">#2</span>
+        </div>
+        <div class="card-info">
+          <div class="card-line1">
+            <span class="card-name">Bibliothèque Sainte-Geneviève</span>
+            <span class="card-distance">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A89888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 C4 20 8 4 12 4 C16 4 20 20 20 20"/><circle cx="8" cy="16" r="2"/><circle cx="16" cy="16" r="2"/></svg>
+              800m
+            </span>
+          </div>
+          <div class="card-line2">
+            <span class="card-rating">&#9733; 4.5</span>
+            <span class="card-rating-label tresbien">Très bien</span>
+            <span class="card-mini-chip">WiFi</span>
+            <span class="card-mini-chip">Très calme</span>
+            <span class="card-mini-chip">Gratuit</span>
+          </div>
+          <div class="card-line3">Bibliothèque · <span class="open">Ouvert</span></div>
+        </div>
+        <div class="card-bookmark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A89888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card">
+        <div class="card-photo photo-3">
+          <span class="badge-rank">#3</span>
+        </div>
+        <div class="card-info">
+          <div class="card-line1">
+            <span class="card-name">The Hub Canal Saint-Martin</span>
+            <span class="card-distance">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A89888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 C4 20 8 4 12 4 C16 4 20 20 20 20"/><circle cx="8" cy="16" r="2"/><circle cx="16" cy="16" r="2"/></svg>
+              1.2km
+            </span>
+          </div>
+          <div class="card-line2">
+            <span class="card-rating">&#9733; 4.2</span>
+            <span class="card-rating-label bien">Bien</span>
+            <span class="card-mini-chip">WiFi</span>
+            <span class="card-mini-chip">Prises</span>
+            <span class="card-mini-chip">Coworking</span>
+          </div>
+          <div class="card-line3">Coworking · <span class="open">Ouvert</span></div>
+        </div>
+        <div class="card-bookmark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A89888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="card">
+        <div class="card-photo photo-4">
+          <span class="badge-rank">#4</span>
+        </div>
+        <div class="card-info">
+          <div class="card-line1">
+            <span class="card-name">Café Craft Oberkampf</span>
+            <span class="card-distance">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#A89888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20 C4 20 8 4 12 4 C16 4 20 20 20 20"/><circle cx="8" cy="16" r="2"/><circle cx="16" cy="16" r="2"/></svg>
+              1.5km
+            </span>
+          </div>
+          <div class="card-line2">
+            <span class="card-rating">&#9733; 4.1</span>
+            <span class="card-rating-label bien">Bien</span>
+            <span class="card-mini-chip">Bon WiFi</span>
+            <span class="card-mini-chip">Resto</span>
+          </div>
+          <div class="card-line3">Café · <span class="closed">Fermé</span></div>
+        </div>
+        <div class="card-bookmark">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A89888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg>
+        </div>
+      </div>
+
+    </main>
+
+    <!-- MINI CARTE -->
+    <div class="mini-map">
+      <!-- Fake map blocks (buildings) -->
+      <div class="map-block" style="top:40px;left:30px;width:80px;height:50px;"></div>
+      <div class="map-block" style="top:40px;left:140px;width:120px;height:40px;"></div>
+      <div class="map-block" style="top:40px;left:290px;width:90px;height:55px;"></div>
+      <div class="map-block" style="top:130px;left:20px;width:100px;height:70px;"></div>
+      <div class="map-block" style="top:130px;left:160px;width:70px;height:60px;"></div>
+      <div class="map-block" style="top:130px;left:270px;width:110px;height:50px;"></div>
+      <div class="map-block" style="top:240px;left:40px;width:130px;height:45px;"></div>
+      <div class="map-block" style="top:240px;left:210px;width:80px;height:65px;"></div>
+      <div class="map-block" style="top:240px;left:320px;width:70px;height:40px;"></div>
+      <div class="map-block" style="top:340px;left:10px;width:90px;height:55px;"></div>
+      <div class="map-block" style="top:340px;left:140px;width:110px;height:50px;"></div>
+      <div class="map-block" style="top:340px;left:290px;width:100px;height:60px;"></div>
+      <div class="map-block" style="top:440px;left:50px;width:70px;height:45px;"></div>
+      <div class="map-block" style="top:440px;left:160px;width:120px;height:55px;"></div>
+      <div class="map-block" style="top:440px;left:310px;width:80px;height:40px;"></div>
+      <div class="map-block" style="top:530px;left:20px;width:110px;height:50px;"></div>
+      <div class="map-block" style="top:530px;left:180px;width:90px;height:60px;"></div>
+      <div class="map-block" style="top:530px;left:300px;width:100px;height:45px;"></div>
+
+      <!-- Fake streets -->
+      <div class="map-street map-street-h" style="top:100px;left:0;width:420px;"></div>
+      <div class="map-street map-street-h" style="top:215px;left:0;width:420px;"></div>
+      <div class="map-street map-street-h" style="top:320px;left:0;width:420px;"></div>
+      <div class="map-street map-street-h" style="top:420px;left:0;width:420px;"></div>
+      <div class="map-street map-street-h" style="top:510px;left:0;width:420px;"></div>
+      <div class="map-street map-street-v" style="top:0;left:130px;height:100%;"></div>
+      <div class="map-street map-street-v" style="top:0;left:260px;height:100%;"></div>
+
+      <!-- River -->
+      <div class="map-river" style="top:600px;left:-20px;width:460px;height:24px;transform:rotate(-4deg);"></div>
+
+      <!-- Markers -->
+      <div class="map-marker" style="top:160px;left:90px;">#1</div>
+      <div class="map-marker" style="top:80px;left:280px;">#2</div>
+      <div class="map-marker" style="top:290px;left:200px;">#3</div>
+      <div class="map-marker" style="top:400px;left:100px;">#4</div>
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>

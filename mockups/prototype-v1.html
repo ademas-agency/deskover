@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deskover &mdash; Prototype</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  :root {
+    --terracotta:#AA4C4D; --cream:#FAF7F2; --linen:#F3EDE4; --parchment:#E8DFD0;
+    --espresso:#2C2825; --roast:#6B5B4E; --steam:#A89888; --monstera:#5B7A5E;
+    --edison:#D4A84B;
+  }
+  body { background:#111111; font-family:'Plus Jakarta Sans',sans-serif; display:flex; justify-content:center; min-height:100vh; }
+  .phone { width:390px; min-height:100vh; position:relative; overflow-x:hidden; }
+  .screen-content { display:none; opacity:0; transition:opacity .2s ease; }
+  .screen-content.active { display:block; opacity:1; }
+
+  /* Modal overlays */
+  .modal-overlay { position:fixed; top:0; left:50%; transform:translateX(-50%); width:390px; height:100%; z-index:100; display:none; opacity:0; transition:opacity .2s ease; }
+  .modal-overlay.active { display:flex; opacity:1; flex-direction:column; justify-content:flex-end; }
+  .modal-bg { position:absolute; inset:0; background:rgba(0,0,0,.5); }
+  .modal-sheet { position:relative; z-index:1; background:white; border-radius:24px 24px 0 0; transform:translateY(20px); transition:transform .3s ease-out; max-height:85vh; overflow-y:auto; }
+  .modal-overlay.active .modal-sheet { transform:translateY(0); }
+  .modal-handle { width:40px; height:4px; background:var(--parchment); border-radius:2px; margin:12px auto 0; }
+
+  /* Typography */
+  .font-anton { font-family:'Anton',sans-serif; }
+  .font-mono { font-family:'JetBrains Mono',monospace; }
+
+  /* Animations */
+  @keyframes heroZoom { 0%{transform:scale(1)} 100%{transform:scale(1.15)} }
+  @keyframes fadeInUp { from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+  .anim-fade-up { animation:fadeInUp .5s ease both; }
+  .anim-fade-up-1 { animation-delay:.1s; }
+  .anim-fade-up-2 { animation-delay:.2s; }
+  .anim-fade-up-3 { animation-delay:.3s; }
+  .anim-fade-up-4 { animation-delay:.4s; }
+
+  /* Scroll indicator */
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+
+  /* Chips */
+  .chip { display:inline-flex; align-items:center; gap:6px; padding:10px 18px; border-radius:40px; font-size:13px; font-weight:600; white-space:nowrap; cursor:pointer; transition:all .15s; border:1.5px solid var(--parchment); background:white; color:var(--espresso); }
+  .chip.active { background:var(--terracotta); color:white; border-color:var(--terracotta); }
+  .chip:hover { transform:translateY(-1px); }
+
+  /* Cards */
+  .spot-card { background:white; border-radius:18px; overflow:hidden; box-shadow:0 2px 12px rgba(44,40,37,.06); cursor:pointer; transition:transform .2s,box-shadow .2s; }
+  .spot-card:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(44,40,37,.1); }
+
+  /* Scrollbar hide */
+  .scroll-h { display:flex; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+  .scroll-h::-webkit-scrollbar { display:none; }
+
+  /* Vitals grid */
+  .vitals-grid { display:grid; grid-template-columns:repeat(4,1fr); background:var(--linen); border-radius:14px; padding:14px 0; }
+  .vital-col { display:flex; flex-direction:column; align-items:center; gap:3px; position:relative; }
+  .vital-col:not(:last-child)::after { content:''; position:absolute; right:0; top:10%; height:80%; width:1px; background:var(--parchment); }
+  .vital-label { font-size:9px; text-transform:uppercase; color:var(--steam); font-weight:600; letter-spacing:.04em; }
+  .vital-value { font-size:11px; font-weight:700; }
+
+  /* Toggle */
+  .toggle { width:44px; height:24px; border-radius:12px; background:var(--monstera); position:relative; cursor:pointer; transition:background .2s; }
+  .toggle .knob { width:20px; height:20px; border-radius:50%; background:white; position:absolute; top:2px; left:22px; transition:left .2s; box-shadow:0 1px 3px rgba(0,0,0,.15); }
+  .toggle.off { background:var(--parchment); }
+  .toggle.off .knob { left:2px; }
+
+  /* Buttons */
+  .btn { display:flex; align-items:center; justify-content:center; gap:8px; border:none; border-radius:14px; padding:14px 20px; font-family:'Plus Jakarta Sans',sans-serif; font-size:14px; font-weight:600; cursor:pointer; transition:transform .15s,box-shadow .15s; }
+  .btn:hover { transform:translateY(-1px); box-shadow:0 4px 12px rgba(0,0,0,.1); }
+  .btn-terracotta { background:var(--terracotta); color:var(--cream); }
+  .btn-espresso { background:var(--espresso); color:var(--cream); }
+  .btn-ghost { background:transparent; color:var(--terracotta); border:1.5px solid var(--terracotta); }
+
+  /* Contribution rating buttons */
+  .rate-btn { height:36px; padding:0 14px; border-radius:18px; border:none; font-family:'Plus Jakarta Sans',sans-serif; font-size:12px; font-weight:600; cursor:pointer; transition:all .15s; background:var(--linen); color:var(--roast); }
+  .rate-btn.selected { background:var(--monstera); color:white; }
+</style>
+</head>
+<body>
+<div class="phone">
+
+<!-- ======================= SCREEN 1: HOME ======================= -->
+<section id="home" class="screen-content active">
+
+  <!-- Hero -->
+  <div style="position:relative;height:85vh;overflow:hidden;">
+    <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=1200&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;animation:heroZoom 25s ease-in-out infinite alternate;">
+    <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.3) 0%,rgba(0,0,0,.1) 40%,rgba(0,0,0,.55) 100%);"></div>
+
+    <!-- Top bar -->
+    <div style="position:absolute;top:52px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;">
+      <span class="font-anton" style="color:var(--cream);font-size:18px;letter-spacing:.02em;">DESKOVER</span>
+      <div onclick="goTo('search')" style="cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:rgba(255,255,255,.15);backdrop-filter:blur(8px);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FAF7F2" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+    </div>
+
+    <!-- Hero text -->
+    <div style="position:absolute;bottom:60px;left:16px;right:16px;">
+      <div style="font-size:12px;text-transform:uppercase;letter-spacing:.12em;color:var(--steam);margin-bottom:8px;">Paris</div>
+      <div class="font-anton" style="font-size:44px;line-height:1;color:var(--cream);">LES MEILLEURS<br>SPOTS POUR<br>BOSSER</div>
+      <div style="font-style:italic;color:var(--steam);font-size:14px;margin-top:10px;">S&eacute;lection Deskover</div>
+    </div>
+
+    <!-- Scroll indicator -->
+    <div style="position:absolute;bottom:16px;left:50%;transform:translateX(-50%);animation:bounce 2s infinite;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#A89888" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+    </div>
+  </div>
+
+  <!-- Classement section -->
+  <div style="background:var(--cream);border-radius:24px 24px 0 0;margin-top:-24px;position:relative;z-index:2;padding-bottom:20px;">
+
+    <!-- Filtres -->
+    <div style="padding:20px 16px 0;">
+      <div class="scroll-h" style="gap:8px;">
+        <div class="chip active">&#9749; Caf&eacute;s</div>
+        <div class="chip">&#128218; Biblioth&egrave;ques</div>
+        <div class="chip">&#128187; Coworking</div>
+        <div class="chip">&#128246; Bon WiFi</div>
+        <div class="chip">&#128264; Calme</div>
+        <div class="chip">&#127860; Food</div>
+      </div>
+    </div>
+
+    <!-- VU DANS -->
+    <div style="padding:16px 16px 0;">
+      <div style="font-size:10px;text-transform:uppercase;letter-spacing:.1em;color:var(--steam);font-weight:600;margin-bottom:10px;">VU DANS</div>
+      <div class="scroll-h" style="gap:10px;">
+        <div style="background:white;border-radius:12px;padding:12px 14px;min-width:200px;flex-shrink:0;">
+          <div style="font-size:10px;color:var(--terracotta);font-weight:700;text-transform:uppercase;">LE BONBON</div>
+          <div style="font-size:13px;color:var(--espresso);font-weight:600;margin-top:4px;">Top 10 caf&eacute;s WiFi &agrave; Paris</div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:12px 14px;min-width:200px;flex-shrink:0;">
+          <div style="font-size:10px;color:var(--terracotta);font-weight:700;text-transform:uppercase;">TIME OUT</div>
+          <div style="font-size:13px;color:var(--espresso);font-weight:600;margin-top:4px;">Les meilleurs coworkings</div>
+        </div>
+        <div style="background:white;border-radius:12px;padding:12px 14px;min-width:200px;flex-shrink:0;">
+          <div style="font-size:10px;color:var(--terracotta);font-weight:700;text-transform:uppercase;">KONBINI</div>
+          <div style="font-size:13px;color:var(--espresso);font-weight:600;margin-top:4px;">O&ugrave; bosser &agrave; Paris ?</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Titre section -->
+    <div style="padding:20px 16px 0;display:flex;align-items:baseline;gap:8px;">
+      <span class="font-anton" style="font-size:20px;color:var(--espresso);">NOS COUPS DE C&OElig;UR</span>
+      <span style="font-size:13px;color:var(--steam);">pr&egrave;s de toi</span>
+    </div>
+
+    <!-- Card 1 -->
+    <div style="padding:14px 16px 0;">
+      <div class="spot-card anim-fade-up anim-fade-up-1" onclick="goTo('lieu')">
+        <div style="position:relative;height:180px;overflow:hidden;">
+          <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;">
+          <!-- Tag number one -->
+          <div style="position:absolute;bottom:12px;left:12px;display:flex;align-items:center;gap:4px;background:var(--terracotta);color:white;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:700;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z"/><rect x="5" y="18" width="14" height="2" rx="1"/></svg>
+            Number one
+          </div>
+          <!-- Badge ouvert -->
+          <div style="position:absolute;top:12px;right:12px;background:rgba(91,122,94,.92);color:white;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;">Ouvert</div>
+        </div>
+        <div style="padding:14px 14px 4px;">
+          <div class="font-anton" style="font-size:16px;color:var(--espresso);">L&rsquo;ANTICAF&Eacute; BEAUBOURG</div>
+          <div style="font-size:12px;color:var(--steam);margin-top:2px;">Caf&eacute; &middot; Beaubourg Paris 3e &middot; 350m</div>
+        </div>
+        <div style="padding:6px 14px 14px;">
+          <div class="vitals-grid">
+            <div class="vital-col">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+              <span class="vital-label">WiFi</span>
+              <span class="vital-value" style="color:var(--monstera);">Rapide</span>
+            </div>
+            <div class="vital-col">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><line x1="12" y1="17" x2="12" y2="11"/><line x1="8" y1="17" x2="8" y2="13"/><line x1="16" y1="17" x2="16" y2="13"/><line x1="6" y1="3" x2="6" y2="7"/><line x1="18" y1="3" x2="18" y2="7"/></svg>
+              <span class="vital-label">Prises</span>
+              <span class="vital-value" style="color:var(--monstera);">Partout</span>
+            </div>
+            <div class="vital-col">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+              <span class="vital-label">Food</span>
+              <span class="vital-value" style="color:var(--monstera);">Complet</span>
+            </div>
+            <div class="vital-col">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              <span class="vital-label">Style</span>
+              <span class="vital-value" style="color:var(--monstera);">Canon</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2 -->
+    <div style="padding:14px 16px 0;">
+      <div class="spot-card anim-fade-up anim-fade-up-2" onclick="goTo('lieu')">
+        <div style="position:relative;height:180px;overflow:hidden;">
+          <img src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?w=800&h=600&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;">
+          <div style="position:absolute;bottom:12px;left:12px;display:flex;align-items:center;gap:4px;background:var(--espresso);color:var(--cream);padding:5px 10px;border-radius:8px;font-size:11px;font-weight:700;">
+            &#10084;&#65039; Coup de c&oelig;ur
+          </div>
+          <div style="position:absolute;top:12px;right:12px;background:rgba(91,122,94,.92);color:white;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;">Ouvert</div>
+        </div>
+        <div style="padding:14px 14px 4px;">
+          <div class="font-anton" style="font-size:16px;color:var(--espresso);">BIBLIOTH&Egrave;QUE SAINTE-GENEVI&Egrave;VE</div>
+          <div style="font-size:12px;color:var(--steam);margin-top:2px;">Biblioth&egrave;que &middot; Quartier Latin Paris 5e &middot; 800m</div>
+        </div>
+        <div style="padding:6px 14px 14px;">
+          <div class="vitals-grid">
+            <div class="vital-col">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+              <span class="vital-label">WiFi</span>
+              <span class="vital-value" style="color:var(--monstera);">Bon</span>
+            </div>
+            <div class="vital-col">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--edison)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><line x1="12" y1="17" x2="12" y2="11"/><line x1="8" y1="17" x2="8" y2="13"/><line x1="16" y1="17" x2="16" y2="13"/><line x1="6" y1="3" x2="6" y2="7"/><line x1="18" y1="3" x2="18" y2="7"/></svg>
+              <span class="vital-label">Prises</span>
+              <span class="vital-value" style="color:var(--edison);">Rares</span>
+            </div>
+            <div class="vital-col">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+              <span class="vital-label">Food</span>
+              <span class="vital-value" style="color:var(--steam);">&mdash;</span>
+            </div>
+            <div class="vital-col">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              <span class="vital-label">Style</span>
+              <span class="vital-value" style="color:var(--monstera);">Superbe</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 3 -->
+    <div style="padding:14px 16px 0;">
+      <div class="spot-card anim-fade-up anim-fade-up-3" onclick="goTo('lieu')">
+        <div style="position:relative;height:180px;overflow:hidden;">
+          <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=800&h=600&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;">
+          <div style="position:absolute;top:12px;right:12px;background:rgba(91,122,94,.92);color:white;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;">Ouvert</div>
+        </div>
+        <div style="padding:14px 14px 4px;">
+          <div class="font-anton" style="font-size:16px;color:var(--espresso);">THE HUB CANAL SAINT-MARTIN</div>
+          <div style="font-size:12px;color:var(--steam);margin-top:2px;">Coworking &middot; Canal St-Martin Paris 10e &middot; 1.2km</div>
+        </div>
+        <div style="padding:6px 14px 14px;">
+          <div class="vitals-grid">
+            <div class="vital-col">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+              <span class="vital-label">WiFi</span>
+              <span class="vital-value" style="color:var(--monstera);">Rapide</span>
+            </div>
+            <div class="vital-col">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><line x1="12" y1="17" x2="12" y2="11"/><line x1="8" y1="17" x2="8" y2="13"/><line x1="16" y1="17" x2="16" y2="13"/><line x1="6" y1="3" x2="6" y2="7"/><line x1="18" y1="3" x2="18" y2="7"/></svg>
+              <span class="vital-label">Prises</span>
+              <span class="vital-value" style="color:var(--monstera);">Partout</span>
+            </div>
+            <div class="vital-col">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--edison)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+              <span class="vital-label">Food</span>
+              <span class="vital-value" style="color:var(--edison);">Snacks</span>
+            </div>
+            <div class="vital-col">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--edison)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              <span class="vital-label">Style</span>
+              <span class="vital-value" style="color:var(--edison);">Sympa</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 4 -->
+    <div style="padding:14px 16px 0;">
+      <div class="spot-card anim-fade-up anim-fade-up-4" onclick="goTo('lieu')">
+        <div style="position:relative;height:180px;overflow:hidden;">
+          <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=800&h=600&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;">
+          <div style="position:absolute;top:12px;right:12px;background:rgba(170,76,77,.92);color:white;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;">Ferm&eacute;</div>
+        </div>
+        <div style="padding:14px 14px 4px;">
+          <div class="font-anton" style="font-size:16px;color:var(--espresso);">CAF&Eacute; CRAFT OBERKAMPF</div>
+          <div style="font-size:12px;color:var(--steam);margin-top:2px;">Caf&eacute; &middot; Oberkampf Paris 11e &middot; 1.5km</div>
+        </div>
+        <div style="padding:6px 14px 14px;">
+          <div class="vitals-grid">
+            <div class="vital-col">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+              <span class="vital-label">WiFi</span>
+              <span class="vital-value" style="color:var(--monstera);">Rapide</span>
+            </div>
+            <div class="vital-col">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><line x1="12" y1="17" x2="12" y2="11"/><line x1="8" y1="17" x2="8" y2="13"/><line x1="16" y1="17" x2="16" y2="13"/><line x1="6" y1="3" x2="6" y2="7"/><line x1="18" y1="3" x2="18" y2="7"/></svg>
+              <span class="vital-label">Prises</span>
+              <span class="vital-value" style="color:var(--monstera);">Partout</span>
+            </div>
+            <div class="vital-col">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+              <span class="vital-label">Food</span>
+              <span class="vital-value" style="color:var(--monstera);">Complet</span>
+            </div>
+            <div class="vital-col">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+              <span class="vital-label">Style</span>
+              <span class="vital-value" style="color:var(--monstera);">Canon</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation bas -->
+    <div style="padding:20px 16px 40px;display:flex;gap:10px;">
+      <button class="btn btn-espresso" style="flex:1;" onclick="goTo('carte')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>
+        Voir la carte
+      </button>
+      <button class="btn btn-terracotta" style="flex:1;" onclick="goTo('search')">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Rechercher
+      </button>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ======================= SCREEN 2: SEARCH ======================= -->
+<section id="search" class="screen-content">
+  <div style="background:var(--cream);min-height:100vh;padding-bottom:200px;">
+
+    <!-- Header -->
+    <div style="padding:52px 16px 0;display:flex;justify-content:space-between;align-items:center;">
+      <div onclick="goTo('home')" style="cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--espresso)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      </div>
+      <div onclick="goTo('home')" style="cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+    </div>
+
+    <!-- Search bar -->
+    <div style="margin:20px 16px 0;position:relative;">
+      <div style="position:absolute;left:18px;top:50%;transform:translateY(-50%);">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </div>
+      <div style="background:white;border-radius:16px;padding:16px 20px 16px 50px;box-shadow:0 2px 12px rgba(44,40,37,.06);font-size:15px;color:var(--espresso);font-weight:500;">Paris 11e</div>
+    </div>
+
+    <!-- Ce qui compte pour toi -->
+    <div style="margin:28px 16px 0;">
+      <div class="font-anton" style="font-size:18px;text-transform:uppercase;color:var(--espresso);">CE QUI COMPTE POUR TOI</div>
+      <div style="font-size:13px;color:var(--steam);margin-top:4px;">S&eacute;lectionne tes crit&egrave;res</div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px;">
+        <!-- WiFi selected -->
+        <div style="background:#FFF0EF;border-radius:16px;padding:16px;box-shadow:0 1px 6px rgba(44,40,37,.04);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;height:110px;cursor:pointer;">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--terracotta)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+          <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--terracotta);">WiFi</span>
+          <span style="font-size:12px;color:var(--terracotta);font-weight:500;">Important</span>
+        </div>
+        <!-- Prises selected -->
+        <div style="background:#FFF0EF;border-radius:16px;padding:16px;box-shadow:0 1px 6px rgba(44,40,37,.04);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;height:110px;cursor:pointer;">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--terracotta)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><line x1="12" y1="17" x2="12" y2="11"/><line x1="8" y1="17" x2="8" y2="13"/><line x1="16" y1="17" x2="16" y2="13"/><line x1="6" y1="3" x2="6" y2="7"/><line x1="18" y1="3" x2="18" y2="7"/></svg>
+          <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--terracotta);">Prises</span>
+          <span style="font-size:12px;color:var(--terracotta);font-weight:500;">Important</span>
+        </div>
+        <!-- Food not selected -->
+        <div style="background:white;border-radius:16px;padding:16px;box-shadow:0 1px 6px rgba(44,40,37,.04);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;height:110px;cursor:pointer;">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+          <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--steam);">Food</span>
+          <span style="font-size:12px;color:var(--steam);font-weight:500;">Indiff&eacute;rent</span>
+        </div>
+        <!-- Style not selected -->
+        <div style="background:white;border-radius:16px;padding:16px;box-shadow:0 1px 6px rgba(44,40,37,.04);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;height:110px;cursor:pointer;">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--steam);">Style</span>
+          <span style="font-size:12px;color:var(--steam);font-weight:500;">Indiff&eacute;rent</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Type de lieu -->
+    <div style="margin:24px 16px 0;">
+      <div class="font-anton" style="font-size:18px;text-transform:uppercase;color:var(--espresso);">TYPE DE LIEU</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
+        <div class="chip active">Tout</div>
+        <div class="chip">Caf&eacute;</div>
+        <div class="chip">Biblioth&egrave;que</div>
+        <div class="chip">Coworking</div>
+        <div class="chip">Tiers-lieu</div>
+      </div>
+    </div>
+
+    <!-- Acc&egrave;s -->
+    <div style="margin:20px 16px 0;">
+      <div class="font-anton" style="font-size:18px;text-transform:uppercase;color:var(--espresso);">ACC&Egrave;S</div>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:12px;">
+        <div class="chip active">Tous</div>
+        <div class="chip">Gratuit</div>
+        <div class="chip">Payant</div>
+      </div>
+    </div>
+
+    <!-- Ouvert -->
+    <div style="margin:20px 16px 0;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:15px;color:var(--espresso);font-weight:500;">Ouvert maintenant</span>
+        <div class="toggle" onclick="this.classList.toggle('off')">
+          <div class="knob"></div>
+        </div>
+      </div>
+      <!-- Ou choisir un horaire -->
+      <div style="margin-top:12px;">
+        <span style="font-size:13px;color:var(--terracotta);font-weight:500;cursor:pointer;">Choisir un autre horaire &rarr;</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA fixed -->
+  <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:390px;padding:16px 16px calc(16px + 20px);background:var(--cream);z-index:50;">
+    <button class="btn btn-terracotta" style="width:100%;font-family:'Anton',sans-serif;font-size:16px;text-transform:uppercase;padding:16px;" onclick="goTo('home')">VOIR 127 LIEUX</button>
+  </div>
+</section>
+
+
+<!-- ======================= SCREEN 3: FICHE LIEU ======================= -->
+<section id="lieu" class="screen-content">
+  <div style="background:var(--cream);min-height:100vh;padding-bottom:100px;">
+
+    <!-- Photo hero -->
+    <div style="position:relative;height:260px;overflow:hidden;border-radius:0 0 24px 24px;">
+      <img src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop" alt="" style="width:100%;height:100%;object-fit:cover;">
+      <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35) 0%,transparent 40%);"></div>
+
+      <!-- Header overlay -->
+      <div style="position:absolute;top:52px;left:16px;right:16px;display:flex;justify-content:space-between;align-items:center;">
+        <div onclick="goTo('home')" style="cursor:pointer;width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+          </div>
+          <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,.2);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;cursor:pointer;">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Badges bas photo -->
+      <div style="position:absolute;bottom:16px;left:16px;display:flex;gap:8px;align-items:center;">
+        <div style="display:flex;align-items:center;gap:4px;background:var(--terracotta);color:white;padding:5px 10px;border-radius:8px;font-size:11px;font-weight:700;">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5z"/><rect x="5" y="18" width="14" height="2" rx="1"/></svg>
+          Number one
+        </div>
+        <div style="background:rgba(91,122,94,.92);color:white;font-size:11px;font-weight:700;padding:5px 10px;border-radius:8px;">Ouvert</div>
+      </div>
+    </div>
+
+    <!-- Infos -->
+    <div style="padding:20px 16px 0;">
+      <div class="font-anton" style="font-size:22px;color:var(--espresso);">L&rsquo;ANTICAF&Eacute; BEAUBOURG</div>
+      <div style="font-size:13px;color:var(--steam);margin-top:4px;">Caf&eacute; &middot; 42 Rue de Rivoli, Paris 3e</div>
+      <div style="display:inline-flex;align-items:center;gap:6px;background:var(--linen);padding:4px 12px;border-radius:8px;margin-top:8px;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--roast)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16c0 2 2 4 6 4s8-2 8-4"/><path d="M4 12c0 2 2 4 6 4s8-2 8-4"/><path d="M4 8c0 2 2 4 6 4s8-2 8-4"/><ellipse cx="10" cy="4" rx="8" ry="4"/></svg>
+        <span style="font-size:12px;color:var(--roast);font-weight:500;">350m &middot; 5 min</span>
+      </div>
+    </div>
+
+    <!-- Bouton itin&eacute;raire -->
+    <div style="margin:14px 16px 0;">
+      <button class="btn btn-espresso" style="width:100%;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="3 11 22 2 13 21 11 13 3 11"/></svg>
+        Itin&eacute;raire
+      </button>
+    </div>
+
+    <!-- Vitals -->
+    <div style="margin:18px 16px 0;">
+      <div class="font-anton" style="font-size:13px;color:var(--steam);text-transform:uppercase;letter-spacing:.1em;margin-bottom:10px;">LES VITALS</div>
+      <div style="background:var(--linen);border-radius:16px;padding:16px 0;">
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);">
+          <div class="vital-col">
+            <div style="display:flex;align-items:center;gap:2px;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+              <span onclick="goTo('speedtest')" style="cursor:pointer;display:flex;">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+              </span>
+            </div>
+            <span class="vital-label">WiFi</span>
+            <span class="vital-value" style="color:var(--monstera);font-size:12px;">Rapide</span>
+          </div>
+          <div class="vital-col">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><line x1="12" y1="17" x2="12" y2="11"/><line x1="8" y1="17" x2="8" y2="13"/><line x1="16" y1="17" x2="16" y2="13"/><line x1="6" y1="3" x2="6" y2="7"/><line x1="18" y1="3" x2="18" y2="7"/></svg>
+            <span class="vital-label">Prises</span>
+            <span class="vital-value" style="color:var(--monstera);font-size:12px;">Partout</span>
+          </div>
+          <div class="vital-col">
+            <div style="display:flex;align-items:center;gap:2px;">
+              <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </div>
+            <span class="vital-label">Food</span>
+            <span class="vital-value" style="color:var(--monstera);font-size:12px;">Complet</span>
+          </div>
+          <div class="vital-col">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+            <span class="vital-label">Style</span>
+            <span class="vital-value" style="color:var(--monstera);font-size:12px;">Canon</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Speed test -->
+    <div style="margin:16px 16px 0;background:white;border-radius:16px;padding:16px;box-shadow:0 1px 6px rgba(44,40,37,.04);cursor:pointer;" onclick="goTo('speedtest')">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:11px;font-weight:700;text-transform:uppercase;color:var(--espresso);">SPEED TEST</span>
+        <span style="font-size:11px;color:var(--steam);">Mesur&eacute; il y a 2h</span>
+      </div>
+      <div class="font-mono" style="font-size:28px;font-weight:700;color:var(--terracotta);margin-top:6px;">45 Mbps</div>
+      <div class="font-mono" style="font-size:12px;color:var(--steam);margin-top:2px;">&darr; 45 &middot; &uarr; 12 &middot; 8ms</div>
+      <div style="height:4px;background:var(--parchment);border-radius:2px;margin-top:10px;overflow:hidden;">
+        <div style="width:85%;height:100%;background:var(--monstera);border-radius:2px;"></div>
+      </div>
+    </div>
+
+    <!-- Infos -->
+    <div style="margin:18px 16px 0;">
+      <div class="font-anton" style="font-size:13px;color:var(--steam);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px;">INFOS</div>
+
+      <div style="display:flex;flex-direction:column;gap:16px;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span style="font-size:14px;color:var(--espresso);">42 rue de Rivoli, Paris 3e</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span style="font-size:14px;"><span style="color:var(--monstera);font-weight:600;">Ouvert</span> <span style="color:var(--espresso);">&middot; Ferme &agrave; 19h00</span></span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6"/><circle cx="18" cy="16" r="6"/></svg>
+          <span style="font-size:14px;color:var(--espresso);">Consommation obligatoire &middot; &euro;&euro;</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="5"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+          <span style="font-size:14px;color:var(--terracotta);font-weight:500;cursor:pointer;">Voir sur Instagram &rarr;</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Vu dans -->
+    <div style="margin:24px 16px 0;">
+      <div class="font-anton" style="font-size:13px;color:var(--steam);text-transform:uppercase;letter-spacing:.1em;">VU DANS</div>
+      <div style="background:white;border-radius:14px;padding:14px;margin-top:10px;box-shadow:0 1px 6px rgba(44,40,37,.04);">
+        <div style="font-size:10px;color:var(--terracotta);font-weight:700;text-transform:uppercase;">LE BONBON</div>
+        <div style="font-size:14px;font-weight:600;color:var(--espresso);margin-top:4px;">Top 10 des caf&eacute;s WiFi &agrave; Paris</div>
+        <div style="font-size:12px;color:var(--terracotta);margin-top:6px;cursor:pointer;">Lire l&rsquo;article &rarr;</div>
+      </div>
+    </div>
+
+    <!-- S&eacute;parateur -->
+    <div style="text-align:center;color:var(--steam);margin:20px 0;font-size:16px;letter-spacing:8px;">&middot; &middot; &middot;</div>
+
+    <!-- Dans le coin -->
+    <div style="padding:0 16px;">
+      <div class="font-anton" style="font-size:13px;color:var(--steam);text-transform:uppercase;letter-spacing:.1em;">DANS LE COIN</div>
+    </div>
+    <div class="scroll-h" style="gap:12px;padding:10px 16px;margin-top:4px;">
+      <!-- Mini card 1 -->
+      <div style="min-width:180px;flex-shrink:0;background:white;border-radius:14px;overflow:hidden;box-shadow:0 1px 6px rgba(44,40,37,.04);cursor:pointer;" onclick="goTo('lieu')">
+        <img src="https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?w=400&h=300&fit=crop" alt="" style="width:100%;height:110px;object-fit:cover;">
+        <div style="padding:10px;">
+          <div class="font-anton" style="font-size:13px;color:var(--espresso);">CAF&Eacute; LOMI</div>
+          <div style="font-size:11px;color:var(--steam);margin-top:2px;">Caf&eacute; &middot; 600m</div>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><line x1="12" y1="17" x2="12" y2="11"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--edison)" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+        </div>
+      </div>
+      <!-- Mini card 2 -->
+      <div style="min-width:180px;flex-shrink:0;background:white;border-radius:14px;overflow:hidden;box-shadow:0 1px 6px rgba(44,40,37,.04);cursor:pointer;" onclick="goTo('lieu')">
+        <img src="https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=400&h=300&fit=crop" alt="" style="width:100%;height:110px;object-fit:cover;">
+        <div style="padding:10px;">
+          <div class="font-anton" style="font-size:13px;color:var(--espresso);">LE PELOTON</div>
+          <div style="font-size:11px;color:var(--steam);margin-top:2px;">Caf&eacute; &middot; 850m</div>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--edison)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><line x1="12" y1="17" x2="12" y2="11"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--edison)" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+        </div>
+      </div>
+      <!-- Mini card 3 -->
+      <div style="min-width:180px;flex-shrink:0;background:white;border-radius:14px;overflow:hidden;box-shadow:0 1px 6px rgba(44,40,37,.04);cursor:pointer;" onclick="goTo('lieu')">
+        <img src="https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=400&h=300&fit=crop" alt="" style="width:100%;height:110px;object-fit:cover;">
+        <div style="padding:10px;">
+          <div class="font-anton" style="font-size:13px;color:var(--espresso);">NUAGE CAF&Eacute;</div>
+          <div style="font-size:11px;color:var(--steam);margin-top:2px;">Caf&eacute; &middot; 1.1km</div>
+          <div style="display:flex;gap:8px;margin-top:8px;">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--edison)" stroke-width="2"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><line x1="12" y1="17" x2="12" y2="11"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="2"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="var(--monstera)" stroke-width="2"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 12l10 5 10-5"/></svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- CTA sticky -->
+  <div style="position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:390px;padding:12px 16px calc(12px + 20px);background:white;box-shadow:0 -4px 20px rgba(0,0,0,.06);z-index:50;">
+    <button class="btn btn-terracotta" style="width:100%;font-size:15px;font-weight:700;" onclick="goTo('contribution')">Donner mon avis</button>
+  </div>
+</section>
+
+
+<!-- ======================= SCREEN 4: CARTE ======================= -->
+<section id="carte" class="screen-content">
+  <div style="background:var(--cream);min-height:100vh;">
+
+    <!-- Header -->
+    <div style="padding:52px 16px 16px;display:flex;justify-content:space-between;align-items:center;">
+      <div onclick="goTo('home')" style="cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--espresso)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+      </div>
+      <span class="font-anton" style="font-size:16px;color:var(--espresso);">PARIS</span>
+      <div onclick="goTo('search')" style="cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--espresso)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/><circle cx="8" cy="6" r="2" fill="var(--espresso)"/><circle cx="16" cy="12" r="2" fill="var(--espresso)"/><circle cx="10" cy="18" r="2" fill="var(--espresso)"/></svg>
+      </div>
+    </div>
+
+    <!-- Filtres -->
+    <div style="padding:0 16px 12px;">
+      <div class="scroll-h" style="gap:8px;">
+        <div class="chip active">&#9749; Caf&eacute;s</div>
+        <div class="chip">&#128218; Biblioth&egrave;ques</div>
+        <div class="chip">&#128187; Coworking</div>
+        <div class="chip">&#128246; Bon WiFi</div>
+        <div class="chip">&#128264; Calme</div>
+      </div>
+    </div>
+
+    <!-- Fausse carte -->
+    <div style="margin:0 16px;height:65vh;background:#E8EEF4;border-radius:16px;position:relative;overflow:hidden;">
+      <!-- Rues -->
+      <div style="position:absolute;top:30%;left:0;right:0;height:2px;background:#D8E2EC;"></div>
+      <div style="position:absolute;top:55%;left:0;right:0;height:2px;background:#D8E2EC;"></div>
+      <div style="position:absolute;top:0;bottom:0;left:30%;width:2px;background:#D8E2EC;"></div>
+      <div style="position:absolute;top:0;bottom:0;left:65%;width:2px;background:#D8E2EC;"></div>
+      <div style="position:absolute;top:15%;left:10%;right:50%;height:3px;background:#D0DAE5;border-radius:1px;transform:rotate(-15deg);"></div>
+      <div style="position:absolute;top:70%;left:40%;right:10%;height:3px;background:#D0DAE5;border-radius:1px;transform:rotate(8deg);"></div>
+      <!-- Blocs -->
+      <div style="position:absolute;top:8%;left:8%;width:60px;height:50px;background:#DCE6F0;border-radius:4px;"></div>
+      <div style="position:absolute;top:38%;left:45%;width:80px;height:40px;background:#DCE6F0;border-radius:4px;"></div>
+      <div style="position:absolute;top:62%;left:12%;width:70px;height:55px;background:#DCE6F0;border-radius:4px;"></div>
+      <div style="position:absolute;top:18%;left:72%;width:55px;height:65px;background:#DCE6F0;border-radius:4px;"></div>
+
+      <!-- Markers -->
+      <div onclick="goTo('lieu')" style="cursor:pointer;position:absolute;top:22%;left:20%;width:36px;height:36px;border-radius:50%;background:var(--terracotta);color:white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(170,76,77,.4);font-size:13px;font-weight:700;">1</div>
+      <div onclick="goTo('lieu')" style="cursor:pointer;position:absolute;top:45%;left:55%;width:36px;height:36px;border-radius:50%;background:var(--terracotta);color:white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(170,76,77,.4);font-size:13px;font-weight:700;">2</div>
+      <div onclick="goTo('lieu')" style="cursor:pointer;position:absolute;top:68%;left:35%;width:36px;height:36px;border-radius:50%;background:var(--terracotta);color:white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(170,76,77,.4);font-size:13px;font-weight:700;">3</div>
+      <div onclick="goTo('lieu')" style="cursor:pointer;position:absolute;top:35%;left:78%;width:36px;height:36px;border-radius:50%;background:var(--terracotta);color:white;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(170,76,77,.4);font-size:13px;font-weight:700;">4</div>
+    </div>
+
+    <!-- Bas -->
+    <div style="padding:16px;text-align:center;">
+      <div style="font-size:13px;color:var(--steam);">4 lieux trouv&eacute;s</div>
+      <div onclick="goTo('home')" style="font-size:13px;color:var(--terracotta);margin-top:8px;cursor:pointer;font-weight:500;">Voir le classement &rarr;</div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ======================= SCREEN 5: CONTRIBUTION (Modal) ======================= -->
+<section id="contribution" class="screen-content modal-overlay">
+  <div class="modal-bg" onclick="goTo('lieu')"></div>
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+
+    <!-- Header -->
+    <div style="padding:16px 20px;display:flex;justify-content:space-between;align-items:center;">
+      <span class="font-anton" style="font-size:16px;color:var(--espresso);">L&rsquo;ANTICAF&Eacute; BEAUBOURG</span>
+      <div onclick="goTo('lieu')" style="cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+    </div>
+
+    <!-- Contenu -->
+    <div style="padding:0 20px;">
+
+      <!-- WiFi -->
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--linen);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+          <span style="font-size:15px;font-weight:600;color:var(--espresso);">WiFi</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="rate-btn">Faible</button>
+          <button class="rate-btn">Bon</button>
+          <button class="rate-btn selected">Rapide</button>
+        </div>
+      </div>
+
+      <!-- Prises -->
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--linen);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><line x1="12" y1="17" x2="12" y2="11"/><line x1="8" y1="17" x2="8" y2="13"/><line x1="16" y1="17" x2="16" y2="13"/><line x1="6" y1="3" x2="6" y2="7"/><line x1="18" y1="3" x2="18" y2="7"/></svg>
+          <span style="font-size:15px;font-weight:600;color:var(--espresso);">Prises</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="rate-btn">Peu</button>
+          <button class="rate-btn">Rares</button>
+          <button class="rate-btn selected">Partout</button>
+        </div>
+      </div>
+
+      <!-- Food -->
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;border-bottom:1px solid var(--linen);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8h1a4 4 0 0 1 0 8h-1"/><path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/><line x1="6" y1="1" x2="6" y2="4"/><line x1="10" y1="1" x2="10" y2="4"/><line x1="14" y1="1" x2="14" y2="4"/></svg>
+          <span style="font-size:15px;font-weight:600;color:var(--espresso);">Food</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="rate-btn">Non</button>
+          <button class="rate-btn">Snacks</button>
+          <button class="rate-btn selected">Complet</button>
+        </div>
+      </div>
+
+      <!-- Style -->
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:16px 0;">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          <span style="font-size:15px;font-weight:600;color:var(--espresso);">Style</span>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button class="rate-btn">Bof</button>
+          <button class="rate-btn">Sympa</button>
+          <button class="rate-btn selected">Canon</button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- CTA -->
+    <div style="margin:24px 20px 36px;">
+      <button class="btn btn-terracotta" style="width:100%;font-size:15px;font-weight:700;" onclick="sendContribution(this)">Envoyer</button>
+    </div>
+  </div>
+</section>
+
+
+<!-- ======================= SCREEN 6: SPEED TEST (Modal) ======================= -->
+<section id="speedtest" class="screen-content modal-overlay">
+  <div class="modal-bg" onclick="goTo('lieu')"></div>
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+
+    <!-- Header -->
+    <div style="padding:16px 20px;display:flex;justify-content:space-between;align-items:center;">
+      <span class="font-anton" style="font-size:16px;color:var(--espresso);">SPEED TEST WIFI</span>
+      <div onclick="goTo('lieu')" style="cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--steam)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </div>
+    </div>
+
+    <!-- Contenu centr&eacute; -->
+    <div style="padding:20px 20px 0;display:flex;flex-direction:column;align-items:center;">
+
+      <!-- Grand cercle -->
+      <div style="width:160px;height:160px;border-radius:50%;background:var(--linen);display:flex;flex-direction:column;align-items:center;justify-content:center;">
+        <span class="font-mono" style="font-size:48px;font-weight:700;color:var(--terracotta);line-height:1;">45</span>
+        <span class="font-mono" style="font-size:14px;color:var(--steam);margin-top:2px;">Mbps</span>
+      </div>
+
+      <!-- D&eacute;tails -->
+      <div class="font-mono" style="font-size:13px;color:var(--steam);margin-top:16px;">&darr; 45 Mbps &middot; &uarr; 12 Mbps &middot; Ping 8ms</div>
+
+      <!-- Qualit&eacute; -->
+      <div style="font-size:14px;font-weight:600;color:var(--monstera);margin-top:20px;">Excellent pour travailler</div>
+
+      <!-- Derni&egrave;re mesure -->
+      <div style="font-size:12px;color:var(--steam);margin-top:6px;">Derni&egrave;re mesure il y a 2h</div>
+
+      <!-- Boutons -->
+      <button class="btn btn-espresso" style="width:100%;margin-top:24px;">Lancer un test</button>
+      <button class="btn btn-ghost" style="width:100%;margin-top:12px;margin-bottom:36px;" onclick="goTo('lieu')">Fermer</button>
+
+    </div>
+  </div>
+</section>
+
+
+</div><!-- .phone -->
+
+<script>
+function goTo(id) {
+  // Close all screens
+  document.querySelectorAll('.screen-content').forEach(function(s) {
+    s.classList.remove('active');
+  });
+  // Open target
+  var target = document.getElementById(id);
+  if (target) {
+    target.classList.add('active');
+  }
+  window.scrollTo(0, 0);
+}
+
+function sendContribution(btn) {
+  var original = btn.innerHTML;
+  btn.innerHTML = '<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Envoy&eacute; !';
+  btn.style.background = 'var(--monstera)';
+  setTimeout(function() {
+    btn.innerHTML = original;
+    btn.style.background = '';
+    goTo('lieu');
+  }, 1200);
+}
+
+// Toggle interaction
+document.querySelectorAll('.toggle').forEach(function(t) {
+  t.addEventListener('click', function() {
+    this.classList.toggle('off');
+  });
+});
+
+// Rate button interaction
+document.querySelectorAll('.rate-btn').forEach(function(btn) {
+  btn.addEventListener('click', function() {
+    var siblings = this.parentElement.querySelectorAll('.rate-btn');
+    siblings.forEach(function(s) { s.classList.remove('selected'); });
+    this.classList.add('selected');
+  });
+});
+
+// Chip interaction
+document.querySelectorAll('.chip').forEach(function(chip) {
+  chip.addEventListener('click', function() {
+    var siblings = this.parentElement.querySelectorAll('.chip');
+    siblings.forEach(function(s) { s.classList.remove('active'); });
+    this.classList.add('active');
+  });
+});
+
+// Initialize home screen
+document.getElementById('home').classList.add('active');
+</script>
+
+</body>
+</html>

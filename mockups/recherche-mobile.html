@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Deskover &mdash; Recherche</title>
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body {
+    background: #111111;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    display: flex;
+    justify-content: center;
+  }
+  .screen {
+    width: 390px;
+    min-height: 100vh;
+    background: #FAF7F2;
+    position: relative;
+    padding-bottom: 100px;
+  }
+
+  /* Header */
+  .header {
+    padding: 52px 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .header-logo {
+    font-family: 'Anton', sans-serif;
+    font-size: 16px;
+    color: #2C2825;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+  }
+  .header-close {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background 0.2s;
+  }
+  .header-close:hover {
+    background: rgba(168,152,136,0.1);
+  }
+
+  /* Search bar */
+  .search-bar {
+    margin: 24px 16px 0;
+    position: relative;
+  }
+  .search-bar-icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #A89888;
+  }
+  .search-input {
+    width: 100%;
+    background: #fff;
+    border: none;
+    border-radius: 16px;
+    padding: 16px 20px 16px 50px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #2C2825;
+    box-shadow: 0 2px 8px rgba(44,40,37,0.06);
+    outline: none;
+  }
+  .search-input::placeholder {
+    color: #A89888;
+    font-weight: 400;
+  }
+
+  /* Section titles */
+  .section-label {
+    font-family: 'Anton', sans-serif;
+    font-size: 18px;
+    text-transform: uppercase;
+    color: #2C2825;
+    letter-spacing: 0.06em;
+  }
+  .section-hint {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    color: #A89888;
+    margin-top: 4px;
+  }
+
+  /* Criteres grid */
+  .criteria-section { margin: 32px 16px 0; }
+  .criteria-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .criteria-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    box-shadow: 0 2px 8px rgba(44,40,37,0.06);
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    min-height: 120px;
+  }
+  .criteria-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(44,40,37,0.1);
+  }
+  .criteria-card.selected {
+    background: #FFF0EF;
+  }
+  .criteria-name {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .criteria-state {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 12px;
+  }
+  .criteria-card.selected .criteria-name,
+  .criteria-card.selected .criteria-state {
+    color: #AA4C4D;
+  }
+  .criteria-card:not(.selected) .criteria-name,
+  .criteria-card:not(.selected) .criteria-state {
+    color: #A89888;
+  }
+  .criteria-card.selected .criteria-state { font-weight: 700; }
+
+  /* Chips section */
+  .chips-section { margin: 28px 16px 0; }
+  .chips-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+  }
+  .chip {
+    padding: 10px 18px;
+    border-radius: 20px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s ease;
+  }
+  .chip-active {
+    background: #AA4C4D;
+    color: #fff;
+    border: 1.5px solid #AA4C4D;
+  }
+  .chip-inactive {
+    background: #fff;
+    color: #6B5B4E;
+    border: 1.5px solid #E8DFD0;
+  }
+
+  /* Toggle section */
+  .toggle-section {
+    margin: 24px 16px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .toggle-label {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 500;
+    color: #2C2825;
+  }
+  .toggle-switch {
+    width: 44px;
+    height: 24px;
+    background: #AA4C4D;
+    border-radius: 12px;
+    position: relative;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  .toggle-knob {
+    width: 20px;
+    height: 20px;
+    background: #fff;
+    border-radius: 50%;
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    transition: transform 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  }
+
+  /* CTA fixed */
+  .cta-fixed {
+    position: fixed;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 390px;
+    padding: 16px 16px 36px;
+    background: #FAF7F2;
+    z-index: 100;
+  }
+  .cta-btn {
+    width: 100%;
+    padding: 16px;
+    border: none;
+    border-radius: 14px;
+    background: #AA4C4D;
+    color: #FAF7F2;
+    font-family: 'Anton', sans-serif;
+    font-size: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+  }
+  .cta-btn:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 14px rgba(170,76,77,0.3);
+  }
+
+  /* Animations */
+  .criteria-card, .chips-section, .toggle-section {
+    opacity: 0;
+    animation: fadeInUp 0.5s ease forwards;
+  }
+  .criteria-section { animation-delay: 0.1s; }
+  .criteria-card:nth-child(1) { animation-delay: 0.15s; }
+  .criteria-card:nth-child(2) { animation-delay: 0.2s; }
+  .criteria-card:nth-child(3) { animation-delay: 0.25s; }
+  .criteria-card:nth-child(4) { animation-delay: 0.3s; }
+  .chips-section:nth-of-type(1) { animation-delay: 0.35s; }
+  .chips-section:nth-of-type(2) { animation-delay: 0.4s; }
+  .toggle-section { animation-delay: 0.45s; }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body>
+<div class="screen">
+
+  <!-- Header -->
+  <div class="header">
+    <div class="header-logo">DESKOVER</div>
+    <div class="header-close">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A89888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6L6 18"/><path d="M6 6l12 12"/></svg>
+    </div>
+  </div>
+
+  <!-- Search bar -->
+  <div class="search-bar">
+    <div class="search-bar-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#A89888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+    </div>
+    <input class="search-input" type="text" value="Paris 11e" placeholder="Une ville, un quartier...">
+  </div>
+
+  <!-- CE QUI COMPTE POUR TOI -->
+  <div class="criteria-section">
+    <div class="section-label">Ce qui compte pour toi</div>
+    <div class="section-hint">S&eacute;lectionne tes crit&egrave;res</div>
+    <div class="criteria-grid">
+      <!-- WiFi - selected -->
+      <div class="criteria-card selected">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#AA4C4D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12.55a11 11 0 0 1 14.08 0"/><path d="M1.42 9a16 16 0 0 1 21.16 0"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><circle cx="12" cy="20" r="1" fill="#AA4C4D"/></svg>
+        <div class="criteria-name">WiFi</div>
+        <div class="criteria-state">Important</div>
+      </div>
+      <!-- Prises - selected -->
+      <div class="criteria-card selected">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#AA4C4D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"/></svg>
+        <div class="criteria-name">Prises</div>
+        <div class="criteria-state">Important</div>
+      </div>
+      <!-- Food - not selected -->
+      <div class="criteria-card">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#A89888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2v7c0 1.1.9 2 2 2h4a2 2 0 0 0 2-2V2"/><path d="M7 2v20"/><path d="M21 15V2a5 5 0 0 0-5 5v6c0 1.1.9 2 2 2h3Zm0 0v7"/></svg>
+        <div class="criteria-name">Food</div>
+        <div class="criteria-state">Indiff&eacute;rent</div>
+      </div>
+      <!-- Style - not selected -->
+      <div class="criteria-card">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#A89888" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.912 5.813a2 2 0 0 0 1.275 1.275L21 12l-5.813 1.912a2 2 0 0 0-1.275 1.275L12 21l-1.912-5.813a2 2 0 0 0-1.275-1.275L3 12l5.813-1.912a2 2 0 0 0 1.275-1.275L12 3z"/></svg>
+        <div class="criteria-name">Style</div>
+        <div class="criteria-state">Indiff&eacute;rent</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TYPE DE LIEU -->
+  <div class="chips-section">
+    <div class="section-label">Type de lieu</div>
+    <div class="chips-row">
+      <div class="chip chip-active">Caf&eacute;</div>
+      <div class="chip chip-inactive">Biblioth&egrave;que</div>
+      <div class="chip chip-inactive">Coworking</div>
+      <div class="chip chip-inactive">Tiers-lieu</div>
+    </div>
+  </div>
+
+  <!-- ACCES -->
+  <div class="chips-section">
+    <div class="section-label">Acc&egrave;s</div>
+    <div class="chips-row">
+      <div class="chip chip-active">Tous</div>
+      <div class="chip chip-inactive">Gratuit</div>
+      <div class="chip chip-inactive">Payant</div>
+    </div>
+  </div>
+
+  <!-- OUVERT MAINTENANT -->
+  <div class="toggle-section">
+    <div class="toggle-label">Ouvert maintenant</div>
+    <div class="toggle-switch">
+      <div class="toggle-knob"></div>
+    </div>
+  </div>
+
+  <!-- CTA -->
+  <div class="cta-fixed">
+    <button class="cta-btn">VOIR 127 LIEUX</button>
+  </div>
+
+</div>
+</body>
+</html>
