@@ -2,17 +2,36 @@
 import type { PlaceFilters } from '~/domain/models/Place'
 
 const { getAll } = usePlaces()
+const route = useRoute()
+
+// Read filters from URL query params (set by /search page)
+const urlQuery = route.query
 
 const activeFilters = ref([
-  { label: 'WiFi', value: 'wifi', active: false },
-  { label: 'Prises', value: 'prises', active: false },
-  { label: 'Food', value: 'food', active: false },
-  { label: 'Calme', value: 'calme', active: false },
-  { label: 'Cafés', value: 'cafe', active: false },
-  { label: 'Coffee Shops', value: 'coffee_shop', active: false },
-  { label: 'Coworking', value: 'coworking', active: false },
-  { label: 'Tiers-lieux', value: 'tiers_lieu', active: false }
+  { label: 'WiFi', value: 'wifi', active: !!urlQuery.wifi },
+  { label: 'Prises', value: 'prises', active: !!urlQuery.prises },
+  { label: 'Food', value: 'food', active: !!urlQuery.food },
+  { label: 'Style', value: 'style', active: !!urlQuery.style },
+  { label: 'Cafés', value: 'cafe', active: urlQuery.type === 'cafe' },
+  { label: 'Coffee Shops', value: 'coffee_shop', active: urlQuery.type === 'coffee_shop' },
+  { label: 'Coworking', value: 'coworking', active: urlQuery.type === 'coworking' },
+  { label: 'Tiers-lieux', value: 'tiers_lieu', active: urlQuery.type === 'tiers_lieu' }
 ])
+
+const searchQuery = (urlQuery.q as string) || ''
+const filterOpen = !!urlQuery.open
+const hasFilters = Object.keys(urlQuery).length > 0
+
+// Title based on filters
+const pageTitle = computed(() => {
+  if (searchQuery) return searchQuery.toUpperCase()
+  const type = urlQuery.type as string
+  if (type === 'cafe') return 'LES MEILLEURS CAFÉS'
+  if (type === 'coffee_shop') return 'COFFEE SHOPS'
+  if (type === 'coworking') return 'COWORKINGS'
+  if (type === 'tiers_lieu') return 'TIERS-LIEUX'
+  return 'NOS COUPS DE COEUR'
+})
 
 function toggleFilter(value: string) {
   const filter = activeFilters.value.find(f => f.value === value)
@@ -22,31 +41,30 @@ function toggleFilter(value: string) {
 const computedFilters = computed<PlaceFilters>(() => {
   const f: PlaceFilters = {}
   const active = activeFilters.value.filter(x => x.active).map(x => x.value)
-  // Only apply filters if something is actively selected
   if (active.includes('wifi')) f.wifi = true
   if (active.includes('prises')) f.prises = true
   if (active.includes('food')) f.food = true
-  if (active.includes('calme')) f.calme = true
+  if (active.includes('style')) f.calme = true
   const cats = active.filter(v => ['cafe', 'coffee_shop', 'coworking', 'tiers_lieu'].includes(v))
   if (cats.length === 1) f.category = cats[0]
+  if (searchQuery) f.query = searchQuery
   return f
 })
-
-// Empty filters = show all (no filtering)
 
 const places = ref<any[]>([])
 const loading = ref(true)
 
 async function loadPlaces() {
   loading.value = true
-  places.value = await getAll(computedFilters.value)
+  let results = await getAll(computedFilters.value)
+  if (filterOpen) {
+    results = results.filter(p => p.isOpen !== false)
+  }
+  places.value = results
   loading.value = false
 }
 
-// Load on mount (client-side only)
 onMounted(() => loadPlaces())
-
-// Reload when filters change
 watch(computedFilters, () => loadPlaces())
 
 const press = [
@@ -102,7 +120,8 @@ const press = [
 
       <!-- Titre -->
       <div class="px-4 pb-1">
-        <h2 class="font-display text-xl text-[var(--color-espresso)] tracking-[0.04em]">NOS COUPS DE COEUR</h2>
+        <h2 class="font-display text-xl text-[var(--color-espresso)] tracking-[0.04em]">{{ pageTitle }}</h2>
+        <p v-if="searchQuery" class="text-[13px] text-[var(--color-steam)] mt-0.5">{{ places.length }} lieu{{ places.length > 1 ? 'x' : '' }} trouvé{{ places.length > 1 ? 's' : '' }}</p>
       </div>
 
       <!-- FAB Carte (fixed bottom center) -->

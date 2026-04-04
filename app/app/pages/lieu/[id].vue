@@ -1,6 +1,16 @@
 <script setup lang="ts">
 const route = useRoute()
+const router = useRouter()
 const { getById } = usePlaces()
+
+// Back navigation: use browser history to go back properly
+function goBack() {
+  if (window.history.length > 1) {
+    router.back()
+  } else {
+    router.push('/')
+  }
+}
 
 const place = ref<any>(null)
 const loading = ref(true)
@@ -170,6 +180,48 @@ function onVitalClick(label: string) {
   }
 }
 
+const showShareToast = ref(false)
+
+async function shareLieu() {
+  if (!place.value) return
+
+  const url = window.location.href
+  const title = place.value.name
+  const text = `Grâce à Deskover j'ai trouvé le spot parfait pour travailler : ${title}`
+
+  if (navigator.share) {
+    try {
+      // Try sharing with image if available
+      if (place.value.photoUrl && navigator.canShare) {
+        try {
+          const response = await fetch(place.value.photoUrl)
+          const blob = await response.blob()
+          const file = new File([blob], `${title}.jpg`, { type: 'image/jpeg' })
+          if (navigator.canShare({ files: [file] })) {
+            await navigator.share({ title, text, url, files: [file] })
+            return
+          }
+        } catch {
+          // Image share failed, share without image
+        }
+      }
+      await navigator.share({ title, text, url })
+      return
+    } catch {
+      // User cancelled — fall through to clipboard
+    }
+  }
+
+  // Fallback: copy to clipboard
+  try {
+    await navigator.clipboard.writeText(`${text}\n${url}`)
+    showShareToast.value = true
+    setTimeout(() => { showShareToast.value = false }, 2000)
+  } catch {
+    // Silent fail
+  }
+}
+
 function categoryLabel(cat: string) {
   switch (cat) {
     case 'cafe': return 'Café'
@@ -196,17 +248,17 @@ function categoryLabel(cat: string) {
 
       <!-- Header overlay -->
       <div class="absolute top-[52px] left-4 right-4 flex justify-between items-center">
-        <NuxtLink
-          to="/"
+        <button
+          @click="goBack"
           class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center"
         >
           <UIcon name="lucide:chevron-left" class="w-5 h-5 text-white" />
-        </NuxtLink>
+        </button>
         <div class="flex gap-2">
           <button class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center">
             <UIcon name="lucide:heart" class="w-5 h-5 text-white" />
           </button>
-          <button class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center">
+          <button class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center" @click="shareLieu">
             <UIcon name="lucide:share" class="w-5 h-5 text-white" />
           </button>
         </div>
@@ -489,6 +541,21 @@ function categoryLabel(cat: string) {
         </div>
       </Transition>
     </Teleport>
+
+    <!-- Share toast -->
+    <Transition
+      enter-active-class="transition duration-300 ease-out"
+      enter-from-class="translate-y-4 opacity-0"
+      enter-to-class="translate-y-0 opacity-100"
+      leave-active-class="transition duration-200 ease-in"
+      leave-from-class="opacity-100"
+      leave-to-class="translate-y-4 opacity-0"
+    >
+      <div v-if="showShareToast" class="fixed bottom-24 left-1/2 -translate-x-1/2 z-[200] bg-[var(--color-espresso)] text-white text-[13px] font-semibold px-5 py-3 rounded-full shadow-lg flex items-center gap-2">
+        <UIcon name="lucide:check" class="w-4 h-4" />
+        Lien copié !
+      </div>
+    </Transition>
 
     <!-- Speed Test Bottom Sheet -->
     <Teleport to="body">

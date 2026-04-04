@@ -1,0 +1,422 @@
+[
+  {
+    "city_key": "montpellier",
+    "city": "Montpellier",
+    "place_count": 72
+  },
+  {
+    "city_key": "nantes",
+    "city": "Nantes",
+    "place_count": 62
+  },
+  {
+    "city_key": "nice",
+    "city": "Nice",
+    "place_count": 59
+  },
+  {
+    "city_key": "bordeaux",
+    "city": "Bordeaux",
+    "place_count": 54
+  },
+  {
+    "city_key": "paris",
+    "city": "Paris",
+    "place_count": 53
+  },
+  {
+    "city_key": "lyon",
+    "city": "Lyon",
+    "place_count": 53
+  },
+  {
+    "city_key": "lille",
+    "city": "Lille",
+    "place_count": 51
+  },
+  {
+    "city_key": "paris-20e",
+    "city": "Paris",
+    "place_count": 50
+  },
+  {
+    "city_key": "paris-10e",
+    "city": "Paris",
+    "place_count": 46
+  },
+  {
+    "city_key": "grenoble",
+    "city": "Grenoble",
+    "place_count": 44
+  },
+  {
+    "city_key": "toulouse",
+    "city": "Toulouse",
+    "place_count": 39
+  },
+  {
+    "city_key": "saint-etienne",
+    "city": "Saint-Étienne",
+    "place_count": 36
+  },
+  {
+    "city_key": "paris-11e",
+    "city": "Paris",
+    "place_count": 34
+  },
+  {
+    "city_key": "paris-3e",
+    "city": "Paris",
+    "place_count": 32
+  },
+  {
+    "city_key": "strasbourg",
+    "city": "Strasbourg",
+    "place_count": 32
+  },
+  {
+    "city_key": "caen",
+    "city": "Caen",
+    "place_count": 29
+  },
+  {
+    "city_key": "paris-1e",
+    "city": "Paris",
+    "place_count": 29
+  },
+  {
+    "city_key": "nancy",
+    "city": "Nancy",
+    "place_count": 28
+  },
+  {
+    "city_key": "paris-9e",
+    "city": "Paris",
+    "place_count": 28
+  },
+  {
+    "city_key": "paris-8e",
+    "city": "Paris",
+    "place_count": 27
+  },
+  {
+    "city_key": "rennes",
+    "city": "Rennes",
+    "place_count": 27
+  },
+  {
+    "city_key": "paris-18e",
+    "city": "Paris",
+    "place_count": 26
+  },
+  {
+    "city_key": "angers",
+    "city": "Angers",
+    "place_count": 25
+  },
+  {
+    "city_key": "metz",
+    "city": "Metz",
+    "place_count": 24
+  },
+  {
+    "city_key": "paris-2e",
+    "city": "Paris",
+    "place_count": 24
+  },
+  {
+    "city_key": "paris-17e",
+    "city": "Paris",
+    "place_count": 24
+  },
+  {
+    "city_key": "reims",
+    "city": "Reims",
+    "place_count": 24
+  },
+  {
+    "city_key": "paris-5e",
+    "city": "Paris",
+    "place_count": 23
+  },
+  {
+    "city_key": "mulhouse",
+    "city": "Mulhouse",
+    "place_count": 22
+  },
+  {
+    "city_key": "paris-15e",
+    "city": "Paris",
+    "place_count": 21
+  },
+  {
+    "city_key": "paris-19e",
+    "city": "Paris",
+    "place_count": 21
+  },
+  {
+    "city_key": "boulogne-billancourt",
+    "city": "Boulogne Billancourt",
+    "place_count": 20
+  },
+  {
+    "city_key": "paris-4e",
+    "city": "Paris",
+    "place_count": 19
+  },
+  {
+    "city_key": "perpignan",
+    "city": "Perpignan",
+    "place_count": 19
+  },
+  {
+    "city_key": "nimes",
+    "city": "Nîmes",
+    "place_count": 19
+  },
+  {
+    "city_key": "courbevoie",
+    "city": "Courbevoie",
+    "place_count": 18
+  },
+  {
+    "city_key": "dijon",
+    "city": "Dijon",
+    "place_count": 18
+  },
+  {
+    "city_key": "aix-en-provence",
+    "city": "Aix-en-Provence",
+    "place_count": 18
+  },
+  {
+    "city_key": "montreuil",
+    "city": "Montreuil",
+    "place_count": 17
+  },
+  {
+    "city_key": "nanterre",
+    "city": "Nanterre",
+    "place_count": 17
+  },
+  {
+    "city_key": "paris-1er",
+    "city": "Paris",
+    "place_count": 16
+  },
+  {
+    "city_key": "vitry-sur-seine",
+    "city": "Vitry-sur-Seine",
+    "place_count": 16
+  },
+  {
+    "city_key": "poitiers",
+    "city": "Poitiers",
+    "place_count": 15
+  },
+  {
+    "city_key": "versailles",
+    "city": "Versailles",
+    "place_count": 15
+  },
+  {
+    "city_key": "pau",
+    "city": "Pau",
+    "place_count": 15
+  },
+  {
+    "city_key": "orleans",
+    "city": "Orléans",
+    "place_count": 14
+  },
+  {
+    "city_key": "avignon",
+    "city": "Avignon",
+    "place_count": 14
+  },
+  {
+    "city_key": "paris-7e",
+    "city": "Paris",
+    "place_count": 14
+  },
+  {
+    "city_key": "tours",
+    "city": "Tours",
+    "place_count": 14
+  },
+  {
+    "city_key": "paris-13e",
+    "city": "Paris",
+    "place_count": 13
+  },
+  {
+    "city_key": "paris-12e",
+    "city": "Paris",
+    "place_count": 13
+  },
+  {
+    "city_key": "asnieres-sur-seine",
+    "city": "Asnieres-sur-Seine",
+    "place_count": 13
+  },
+  {
+    "city_key": "marseille",
+    "city": "Marseille",
+    "place_count": 13
+  },
+  {
+    "city_key": "roubaix",
+    "city": "Roubaix",
+    "place_count": 12
+  },
+  {
+    "city_key": "paris-14e",
+    "city": "Paris",
+    "place_count": 12
+  },
+  {
+    "city_key": "saint-denis",
+    "city": "Saint-Denis",
+    "place_count": 12
+  },
+  {
+    "city_key": "amiens",
+    "city": "Amiens",
+    "place_count": 12
+  },
+  {
+    "city_key": "le-havre",
+    "city": "Le Havre",
+    "place_count": 11
+  },
+  {
+    "city_key": "toulon",
+    "city": "Toulon",
+    "place_count": 11
+  },
+  {
+    "city_key": "rueil-malmaison",
+    "city": "Rueil-Malmaison",
+    "place_count": 11
+  },
+  {
+    "city_key": "limoges",
+    "city": "Limoges",
+    "place_count": 11
+  },
+  {
+    "city_key": "paris-6e",
+    "city": "Paris",
+    "place_count": 10
+  },
+  {
+    "city_key": "besancon",
+    "city": "Besançon",
+    "place_count": 10
+  },
+  {
+    "city_key": "creteil",
+    "city": "Créteil",
+    "place_count": 10
+  },
+  {
+    "city_key": "annecy",
+    "city": "Annecy",
+    "place_count": 10
+  },
+  {
+    "city_key": "paris-16e",
+    "city": "Paris",
+    "place_count": 9
+  },
+  {
+    "city_key": "rouen",
+    "city": "Rouen",
+    "place_count": 9
+  },
+  {
+    "city_key": "clermont-ferrand",
+    "city": "Clermont-Ferrand",
+    "place_count": 9
+  },
+  {
+    "city_key": "colombes",
+    "city": "Colombes",
+    "place_count": 8
+  },
+  {
+    "city_key": "neuilly-sur-seine",
+    "city": "Neuilly-sur-Seine",
+    "place_count": 8
+  },
+  {
+    "city_key": "antibes",
+    "city": "Antibes",
+    "place_count": 8
+  },
+  {
+    "city_key": "dunkerque",
+    "city": "Dunkerque",
+    "place_count": 6
+  },
+  {
+    "city_key": "tourcoing",
+    "city": "Tourcoing",
+    "place_count": 6
+  },
+  {
+    "city_key": "aulnay-sous-bois",
+    "city": "Aulnay-sous-Bois",
+    "place_count": 6
+  },
+  {
+    "city_key": "vincennes",
+    "city": "Vincennes",
+    "place_count": 5
+  },
+  {
+    "city_key": "brest",
+    "city": "Brest",
+    "place_count": 5
+  },
+  {
+    "city_key": "pantin",
+    "city": "Pantin",
+    "place_count": 4
+  },
+  {
+    "city_key": "villeurbanne",
+    "city": "Villeurbanne",
+    "place_count": 4
+  },
+  {
+    "city_key": "le-mans",
+    "city": "Le Mans",
+    "place_count": 4
+  },
+  {
+    "city_key": "puteaux",
+    "city": "Puteaux",
+    "place_count": 4
+  },
+  {
+    "city_key": "issy-les-moulineaux",
+    "city": "Issy-les-Moulineaux",
+    "place_count": 3
+  },
+  {
+    "city_key": "montreal",
+    "city": "Montréal",
+    "place_count": 3
+  },
+  {
+    "city_key": "argenteuil",
+    "city": "Argenteuil",
+    "place_count": 3
+  },
+  {
+    "city_key": "levallois-perret",
+    "city": "Levallois-Perret",
+    "place_count": 3
+  }
+]

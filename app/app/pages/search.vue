@@ -2,11 +2,14 @@
 import type { Place } from '~/domain/models/Place'
 
 const { search, getAll } = usePlaces()
+const router = useRouter()
 
 const query = ref('')
 const results = ref<Place[]>([])
 const searching = ref(false)
 const hasSearched = ref(false)
+
+const mode = ref<'now' | 'later'>('now')
 
 const criteriaFilters = reactive({
   wifi: false,
@@ -17,20 +20,20 @@ const criteriaFilters = reactive({
 
 const categoryFilter = ref('')
 const accessFilter = ref('')
-const openNow = ref(false)
+const selectedDay = ref('')
+const timeFrom = ref('')
+const timeTo = ref('')
 
 const categories = [
-  { value: '', label: 'Tout' },
-  { value: 'cafe', label: 'Café' },
-  { value: 'coffee_shop', label: 'Coffee Shop' },
-  { value: 'coworking', label: 'Coworking' },
-  { value: 'tiers_lieu', label: 'Tiers-lieu' }
+  { value: 'cafe', label: 'Café', icon: 'lucide:coffee' },
+  { value: 'coffee_shop', label: 'Coffee Shop', icon: 'lucide:cup-soda' },
+  { value: 'coworking', label: 'Coworking', icon: 'lucide:building-2' },
+  { value: 'tiers_lieu', label: 'Tiers-lieu', icon: 'lucide:home' }
 ]
 
 const accessOptions = [
-  { value: '', label: 'Tous' },
-  { value: 'free', label: 'Gratuit' },
-  { value: 'paid', label: 'Payant' }
+  { value: 'free', label: 'Gratuit', icon: 'lucide:heart' },
+  { value: 'paid', label: 'Payant', icon: 'lucide:credit-card' }
 ]
 
 const criteriaList = [
@@ -40,32 +43,38 @@ const criteriaList = [
   { key: 'style', icon: 'lucide:sparkles', label: 'Style' }
 ]
 
-async function doSearch() {
-  searching.value = true
-  hasSearched.value = true
-  if (query.value.trim()) {
-    results.value = await search(query.value.trim())
-  } else {
-    results.value = await getAll({
-      wifi: criteriaFilters.wifi || undefined,
-      prises: criteriaFilters.prises || undefined,
-      food: criteriaFilters.food || undefined,
-      calme: criteriaFilters.style || undefined,
-      category: categoryFilter.value || undefined
-    })
-  }
-  searching.value = false
-}
+const days = [
+  { value: 'lundi', label: 'Lun' },
+  { value: 'mardi', label: 'Mar' },
+  { value: 'mercredi', label: 'Mer' },
+  { value: 'jeudi', label: 'Jeu' },
+  { value: 'vendredi', label: 'Ven' },
+  { value: 'samedi', label: 'Sam' },
+  { value: 'dimanche', label: 'Dim' }
+]
 
-let timeout: ReturnType<typeof setTimeout>
-watch(query, () => {
-  clearTimeout(timeout)
-  timeout = setTimeout(doSearch, 300)
-})
+const timeSlots = ['7h', '8h', '9h', '10h', '11h', '12h', '13h', '14h', '15h', '16h', '17h', '18h', '19h', '20h', '21h', '22h']
+
+function goToResults() {
+  const params: Record<string, string> = {}
+  if (query.value.trim()) params.q = query.value.trim()
+  if (criteriaFilters.wifi) params.wifi = '1'
+  if (criteriaFilters.prises) params.prises = '1'
+  if (criteriaFilters.food) params.food = '1'
+  if (criteriaFilters.style) params.style = '1'
+  if (categoryFilter.value) params.type = categoryFilter.value
+  if (accessFilter.value) params.access = accessFilter.value
+  if (mode.value === 'now') params.open = '1'
+  if (mode.value === 'later') {
+    if (selectedDay.value) params.day = selectedDay.value
+    if (timeFrom.value) params.from = timeFrom.value
+    if (timeTo.value) params.to = timeTo.value
+  }
+  router.push({ path: '/', query: params })
+}
 
 function toggleCriteria(key: string) {
   criteriaFilters[key as keyof typeof criteriaFilters] = !criteriaFilters[key as keyof typeof criteriaFilters]
-  doSearch()
 }
 
 function isActive(key: string) {
@@ -74,115 +83,153 @@ function isActive(key: string) {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--color-cream)] pb-10">
+  <div class="min-h-screen bg-[var(--color-cream)] pb-24">
     <!-- Header -->
-    <div class="flex items-center gap-3 px-5 pt-[52px] pb-5">
+    <div class="px-4 pt-[52px] pb-3 flex items-center gap-3">
       <NuxtLink to="/" class="w-10 h-10 rounded-full bg-[var(--color-linen)] flex items-center justify-center flex-shrink-0">
         <UIcon name="lucide:chevron-left" class="w-5 h-5 text-[var(--color-espresso)]" />
       </NuxtLink>
-      <div class="flex-1 relative">
-        <UIcon name="lucide:search" class="w-4 h-4 text-[var(--color-steam)] absolute left-4 top-1/2 -translate-y-1/2" />
+      <div class="flex-1 bg-white rounded-2xl shadow-[0_2px_12px_rgba(44,40,37,0.06)] flex items-center h-12 px-4 gap-3">
+        <UIcon name="lucide:search" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
         <input
           v-model="query"
           type="text"
           placeholder="Une ville, un quartier, un lieu..."
-          class="w-full bg-white rounded-2xl h-12 pl-11 pr-4 text-[15px] text-[var(--color-espresso)] placeholder:text-[var(--color-steam)] shadow-[0_2px_12px_rgba(44,40,37,0.06)] outline-none focus:shadow-[0_4px_16px_rgba(44,40,37,0.1)] transition-shadow"
+          class="flex-1 bg-transparent text-[15px] text-[var(--color-espresso)] placeholder:text-[var(--color-steam)] outline-none"
           autofocus
         >
       </div>
     </div>
 
-    <!-- Criteria -->
-    <div class="px-5">
-      <h3 class="font-display text-[17px] text-[var(--color-espresso)] tracking-[0.06em]">CE QUI COMPTE POUR TOI</h3>
-      <p class="text-[12px] text-[var(--color-steam)] mt-1">Sélectionne tes critères</p>
-
-      <div class="grid grid-cols-2 gap-2.5 mt-3">
+    <div class="px-4">
+      <!-- Mode: Maintenant / Plus tard -->
+      <div class="flex bg-[var(--color-linen)] rounded-2xl p-1 mt-1">
         <button
-          v-for="c in criteriaList"
-          :key="c.key"
-          class="h-[88px] flex flex-col items-center justify-center gap-1.5 rounded-2xl transition-all duration-200"
-          :class="isActive(c.key) ? 'bg-[#FFF0EF] shadow-sm' : 'bg-white shadow-[0_1px_4px_rgba(44,40,37,0.04)]'"
-          @click="toggleCriteria(c.key)"
+          class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[13px] font-semibold transition-all duration-200"
+          :class="mode === 'now' ? 'bg-white text-[var(--color-espresso)] shadow-sm' : 'text-[var(--color-steam)]'"
+          @click="mode = 'now'"
         >
-          <UIcon :name="c.icon" class="w-6 h-6" :class="isActive(c.key) ? 'text-[var(--color-terracotta-500)]' : 'text-[var(--color-steam)]'" />
-          <span class="text-[11px] font-bold uppercase tracking-wide" :class="isActive(c.key) ? 'text-[var(--color-terracotta-500)]' : 'text-[var(--color-steam)]'">{{ c.label }}</span>
-          <span class="text-[10px]" :class="isActive(c.key) ? 'text-[var(--color-terracotta-500)] font-semibold' : 'text-[var(--color-steam)]'">{{ isActive(c.key) ? 'Important' : 'Indifférent' }}</span>
+          <UIcon name="lucide:locate" class="w-4 h-4" />
+          Maintenant
+        </button>
+        <button
+          class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[13px] font-semibold transition-all duration-200"
+          :class="mode === 'later' ? 'bg-white text-[var(--color-espresso)] shadow-sm' : 'text-[var(--color-steam)]'"
+          @click="mode = 'later'"
+        >
+          <UIcon name="lucide:calendar" class="w-4 h-4" />
+          Plus tard
         </button>
       </div>
-    </div>
 
-    <!-- Type de lieu -->
-    <div class="px-5 mt-5">
-      <h3 class="font-display text-[17px] text-[var(--color-espresso)] tracking-[0.06em]">TYPE DE LIEU</h3>
-      <div class="flex gap-2 mt-2.5 overflow-x-auto no-scrollbar">
+      <!-- Mode NOW -->
+      <p v-if="mode === 'now'" class="text-[12px] text-[var(--color-steam)] mt-3 italic">
+        Spots ouverts maintenant, autour de toi
+      </p>
+
+      <!-- Mode LATER: day + time range -->
+      <div v-if="mode === 'later'" class="mt-3">
+        <p class="text-[12px] text-[var(--color-steam)] italic mb-3">Quand est-ce que tu veux y aller ?</p>
+
+        <!-- Day picker -->
+        <div class="flex gap-1.5">
+          <button
+            v-for="d in days"
+            :key="d.value"
+            class="flex-1 py-2 rounded-xl text-[11px] font-semibold transition-all"
+            :class="selectedDay === d.value ? 'bg-[var(--color-espresso)] text-white' : 'bg-white text-[var(--color-roast)]'"
+            @click="selectedDay = selectedDay === d.value ? '' : d.value"
+          >{{ d.label }}</button>
+        </div>
+
+        <!-- Time range -->
+        <p class="text-[10px] font-bold uppercase tracking-wide text-[var(--color-steam)] mt-3 mb-1.5">De</p>
+        <div class="flex gap-1.5 overflow-x-auto no-scrollbar -mx-4 px-4">
+          <button
+            v-for="t in timeSlots"
+            :key="'from-'+t"
+            class="flex-shrink-0 px-3 py-2 rounded-xl text-[11px] font-semibold transition-all"
+            :class="timeFrom === t ? 'bg-[var(--color-espresso)] text-white' : 'bg-white text-[var(--color-roast)]'"
+            @click="timeFrom = timeFrom === t ? '' : t"
+          >{{ t }}</button>
+        </div>
+
+        <p class="text-[10px] font-bold uppercase tracking-wide text-[var(--color-steam)] mt-2.5 mb-1.5">À</p>
+        <div class="flex gap-1.5 overflow-x-auto no-scrollbar -mx-4 px-4">
+          <button
+            v-for="t in timeSlots"
+            :key="'to-'+t"
+            class="flex-shrink-0 px-3 py-2 rounded-xl text-[11px] font-semibold transition-all"
+            :class="timeTo === t ? 'bg-[var(--color-espresso)] text-white' : 'bg-white text-[var(--color-roast)]'"
+            @click="timeTo = timeTo === t ? '' : t"
+          >{{ t }}</button>
+        </div>
+      </div>
+
+      <!-- Separator -->
+      <div class="text-center py-4 text-[var(--color-parchment)] text-sm tracking-[4px]">· · ·</div>
+
+      <!-- Vitals — same style as PlaceVitals -->
+      <h3 class="font-display text-[17px] text-[var(--color-espresso)] tracking-[0.06em]">CE QUI COMPTE POUR TOI</h3>
+
+      <div class="bg-[var(--color-linen)] rounded-[14px] mt-3 flex" style="padding: 14px 0;">
+        <button
+          v-for="(c, i) in criteriaList"
+          :key="c.key"
+          class="flex-1 flex flex-col items-center gap-[3px] relative"
+          @click="toggleCriteria(c.key)"
+        >
+          <div v-if="i > 0" class="absolute left-0 top-2 bottom-2 w-px bg-[var(--color-parchment)]" />
+          <UIcon :name="c.icon" class="w-7 h-7 transition-colors" :class="isActive(c.key) ? 'text-[var(--color-monstera)]' : 'text-[var(--color-steam)]'" />
+          <span class="text-[9px] uppercase tracking-[0.06em] transition-colors" :class="isActive(c.key) ? 'text-[var(--color-monstera)] font-bold' : 'text-[var(--color-steam)]'">{{ c.label }}</span>
+          <span class="text-[11px] font-bold transition-colors" :class="isActive(c.key) ? 'text-[var(--color-monstera)]' : 'text-transparent'">Important</span>
+        </button>
+      </div>
+
+      <!-- Type de lieu — 2 col grid -->
+      <h3 class="font-display text-[17px] text-[var(--color-espresso)] tracking-[0.06em] mt-6">TYPE DE LIEU</h3>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
         <button
           v-for="cat in categories"
           :key="cat.value"
-          class="flex-shrink-0 px-4 h-9 rounded-full text-[12px] font-semibold transition-all duration-200"
-          :class="categoryFilter === cat.value ? 'bg-[var(--color-terracotta-500)] text-white' : 'bg-white text-[var(--color-roast)] border-[1.5px] border-[var(--color-parchment)]'"
-          @click="categoryFilter = cat.value; doSearch()"
-        >{{ cat.label }}</button>
+          class="flex flex-col items-center justify-center gap-1.5 rounded-2xl text-[11px] font-semibold transition-all duration-200"
+          style="height:72px;"
+          :style="{ background: categoryFilter === cat.value ? 'var(--color-terracotta-500)' : 'white', color: categoryFilter === cat.value ? 'white' : 'var(--color-roast)' }"
+          @click="categoryFilter = categoryFilter === cat.value ? '' : cat.value"
+        >
+          <UIcon :name="cat.icon" class="w-5 h-5" />
+          {{ cat.label }}
+        </button>
       </div>
-    </div>
 
-    <!-- Accès -->
-    <div class="px-5 mt-5">
-      <h3 class="font-display text-[17px] text-[var(--color-espresso)] tracking-[0.06em]">ACCÈS</h3>
-      <div class="flex gap-2 mt-2.5">
+      <!-- Accès — 2 col grid -->
+      <h3 class="font-display text-[17px] text-[var(--color-espresso)] tracking-[0.06em] mt-6">ACCÈS</h3>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
         <button
           v-for="opt in accessOptions"
           :key="opt.value"
-          class="px-4 h-9 rounded-full text-[12px] font-semibold transition-all duration-200"
-          :class="accessFilter === opt.value ? 'bg-[var(--color-terracotta-500)] text-white' : 'bg-white text-[var(--color-roast)] border-[1.5px] border-[var(--color-parchment)]'"
-          @click="accessFilter = opt.value; doSearch()"
-        >{{ opt.label }}</button>
-      </div>
-    </div>
-
-    <!-- Ouvert -->
-    <div class="px-5 mt-5 flex items-center justify-between">
-      <span class="text-[14px] font-medium text-[var(--color-espresso)]">Ouvert maintenant</span>
-      <button
-        class="w-11 h-6 rounded-full transition-colors duration-200 relative"
-        :class="openNow ? 'bg-[var(--color-monstera)]' : 'bg-[var(--color-parchment)]'"
-        @click="openNow = !openNow"
-      >
-        <div class="w-5 h-5 bg-white rounded-full shadow-sm absolute top-0.5 transition-transform duration-200" :class="openNow ? 'translate-x-[22px]' : 'translate-x-0.5'" />
-      </button>
-    </div>
-
-    <!-- Results / CTA -->
-    <div class="px-5 mt-6">
-      <!-- Search results -->
-      <div v-if="query.trim() && hasSearched" class="flex flex-col gap-2.5">
-        <p class="text-[12px] text-[var(--color-steam)] mb-1">{{ results.length }} résultat{{ results.length > 1 ? 's' : '' }}</p>
-        <NuxtLink
-          v-for="place in results.slice(0, 15)"
-          :key="place.id"
-          :to="`/lieu/${place.id}`"
-          class="flex items-center gap-3 bg-white rounded-2xl p-3 shadow-[0_1px_4px_rgba(44,40,37,0.04)]"
+          class="flex flex-col items-center justify-center gap-1.5 rounded-2xl text-[11px] font-semibold transition-all duration-200"
+          style="height:72px;"
+          :style="{ background: accessFilter === opt.value ? 'var(--color-terracotta-500)' : 'white', color: accessFilter === opt.value ? 'white' : 'var(--color-roast)' }"
+          @click="accessFilter = accessFilter === opt.value ? '' : opt.value"
         >
-          <img :src="place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=200&h=200&fit=crop'" :alt="place.name" class="w-12 h-12 rounded-xl object-cover flex-shrink-0">
-          <div class="flex-1 min-w-0">
-            <p class="text-[13px] font-bold text-[var(--color-espresso)] truncate">{{ place.name }}</p>
-            <p class="text-[11px] text-[var(--color-steam)] mt-0.5">{{ place.city }}</p>
-            <div class="flex gap-2 mt-1">
-              <UIcon v-for="v in place.vitals" :key="v.label" :name="v.icon" class="w-3 h-3" :class="v.status === 'good' ? 'text-[var(--color-monstera)]' : v.status === 'medium' ? 'text-[var(--color-edison)]' : 'text-[var(--color-steam)]'" />
-            </div>
-          </div>
-          <UIcon name="lucide:chevron-right" class="w-4 h-4 text-[var(--color-parchment)] flex-shrink-0" />
-        </NuxtLink>
-        <p v-if="!results.length && !searching" class="text-sm text-[var(--color-steam)] text-center py-8">Aucun lieu trouvé</p>
+          <UIcon :name="opt.icon" class="w-5 h-5" />
+          {{ opt.label }}
+        </button>
       </div>
 
-      <!-- CTA -->
+    </div>
+
+    <!-- Fixed CTA -->
+    <div class="fixed bottom-0 left-0 right-0 p-4 pb-8 bg-gradient-to-t from-[var(--color-cream)] via-[var(--color-cream)] to-transparent z-40">
       <button
-        v-else
-        class="w-full h-14 rounded-2xl font-bold bg-[var(--color-terracotta-500)] text-[var(--color-cream)]"
-        @click="doSearch"
+        class="w-full rounded-2xl font-bold bg-[var(--color-terracotta-500)] text-[var(--color-cream)] shadow-[0_4px_20px_rgba(170,76,77,0.25)] active:scale-[0.98] transition-transform"
+        style="height: 56px;"
+        @click="goToResults"
       >
-        <span class="font-display text-[15px] tracking-wide">VOIR LES LIEUX</span>
+        <span class="font-display text-[15px] tracking-[0.06em]">VOIR LES LIEUX</span>
       </button>
     </div>
   </div>
