@@ -9,9 +9,12 @@ import BaseCard from '../ui/BaseCard.vue'
 import BaseBadge from '../ui/BaseBadge.vue'
 import { Save, ExternalLink, Star, Clock, Globe, Phone, Instagram } from 'lucide-vue-next'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   place: Place
-}>()
+  saving?: boolean
+}>(), {
+  saving: false,
+})
 
 const emit = defineEmits<{
   save: [place: Place]
@@ -37,6 +40,9 @@ function slugify(text: string): string {
 }
 
 const supabasePhotoUrl = computed(() => {
+  if (form.value.photo_storage_path) {
+    return `${SUPABASE_STORAGE_BASE}/${form.value.photo_storage_path}`
+  }
   if (form.value.city_key && form.value.name) {
     const path = `${form.value.city_key}/${slugify(form.value.name)}.jpg`
     return `${SUPABASE_STORAGE_BASE}/${path}`
@@ -265,9 +271,9 @@ function handleSave() {
 
     <!-- Save button -->
     <div class="flex justify-end sticky bottom-6">
-      <BaseButton type="submit" variant="primary" size="lg">
+      <BaseButton type="submit" variant="primary" size="lg" :disabled="saving">
         <Save :size="18" />
-        Sauvegarder
+        {{ saving ? 'Sauvegarde...' : 'Sauvegarder' }}
       </BaseButton>
     </div>
   </form>

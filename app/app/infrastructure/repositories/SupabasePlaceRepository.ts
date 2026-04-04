@@ -34,6 +34,63 @@ function getPhotoUrl(row: any): string | undefined {
   return row.photo_url || undefined
 }
 
+const DAYS_FR = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi']
+
+function parseTimeStr(t: string): number {
+  const clean = t.replace(/\s/g, '')
+  const [h, m] = clean.split(':').map(Number)
+  return h * 60 + (m || 0)
+}
+
+function parseDayEntry(entry: string): { day: string; openMin: number; closeMin: number } | null {
+  // "lundi: 12:00 – 21:00" or "lundi: Fermé"
+  const colonIdx = entry.indexOf(':')
+  if (colonIdx === -1) return null
+  const day = entry.substring(0, colonIdx).trim().toLowerCase()
+  const rest = entry.substring(colonIdx + 1).trim()
+  if (rest.toLowerCase().includes('ferm')) return null
+  // Split on – or - (em-dash or regular dash)
+  const parts = rest.split(/[–\-]/).map(s => s.trim())
+  if (parts.length < 2) return null
+  return { day, openMin: parseTimeStr(parts[0]), closeMin: parseTimeStr(parts[1]) }
+}
+
+function computeOpenStatus(openingHours?: any): { isOpen: boolean; nextOpen?: string } {
+  if (!openingHours || !Array.isArray(openingHours) || openingHours.length === 0) return { isOpen: true }
+
+  const parsed = openingHours.map(parseDayEntry)
+  const now = new Date()
+  const todayName = DAYS_FR[now.getDay()]
+  const currentMinutes = now.getHours() * 60 + now.getMinutes()
+
+  // Check if open right now
+  const todayEntry = parsed.find(e => e && e.day === todayName)
+  if (todayEntry) {
+    const closeMin = todayEntry.closeMin <= todayEntry.openMin ? todayEntry.closeMin + 24 * 60 : todayEntry.closeMin
+    if (currentMinutes >= todayEntry.openMin && currentMinutes < closeMin) {
+      return { isOpen: true }
+    }
+  }
+
+  // Find next opening
+  for (let offset = 0; offset < 7; offset++) {
+    const dayIdx = (now.getDay() + offset) % 7
+    const dayName = DAYS_FR[dayIdx]
+    const entry = parsed.find(e => e && e.day === dayName)
+    if (!entry) continue
+    if (offset === 0 && entry.openMin <= currentMinutes) continue
+
+    const h = Math.floor(entry.openMin / 60)
+    const m = entry.openMin % 60
+    const timeStr = `${h}h${m ? String(m).padStart(2, '0') : ''}`
+    if (offset === 0) return { isOpen: false, nextOpen: `Ouvre à ${timeStr}` }
+    if (offset === 1) return { isOpen: false, nextOpen: `Ouvre demain à ${timeStr}` }
+    return { isOpen: false, nextOpen: `Ouvre ${dayName} à ${timeStr}` }
+  }
+
+  return { isOpen: false }
+}
+
 function rowToPlace(row: any, index: number, mentions?: any[]): Place {
   const signals = row.signals || []
 
@@ -76,7 +133,8 @@ function rowToPlace(row: any, index: number, mentions?: any[]): Place {
     phone: row.phone,
     openingHours: row.opening_hours,
     businessStatus: row.business_status,
-    isOpen: row.business_status === 'OPERATIONAL',
+    isOpen: computeOpenStatus(row.opening_hours).isOpen,
+    nextOpen: computeOpenStatus(row.opening_hours).nextOpen,
     blogMentions,
     instagram: row.instagram_handle || undefined,
     tag

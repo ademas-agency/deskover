@@ -19,7 +19,7 @@ Boulogne a un avantage que peu de villes de banlieue offrent : un maillage de tr
 
 Avenue Victor Hugo, à deux pas du pont de Sèvres. Multiburo, c'est du coworking haut de gamme dans un cadre soigné. L'espace est lumineux, les bureaux bien agencés, et l'ambiance oscille entre le calme studieux et l'énergie collective d'un lieu où les gens bossent pour de bon. Le mobilier est pro, les chaises confortables, et il y a même une terrasse pour prendre l'air entre deux sessions. On est loin du coworking bricolé dans un sous-sol, ici tout respire le sérieux sans être étouffant.
 
-WiFi rapide, prises partout, et des services premium inclus dans les formules (restauration sur place, espaces calmes). Noté 4,4/5 sur Google (45 avis), recommandé par Neo-Nomade, Boulonnais.fr et Coworking-France. Ouvert du mardi au vendredi, 8h30-18h. Fermé le lundi et le week-end. Le positionnement sur l'avenue Victor Hugo, bien desservi par le métro, en fait un spot pratique si tu viens de Paris ou du sud des Hauts-de-Seine.
+WiFi rapide, prises partout, et des services premium inclus dans les formules (restauration sur place, espaces calmes).fr et Coworking-France. Ouvert du mardi au vendredi, 8h30-18h. Fermé le lundi et le week-end. Le positionnement sur l'avenue Victor Hugo, bien desservi par le métro, en fait un spot pratique si tu viens de Paris ou du sud des Hauts-de-Seine.
 
 Le choix solide pour ceux qui veulent un cadre pro sans compromis.
 
@@ -28,7 +28,7 @@ Le choix solide pour ceux qui veulent un cadre pro sans compromis.
 
 ## Emergence
 
-Rue d'Aguesseau, dans le quartier résidentiel de Boulogne. Emergence se démarque avec une note de 4,7/5 sur Google (39 avis), et pour cause : l'espace est généreux, bien pensé, et propose des services qu'on ne trouve pas partout. Bureaux modulables de 1 à 120 postes, salle de sport, espace de restauration, call box pour passer tes appels tranquille. L'ambiance est chaleureuse malgré le côté pro, avec des espaces communs qui invitent à lever le nez de l'écran de temps en temps.
+Rue d'Aguesseau, dans le quartier résidentiel de Boulogne. Emergence se démarque avec une note de, et pour cause : l'espace est généreux, bien pensé, et propose des services qu'on ne trouve pas partout. Bureaux modulables de 1 à 120 postes, salle de sport, espace de restauration, call box pour passer tes appels tranquille. L'ambiance est chaleureuse malgré le côté pro, avec des espaces communs qui invitent à lever le nez de l'écran de temps en temps.
 
 WiFi et prises sont évidemment au rendez-vous, avec une terrasse pour les pauses. Ouvert du lundi au vendredi, 8h30-18h30 (18h le vendredi). Le gros plus, c'est la salle de sport intégrée : tu peux caser une séance entre midi et deux sans quitter le bâtiment. C'est le genre de détail qui change la qualité de ta journée quand tu bosses en coworking cinq jours par semaine.
 
@@ -41,7 +41,7 @@ Pour les journées intensives où tu veux tout avoir sous la main.
 
 Avenue du Général Leclerc, à deux pas du Pont de Sèvres et de sa station de métro. Spacesworks occupe un bel espace moderne en bois massif, avec de grandes baies vitrées et une terrasse. L'open space est bien agencé, les bureaux fermés offrent du calme quand tu en as besoin, et les salles de réunion se réservent facilement pour tes calls. L'ambiance est internationale, un brin corporate mais jamais froide, portée par un design qui mise sur les matériaux naturels.
 
-WiFi fibre, prises partout, café et restauration sur place. Noté 4/5 sur Google (26 avis), référencé par Coworking-France. Ouvert 24h/24, 7j/7 pour les membres, ce qui est un atout majeur si tu as des horaires décalés ou des deadlines nocturnes. La proximité du Pont de Sèvres (métro 9, tram T2) rend l'accès fluide depuis Paris comme depuis les villes voisines.
+WiFi fibre, prises partout, café et restauration sur place. Ouvert 24h/24, 7j/7 pour les membres, ce qui est un atout majeur si tu as des horaires décalés ou des deadlines nocturnes. La proximité du Pont de Sèvres (métro 9, tram T2) rend l'accès fluide depuis Paris comme depuis les villes voisines.
 
 Parfait si tu cherches un coworking accessible à toute heure avec un cadre soigné.
 
@@ -50,7 +50,7 @@ Parfait si tu cherches un coworking accessible à toute heure avec un cadre soig
 
 ## Le 16 Co
 
-Avenue Edouard Vaillant, en plein centre de Boulogne. Le 16 Co est un coworking à taille humaine, noté 4,4/5 sur Google, qui mise sur la flexibilité totale : ouvert 24h/24, 7j/7. Tu peux y venir un dimanche soir comme un mardi à l'aube, l'espace est toujours accessible. Les bureaux sont bien équipés, les tables spacieuses, et l'ambiance reste calme même quand le lieu est bien rempli.
+Avenue Edouard Vaillant, en plein centre de Boulogne. Le 16 Co est un coworking à taille humaine, qui mise sur la flexibilité totale : ouvert 24h/24, 7j/7. Tu peux y venir un dimanche soir comme un mardi à l'aube, l'espace est toujours accessible. Les bureaux sont bien équipés, les tables spacieuses, et l'ambiance reste calme même quand le lieu est bien rempli.
 
 WiFi fiable et prises accessibles partout. Recommandé par Le Cercle des Dircom et Konfian. C'est le genre de spot qui convient particulièrement aux indépendants avec des emplois du temps atypiques. Pas de formule rigide, pas d'horaires contraignants. Tu viens, tu bosses, tu repars.
 
@@ -72,9 +72,7 @@ Un bon spot de quartier pour bosser au calme près de la Seine.
 
 ## Le Trèfle Marcel Sembat
 
-Rue des Longs Prés, à quelques minutes de la station Marcel Sembat (métro 9). Deuxième adresse du réseau Le Trèfle à Boulogne, ce lieu mise sur le coworking et le networking. L'espace est plus intime que son grand frère du Pont de Sèvres, avec une atmosphère propice aux échanges entre coworkers. Les tables sont grandes, le WiFi tient la route, et l'ambiance est décontractée mais sérieuse.
-
-Noté 3,7/5 sur Google (29 avis). Ouvert du lundi au vendredi, 9h-18h. Si tu es dans le quartier Marcel Sembat et que tu cherches un espace de travail partagé sans fioritures, c'est une option fiable et bien située.
+Rue des Longs Prés, à quelques minutes de la station Marcel Sembat (métro 9). Deuxième adresse du réseau Le Trèfle à Boulogne, ce lieu mise sur le coworking et le networking. L'espace est plus intime que son grand frère du Pont de Sèvres, avec une atmosphère propice aux échanges entre coworkers. Les tables sont grandes, le WiFi tient la route, et l'ambiance est décontractée mais sérieuse. Ouvert du lundi au vendredi, 9h-18h. Si tu es dans le quartier Marcel Sembat et que tu cherches un espace de travail partagé sans fioritures, c'est une option fiable et bien située.
 
 Pour les travailleurs du quartier Marcel Sembat qui veulent du concret.
 
@@ -83,7 +81,7 @@ Pour les travailleurs du quartier Marcel Sembat qui veulent du concret.
 
 ## Le 24 by Solal
 
-Route de la Reine, dans un quartier calme de Boulogne. Le 24 by Solal, c'est un espace de coworking avec des formules souples et une amplitude horaire généreuse : ouvert de 6h30 à 23h en semaine, et jusqu'à 15h le dimanche. Noté 4,7/5 sur Google avec 270 avis, c'est un des espaces les mieux notés de la ville. L'ambiance est pro et conviviale, les bureaux sont partagés de manière intelligente, et on sent que le lieu vit au rythme des gens qui y travaillent.
+Route de la Reine, dans un quartier calme de Boulogne. Le 24 by Solal, c'est un espace de coworking avec des formules souples et une amplitude horaire généreuse : ouvert de 6h30 à 23h en semaine, et jusqu'à 15h le dimanche. L'ambiance est pro et conviviale, les bureaux sont partagés de manière intelligente, et on sent que le lieu vit au rythme des gens qui y travaillent.
 
 WiFi et prises au rendez-vous. L'ouverture dès 6h30 est un argument de poids pour les lève-tôt qui aiment attaquer leur journée avant que le reste du monde se réveille. Et la fermeture tardive te laisse de la marge si un projet déborde.
 
@@ -94,9 +92,7 @@ Le spot des lève-tôt et des couche-tard, avec une note Google qui parle d'elle
 
 ## Coworking Route de la Reine
 
-Route de la Reine, dans un espace Spaces avec tout le confort d'un coworking international. Internet haut débit, bureaux privés, espaces partagés, et un café-restaurant sur place pour ne pas avoir à bouger de la journée. L'ambiance est résolument moderne, le genre d'endroit où tu te sens productif dès que tu franchis la porte. Les espaces sont bien insonorisés, ce qui est appréciable quand tu enchaînes les visioconférences.
-
-Noté 3,9/5 sur Google (27 avis). Ouvert 24h/24, 7j/7. Le cadre est fonctionnel plus que chaleureux, mais c'est exactement ce que tu cherches quand tu as besoin d'un bureau sans distraction.
+Route de la Reine, dans un espace Spaces avec tout le confort d'un coworking international. Internet haut débit, bureaux privés, espaces partagés, et un café-restaurant sur place pour ne pas avoir à bouger de la journée. L'ambiance est résolument moderne, le genre d'endroit où tu te sens productif dès que tu franchis la porte. Les espaces sont bien insonorisés, ce qui est appréciable quand tu enchaînes les visioconférences. Ouvert 24h/24, 7j/7. Le cadre est fonctionnel plus que chaleureux, mais c'est exactement ce que tu cherches quand tu as besoin d'un bureau sans distraction.
 
 Pour les sessions longues où la productivité prime sur l'ambiance.
 
@@ -105,9 +101,7 @@ Pour les sessions longues où la productivité prime sur l'ambiance.
 
 ## Scandium Point du Jour
 
-Rue du Point du Jour, dans le quartier du même nom. Scandium est un espace de coworking compact qui offre des solutions de travail flexibles. L'endroit est fonctionnel, avec WiFi, prises et grandes tables pour travailler confortablement. Le quartier du Point du Jour est calme et résidentiel, ce qui se ressent dans l'ambiance du lieu.
-
-Noté 3,7/5 sur Google (3 avis seulement, donc difficile de se faire un avis définitif). Recommandé par Coworking-France et Le Cercle des Dircom. C'est une option pratique si tu habites dans le sud de Boulogne et que tu ne veux pas traverser la ville pour trouver un poste de travail.
+Rue du Point du Jour, dans le quartier du même nom. Scandium est un espace de coworking compact qui offre des solutions de travail flexibles. L'endroit est fonctionnel, avec WiFi, prises et grandes tables pour travailler confortablement. Le quartier du Point du Jour est calme et résidentiel, ce qui se ressent dans l'ambiance du lieu, donc difficile de se faire un avis définitif). Recommandé par Coworking-France et Le Cercle des Dircom. C'est une option pratique si tu habites dans le sud de Boulogne et que tu ne veux pas traverser la ville pour trouver un poste de travail.
 
 Un spot de proximité pour les habitants du Point du Jour.
 
@@ -116,7 +110,7 @@ Un spot de proximité pour les habitants du Point du Jour.
 
 ## BHI
 
-Rue de la Pyramide, en plein centre. BHI propose du coworking avec des formules à l'heure, à la demi-journée ou à la journée. Noté 5/5 sur Google (mais avec seulement 3 avis, donc à prendre avec du recul). L'avantage principal : c'est ouvert 7j/7, de 8h à 18h, y compris le week-end. WiFi et prises sont disponibles. L'espace est simple et efficace, sans chichi.
+Rue de la Pyramide, en plein centre. BHI propose du coworking avec des formules à l'heure, à la demi-journée ou à la journée. Noté. L'avantage principal : c'est ouvert 7j/7, de 8h à 18h, y compris le week-end. WiFi et prises sont disponibles. L'espace est simple et efficace, sans chichi.
 
 Pour ceux qui ont besoin d'un poste de travail le week-end sans s'engager sur un abonnement.
 

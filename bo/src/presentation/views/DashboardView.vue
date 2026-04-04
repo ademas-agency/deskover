@@ -48,9 +48,9 @@ const topCities = computed(() => {
         <div class="divide-y divide-steam/5">
           <div
             v-for="place in placesStore.toEnrich.slice(0, 6)"
-            :key="place.google_place_id"
+            :key="place.id"
             class="px-6 py-3 flex items-center gap-3 hover:bg-linen/50 cursor-pointer transition-colors"
-            @click="router.push({ name: 'place-edit', params: { id: place.google_place_id } })"
+            @click="router.push({ name: 'place-edit', params: { id: place.id } })"
           >
             <div class="w-8 h-8 rounded-lg overflow-hidden bg-linen flex-shrink-0">
               <img
@@ -137,9 +137,9 @@ const topCities = computed(() => {
         <div class="divide-y divide-steam/5">
           <div
             v-for="place in recentPlaces"
-            :key="place.google_place_id"
+            :key="place.id"
             class="px-6 py-3 flex items-center gap-3 hover:bg-linen/50 cursor-pointer transition-colors"
-            @click="router.push({ name: 'place-edit', params: { id: place.google_place_id } })"
+            @click="router.push({ name: 'place-edit', params: { id: place.id } })"
           >
             <div class="w-8 h-8 rounded-lg overflow-hidden bg-linen flex-shrink-0">
               <img

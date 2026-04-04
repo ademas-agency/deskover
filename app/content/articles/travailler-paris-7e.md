@@ -19,7 +19,7 @@ On a repéré 6 spots entre le musée d'Orsay et le Champ-de-Mars. Des cafés av
 
 Rue des Saints-Pères, à la frontière entre le 6e et le 7e. Maison Fleuret est une ancienne librairie transformée en café, et le lieu a gardé cette atmosphère feutrée des endroits où l'on se plonge dans un livre. L'intérieur est intime et chaleureux, avec des murs en boiserie, une lumière douce, et des pâtisseries qui donnent envie de s'attarder. Le thé est aussi bon que le café, et la carte de petits plats est soignée.
 
-WiFi et prises sont au rendez-vous, le calme aussi. Noté 4,2/5 sur Google (485 avis), cité par Vivre Paris, TimeOut Paris et Copenhagen Filtered parmi les bons spots pour travailler à Paris. Ouvert du lundi au vendredi de 9h à 18h, et le week-end de 9h30 à 18h. L'ambiance est clairement faite pour les matinées et les après-midi de concentration, pas pour les soirées. Si tu bosses dans le coin de Saint-Germain ou du musée d'Orsay, c'est un repaire tout trouvé.
+WiFi et prises sont au rendez-vous, le calme aussi. Ouvert du lundi au vendredi de 9h à 18h, et le week-end de 9h30 à 18h. L'ambiance est clairement faite pour les matinées et les après-midi de concentration, pas pour les soirées. Si tu bosses dans le coin de Saint-Germain ou du musée d'Orsay, c'est un repaire tout trouvé.
 
 Notre préféré dans le 7e pour les matinées de travail au calme, dans un cadre qui a de l'âme.
 
@@ -39,9 +39,7 @@ Le concept double-étage est malin : détente en bas, concentration en haut. A t
 
 ## Coin Café
 
-Rue de Bourgogne, dans le quartier des ministères. Coin Café est un petit café cosy qui fait le job pour les sessions de travail entre deux rendez-vous. L'ambiance est celle d'un café de quartier, avec des habitués qui passent prendre leur café du matin et des travailleurs nomades qui s'installent pour quelques heures. Le WiFi fonctionne, le café est bon, et les pâtisseries accompagnent bien la matinée.
-
-Noté 4,2/5 sur Google (464 avis). Les horaires sont un vrai atout en semaine : ouvert du lundi au vendredi de 7h à minuit, ce qui te laisse une amplitude rare. Le samedi, c'est 9h-19h, et c'est fermé le dimanche. Le quartier est calme, bien desservi par le métro Assemblée Nationale, et tu es à cinq minutes à pied du musée d'Orsay pour une pause culturelle entre deux calls.
+Rue de Bourgogne, dans le quartier des ministères. Coin Café est un petit café cosy qui fait le job pour les sessions de travail entre deux rendez-vous. L'ambiance est celle d'un café de quartier, avec des habitués qui passent prendre leur café du matin et des travailleurs nomades qui s'installent pour quelques heures. Le WiFi fonctionne, le café est bon, et les pâtisseries accompagnent bien la matinée. Les horaires sont un vrai atout en semaine : ouvert du lundi au vendredi de 7h à minuit, ce qui te laisse une amplitude rare. Le samedi, c'est 9h-19h, et c'est fermé le dimanche. Le quartier est calme, bien desservi par le métro Assemblée Nationale, et tu es à cinq minutes à pied du musée d'Orsay pour une pause culturelle entre deux calls.
 
 Un bon café de quartier pour les journées de boulot dans le coin des ministères, avec des horaires larges en semaine.
 
@@ -52,7 +50,7 @@ Un bon café de quartier pour les journées de boulot dans le coin des ministèr
 
 Rue de Babylone, dans un quartier résidentiel calme entre le Bon Marché et les Invalides. MaMi, c'est un espace cocon avec des canapés moelleux, des fauteuils confortables, et une ambiance qui invite à se poser pour la journée. L'endroit est spacieux, avec de grandes tables qui permettent d'étaler tes affaires, et un volume sonore maîtrisé. Le café et les snacks sont bons, et la carte permet de tenir de 8h à la fermeture sans bouger.
 
-WiFi dispo, grandes tables, cadre calme. Noté 4,3/5 sur Google avec plus de 2 200 avis, cité par Le Bonbon. Ouvert du lundi au vendredi de 8h à 17h30, et le week-end de 9h à 18h. C'est un spot de journée, qui ferme un peu tôt pour les gros travailleurs, mais l'ambiance cocon et le confort des assises compensent largement.
+WiFi dispo, grandes tables, cadre calme. Ouvert du lundi au vendredi de 8h à 17h30, et le week-end de 9h à 18h. C'est un spot de journée, qui ferme un peu tôt pour les gros travailleurs, mais l'ambiance cocon et le confort des assises compensent largement.
 
 Pour les après-midi de travail où tu veux du confort, du calme, et un bon café dans un cadre douillet.
 
@@ -63,7 +61,7 @@ Pour les après-midi de travail où tu veux du confort, du calme, et un bon caf�
 
 Rue de Babylone, toujours, à quelques numéros de MaMi. Sofffa Paris, c'est la version parisienne du slow café lyonnais qu'on adore. Le concept est simple : tu paies au temps passé (5 euros la première heure, 3 euros les suivantes), et le buffet est en libre-service. Café, thé, encas, tout est inclus. La déco a un petit air berlinois, épuré et chaleureux, avec des matériaux bruts et une lumière naturelle qui fait du bien.
 
-Le WiFi est solide, le calme est au rendez-vous, et le modèle au temps passé supprime le stress de la consommation obligatoire. Noté 4,9/5 sur Google (109 avis), ce qui est remarquable. Recommandé par Le Bonbon. Attention aux horaires qui varient : mercredi et dimanche 12h-18h30, jeudi au samedi 12h-15h puis 19h-21h30, fermé lundi et mardi. C'est un spot de milieu de semaine et de week-end, avec une coupure le soir certains jours. Pas le plus simple à caler dans un planning, mais l'expérience vaut le détour.
+Le WiFi est solide, le calme est au rendez-vous, et le modèle au temps passé supprime le stress de la consommation obligatoire. Recommandé par Le Bonbon. Attention aux horaires qui varient : mercredi et dimanche 12h-18h30, jeudi au samedi 12h-15h puis 19h-21h30, fermé lundi et mardi. C'est un spot de milieu de semaine et de week-end, avec une coupure le soir certains jours. Pas le plus simple à caler dans un planning, mais l'expérience vaut le détour.
 
 Le concept anti-stress par excellence : tu paies ton temps, tu te sers, et tu bosses sans pression.
 
@@ -72,9 +70,7 @@ Le concept anti-stress par excellence : tu paies ton temps, tu te sers, et tu bo
 
 ## Le Carré des Invalides
 
-Rue de Grenelle, dans l'enceinte du musée de l'Armée. Le Carré des Invalides, c'est la cafétéria du musée, mais accessible sans billet d'entrée. L'espace est grand, lumineux, et la terrasse ensoleillée donne sur les jardins. C'est un spot atypique pour bosser : tu es dans un cadre historique, au calme, avec de la place et du WiFi.
-
-Noté 2,6/5 sur Google (260 avis), ce qui reflète surtout des avis de visiteurs du musée déçus par la restauration classique. En tant que spot de travail, l'endroit a ses atouts : beaucoup d'espace, pas de pression de consommation, et un cadre qui change du café habituel. Pas de miracle sur le café, mais la terrasse et le calme des Invalides compensent. Un spot de beau temps, à tester quand tu as envie de changer d'air.
+Rue de Grenelle, dans l'enceinte du musée de l'Armée. Le Carré des Invalides, c'est la cafétéria du musée, mais accessible sans billet d'entrée. L'espace est grand, lumineux, et la terrasse ensoleillée donne sur les jardins. C'est un spot atypique pour bosser : tu es dans un cadre historique, au calme, avec de la place et du WiFi, ce qui reflète surtout des avis de visiteurs du musée déçus par la restauration classique. En tant que spot de travail, l'endroit a ses atouts : beaucoup d'espace, pas de pression de consommation, et un cadre qui change du café habituel. Pas de miracle sur le café, mais la terrasse et le calme des Invalides compensent. Un spot de beau temps, à tester quand tu as envie de changer d'air.
 
 Pour les jours de soleil où tu veux bosser en terrasse dans un cadre historique.
 

@@ -19,7 +19,7 @@ On a fait le tour de la ville pour te repérer les meilleurs endroits où bosser
 
 Rue Chevalier Paul, dans le centre-ville. L'Archipel, c'est le spot de coworking de référence à Toulon. Un écosystème collaboratif avec des espaces modulables, des salles de réunion atypiques, et une ambiance qui favorise les échanges sans sacrifier le calme. L'endroit est lumineux, bien agencé, et on sent qu'il a été pensé par des gens qui bossent eux-mêmes. Les grandes tables sont confortables, les chaises tiennent la route pour une journée complète, et l'énergie collective est là.
 
-WiFi fiable, prises partout, et possibilité de manger sur place. Noté 4,7/5 sur Google avec 45 avis, recommandé par Le Varois et cité sur leur propre blog parmi les adresses pour travailler autrement à Toulon. Ouvert du lundi au vendredi, 8h30-18h. Fermé le week-end. C'est le lieu où tu reviens chaque semaine quand tu as compris que bosser seul chez toi ne te convient plus.
+WiFi fiable, prises partout, et possibilité de manger sur place. Ouvert du lundi au vendredi, 8h30-18h. Fermé le week-end. C'est le lieu où tu reviens chaque semaine quand tu as compris que bosser seul chez toi ne te convient plus.
 
 Le spot de référence pour les télétravailleurs qui veulent un cadre pro et une communauté.
 
@@ -30,7 +30,7 @@ Le spot de référence pour les télétravailleurs qui veulent un cadre pro et u
 
 Rue Paul Lendrin, sur le Petit Cours Lafayette. Un café associatif qui a du charme et des convictions. L'ambiance est calme, un peu bohème, avec une terrasse agréable aux beaux jours. On y boit un café, on y grignote, et on y travaille dans une atmosphère détendue. Le lieu vit au rythme de ses activités culturelles, ce qui donne un petit supplément d'âme qu'on ne trouve pas dans un café classique.
 
-WiFi disponible (même si parfois un peu capricieux, d'après les retours), et les prix sont doux. Noté 4,8/5 sur Google avec 54 avis. Ouvert du mardi au samedi, avec une pause entre 13h et 14h. Fermé le lundi et le dimanche. C'est le genre d'adresse qu'on adopte pour les matinées calmes avec un bon café et un projet à faire avancer.
+WiFi disponible (même si parfois un peu capricieux, d'après les retours), et les prix sont doux. Ouvert du mardi au samedi, avec une pause entre 13h et 14h. Fermé le lundi et le dimanche. C'est le genre d'adresse qu'on adopte pour les matinées calmes avec un bon café et un projet à faire avancer.
 
 Un café associatif avec de l'âme pour les sessions de travail tranquilles.
 
@@ -41,7 +41,7 @@ Un café associatif avec de l'âme pour les sessions de travail tranquilles.
 
 Rue Pierre Semard, dans le centre. Dégus'Thé, c'est un salon de thé doux et accueillant, avec une déco qui fait la part belle aux livres. L'ambiance est feutrée, presque cocon, et la carte propose des options végétaliennes qui changent des éternels croque-monsieurs. On s'y installe pour un brunch tardif ou un goûter, et le calme de l'endroit invite naturellement à sortir l'ordi.
 
-L'espace est agréable pour bosser, surtout si tu cherches un cadre posé. Noté 4,6/5 sur Google avec 553 avis. Ouvert tous les jours de 11h à 17h (10h-14h le dimanche). Les horaires sont un peu courts pour une journée complète, mais pour une session de 3-4 heures dans un cadre cosy, c'est top.
+L'espace est agréable pour bosser, surtout si tu cherches un cadre posé. Ouvert tous les jours de 11h à 17h (10h-14h le dimanche). Les horaires sont un peu courts pour une journée complète, mais pour une session de 3-4 heures dans un cadre cosy, c'est top.
 
 Le spot cocon pour une session de travail l'après-midi, entouré de livres et de thé.
 
@@ -52,7 +52,7 @@ Le spot cocon pour une session de travail l'après-midi, entouré de livres et d
 
 Rue des Savonnières, dans le quartier des Arts. Un tout petit café-couture avec des plats gourmands faits maison et une ambiance chaleureuse. Beaux Aime, c'est l'adresse confidentielle que les habitués se refilent. L'endroit est petit, l'accueil est généreux, et les prix sont doux. Le genre de lieu où tu te sens bien dès que tu passes la porte.
 
-Noté 5/5 sur Google avec 35 avis. Les horaires ne sont pas affichés en ligne, donc prévois de vérifier avant de te déplacer. C'est un spot pour les petites sessions de travail dans un cadre intimiste, pas pour les marathons de 8 heures. Mais quand tu as besoin de changer d'air et de manger un truc bon sans te ruiner, c'est une pépite.
+Noté Les horaires ne sont pas affichés en ligne, donc prévois de vérifier avant de te déplacer. C'est un spot pour les petites sessions de travail dans un cadre intimiste, pas pour les marathons de 8 heures. Mais quand tu as besoin de changer d'air et de manger un truc bon sans te ruiner, c'est une pépite.
 
 Un micro-café chaleureux pour les pauses productives dans le quartier des Arts.
 
@@ -61,9 +61,7 @@ Un micro-café chaleureux pour les pauses productives dans le quartier des Arts.
 
 ## TVT Innovation
 
-Place Georges Pompidou, dans le centre commercial Mayol. TVT, c'est le plus grand espace de coworking de Toulon, avec une ambiance startup et des équipements pro. Les grandes tables, le WiFi rapide, les prises en nombre : tout est là pour bosser efficacement. Le positionnement dans le centre commercial est un avantage pratique (courses, restos, services à portée de main), même si le cadre n'a pas le charme d'un café de quartier.
-
-Noté 4,1/5 sur Google avec 46 avis. Ouvert du lundi au vendredi, 7h30-18h. L'ouverture matinale dès 7h30 est un vrai plus pour les lève-tôt qui veulent attaquer la journée avant tout le monde. Fermé le week-end.
+Place Georges Pompidou, dans le centre commercial Mayol. TVT, c'est le plus grand espace de coworking de Toulon, avec une ambiance startup et des équipements pro. Les grandes tables, le WiFi rapide, les prises en nombre : tout est là pour bosser efficacement. Le positionnement dans le centre commercial est un avantage pratique (courses, restos, services à portée de main), même si le cadre n'a pas le charme d'un café de quartier. Ouvert du lundi au vendredi, 7h30-18h. L'ouverture matinale dès 7h30 est un vrai plus pour les lève-tôt qui veulent attaquer la journée avant tout le monde. Fermé le week-end.
 
 Le coworking grande capacité pour les journées intenses, avec tout à portée de main.
 
@@ -72,9 +70,7 @@ Le coworking grande capacité pour les journées intenses, avec tout à portée 
 
 ## La Cantine
 
-Rue Corneille, toujours du côté de Mayol. La Cantine, c'est un espace de coworking avec une ambiance communautaire qui tourne autour d'une grande table de cuisine. Le concept est convivial : on bosse, on échange, on partage un café. Les grandes tables permettent de s'installer confortablement, le WiFi est là, les prises aussi. L'endroit a un côté familial qui le rend attachant.
-
-Noté 4,2/5 sur Google (13 avis). Les horaires ne sont pas affichés en ligne, mieux vaut appeler avant de venir. Si tu aimes l'idée de bosser dans un lieu où les gens se parlent et où la machine à café est un prétexte à la discussion, La Cantine est faite pour toi.
+Rue Corneille, toujours du côté de Mayol. La Cantine, c'est un espace de coworking avec une ambiance communautaire qui tourne autour d'une grande table de cuisine. Le concept est convivial : on bosse, on échange, on partage un café. Les grandes tables permettent de s'installer confortablement, le WiFi est là, les prises aussi. L'endroit a un côté familial qui le rend attachant. Les horaires ne sont pas affichés en ligne, mieux vaut appeler avant de venir. Si tu aimes l'idée de bosser dans un lieu où les gens se parlent et où la machine à café est un prétexte à la discussion, La Cantine est faite pour toi.
 
 Un coworking convivial, version grande tablée, pour ceux qui aiment le collectif.
 
@@ -85,7 +81,7 @@ Un coworking convivial, version grande tablée, pour ceux qui aiment le collecti
 
 Place des Savonnières, dans le quartier des Arts. Un espace associatif dédié aux créatifs et aux porteurs de projets culturels. Le Port des Créateurs mélange espace de travail et lieu de vie artistique, dans un quartier qui prend de plus en plus de couleurs. L'ambiance est inspirante, l'endroit est vivant, et on y croise des profils variés : artistes, designers, photographes, vidéastes.
 
-WiFi disponible, prises accessibles. Noté 4,3/5 sur Google avec 107 avis. Ouvert du lundi au vendredi, 9h-18h. Si tu bosses dans le domaine créatif, c'est probablement le lieu qui te correspondra le mieux à Toulon. Les échanges informels entre les résidents sont un bonus qu'on ne trouve pas dans un coworking classique.
+WiFi disponible, prises accessibles. Ouvert du lundi au vendredi, 9h-18h. Si tu bosses dans le domaine créatif, c'est probablement le lieu qui te correspondra le mieux à Toulon. Les échanges informels entre les résidents sont un bonus qu'on ne trouve pas dans un coworking classique.
 
 Le repaire des créatifs, dans un quartier qui bouge et qui inspire.
 
@@ -94,9 +90,7 @@ Le repaire des créatifs, dans un quartier qui bouge et qui inspire.
 
 ## Columbus Café Co
 
-Place Pierre Puget, en plein centre. Un classique de la chaîne qui fonctionne bien pour le télétravail occasionnel. L'ambiance est calme et propre, le café est correct, et les sandwichs faits maison dépannent pour le déjeuner. Les tables sont suffisamment grandes pour y poser un ordi, et le volume sonore reste raisonnable.
-
-Noté 4,1/5 sur Google avec 342 avis. Ouvert du lundi au samedi, 8h-18h30. Fermé le dimanche. Attention : les ordis portables sont interdits le samedi, donc c'est strictement un spot de semaine. Pour le reste, c'est une valeur sûre quand tu veux un café rapide et une table pour avancer sur un dossier.
+Place Pierre Puget, en plein centre. Un classique de la chaîne qui fonctionne bien pour le télétravail occasionnel. L'ambiance est calme et propre, le café est correct, et les sandwichs faits maison dépannent pour le déjeuner. Les tables sont suffisamment grandes pour y poser un ordi, et le volume sonore reste raisonnable. Ouvert du lundi au samedi, 8h-18h30. Fermé le dimanche. Attention : les ordis portables sont interdits le samedi, donc c'est strictement un spot de semaine. Pour le reste, c'est une valeur sûre quand tu veux un café rapide et une table pour avancer sur un dossier.
 
 Le plan B fiable en centre-ville pour les sessions de travail en semaine.
 

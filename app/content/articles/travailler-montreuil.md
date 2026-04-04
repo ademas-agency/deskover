@@ -19,7 +19,7 @@ Montreuil a compris le truc : entre les coworkings installés dans d'anciens ent
 
 Boulevard Chanzy, dans le haut-Montreuil. Ici Montreuil, c'est bien plus qu'un coworking : c'est un maker space, un atelier partagé, un lieu de création qui vibre en permanence. Imprimante 3D, découpe laser, ateliers bois et métal, mais aussi des postes de travail classiques pour ceux qui bossent sur écran. L'espace est immense, installé dans un ancien bâtiment industriel avec des volumes qui donnent de l'air. On y croise des artisans, des designers, des développeurs, des créatifs de tous bords. L'énergie est communicative.
 
-WiFi fiable, prises partout, grandes tables, et la possibilité de manger sur place. Noté 4,8/5 sur Google (172 avis), recommandé par Bondy Blog, Hub-Grade, Ubiq et Coworking-France. Ouvert du lundi au vendredi, 9h30-18h. C'est la référence absolue à Montreuil pour quiconque cherche un espace de travail avec du caractère et une communauté active.
+WiFi fiable, prises partout, grandes tables, et la possibilité de manger sur place. Ouvert du lundi au vendredi, 9h30-18h. C'est la référence absolue à Montreuil pour quiconque cherche un espace de travail avec du caractère et une communauté active.
 
 Le lieu qui résume Montreuil en un seul endroit : créatif, collaboratif, et vivant.
 
@@ -28,7 +28,7 @@ Le lieu qui résume Montreuil en un seul endroit : créatif, collaboratif, et vi
 
 ## Le 71
 
-Rue Robespierre, en plein centre. Le 71 est un coworking qui se distingue par son engagement social : il propose des formations aux outils digitaux, dont certaines gratuites pour les demandeurs d'emploi. L'espace est bien équipé, avec WiFi et prises, et l'ambiance est bienveillante et accessible. Noté 4,4/5 sur Google (56 avis).
+Rue Robespierre, en plein centre. Le 71 est un coworking qui se distingue par son engagement social : il propose des formations aux outils digitaux, dont certaines gratuites pour les demandeurs d'emploi. L'espace est bien équipé, avec WiFi et prises, et l'ambiance est bienveillante et accessible.
 
 Au-delà du poste de travail, Le 71 est un lieu où tu peux monter en compétences et rencontrer des gens qui partagent tes problématiques professionnelles. C'est le coworking avec un supplément d'âme.
 
@@ -39,7 +39,7 @@ Pour ceux qui veulent bosser et apprendre en même temps.
 
 ## O Bar Lié
 
-Rue de la République, dans le bas-Montreuil, la zone de bureaux. O Bar Lié est une brasserie chaleureuse qui accueille les ordis sans sourciller. Plusieurs salles, des terrasses, une carte complète pour manger sur place, et du WiFi. L'ambiance est vivante sans être bruyante, avec un calme relatif qui permet de se concentrer, surtout en dehors des heures de repas. Noté 4,3/5 sur Google (262 avis).
+Rue de la République, dans le bas-Montreuil, la zone de bureaux. O Bar Lié est une brasserie chaleureuse qui accueille les ordis sans sourciller. Plusieurs salles, des terrasses, une carte complète pour manger sur place, et du WiFi. L'ambiance est vivante sans être bruyante, avec un calme relatif qui permet de se concentrer, surtout en dehors des heures de repas.
 
 Ouvert du lundi au vendredi, 8h-minuit. L'amplitude horaire est un vrai plus : tu peux venir tôt pour une session matinale et rester tard si le projet déborde, puis transformer la fin de journée en apéro sans bouger de ta chaise.
 
@@ -50,7 +50,7 @@ Le bon plan pour bosser dans un cadre brasserie avec des horaires larges.
 
 ## Coworking Easy Business
 
-Place du Général de Gaulle, en face de la mairie. Easy Business, c'est un coworking qui mise sur la flexibilité totale : ouvert 24h/24, 7j/7. Noté 5/5 sur Google avec 152 avis, ce qui est assez rare pour un espace de coworking. WiFi et prises sont au rendez-vous, et l'espace est conçu pour accueillir aussi bien les nomades à la journée que les équipes installées.
+Place du Général de Gaulle, en face de la mairie. Easy Business, c'est un coworking qui mise sur la flexibilité totale : ouvert 24h/24, 7j/7. Noté WiFi et prises sont au rendez-vous, et l'espace est conçu pour accueillir aussi bien les nomades à la journée que les équipes installées.
 
 Le positionnement en plein centre, face à la mairie, rend le lieu facile à trouver et accessible en transports.
 
@@ -61,7 +61,7 @@ Le coworking sans contrainte d'horaires, avec une note Google qui inspire confia
 
 ## Coworking Arch Types
 
-Rue Gutenberg, dans le quartier des ateliers. Arch Types est un espace de coworking à taille humaine, noté 5/5 sur Google (16 avis). L'espace est bien équipé (WiFi, prises) et l'ambiance est studieuse. Ouvert du lundi au vendredi, 9h-18h. C'est le genre de petit coworking où tu connais vite tout le monde et où l'entraide entre coworkers fait partie du quotidien.
+Rue Gutenberg, dans le quartier des ateliers. Arch Types est un espace de coworking à taille humaine. L'espace est bien équipé (WiFi, prises) et l'ambiance est studieuse. Ouvert du lundi au vendredi, 9h-18h. C'est le genre de petit coworking où tu connais vite tout le monde et où l'entraide entre coworkers fait partie du quotidien.
 
 Pour les freelances qui cherchent un espace intime et bien rodé.
 
@@ -70,7 +70,7 @@ Pour les freelances qui cherchent un espace intime et bien rodé.
 
 ## Fab City Hub
 
-Place du 19 mars 1962. Fab City Hub propose du coworking à tarification flexible : à l'heure, à la demi-journée ou à la journée. Noté 5/5 sur Google (17 avis). WiFi et prises sont disponibles. L'espace est rattaché à un fablab, ce qui lui donne une touche maker appréciable.
+Place du 19 mars 1962. Fab City Hub propose du coworking à tarification flexible : à l'heure, à la demi-journée ou à la journée. WiFi et prises sont disponibles. L'espace est rattaché à un fablab, ce qui lui donne une touche maker appréciable.
 
 Pratique pour les sessions ponctuelles sans engagement.
 
@@ -79,7 +79,7 @@ Pratique pour les sessions ponctuelles sans engagement.
 
 ## La Maison Montreau
 
-Boulevard Théophile Sueur, dans le haut-Montreuil. La Maison Montreau est un espace de coworking qui propose bureaux privatifs et partagés. Noté 4,5/5 sur Google (108 avis). WiFi et prises au rendez-vous. L'endroit a une bonne réputation locale et attire une communauté de travailleurs indépendants du quartier.
+Boulevard Théophile Sueur, dans le haut-Montreuil. La Maison Montreau est un espace de coworking qui propose bureaux privatifs et partagés. WiFi et prises au rendez-vous. L'endroit a une bonne réputation locale et attire une communauté de travailleurs indépendants du quartier.
 
 Un spot fiable pour ceux qui bossent dans le haut-Montreuil.
 
@@ -88,7 +88,7 @@ Un spot fiable pour ceux qui bossent dans le haut-Montreuil.
 
 ## Coworking Ust Working
 
-Rue Rabelais. Un espace de coworking classique avec postes de travail et salles de réunion. Noté 4,4/5 sur Google (22 avis). WiFi et prises. Ouvert du lundi au vendredi, 9h-18h30 (16h30 le vendredi).
+Rue Rabelais. Un espace de coworking classique avec postes de travail et salles de réunion. WiFi et prises. Ouvert du lundi au vendredi, 9h-18h30 (16h30 le vendredi).
 
 Fonctionnel et sans surprise, pour les journées de boulot classiques.
 
@@ -97,7 +97,7 @@ Fonctionnel et sans surprise, pour les journées de boulot classiques.
 
 ## Ecoeff Lab
 
-Rue de Rosny, dans le haut-Montreuil. Ecoeff Lab est un coworking dédié aux activités numériques et durables. Noté 5/5 sur Google (1 avis). WiFi et prises. Ouvert du lundi au vendredi, 10h-17h. Un espace de niche pour les profils engagés dans l'économie durable.
+Rue de Rosny, dans le haut-Montreuil. Ecoeff Lab est un coworking dédié aux activités numériques et durables. WiFi et prises. Ouvert du lundi au vendredi, 10h-17h. Un espace de niche pour les profils engagés dans l'économie durable.
 
 ::place-embed{id="a61a5f04-296f-4e1e-aa7a-2258796586ff"}
 ::

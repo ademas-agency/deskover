@@ -19,7 +19,7 @@ On a arpenté les rues Perret et les quais pour te dénicher les meilleurs spots
 
 Rue Victor Hugo, dans un espace de 2 500 m2 qui en impose. La Hune, c'est le vaisseau amiral du coworking havrais. L'intérieur est élégant et fonctionnel, avec des détails inspirés par la mer et les transatlantiques. Normal, au Havre. On y trouve des bureaux individuels, des salles de réunion, des espaces nomades, et une ambiance qui mélange le pro et le convivial. La lumière naturelle entre généreusement, les espaces sont bien agencés, et on sent que le lieu a été pensé par des gens qui savent ce que bosser veut dire.
 
-WiFi fiable, prises partout, calme au rendez-vous, et possibilité de manger sur place. Noté 4,5/5 sur Google avec 82 avis, recommandé par Ouest-France, France Bleu et l'Agence Ann(e). Ouvert du mardi au vendredi, 8h30-18h. Fermé le week-end et le lundi. C'est le spot de référence pour les télétravailleurs havrais, et à raison.
+WiFi fiable, prises partout, calme au rendez-vous, et possibilité de manger sur place. Ouvert du mardi au vendredi, 8h30-18h. Fermé le week-end et le lundi. C'est le spot de référence pour les télétravailleurs havrais, et à raison.
 
 Le QG pour les journées productives dans un cadre qui a de l'allure.
 
@@ -30,7 +30,7 @@ Le QG pour les journées productives dans un cadre qui a de l'allure.
 
 Quai de Southampton, face au port. Le nom dit tout : on est dans l'esprit havrais, brut et maritime. Le Container, c'est un espace de coworking gratuit installé au rez-de-chaussée de la CCI, avec une trentaine de postes de travail. L'idée est simple : sortir les télétravailleurs de leur isolement et créer des rencontres professionnelles. L'espace est calme, les grandes tables permettent de s'installer confortablement, et l'ambiance est studieuse sans être étouffante.
 
-WiFi solide, prises dispo, et accès libre. Gratuit, on insiste. Noté 4,6/5 sur Google avec plus de 1 900 avis (sur l'ensemble du lieu), recommandé par Ouest-France et France Bleu. L'emplacement sur les quais ajoute un petit plus non négligeable : quand tu lèves les yeux, tu vois le port. Ça change du mur du salon.
+WiFi solide, prises dispo, et accès libre. Gratuit, on insiste. L'emplacement sur les quais ajoute un petit plus non négligeable : quand tu lèves les yeux, tu vois le port. Ça change du mur du salon.
 
 Le plan parfait si tu veux bosser sans sortir la carte bleue, dans un cadre maritime qui a du cachet.
 
@@ -41,7 +41,7 @@ Le plan parfait si tu veux bosser sans sortir la carte bleue, dans un cadre mari
 
 Cours de la République, à deux pas de l'université. Le 139, c'est un espace de travail gratuit et cosy qui accueille aussi bien les étudiants que les télétravailleurs. L'endroit propose des ordinateurs en libre accès, une imprimante, une photocopieuse, et un cadre calme pour bosser tranquille. L'ambiance est jeune, dynamique, et l'équipe est accueillante. On s'y sent bien, c'est simple mais efficace.
 
-WiFi fiable, prises disponibles, et tout ça sans débourser un centime. Noté 4,6/5 sur Google (46 avis), cité par Ouest-France et France Bleu parmi les espaces de coworking du Havre. Ouvert du lundi au vendredi, 8h30-18h30. L'adresse idéale si tu es dans le quartier universitaire et que tu cherches un lieu fonctionnel sans te prendre la tête.
+WiFi fiable, prises disponibles, et tout ça sans débourser un centime. Ouvert du lundi au vendredi, 8h30-18h30. L'adresse idéale si tu es dans le quartier universitaire et que tu cherches un lieu fonctionnel sans te prendre la tête.
 
 Un spot gratuit, calme et bien équipé pour les sessions de travail sans fioritures.
 
@@ -52,7 +52,7 @@ Un spot gratuit, calme et bien équipé pour les sessions de travail sans fiorit
 
 Boulevard de Strasbourg, en centre-ville. Village Socrate, c'est un espace de coworking paisible qui cultive la convivialité. L'endroit est chaleureux, les bureaux en open space sont bien agencés, les salles de réunion sont équipées, et l'ambiance entre entrepreneurs et télétravailleurs crée un petit écosystème agréable. On n'est pas dans un grand volume impersonnel, on est dans un lieu à taille humaine où les gens se connaissent et se croisent avec plaisir.
 
-WiFi rapide, prises dispo, possibilité de manger sur place. Noté 4,9/5 sur Google (18 avis, mais quasi parfait). Ouvert du lundi au vendredi, 8h30-19h30. L'amplitude horaire est un cran au-dessus de la moyenne des coworkings havrais, ce qui laisse de la marge pour les journées chargées.
+WiFi rapide, prises dispo, possibilité de manger sur place. Ouvert du lundi au vendredi, 8h30-19h30. L'amplitude horaire est un cran au-dessus de la moyenne des coworkings havrais, ce qui laisse de la marge pour les journées chargées.
 
 Un coworking à taille humaine où la convivialité n'est pas un argument marketing mais une réalité.
 
@@ -63,7 +63,7 @@ Un coworking à taille humaine où la convivialité n'est pas un argument market
 
 Rue Charles Laffitte, dans l'hostel-rooftop du même nom. The People, c'est un concept hybride : hébergement, bar-rooftop, et espace de coworking. L'ambiance est jeune, cosmopolite, et l'énergie du lieu est portée par les voyageurs et les locaux qui s'y mélangent. Le coworking dispose de grandes tables, de phone booths, et de salles de réunion. Le cadre est moderne, la déco est soignée, et on se sent un peu comme dans un hub international, version normande.
 
-WiFi dispo, prises accessibles, et l'avantage d'être ouvert 24h/24, 7j/7. Noté 3,8/5 sur Google (482 avis, pour l'ensemble de l'hostel). La note est tirée vers le bas par les avis sur l'hébergement, pas sur le coworking. Si tu cherches un spot ouvert en permanence avec une ambiance internationale, c'est un choix intéressant.
+WiFi dispo, prises accessibles, et l'avantage d'être ouvert 24h/24, 7j/7. La note est tirée vers le bas par les avis sur l'hébergement, pas sur le coworking. Si tu cherches un spot ouvert en permanence avec une ambiance internationale, c'est un choix intéressant.
 
 Pour les noctambules et les travailleurs du week-end qui veulent un lieu ouvert en continu.
 
@@ -74,7 +74,7 @@ Pour les noctambules et les travailleurs du week-end qui veulent un lieu ouvert 
 
 Allée Aimé Césaire, dans un espace chaleureux pensé pour le travail. Chill Work porte bien son nom : on y travaille sérieusement dans une atmosphère détendue. L'endroit propose la fibre haut débit, des zones de détente, du café inclus dans la formule, et des ateliers thématiques réguliers pour stimuler la créativité. Les grandes tables sont confortables, le calme est au rendez-vous, et les tarifs restent abordables.
 
-WiFi en fibre, prises partout, et l'ambiance qui va avec. Noté 4,9/5 sur Google avec 85 avis. Ouvert du mardi au vendredi de 9h à 18h, et le samedi matin de 9h à 12h30. La demi-journée du samedi est un petit plus appréciable pour ceux qui ont besoin de finir un projet le week-end.
+WiFi en fibre, prises partout, et l'ambiance qui va avec. Ouvert du mardi au vendredi de 9h à 18h, et le samedi matin de 9h à 12h30. La demi-journée du samedi est un petit plus appréciable pour ceux qui ont besoin de finir un projet le week-end.
 
 Le spot chill mais sérieux, pour bosser au calme avec tout le confort nécessaire.
 
@@ -85,7 +85,7 @@ Le spot chill mais sérieux, pour bosser au calme avec tout le confort nécessai
 
 Quai de Southampton, face au port. Un café avec une bonne carte et une vue maritime qui ne gâche rien. Brumm, c'est le genre d'endroit où tu viens pour un café et tu restes pour bosser. L'ambiance est décontractée, la lumière est belle (merci l'estuaire), et les tables sont suffisamment grandes pour y poser un ordi et un carnet.
 
-WiFi disponible, et de quoi manger sur place pour tenir la journée. Noté 4,5/5 sur Google avec 129 avis. Horaires : 10h-17h en semaine (15h30 le lundi et le dimanche), jusqu'à 18h le samedi. C'est plus un spot pour les demi-journées que pour les marathons, mais le cadre vaut le déplacement.
+WiFi disponible, et de quoi manger sur place pour tenir la journée. Horaires : 10h-17h en semaine (15h30 le lundi et le dimanche), jusqu'à 18h le samedi. C'est plus un spot pour les demi-journées que pour les marathons, mais le cadre vaut le déplacement.
 
 Un café face au port pour les matinées productives avec vue sur les bateaux.
 
@@ -96,7 +96,7 @@ Un café face au port pour les matinées productives avec vue sur les bateaux.
 
 Rue d'Iéna, dans un ancien hangar à café reconverti. L'espace est spacieux, lumineux, avec le charme brut de l'architecture industrielle havraise. Archipel propose des bureaux partagés et fermés, dans un cadre calme à 5 minutes du centre-ville. Les grandes tables sont bien éclairées, l'ambiance est studieuse, et le lieu a cette authenticité qu'on ne retrouve pas dans les coworkings préfabriqués.
 
-WiFi fiable, prises en nombre, calme assuré. Ouvert 24h/24, 7j/7 pour les membres, ce qui est un atout considérable. Noté 4,3/5 sur Google (10 avis). Si tu cherches un espace flexible accessible à toute heure dans un cadre industriel qui a du caractère, Archipel est un choix solide.
+WiFi fiable, prises en nombre, calme assuré. Ouvert 24h/24, 7j/7 pour les membres, ce qui est un atout considérable. Si tu cherches un espace flexible accessible à toute heure dans un cadre industriel qui a du caractère, Archipel est un choix solide.
 
 Pour ceux qui veulent un coworking avec de l'espace, de la lumière, et la liberté de venir quand ils veulent.
 

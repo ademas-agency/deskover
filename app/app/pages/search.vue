@@ -37,10 +37,10 @@ const accessOptions = [
 ]
 
 const criteriaList = [
-  { key: 'wifi', icon: 'lucide:wifi', label: 'WiFi' },
-  { key: 'prises', icon: 'lucide:zap', label: 'Prises' },
-  { key: 'food', icon: 'lucide:utensils', label: 'Food' },
-  { key: 'style', icon: 'lucide:sparkles', label: 'Style' }
+  { key: 'wifi', icon: 'lucide:wifi', label: 'WiFi', topValue: 'Rapide' },
+  { key: 'prises', icon: 'lucide:zap', label: 'Prises', topValue: 'Partout' },
+  { key: 'food', icon: 'lucide:utensils', label: 'Food', topValue: 'Complet' },
+  { key: 'style', icon: 'lucide:sparkles', label: 'Style', topValue: 'Canon' }
 ]
 
 const days = [
@@ -182,7 +182,7 @@ function isActive(key: string) {
           <div v-if="i > 0" class="absolute left-0 top-2 bottom-2 w-px bg-[var(--color-parchment)]" />
           <UIcon :name="c.icon" class="w-7 h-7 transition-colors" :class="isActive(c.key) ? 'text-[var(--color-monstera)]' : 'text-[var(--color-steam)]'" />
           <span class="text-[9px] uppercase tracking-[0.06em] transition-colors" :class="isActive(c.key) ? 'text-[var(--color-monstera)] font-bold' : 'text-[var(--color-steam)]'">{{ c.label }}</span>
-          <span class="text-[11px] font-bold transition-colors" :class="isActive(c.key) ? 'text-[var(--color-monstera)]' : 'text-transparent'">Important</span>
+          <span class="text-[11px] font-bold transition-colors" :class="isActive(c.key) ? 'text-[var(--color-monstera)]' : 'text-[var(--color-steam)]'">{{ c.topValue }}</span>
         </button>
       </div>
 

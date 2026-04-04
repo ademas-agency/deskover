@@ -48,6 +48,7 @@ export interface Place {
   // Hours
   openingHours?: OpeningHours
   isOpen?: boolean
+  nextOpen?: string
   businessStatus?: string
 
   // Press

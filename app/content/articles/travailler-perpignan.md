@@ -19,7 +19,7 @@ On a ratissé la ville pour trouver les endroits où tu peux vraiment t'installe
 
 Boulevard Georges Clemenceau, en plein centre de Perpignan. Tu pousses la porte et tu tombes sur un espace qui mélange l'énergie d'un café et le sérieux d'un coworking. L'endroit est moderne, lumineux, et l'ambiance est celle d'un lieu où les gens viennent pour avancer, pas pour traîner. Les tables sont grandes, l'agencement est pensé pour que chacun ait son espace, et il y a cette terrasse qui fait du bien quand tu veux prendre l'air entre deux sessions de travail. Le cadre est agréable sans être tape-à-l'oeil, avec une déco sobre et des matériaux chaleureux.
 
-Côté pratique, c'est du solide : WiFi haut débit, prises à chaque poste, et un café intégré qui te permet de te ravitailler sans bouger. Le calme est au rendez-vous, ce qui n'est pas toujours gagné dans un espace partagé. Noté 4,6/5 sur Google avec 189 avis, recommandé par Passion Télétravail et le site de l'office de tourisme de Perpignan. Ouvert du lundi au vendredi, de 8h30 à 18h. Fermé le week-end. Un spot fiable pour les semaines de boulot régulières.
+Côté pratique, c'est du solide : WiFi haut débit, prises à chaque poste, et un café intégré qui te permet de te ravitailler sans bouger. Le calme est au rendez-vous, ce qui n'est pas toujours gagné dans un espace partagé. Ouvert du lundi au vendredi, de 8h30 à 18h. Fermé le week-end. Un spot fiable pour les semaines de boulot régulières.
 
 Notre préféré pour les journées où tu as besoin de structure et de bonne connexion sans prise de tête.
 
@@ -30,7 +30,7 @@ Notre préféré pour les journées où tu as besoin de structure et de bonne co
 
 Esplanade Méditerranée, toujours en centre-ville. Ici, le mot clé c'est flexibilité : l'espace est ouvert 24h/24, 7j/7. Tu bosses à 6h du matin ou à 23h un dimanche soir ? Aucun problème. Les bureaux sont équipés d'écrans, les postes sont confortables, et il y a même un coin pause avec un billard pour décrocher quelques minutes quand le cerveau sature. L'ambiance est détendue mais studieuse, un bon mélange entre concentration et convivialité.
 
-WiFi fiable, prises partout, espace café à disposition, et des tarifs qui restent abordables pour la région. Noté 4,8/5 sur Google avec 110 avis, cité par Passion Télétravail et Desk Community. L'accès 24h/24 est un vrai plus qui fait la différence, surtout si tu as des horaires décalés ou des deadlines qui te font veiller tard. C'est probablement l'espace le plus flexible de Perpignan.
+WiFi fiable, prises partout, espace café à disposition, et des tarifs qui restent abordables pour la région. L'accès 24h/24 est un vrai plus qui fait la différence, surtout si tu as des horaires décalés ou des deadlines qui te font veiller tard. C'est probablement l'espace le plus flexible de Perpignan.
 
 Le spot pour ceux qui refusent de se plier aux horaires de bureau classiques.
 
@@ -41,7 +41,7 @@ Le spot pour ceux qui refusent de se plier aux horaires de bureau classiques.
 
 Rue James Watt, dans la zone Technosud, au sud de la ville. On change de registre : ici c'est un espace de coworking professionnel pensé pour les entreprises et les indépendants qui ont besoin de tout le confort d'un bureau classique. Les espaces sont modulables, les équipements de bureau sont complets, et la connexion fibre optique offre un débit qui encaisse sans broncher les visioconférences et les transferts de fichiers lourds. Le cadre est fonctionnel, propre, bien agencé. Pas le lieu le plus inspirant visuellement, mais niveau efficacité, c'est du béton.
 
-Grandes tables, prises accessibles, parking sur place, le tout dans un environnement calme à l'écart du brouhaha du centre-ville. Noté 4,3/5 sur Google (46 avis), référencé par Perpignan Tourisme et Le Cercle des Dircom. Ouvert du lundi au vendredi, 8h-18h. Un choix solide si tu bosses dans le numérique ou si tu as besoin d'un cadre pro sans compromis.
+Grandes tables, prises accessibles, parking sur place, le tout dans un environnement calme à l'écart du brouhaha du centre-ville. Ouvert du lundi au vendredi, 8h-18h. Un choix solide si tu bosses dans le numérique ou si tu as besoin d'un cadre pro sans compromis.
 
 Pour les jours où tu as besoin de tout le confort d'un vrai bureau, sans les inconvénients.
 
@@ -52,7 +52,7 @@ Pour les jours où tu as besoin de tout le confort d'un vrai bureau, sans les in
 
 Boulevard Saint-Assiscle, près du centre-ville et des transports en commun. Le Galet, c'est 1 200 m2 d'espace de coworking dans un cadre zen et épuré. Les postes de travail sont soit en open space soit en bureaux privatifs, et l'ensemble dégage une sérénité qu'on ne trouve pas souvent dans les espaces partagés. La lumière est bien travaillée, le mobilier est sobre, et le volume sonore reste contenu. Tu t'installes, tu te mets dans ta bulle, et tu avances.
 
-WiFi, prises, grandes tables, tout est là. L'accès aux transports est un vrai plus : tu n'as pas besoin de voiture pour y aller. Noté 5/5 sur Google (16 avis, c'est peu mais c'est parfait), recommandé par Passion Télétravail et Bureaux And Co. Ouvert du lundi au vendredi, 9h-12h puis 14h-18h. La coupure de midi est à noter si tu prévois d'y passer la journée entière.
+WiFi, prises, grandes tables, tout est là. L'accès aux transports est un vrai plus : tu n'as pas besoin de voiture pour y aller. Noté, recommandé par Passion Télétravail et Bureaux And Co. Ouvert du lundi au vendredi, 9h-12h puis 14h-18h. La coupure de midi est à noter si tu prévois d'y passer la journée entière.
 
 Le bon choix pour ceux qui cherchent du calme et de l'espace dans un cadre pro accessible.
 
@@ -63,7 +63,7 @@ Le bon choix pour ceux qui cherchent du calme et de l'espace dans un cadre pro a
 
 Rue Aristide Berges, dans un tiers-lieu au design industriel qui a du caractère. Les 5 Éléments, c'est un coworking à énergie positive qui mise sur la collaboration et la synergie entre ses membres. Le cadre est atypique : structure métallique apparente, volumes généreux, lumière naturelle qui joue avec les hauteurs sous plafond. L'endroit a cette énergie des lieux où les gens créent, échangent, et se tirent vers le haut. Le design industriel donne une atmosphère à la fois brute et chaleureuse.
 
-Grandes tables, WiFi, prises, et des tarifs accessibles. Noté 4,7/5 sur Google (114 avis), cité par Passion Télétravail dans sa sélection des meilleurs coworkings de Perpignan. Ouvert du lundi au vendredi, 8h-18h. L'ambiance collaborative est clairement le point fort ici : si tu es du genre à nourrir tes projets du contact avec d'autres indépendants, tu vas te plaire.
+Grandes tables, WiFi, prises, et des tarifs accessibles. Ouvert du lundi au vendredi, 8h-18h. L'ambiance collaborative est clairement le point fort ici : si tu es du genre à nourrir tes projets du contact avec d'autres indépendants, tu vas te plaire.
 
 Un spot qui mise sur le collectif et l'énergie du groupe pour booster ta productivité.
 
@@ -74,7 +74,7 @@ Un spot qui mise sur le collectif et l'énergie du groupe pour booster ta produc
 
 Rue Général Derroja, à deux pas du Palais des rois de Majorque. La Permission est un lieu hybride de 200 m2 qui combine espace de coworking, bar-restaurant et salle bien-être. L'idée, c'est de pouvoir bosser, manger et souffler au même endroit sans avoir à traverser la ville. L'ambiance est chaleureuse et décontractée, avec une déco qui mêle touches contemporaines et caractère du quartier historique. On s'y sent bien vite, comme dans un QG qu'on adopterait au fil des semaines.
 
-WiFi, prises, calme, et des tarifs parmi les plus bas de la ville. La carte du restaurant te permet de déjeuner sur place sans casser ta concentration. Noté 4,6/5 sur Google (40 avis). Ouvert du lundi au samedi, 9h-18h. Le fait d'être ouvert le samedi est un petit bonus appréciable quand tu as un projet qui déborde sur le week-end.
+WiFi, prises, calme, et des tarifs parmi les plus bas de la ville. La carte du restaurant te permet de déjeuner sur place sans casser ta concentration. Ouvert du lundi au samedi, 9h-18h. Le fait d'être ouvert le samedi est un petit bonus appréciable quand tu as un projet qui déborde sur le week-end.
 
 Le tiers-lieu polyvalent où tu peux enchaîner travail, repas et pause détente sans bouger.
 
@@ -85,7 +85,7 @@ Le tiers-lieu polyvalent où tu peux enchaîner travail, repas et pause détente
 
 Cours Lazare Escarguel, intégré à l'hôtel Ibis Styles, près de la gare. Wojo, c'est la marque de coworking d'Accor, et le concept est malin : tu t'installes dans le lobby de l'hôtel, tu commandes une consommation, et tu bosses. L'accès est libre sur consommation, ce qui en fait une option très accessible pour une session de quelques heures. Les bureaux privatifs sont lumineux, le WiFi est solide, et la proximité de la gare est un avantage énorme si tu es en déplacement ou si tu fais des allers-retours réguliers.
 
-L'environnement est propre, fonctionnel, et ouvert 7j/7 de 9h à 18h. Noté 5/5 sur Google (mais seulement 2 avis, donc à prendre avec recul). C'est un spot pratique et sans surprise, idéal pour du dépannage ou pour les journées où tu veux juste un endroit fiable sans engagement.
+L'environnement est propre, fonctionnel, et ouvert 7j/7 de 9h à 18h. Noté. C'est un spot pratique et sans surprise, idéal pour du dépannage ou pour les journées où tu veux juste un endroit fiable sans engagement.
 
 La solution pratique pour les nomades de passage ou les habitués de la gare.
 
@@ -94,9 +94,7 @@ La solution pratique pour les nomades de passage ou les habitués de la gare.
 
 ## Les Cagettes en Ville
 
-Rue des Rois de Majorque, en plein centre historique. Les Cagettes en Ville, c'est un espace de coworking qui mise sur la simplicité : WiFi, prises, un cadre agréable et central, et tu bosses. L'endroit est à taille humaine, ce qui crée une atmosphère plus intimiste que les grands espaces. Tu ne te perds pas dans un open space immense, tu es dans un lieu où tout le monde se connaît ou presque. La localisation en centre-ville est un atout majeur si tu veux combiner ta session de travail avec un déjeuner dans les restaurants du coin.
-
-Noté 4,3/5 sur Google (27 avis). Un spot pour ceux qui préfèrent un cadre discret et bien placé à la débauche d'équipements.
+Rue des Rois de Majorque, en plein centre historique. Les Cagettes en Ville, c'est un espace de coworking qui mise sur la simplicité : WiFi, prises, un cadre agréable et central, et tu bosses. L'endroit est à taille humaine, ce qui crée une atmosphère plus intimiste que les grands espaces. Tu ne te perds pas dans un open space immense, tu es dans un lieu où tout le monde se connaît ou presque. La localisation en centre-ville est un atout majeur si tu veux combiner ta session de travail avec un déjeuner dans les restaurants du coin. Un spot pour ceux qui préfèrent un cadre discret et bien placé à la débauche d'équipements.
 
 Le coworking intimiste du centre historique, pour bosser sans chichis.
 
@@ -105,9 +103,7 @@ Le coworking intimiste du centre historique, pour bosser sans chichis.
 
 ## A l'heure des Thés
 
-Rue de l'Ange, dans une petite cour du centre-ville. On termine avec un lieu qui sort du cadre classique du coworking. A l'heure des Thés, c'est un petit salon de thé cocooning, niché dans une cour intérieure, qui offre une bulle de sérénité en pleine ville. L'ambiance est feutrée, douce, presque suspendue. La sélection de thés est belle, les pâtisseries sont faites maison, et le calme ambiant en fait un refuge parfait pour une session de travail concentrée. Pas de WiFi annoncé ni de prises en nombre, mais le cadre et le calme compensent largement pour une session de réflexion ou de rédaction hors ligne.
-
-Noté 4,2/5 sur Google (69 avis). C'est le genre d'endroit que tu gardes en réserve pour les après-midi où tu as besoin de couper avec le rythme habituel et de bosser dans un cadre qui ressource.
+Rue de l'Ange, dans une petite cour du centre-ville. On termine avec un lieu qui sort du cadre classique du coworking. A l'heure des Thés, c'est un petit salon de thé cocooning, niché dans une cour intérieure, qui offre une bulle de sérénité en pleine ville. L'ambiance est feutrée, douce, presque suspendue. La sélection de thés est belle, les pâtisseries sont faites maison, et le calme ambiant en fait un refuge parfait pour une session de travail concentrée. Pas de WiFi annoncé ni de prises en nombre, mais le cadre et le calme compensent largement pour une session de réflexion ou de rédaction hors ligne. C'est le genre d'endroit que tu gardes en réserve pour les après-midi où tu as besoin de couper avec le rythme habituel et de bosser dans un cadre qui ressource.
 
 Pour les sessions de deep work sans écran, dans un cocon qui sent le thé et les gâteaux maison.
 

@@ -28,7 +28,7 @@ const totalPages = computed(() =>
 )
 
 function goToPlace(place: Place) {
-  router.push({ name: 'place-edit', params: { id: place.google_place_id } })
+  router.push({ name: 'place-edit', params: { id: place.id } })
 }
 
 function getCategoryVariant(category: string): 'primary' | 'success' | 'warning' | 'info' | 'neutral' {
@@ -66,7 +66,7 @@ function getCategoryVariant(category: string): 'primary' | 'success' | 'warning'
         <tbody>
           <tr
             v-for="place in paginatedPlaces"
-            :key="place.google_place_id"
+            :key="place.id"
             class="border-b border-steam/5 hover:bg-linen/50 cursor-pointer transition-colors even:bg-cream/30"
             @click="goToPlace(place)"
           >

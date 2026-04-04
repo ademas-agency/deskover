@@ -2,7 +2,7 @@ import type { Place } from '../domain/entities/Place'
 
 export class PlaceService {
   static getPlacesWithoutPhoto(places: Place[]): Place[] {
-    return places.filter(p => !p.photo_url && !p.photo_local)
+    return places.filter(p => !p.photo_url && !p.photo_storage_path)
   }
 
   static getPlacesWithoutDescription(places: Place[]): Place[] {

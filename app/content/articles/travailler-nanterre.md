@@ -17,7 +17,7 @@ Le RER A et le tramway T2 rendent la ville facile d'accès depuis La Défense et
 
 ## Work & Share Nanterre
 
-Boulevard des Bouvets, bien desservi par les transports. Work & Share, c'est la référence coworking à Nanterre. L'espace est coloré, lumineux, avec des grandes tables, une terrasse, de la restauration, et une ambiance qui mêle convivialité et productivité. Noté 4,9/5 sur Google (79 avis), recommandé par Coworking-France, Work & Share officiel, Wearescene et Neo-Nomade. On sent que le lieu a été pensé pour qu'on s'y sente bien : le mobilier est soigné, les couleurs donnent de l'énergie, et l'espace est suffisamment grand pour ne pas se marcher dessus.
+Boulevard des Bouvets, bien desservi par les transports. Work & Share, c'est la référence coworking à Nanterre. L'espace est coloré, lumineux, avec des grandes tables, une terrasse, de la restauration, et une ambiance qui mêle convivialité et productivité. On sent que le lieu a été pensé pour qu'on s'y sente bien : le mobilier est soigné, les couleurs donnent de l'énergie, et l'espace est suffisamment grand pour ne pas se marcher dessus.
 
 WiFi rapide, prises partout. Ouvert du lundi au vendredi, 9h-19h (17h le vendredi). Le seul bémol, c'est la fermeture le week-end. Mais en semaine, c'est un sans-faute.
 
@@ -28,9 +28,7 @@ Notre préféré à Nanterre pour l'ambiance et l'équipement.
 
 ## Le Château
 
-Allée des Parfumeurs, sur un ancien site industriel reconverti. Le Château est un tiers-lieu qui accueille une communauté d'acteurs de l'économie sociale et solidaire. L'endroit a une âme : les volumes de l'ancien bâtiment, les espaces végétalisés, et cette énergie collective des lieux où les gens travaillent sur des projets qui ont du sens. Les grandes tables sont accueillantes, le WiFi tient la route, et la restauration est assurée sur place.
-
-Noté 4,4/5 sur Google (47 avis), recommandé par Neo-Nomade, Cité ETIC, Coworking-France et Le Cercle des Dircom. Ouvert du lundi au vendredi, 9h-18h.
+Allée des Parfumeurs, sur un ancien site industriel reconverti. Le Château est un tiers-lieu qui accueille une communauté d'acteurs de l'économie sociale et solidaire. L'endroit a une âme : les volumes de l'ancien bâtiment, les espaces végétalisés, et cette énergie collective des lieux où les gens travaillent sur des projets qui ont du sens. Les grandes tables sont accueillantes, le WiFi tient la route, et la restauration est assurée sur place, recommandé par Neo-Nomade, Cité ETIC, Coworking-France et Le Cercle des Dircom. Ouvert du lundi au vendredi, 9h-18h.
 
 Le tiers-lieu avec du caractère pour ceux qui veulent bosser dans un lieu chargé d'histoire.
 
@@ -39,7 +37,7 @@ Le tiers-lieu avec du caractère pour ceux qui veulent bosser dans un lieu charg
 
 ## EVIDENSEE
 
-Rue Lavoisier. EVIDENSEE propose des postes nomades en open space avec un accès flexible. L'espace est fonctionnel, avec WiFi, prises, grandes tables et restauration. Noté 3,7/5 sur Google (3 avis). Recommandé par Neo-Nomade, Coworking-France et Worklib.
+Rue Lavoisier. EVIDENSEE propose des postes nomades en open space avec un accès flexible. L'espace est fonctionnel, avec WiFi, prises, grandes tables et restauration. Recommandé par Neo-Nomade, Coworking-France et Worklib.
 
 Un coworking pratique pour les journées en mode nomade.
 
@@ -48,7 +46,7 @@ Un coworking pratique pour les journées en mode nomade.
 
 ## Vive Les Groues
 
-Rue de la Garenne, dans le quartier des Groues en pleine transformation urbaine. Vive Les Groues est un espace de coworking ancré dans son quartier, avec une dimension associative et communautaire forte. Noté 4,5/5 sur Google (274 avis). WiFi et prises. L'amplitude horaire est généreuse : ouvert de 9h à 20h en semaine, jusqu'à 22h du mercredi au samedi, et le dimanche de 9h à 20h.
+Rue de la Garenne, dans le quartier des Groues en pleine transformation urbaine. Vive Les Groues est un espace de coworking ancré dans son quartier, avec une dimension associative et communautaire forte. WiFi et prises. L'amplitude horaire est généreuse : ouvert de 9h à 20h en semaine, jusqu'à 22h du mercredi au samedi, et le dimanche de 9h à 20h.
 
 Recommandé par Coworking-France. C'est un des rares espaces de Nanterre ouvert le week-end, ce qui en fait un bon plan pour les sessions du samedi ou du dimanche.
 
@@ -59,7 +57,7 @@ Le spot du week-end à Nanterre, avec une vraie vie de quartier autour.
 
 ## United Kitchens
 
-Rue Becquet, sur le site du Château de Nanterre. United Kitchens combine espace de coworking et services adaptés au travail collaboratif. WiFi, prises, restauration sur place. Noté 4,6/5 sur Google (48 avis). Ouvert du lundi au vendredi, 8h30-18h30.
+Rue Becquet, sur le site du Château de Nanterre. United Kitchens combine espace de coworking et services adaptés au travail collaboratif. WiFi, prises, restauration sur place. Ouvert du lundi au vendredi, 8h30-18h30.
 
 Un spot bien situé pour ceux qui travaillent déjà dans l'écosystème du Château.
 
@@ -68,7 +66,7 @@ Un spot bien situé pour ceux qui travaillent déjà dans l'écosystème du Châ
 
 ## Fablab PMCLab
 
-Boulevard de la Seine. Le PMCLab est un fablab et tiers-lieu rattaché au campus CESI. WiFi, prises, et un environnement maker pour ceux qui ont des projets qui dépassent le cadre de l'écran. Noté 5/5 sur Google (3 avis). Ouvert du lundi au vendredi, 8h30-20h (19h30 le vendredi).
+Boulevard de la Seine. Le PMCLab est un fablab et tiers-lieu rattaché au campus CESI. WiFi, prises, et un environnement maker pour ceux qui ont des projets qui dépassent le cadre de l'écran. Ouvert du lundi au vendredi, 8h30-20h (19h30 le vendredi).
 
 Pour les profils tech et makers qui veulent un espace hybride.
 
@@ -77,7 +75,7 @@ Pour les profils tech et makers qui veulent un espace hybride.
 
 ## FRM Domiciliation
 
-Rue de Metz. FRM propose un service de domiciliation avec espace de coworking intégré. Noté 5/5 sur Google (17 avis). WiFi et prises. Ouvert du lundi au vendredi, 9h-18h. Recommandé par Coworking-France.
+Rue de Metz. FRM propose un service de domiciliation avec espace de coworking intégré. WiFi et prises. Ouvert du lundi au vendredi, 9h-18h. Recommandé par Coworking-France.
 
 Pratique si tu as aussi besoin d'une adresse de domiciliation pour ton activité.
 

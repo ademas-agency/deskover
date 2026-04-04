@@ -67,10 +67,37 @@ async function loadPlaces() {
 onMounted(() => loadPlaces())
 watch(computedFilters, () => loadPlaces())
 
-const press = [
-  { source: 'Le Bonbon', title: 'Top 10 cafés WiFi à Paris' },
-  { source: 'Time Out', title: 'Les meilleurs coworkings' },
-  { source: 'Konbini', title: 'Où bosser à Paris ?' }
+const articles = [
+  {
+    title: 'Bosser en terrasse sans galérer',
+    slug: '#',
+    tag: 'LIFESTYLE',
+    img: 'https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=600&h=400&fit=crop'
+  },
+  {
+    title: 'L\'étiquette du télétravailleur en café',
+    slug: '#',
+    tag: 'PRATIQUE',
+    img: 'https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=600&h=400&fit=crop'
+  },
+  {
+    title: 'Combien de temps tu peux rester avec un seul café ?',
+    slug: '#',
+    tag: 'PRATIQUE',
+    img: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=400&fit=crop'
+  },
+  {
+    title: 'Les indispensables dans ton sac pour bosser en café',
+    slug: '#',
+    tag: 'ÉQUIPEMENT',
+    img: 'https://images.unsplash.com/photo-1497515114889-1c06568aeccc?w=600&h=400&fit=crop'
+  },
+  {
+    title: 'Pourquoi on bosse mieux en café qu\'à la maison',
+    slug: '#',
+    tag: 'LIFESTYLE',
+    img: 'https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=600&h=400&fit=crop'
+  }
 ]
 </script>
 
@@ -148,6 +175,7 @@ const press = [
             city: place.city,
             distance: place.distance || '',
             isOpen: place.isOpen ?? true,
+            nextOpen: place.nextOpen,
             tag: place.tag,
             image: place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop',
             vitals: place.vitals
@@ -155,29 +183,42 @@ const press = [
         </NuxtLink>
       </div>
 
-      <!-- Vu dans -->
-      <div class="px-4 mt-8">
-        <div class="text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--color-steam)] mb-2.5">Vu dans</div>
-        <div class="flex gap-2.5 overflow-x-auto no-scrollbar pb-2">
-          <PressCard
-            v-for="item in press"
-            :key="item.source"
-            :source="item.source"
-            :title="item.title"
-          />
-        </div>
-      </div>
+      <!-- Nos articles -->
+      <div class="px-4 mt-10">
+        <h2 class="font-display text-xl text-[var(--color-espresso)] tracking-[0.04em]">À LIRE</h2>
+        <p class="text-[13px] text-[var(--color-roast)] mt-1.5 leading-relaxed mb-5">
+          Guides, conseils, retours d'expérience. Tout ce qu'on aurait aimé savoir avant de poser notre ordi.
+        </p>
 
-      <!-- Navigation -->
-      <div class="flex gap-2.5 px-4 mt-8 pb-2">
-        <NuxtLink to="/carte" class="flex-1 flex items-center justify-center gap-2 bg-[var(--color-espresso)] text-[var(--color-cream)] text-[13px] font-semibold py-3.5 rounded-[14px]">
-          <UIcon name="lucide:map" class="w-[18px] h-[18px]" />
-          Voir la carte
+        <!-- Article principal (large) -->
+        <NuxtLink
+          :to="`/articles/${articles[0].slug}`"
+          class="block relative rounded-2xl overflow-hidden h-[220px] shadow-[0_2px_12px_rgba(44,40,37,0.1)]"
+        >
+          <img :src="articles[0].img" :alt="articles[0].title" class="absolute inset-0 w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <div class="absolute bottom-0 left-0 right-0 p-4">
+            <div class="text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--color-terracotta-300)] mb-1.5">{{ articles[0].tag }}</div>
+            <div class="text-[16px] font-bold text-white leading-snug">{{ articles[0].title }}</div>
+          </div>
         </NuxtLink>
-        <NuxtLink to="/search" class="flex-1 flex items-center justify-center gap-2 bg-[var(--color-terracotta-500)] text-[var(--color-cream)] text-[13px] font-semibold py-3.5 rounded-[14px]">
-          <UIcon name="lucide:search" class="w-[18px] h-[18px]" />
-          Rechercher
-        </NuxtLink>
+
+        <!-- Articles secondaires (grid 2 colonnes) -->
+        <div class="grid grid-cols-2 gap-2.5 mt-3">
+          <NuxtLink
+            v-for="article in articles.slice(1)"
+            :key="article.slug + article.title"
+            :to="`/articles/${article.slug}`"
+            class="block relative rounded-xl overflow-hidden h-[160px] shadow-[0_2px_8px_rgba(44,40,37,0.08)]"
+          >
+            <img :src="article.img" :alt="article.title" class="absolute inset-0 w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
+            <div class="absolute bottom-0 left-0 right-0 p-3">
+              <div class="text-[9px] font-bold uppercase tracking-[0.1em] text-[var(--color-terracotta-300)] mb-1">{{ article.tag }}</div>
+              <div class="text-[12px] font-semibold text-white leading-snug">{{ article.title }}</div>
+            </div>
+          </NuxtLink>
+        </div>
       </div>
 
       <!-- Footer -->

@@ -19,7 +19,7 @@ La ville a un écosystème numérique et créatif qui s'est développé vite ces
 
 Rue Saint-Léonard, dans le quartier Bouffay. Monsieur Machin, c'est le genre d'adresse que les habitués gardent pour eux. En bas, c'est un café-bar avec une ambiance conviviale et un peu animée. Mais c'est à l'étage que tout change : un espace calme, studieux, presque silencieux jusqu'à 17h. Tu montes les escaliers, tu t'installes à une table, et tu te retrouves dans une bulle de concentration. Le volume sonore est bas, l'ambiance est posée, et tu peux enchaîner les heures sans être dérangé. Cité par Le Bonbon dans sa sélection des cafés où travailler tranquillement à Nantes.
 
-WiFi dispo, ambiance calme en journée. Noté 4,7/5 sur Google avec 215 avis. Les horaires sont un peu particuliers : ouvert dès 11h30 du mardi au samedi (17h30 le lundi), avec une coupure l'après-midi en semaine entre 15h et 17h30. Fermé le dimanche. L'astuce, c'est de venir le matin pour la session de 11h30 à 15h, quand l'étage est quasi désert. Attention : le soir, le lieu se transforme en bar, donc range ton ordi avant 17h.
+WiFi dispo, ambiance calme en journée. Les horaires sont un peu particuliers : ouvert dès 11h30 du mardi au samedi (17h30 le lundi), avec une coupure l'après-midi en semaine entre 15h et 17h30. Fermé le dimanche. L'astuce, c'est de venir le matin pour la session de 11h30 à 15h, quand l'étage est quasi désert. Attention : le soir, le lieu se transforme en bar, donc range ton ordi avant 17h.
 
 Notre préféré pour les matinées productives dans un cadre discret et bien situé.
 
@@ -30,7 +30,7 @@ Notre préféré pour les matinées productives dans un cadre discret et bien si
 
 Rue Camille Berruyer, quartier Graslin. Chapitre T est une petite adresse cosy, nichée au milieu des bouquins. Le concept est simple et efficace : tu es entouré de livres, tu sirottes un thé ou un café, et tu bosses au calme. L'intérieur est chaleureux, les murs sont tapissés d'étagères, et l'atmosphère invite naturellement au travail concentré. C'est petit, intimiste, et c'est exactement ce qui fait son charme. Recommandé par Le Bonbon parmi les meilleurs cafés pour travailler à Nantes.
 
-L'ambiance est calme et studieuse, le lieu est pensé pour qu'on y reste un moment. Noté 4,7/5 sur Google avec 127 avis. C'est le genre de pépite qu'on ne trouve pas dans les guides classiques, et qui mérite le détour si tu es dans le quartier Graslin. Le spot est petit, donc évite les heures de pointe si tu veux être sûr d'avoir une place.
+L'ambiance est calme et studieuse, le lieu est pensé pour qu'on y reste un moment. C'est le genre de pépite qu'on ne trouve pas dans les guides classiques, et qui mérite le détour si tu es dans le quartier Graslin. Le spot est petit, donc évite les heures de pointe si tu veux être sûr d'avoir une place.
 
 Un repaire parfait pour les après-midi de deep work dans une ambiance librairie.
 
@@ -39,9 +39,7 @@ Un repaire parfait pour les après-midi de deep work dans une ambiance librairie
 
 ## Le Café sur Cour
 
-Place Louis Daubenton, à Nantes-Sud. Le Café sur Cour, c'est un lieu confortable et accueillant avec un canapé moelleux dans lequel tu t'enfonces doucement, des tables en terrasse quand le temps le permet, et une ambiance cosy qui donne envie de rester des heures. L'intérieur est lumineux, les grandes tables permettent de poser ton ordi et tes notes sans te sentir à l'étroit, et le WiFi gratuit est fiable. Cité par Le Bonbon dans sa sélection des cafés pour travailler à Nantes.
-
-Noté 4,5/5 sur Google avec plus de 1 000 avis. Ouvert du mardi au vendredi, de 8h30 à minuit (jusqu'à 2h le jeudi et le vendredi). Fermé le week-end et le lundi. L'ouverture tardive est un vrai plus si tu as l'habitude de bosser en fin de journée. La terrasse est un atout quand le soleil est là, mais privilégie l'intérieur pour les sessions de travail longues : c'est là que les prises et la connexion sont les plus fiables.
+Place Louis Daubenton, à Nantes-Sud. Le Café sur Cour, c'est un lieu confortable et accueillant avec un canapé moelleux dans lequel tu t'enfonces doucement, des tables en terrasse quand le temps le permet, et une ambiance cosy qui donne envie de rester des heures. L'intérieur est lumineux, les grandes tables permettent de poser ton ordi et tes notes sans te sentir à l'étroit, et le WiFi gratuit est fiable. Cité par Le Bonbon dans sa sélection des cafés pour travailler à Nantes. Ouvert du mardi au vendredi, de 8h30 à minuit (jusqu'à 2h le jeudi et le vendredi). Fermé le week-end et le lundi. L'ouverture tardive est un vrai plus si tu as l'habitude de bosser en fin de journée. La terrasse est un atout quand le soleil est là, mais privilégie l'intérieur pour les sessions de travail longues : c'est là que les prises et la connexion sont les plus fiables.
 
 Le bon plan pour ceux qui veulent bosser l'après-midi puis enchaîner sur une soirée sans changer de lieu.
 
@@ -50,9 +48,7 @@ Le bon plan pour ceux qui veulent bosser l'après-midi puis enchaîner sur une s
 
 ## Marcel et ses Madeleines
 
-Place Catinat, dans le centre-ville. Marcel et ses Madeleines, c'est un petit café de quartier charmant, avec des viennoiseries qui sentent bon le beurre et un café que tu as envie de boire lentement. L'ambiance est calme, les prix sont doux, et on s'y sent vite chez soi. Le lieu est petit mais bien agencé, avec des tables adaptées au travail et une atmosphère qui invite à la concentration. Cité par Le Bonbon parmi les meilleurs cafés pour bosser à Nantes.
-
-Noté 4,6/5 sur Google avec 115 avis. C'est le genre d'adresse où tu viens le matin, tu commandes un café et un croissant, et tu enchaînes une bonne session de boulot dans un cadre simple et efficace. Pas de chichis, pas de concept compliqué : juste un bon café de quartier qui accueille les ordis.
+Place Catinat, dans le centre-ville. Marcel et ses Madeleines, c'est un petit café de quartier charmant, avec des viennoiseries qui sentent bon le beurre et un café que tu as envie de boire lentement. L'ambiance est calme, les prix sont doux, et on s'y sent vite chez soi. Le lieu est petit mais bien agencé, avec des tables adaptées au travail et une atmosphère qui invite à la concentration. Cité par Le Bonbon parmi les meilleurs cafés pour bosser à Nantes. C'est le genre d'adresse où tu viens le matin, tu commandes un café et un croissant, et tu enchaînes une bonne session de boulot dans un cadre simple et efficace. Pas de chichis, pas de concept compliqué : juste un bon café de quartier qui accueille les ordis.
 
 Notre recommandation pour les matinées au calme, quand tu veux juste un bon café et une table pour bosser.
 
@@ -61,9 +57,7 @@ Notre recommandation pour les matinées au calme, quand tu veux juste un bon caf
 
 ## Madeleine Café
 
-Rue Pelisson, quartier Madeleine. Madeleine Café est un spot avec un intérieur élégant et moderne au style industriel cosy : métal, bois, lumière naturelle, et une ambiance studieuse qui attire les travailleurs nomades du quartier. Le WiFi est gratuit et fiable, les prises sont accessibles, les grandes tables permettent de s'étaler, et les prix restent raisonnables. C'est le genre de café où tu t'installes sans te poser de questions : tout est là pour bosser.
-
-Noté 4,7/5 sur Google avec 475 avis. Ouvert du lundi au vendredi, de 8h30 à 17h. Fermé le week-end. C'est un café de semaine, parfait pour les sessions matinales. Le quartier Madeleine est calme, résidentiel, et facile d'accès en tram. Si tu habites dans le coin, c'est probablement ta meilleure option pour bosser hors de chez toi en semaine.
+Rue Pelisson, quartier Madeleine. Madeleine Café est un spot avec un intérieur élégant et moderne au style industriel cosy : métal, bois, lumière naturelle, et une ambiance studieuse qui attire les travailleurs nomades du quartier. Le WiFi est gratuit et fiable, les prises sont accessibles, les grandes tables permettent de s'étaler, et les prix restent raisonnables. C'est le genre de café où tu t'installes sans te poser de questions : tout est là pour bosser. Ouvert du lundi au vendredi, de 8h30 à 17h. Fermé le week-end. C'est un café de semaine, parfait pour les sessions matinales. Le quartier Madeleine est calme, résidentiel, et facile d'accès en tram. Si tu habites dans le coin, c'est probablement ta meilleure option pour bosser hors de chez toi en semaine.
 
 Le spot efficace pour les jours de semaine, avec tout ce qu'il faut sans fioriture.
 
@@ -74,7 +68,7 @@ Le spot efficace pour les jours de semaine, avec tout ce qu'il faut sans fioritu
 
 Rue la Tour d'Auvergne, sur l'Île de Nantes, dans le quartier de la Création. La Cantine Numérique, c'est un espace de coworking pensé pour l'écosystème tech et créatif nantais. Plus de 160 postes de travail, des salles de réunion, des phone box pour les calls, une cuisine équipée, et même un espace pet-friendly si ton chien t'accompagne. L'ambiance est pro mais décontractée : tu croises des développeurs, des designers, des chefs de projet, chacun dans sa bulle mais ouvert à la discussion quand l'occasion se présente.
 
-WiFi, prises partout, grandes tables. Noté 4,5/5 sur Google avec 199 avis. Ouvert du mardi au vendredi, de 9h à 18h (17h le vendredi). Fermé le week-end et le lundi. Le positionnement sur l'Île de Nantes est un vrai plus si tu fais partie de l'écosystème numérique local. Le quartier est en pleine mutation, avec des restaurants et des cafés qui poussent autour.
+WiFi, prises partout, grandes tables. Ouvert du mardi au vendredi, de 9h à 18h (17h le vendredi). Fermé le week-end et le lundi. Le positionnement sur l'Île de Nantes est un vrai plus si tu fais partie de l'écosystème numérique local. Le quartier est en pleine mutation, avec des restaurants et des cafés qui poussent autour.
 
 Pour les profils tech et créatifs qui veulent bosser dans un environnement stimulant et bien équipé.
 
@@ -85,7 +79,7 @@ Pour les profils tech et créatifs qui veulent bosser dans un environnement stim
 
 Rue Paul Bellamy, dans le centre-ville. Le 144, c'est un vaste espace de coworking de 2 000 m2 avec un open space moderne et lumineux, des bureaux partagés et privés, des salles de réunion équipées, des phone box, et un petit-déjeuner offert chaque matin. Oui, tu as bien lu : le petit-déj est inclus. L'ambiance est sérieuse mais conviviale, le mobilier est de qualité, et l'espace est suffisamment grand pour que tu trouves toujours un coin tranquille même aux heures de pointe.
 
-WiFi, prises, grandes tables, tout y est. Noté 4,6/5 sur Google avec 90 avis. Ouvert du lundi au vendredi, de 8h30 à 18h (17h30 le vendredi). Fermé le week-end. Les prix sont abordables pour un coworking de cette qualité. Le petit-déjeuner offert chaque matin, c'est le genre de détail qui fait la différence quand tu viens tous les jours.
+WiFi, prises, grandes tables, tout y est. Ouvert du lundi au vendredi, de 8h30 à 18h (17h30 le vendredi). Fermé le week-end. Les prix sont abordables pour un coworking de cette qualité. Le petit-déjeuner offert chaque matin, c'est le genre de détail qui fait la différence quand tu viens tous les jours.
 
 Le coworking solide et généreux pour ceux qui veulent un espace structuré avec un accueil au top.
 
@@ -94,9 +88,7 @@ Le coworking solide et généreux pour ceux qui veulent un espace structuré ave
 
 ## La Maison du Coworking
 
-Avenue des Améthystes, à Nantes-Nord. La Maison du Coworking est un espace classique et efficace, avec des bureaux privés, un open space, des salles de réunion, et une communauté engagée. L'ambiance est familiale et bienveillante : on s'y sent vite intégré. Le WiFi est rapide, les prises sont partout, et les tarifs sont abordables. Le gros plus : l'espace est accessible 24h/24, 7j/7. Tu peux venir bosser un dimanche soir ou un lundi à 6h du matin si l'envie t'en prend.
-
-Noté 4,9/5 sur Google avec 30 avis. L'accès permanent est un argument de poids pour les travailleurs aux horaires décalés ou les entrepreneurs qui enchaînent les semaines chargées. Le quartier est résidentiel et calme, facile d'accès en voiture avec du stationnement à proximité.
+Avenue des Améthystes, à Nantes-Nord. La Maison du Coworking est un espace classique et efficace, avec des bureaux privés, un open space, des salles de réunion, et une communauté engagée. L'ambiance est familiale et bienveillante : on s'y sent vite intégré. Le WiFi est rapide, les prises sont partout, et les tarifs sont abordables. Le gros plus : l'espace est accessible 24h/24, 7j/7. Tu peux venir bosser un dimanche soir ou un lundi à 6h du matin si l'envie t'en prend. L'accès permanent est un argument de poids pour les travailleurs aux horaires décalés ou les entrepreneurs qui enchaînent les semaines chargées. Le quartier est résidentiel et calme, facile d'accès en voiture avec du stationnement à proximité.
 
 Pour ceux qui veulent un coworking accessible en permanence, avec une ambiance communautaire chaleureuse.
 
@@ -105,9 +97,7 @@ Pour ceux qui veulent un coworking accessible en permanence, avec une ambiance c
 
 ## Vacouva - Gare Sud
 
-Quai de Malakoff, juste à côté de la gare. Vacouva est un espace de coworking coloré de 300 m2, avec trois salles de réunion équipées de vidéoprojecteurs et des services gratuits incluant cuisine, WiFi et casiers fermés. L'ambiance est vivante et chaleureuse, la déco est soignée avec des touches de couleur qui donnent de l'énergie, et l'espace est bien pensé pour alterner entre travail concentré et moments d'échange.
-
-Noté 4,8/5 sur Google avec 59 avis. Ouvert du lundi au vendredi, 9h-18h. Fermé le week-end. La proximité de la gare est un vrai plus si tu fais des allers-retours en TGV ou si tu veux un spot facile d'accès en transports. Le tram est à deux pas.
+Quai de Malakoff, juste à côté de la gare. Vacouva est un espace de coworking coloré de 300 m2, avec trois salles de réunion équipées de vidéoprojecteurs et des services gratuits incluant cuisine, WiFi et casiers fermés. L'ambiance est vivante et chaleureuse, la déco est soignée avec des touches de couleur qui donnent de l'énergie, et l'espace est bien pensé pour alterner entre travail concentré et moments d'échange. Ouvert du lundi au vendredi, 9h-18h. Fermé le week-end. La proximité de la gare est un vrai plus si tu fais des allers-retours en TGV ou si tu veux un spot facile d'accès en transports. Le tram est à deux pas.
 
 Le choix malin pour les jours où tu as besoin d'un cadre pro et coloré, à deux minutes de la gare.
 
@@ -116,9 +106,7 @@ Le choix malin pour les jours où tu as besoin d'un cadre pro et coloré, à deu
 
 ## Les Bien-Aimés
 
-Rue de la Paix, dans le centre-ville. Les Bien-Aimés, c'est un lieu insolite entre librairie et salon de thé, avec une ambiance studieuse qui donne envie de rester des heures. Tu es entouré de bouquins, l'atmosphère est douce, et le calme est presque monacal. C'est le genre d'endroit où tu oublies ton téléphone et tu te plonges dans ton travail. La carte propose des thés, des cafés et de quoi grignoter, le tout dans un cadre soigné et chaleureux. Recommandé par Le Bonbon parmi les cafés où travailler à Nantes.
-
-Noté 4,7/5 sur Google avec 220 avis. Ouvert du lundi au samedi, de 11h à 19h. Fermé le dimanche. L'ouverture le samedi est un bon point si tu veux profiter de l'endroit le week-end. Le lieu est petit, intimiste, et c'est exactement ce qui fait son charme. Arrive tôt pour être sûr d'avoir une place confortable.
+Rue de la Paix, dans le centre-ville. Les Bien-Aimés, c'est un lieu insolite entre librairie et salon de thé, avec une ambiance studieuse qui donne envie de rester des heures. Tu es entouré de bouquins, l'atmosphère est douce, et le calme est presque monacal. C'est le genre d'endroit où tu oublies ton téléphone et tu te plonges dans ton travail. La carte propose des thés, des cafés et de quoi grignoter, le tout dans un cadre soigné et chaleureux. Recommandé par Le Bonbon parmi les cafés où travailler à Nantes. Ouvert du lundi au samedi, de 11h à 19h. Fermé le dimanche. L'ouverture le samedi est un bon point si tu veux profiter de l'endroit le week-end. Le lieu est petit, intimiste, et c'est exactement ce qui fait son charme. Arrive tôt pour être sûr d'avoir une place confortable.
 
 Un repaire idéal pour les âmes littéraires qui veulent bosser entourées de livres.
 

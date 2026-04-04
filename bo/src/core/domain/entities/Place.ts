@@ -5,7 +5,9 @@ export interface BlogMention {
 }
 
 export interface Place {
+  id: string
   name: string
+  slug: string
   address: string
   city: string
   city_key: string
@@ -25,13 +27,11 @@ export interface Place {
   website: string
   phone: string
   photo_url: string
-  photo_local: string
-  opening_hours: string[]
+  photo_storage_path: string
+  opening_hours: Record<string, string> | string[]
   business_status: string
-  // Editable fields (BO)
-  cover_photo?: string
-  gallery_photos?: string[]
-  instagram?: string
+  status: string
+  instagram: string
 }
 
 export type PlaceCategory = 'cafe' | 'coffee_shop' | 'coworking' | 'tiers_lieu'

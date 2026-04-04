@@ -17,7 +17,7 @@ Le 3e, c'est le Haut-Marais, le quartier du Temple, les rues Turenne et Charlot 
 
 Rue de Turenne, à deux pas de la place des Vosges. Le MAIF Social Club, c'est un espace de coworking gratuit et ouvert à tous, installé dans un lieu lumineux dédié à l'innovation sociale. Tu pousses la porte et tu tombes sur des volumes généreux, de la lumière naturelle qui entre par de grandes fenêtres, et une ambiance studieuse sans être étouffante. Les expos temporaires sur les murs ajoutent une touche culturelle qui change des open spaces classiques. On se sent bien, on respire, et on a envie de s'installer pour la journée.
 
-Côté pratique, c'est du solide : WiFi fiable, prises accessibles, calme, et tu peux manger sur place. Le tout gratuitement, ce qui est assez rare à Paris pour être souligné. Noté 4,6/5 sur Google avec plus de 850 avis, recommandé par Monsieur Jetlag, Hub-Grade, Passion Télétravail et Capitaine Study. Ouvert du mardi au vendredi de 10h à 20h30, le samedi jusqu'à 19h. Fermé dimanche et lundi.
+Côté pratique, c'est du solide : WiFi fiable, prises accessibles, calme, et tu peux manger sur place. Le tout gratuitement, ce qui est assez rare à Paris pour être souligné. Ouvert du mardi au vendredi de 10h à 20h30, le samedi jusqu'à 19h. Fermé dimanche et lundi.
 
 Notre préféré dans le 3e pour les journées complètes sans dépenser un centime.
 
@@ -28,7 +28,7 @@ Notre préféré dans le 3e pour les journées complètes sans dépenser un cent
 
 Rue Quincampoix, côté Beaubourg. L'Anticafé reprend le concept qui a fait ses preuves partout à Paris : tu paies au temps passé (quelques euros de l'heure), et les boissons, snacks et friandises sont en libre-service à volonté. Zéro culpabilité à rester trois ou quatre heures. Tu te ressers un thé quand tu veux, tu grignottes un biscuit, et personne ne te facture quoi que ce soit en plus. L'ambiance est détendue, un peu comme un grand salon partagé avec des canapés, des tables de travail et une lumière agréable.
 
-Le WiFi est inclus, les prises sont partout, et le lieu est pensé de A à Z pour les travailleurs nomades. Noté 4,2/5 sur Google avec plus de 700 avis, cité par Le Bon Bon, Welcome to the Jungle et Come to Paris. C'est le genre d'endroit où tu croises des freelances, des étudiants en révision et des salariés en remote, chacun dans sa bulle.
+Le WiFi est inclus, les prises sont partout, et le lieu est pensé de A à Z pour les travailleurs nomades. C'est le genre d'endroit où tu croises des freelances, des étudiants en révision et des salariés en remote, chacun dans sa bulle.
 
 Parfait si tu veux t'installer pour la journée sans surveiller l'horloge ni multiplier les commandes.
 
@@ -39,7 +39,7 @@ Parfait si tu veux t'installer pour la journée sans surveiller l'horloge ni mul
 
 Rue Commines, en plein Haut-Marais. SAFE, c'est un café chaleureux qui accueille les ordis à bras ouverts, à condition de consommer régulièrement. Le deal est honnête. L'intérieur est soigné, les grandes tables permettent d'étaler tes affaires, et le volume sonore reste raisonnable. La lumière est belle, la déco travaillée sans être tape-à-l'oeil, et on s'y sent rapidement à l'aise pour enchainer les heures de boulot.
 
-WiFi dispo, prises accessibles, et l'ambiance calme tient ses promesses. Noté 4,5/5 sur Google avec 410 avis, recommandé par Passion Télétravail et Wicofi. Ouvert du mardi au samedi de 10h à 20h, le dimanche de 13h à 19h. Fermé le lundi.
+WiFi dispo, prises accessibles, et l'ambiance calme tient ses promesses. Ouvert du mardi au samedi de 10h à 20h, le dimanche de 13h à 19h. Fermé le lundi.
 
 Le spot du Haut-Marais pour bosser au calme avec un bon café, sans prise de tête.
 
@@ -50,7 +50,7 @@ Le spot du Haut-Marais pour bosser au calme avec un bon café, sans prise de tê
 
 Rue Chapon, dans une petite rue tranquille entre Arts et Métiers et Beaubourg. Ground to Grow, c'est un café wifi sympa où les tartines sont excellentes et l'ambiance douce. Le lieu est lumineux, les tables sont grandes, et on se sent vite dans sa bulle. La déco est simple et chaleureuse, les plantes ajoutent une touche de vert, et le calme du quartier filtre à travers les vitres.
 
-WiFi solide, grandes tables pour étaler tes affaires, et une carte qui te permet de tenir la journée sans bouger. Noté 4,6/5 sur Google avec 490 avis, recommandé plusieurs fois par Wicofi dans ses sélections des meilleurs cafés du 3e. Ouvert du mardi au vendredi de 11h30 à 18h, le week-end dès 11h. Fermé le lundi. Attention, l'ouverture tardive en semaine en fait plutôt un spot pour les après-midi.
+WiFi solide, grandes tables pour étaler tes affaires, et une carte qui te permet de tenir la journée sans bouger. Ouvert du mardi au vendredi de 11h30 à 18h, le week-end dès 11h. Fermé le lundi. Attention, l'ouverture tardive en semaine en fait plutôt un spot pour les après-midi.
 
 Idéal pour les sessions de travail courtes à moyennes quand tu veux du calme et de bonnes tartines.
 
@@ -61,7 +61,7 @@ Idéal pour les sessions de travail courtes à moyennes quand tu veux du calme e
 
 Rue du Pont aux Choux, à la lisière du Marais. Boot café est un tout petit spot, probablement un des plus mignons de l'arrondissement. L'espace est compact, la déco est canon, et l'ambiance cosy fait qu'on s'y sent comme dans un cocon. Les murs en brique, la lumière tamisée, les petites tables bien agencées : tout invite à se poser avec son ordi et à bosser tranquillement pendant quelques heures.
 
-WiFi dispo, ambiance calme, et un café de qualité. Noté 4,6/5 sur Google avec plus de 660 avis, cité par Direct Emploi dans sa sélection des cafés parisiens pour travailler. Ouvert tous les jours dès 9h (10h le jeudi et le week-end), jusqu'à 16h30 en semaine et 17h30 le vendredi-samedi. Point à noter : l'espace est petit, donc arrive tôt pour avoir une place.
+WiFi dispo, ambiance calme, et un café de qualité. Ouvert tous les jours dès 9h (10h le jeudi et le week-end), jusqu'à 16h30 en semaine et 17h30 le vendredi-samedi. Point à noter : l'espace est petit, donc arrive tôt pour avoir une place.
 
 Le spot mignon et cosy pour les matinées productives au calme.
 
@@ -72,7 +72,7 @@ Le spot mignon et cosy pour les matinées productives au calme.
 
 Rue Blondel, dans le sud du 3e, entre Arts et Métiers et Réaumur-Sébastopol. Kafeibaie est un café-restaurant apprécié des habitués du quartier pour ses desserts et sa cuisine maison. L'ambiance est posée, les prix sont doux, et le lieu a ce côté familier qui fait qu'on y revient. C'est petit, c'est chaleureux, et quand tu trouves une place, tu es bien.
 
-WiFi et calme sont au rendez-vous. Noté 4,8/5 sur Google avec 428 avis (c'est une excellente note), recommandé par Les Alfredines et Wicofi. Ouvert du lundi au samedi de 9h à 17h. Fermé le dimanche. Seul bémol : le lieu est petit et souvent plein, surtout le midi. Viens en début de matinée pour être tranquille.
+WiFi et calme sont au rendez-vous. Ouvert du lundi au samedi de 9h à 17h. Fermé le dimanche. Seul bémol : le lieu est petit et souvent plein, surtout le midi. Viens en début de matinée pour être tranquille.
 
 Une pépite de quartier pour les matinées de deep work, à condition d'arriver tôt.
 
@@ -83,7 +83,7 @@ Une pépite de quartier pour les matinées de deep work, à condition d'arriver 
 
 Rue Beaubourg, juste à côté du Centre Pompidou. Uni Corners, c'est un café cosy avec des oeuvres d'art aux murs, un WiFi rapide et une ambiance sympa qui donne envie de rester. Les prix sont raisonnables, la carte est variée, et le lieu accueille les ordis sans problème. La déco change régulièrement au fil des expos, ce qui donne un petit côté galerie agréable.
 
-WiFi rapide, calme, et un cadre agréable pour bosser. Noté 4,6/5 sur Google avec 428 avis, recommandé par Wicofi et Le Bon Bon. Un bon point de chute si tu es dans le coin de Beaubourg et que tu cherches un café qui ne te regarde pas de travers quand tu sors ton ordi.
+WiFi rapide, calme, et un cadre agréable pour bosser. Un bon point de chute si tu es dans le coin de Beaubourg et que tu cherches un café qui ne te regarde pas de travers quand tu sors ton ordi.
 
 Le café du coin de Beaubourg qui accueille les travailleurs nomades sans chichi.
 
@@ -94,7 +94,7 @@ Le café du coin de Beaubourg qui accueille les travailleurs nomades sans chichi
 
 Rue des Gravilliers, dans une des rues les plus chouettes du Haut-Marais. Grave est une micro-boutique au format minimaliste, où tout est épuré, pensé, millimétré. Le café est excellent, les pâtisseries sont délicates, et l'ambiance est feutrée. C'est le genre d'endroit où tu entres et tu baisses la voix instinctivement. Les proportions sont petites, mais le charme est immense.
 
-WiFi dispo, prises au comptoir, et un calme absolu. Noté 4,8/5 sur Google avec 317 avis, cité par Time Out et Do It In Paris. Ouvert tous les jours dès 8h30 en semaine (9h30 le week-end), jusqu'à 18h. L'espace est vraiment petit, donc ne viens pas avec trois écrans et un clavier externe. Mais pour une session concentrée de deux ou trois heures avec un excellent café, c'est top.
+WiFi dispo, prises au comptoir, et un calme absolu. Ouvert tous les jours dès 8h30 en semaine (9h30 le week-end), jusqu'à 18h. L'espace est vraiment petit, donc ne viens pas avec trois écrans et un clavier externe. Mais pour une session concentrée de deux ou trois heures avec un excellent café, c'est top.
 
 Pour les sessions courtes et intenses dans un cadre minimaliste et raffiné.
 
@@ -105,7 +105,7 @@ Pour les sessions courtes et intenses dans un cadre minimaliste et raffiné.
 
 Rue Chapon, à quelques pas de Ground to Grow. Loustic, c'est un des cafés de spécialité les plus connus du quartier, et aussi un bon spot pour bosser. L'ambiance est cosy et conviviale, entre le Sentier et le Marais, avec un public mélangé d'habitués du quartier et de gens de passage. Le cadre est agréable, les chaises sont confortables, et la lumière est bonne.
 
-WiFi solide, prises accessibles, et un calme appréciable. Noté 4,4/5 sur Google avec 748 avis, recommandé par Direct Emploi et Fabrice Dubesset dans leurs sélections parisiennes. Un bon plan si Ground to Grow est plein et que tu veux rester dans le coin de la rue Chapon.
+WiFi solide, prises accessibles, et un calme appréciable. Un bon plan si Ground to Grow est plein et que tu veux rester dans le coin de la rue Chapon.
 
 Le plan B parfait dans la rue Chapon, avec un bon café et une ambiance chaleureuse.
 
@@ -121,7 +121,7 @@ Le plan B parfait dans la rue Chapon, avec un bon café et une ambiance chaleure
 - **Pour du calme et un bon café** - Grave (micro-boutique minimaliste, ambiance feutrée)
 - **Pour les grandes tables et l'espace** - SAFE Urban Concept (Haut-Marais, ambiance posée)
 - **Pour un spot cosy et mignon** - Boot café (petit mais canon)
-- **Pour le meilleur rapport qualité-prix** - Kafeibaie (4,8/5, prix doux, cuisine maison)
+- **Pour le meilleur rapport qualité-prix** - Kafeibaie (prix doux, cuisine maison)
 - **Pour le coin Beaubourg** - Uni Corners (près du Centre Pompidou, WiFi rapide)
 
 ---

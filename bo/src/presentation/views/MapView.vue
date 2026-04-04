@@ -61,9 +61,9 @@ function updateMarkers() {
     `, { maxWidth: 250 })
 
     marker.on('click', () => {
-      if (place.google_place_id) {
+      if (place.id) {
         // Double click to navigate
-        marker.on('dblclick', () => router.push(`/places/${place.google_place_id}`))
+        marker.on('dblclick', () => router.push(`/places/${place.id}`))
       }
     })
 

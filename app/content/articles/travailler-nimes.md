@@ -19,7 +19,7 @@ On a sillonné Nîmes pour repérer les spots où tu peux vraiment t'installer, 
 
 Rue de l'Enclos Rey, dans un quartier calme proche du centre. Le Spot porte bien son nom : c'est un lieu emblématique de Nîmes qui mêle coworking et ambiance artistique. Les murs accueillent des expos, l'énergie est créative, et on sent que l'endroit a été pensé pour les gens qui font des trucs. Grandes tables, WiFi, prises, et une ambiance qui invite à la concentration sans étouffer. Le cadre a du caractère sans en faire trop, avec une déco qui change au fil des événements culturels.
 
-Côté pratique, c'est bien équipé pour bosser. Noté 4,6/5 sur Google avec 99 avis, recommandé par Le Club Nîmes et Coworking France. Attention aux horaires : ouvert uniquement du jeudi au samedi, de 14h à 21h. C'est le point faible. Si tu cherches un spot pour tes lundis matins, ce n'est pas ici. Mais pour les fins de semaine productives dans un cadre inspirant, c'est top.
+Côté pratique, c'est bien équipé pour bosser. Attention aux horaires : ouvert uniquement du jeudi au samedi, de 14h à 21h. C'est le point faible. Si tu cherches un spot pour tes lundis matins, ce n'est pas ici. Mais pour les fins de semaine productives dans un cadre inspirant, c'est top.
 
 Le spot (littéralement) pour les créatifs qui veulent bosser dans une ambiance galerie et ateliers.
 
@@ -30,7 +30,7 @@ Le spot (littéralement) pour les créatifs qui veulent bosser dans une ambiance
 
 Rue des Halles, en plein centre historique. Les Halles de Nîmes, c'est une institution : un marché couvert magnifique où les Nîmois viennent faire leurs courses depuis toujours. Mais ce que tout le monde ne sait pas, c'est que l'espace intègre aussi des coins plus calmes, parfaits pour s'installer quelques heures avec son ordi. La terrasse sous les arches en pierre est superbe, il y a un coin cosy plus retiré, et même une petite bibliothèque. L'ambiance est vivante sans être envahissante, portée par le ballet des commerçants et des habitués du marché.
 
-WiFi disponible, prises accessibles, et tu peux grignoter les meilleurs produits frais de la ville sans quitter ta place. Noté 4,5/5 sur Google avec plus de 4 300 avis (c'est un monument local, clairement). Ouvert tous les jours de 7h à 13h (13h30 le dimanche). L'amplitude est courte, mais pour une session matinale productive avec un bon café et un croissant, c'est canon.
+WiFi disponible, prises accessibles, et tu peux grignoter les meilleurs produits frais de la ville sans quitter ta place. Ouvert tous les jours de 7h à 13h (13h30 le dimanche). L'amplitude est courte, mais pour une session matinale productive avec un bon café et un croissant, c'est canon.
 
 Le spot des lève-tôt qui veulent bosser dans un cadre authentique, entourés des saveurs du marché.
 
@@ -41,7 +41,7 @@ Le spot des lève-tôt qui veulent bosser dans un cadre authentique, entourés d
 
 Avenue Claude Baillet, côté sud de la ville, dans le quartier Costières. Cap Cowork, c'est un espace de coworking flambant neuf avec 26 postes de travail, des bureaux privés, une salle de réunion bien équipée, et une cuisine complète pour les journées longues. Le lieu est lumineux, les volumes sont généreux, et tout respire le neuf et le fonctionnel. Le mobilier est confortable, l'agencement est fluide, et le calme est au rendez-vous. C'est le genre d'endroit où tu arrives, tu te poses, et tu es productif en cinq minutes.
 
-WiFi rapide, prises partout, grandes tables, et tout ce qu'il faut pour enchaîner les heures sans friction. Noté 4,9/5 sur Google (16 avis). Ouvert du lundi au samedi, de 8h30 à 20h. L'amplitude horaire est un vrai plus, surtout l'ouverture le samedi qui n'est pas courante dans les coworkings nîmois.
+WiFi rapide, prises partout, grandes tables, et tout ce qu'il faut pour enchaîner les heures sans friction. Ouvert du lundi au samedi, de 8h30 à 20h. L'amplitude horaire est un vrai plus, surtout l'ouverture le samedi qui n'est pas courante dans les coworkings nîmois.
 
 Notre préféré pour les journées de travail intensif où tu as besoin de tout le confort d'un vrai espace pro.
 
@@ -52,7 +52,7 @@ Notre préféré pour les journées de travail intensif où tu as besoin de tout
 
 Boulevard Amiral Courbet, en plein centre. Ce Columbus Café a un atout que les autres n'ont pas : c'est le plus grand de France. L'architecture est magnifique, avec une belle hauteur sous plafond, du mobilier sur mesure, et un volume intérieur qui te donne de l'air. Contrairement à beaucoup de chaînes où les tables sont serrées et l'ambiance un peu industrielle, celui-ci a de la place, de la lumière, et une vraie personnalité. Tu ne te sens pas coincé entre deux poussettes et un groupe d'ados.
 
-WiFi dispo, prises accessibles, et une carte de boissons et snacks qui te permet de tenir toute la journée. Noté 4,1/5 sur Google (833 avis). Ouvert 7j/7, de 7h30 à 20h en semaine (8h le samedi, 9h le dimanche). C'est fiable, régulier, et tu sais ce que tu vas y trouver. Pas de surprise, mais pas de mauvaise surprise non plus.
+WiFi dispo, prises accessibles, et une carte de boissons et snacks qui te permet de tenir toute la journée. Ouvert 7j/7, de 7h30 à 20h en semaine (8h le samedi, 9h le dimanche). C'est fiable, régulier, et tu sais ce que tu vas y trouver. Pas de surprise, mais pas de mauvaise surprise non plus.
 
 La valeur sûre quand tu veux un endroit ouvert tôt, 7j/7, avec de la place et du WiFi.
 
@@ -63,7 +63,7 @@ La valeur sûre quand tu veux un endroit ouvert tôt, 7j/7, avec de la place et 
 
 Rue des Lombards, dans le quartier historique de l'Écusson. Sue Bakery, c'est un café cosy avec une déco tendance et une ambiance calme qui attire naturellement les gens avec leur ordi. Le lieu est petit mais bien agencé, les couleurs sont chaudes, et tu te sens tout de suite à l'aise. L'odeur de viennoiseries maison aide à poser l'ambiance. C'est le genre d'adresse qu'on se refile entre amis, un peu planquée, un peu secrète.
 
-WiFi gratuit, ambiance calme, et de quoi manger sur place. Noté 4,5/5 sur Google (82 avis). Les horaires ne sont pas affichés clairement, donc mieux vaut vérifier sur leur Instagram avant de te déplacer. Mais quand c'est ouvert, c'est une petite bulle de tranquillité parfaite pour une session de quelques heures.
+WiFi gratuit, ambiance calme, et de quoi manger sur place. Les horaires ne sont pas affichés clairement, donc mieux vaut vérifier sur leur Instagram avant de te déplacer. Mais quand c'est ouvert, c'est une petite bulle de tranquillité parfaite pour une session de quelques heures.
 
 Le café cosy du centre historique où tu bosses en paix avec un bon gâteau.
 
@@ -74,7 +74,7 @@ Le café cosy du centre historique où tu bosses en paix avec un bon gâteau.
 
 Rue Guizot, toujours dans l'Écusson. Bali Bowls, c'est un concept aux influences indonésiennes qui tranche avec le reste de la ville. La déco est dépaysante, l'ambiance est décontractée, et le café est bon. Les volumes sont agréables, la lumière entre bien, et le lieu a ce petit côté vacances permanentes qui détend sans nuire à la concentration. Tu commandes un bowl, tu ouvres ton ordi, et le temps passe sans que tu t'en rendes compte.
 
-WiFi disponible, ambiance calme, et une carte variée qui te permet de déjeuner sur place. Noté 4,7/5 sur Google (837 avis). Ouvert tous les jours, de 11h à 22h30 (12h le dimanche). L'ouverture tardive est un plus si tu aimes bosser en fin de journée ou en début de soirée. Seul bémol : l'ouverture à 11h coupe les matinées.
+WiFi disponible, ambiance calme, et une carte variée qui te permet de déjeuner sur place. Ouvert tous les jours, de 11h à 22h30 (12h le dimanche). L'ouverture tardive est un plus si tu aimes bosser en fin de journée ou en début de soirée. Seul bémol : l'ouverture à 11h coupe les matinées.
 
 Le spot dépaysant pour bosser l'après-midi et enchaîner sur un dîner sans bouger.
 
@@ -85,7 +85,7 @@ Le spot dépaysant pour bosser l'après-midi et enchaîner sur un dîner sans bo
 
 Rue Porte d'Alès, près de la Coupole. La Verrière, c'est un espace de coworking lumineux et convivial, avec de larges baies vitrées qui inondent les postes de travail de lumière naturelle. Le nom n'est pas choisi au hasard : tout l'espace joue sur la transparence et l'ouverture. Les tables sont grandes, le calme est maintenu, et l'ambiance favorise la concentration sans isoler. C'est un espace à taille humaine où tu croises les mêmes visages au fil des semaines.
 
-WiFi fiable, prises partout, grandes tables. Noté 5/5 sur Google (6 avis, c'est encore confidentiel). Ouvert du lundi au vendredi, 9h-19h. Un coworking discret mais efficace pour ceux qui cherchent un cadre lumineux et calme en semaine.
+WiFi fiable, prises partout, grandes tables. Noté. Ouvert du lundi au vendredi, 9h-19h. Un coworking discret mais efficace pour ceux qui cherchent un cadre lumineux et calme en semaine.
 
 Pour les amoureux de lumière naturelle et d'espaces ouverts.
 
@@ -96,7 +96,7 @@ Pour les amoureux de lumière naturelle et d'espaces ouverts.
 
 Rue Nationale, dans le centre. Un café associatif avec une âme. L'accueil est bienveillant, l'ambiance est conviviale, et les tarifs sont doux. C'est le genre de lieu où le lien humain compte autant que le WiFi. Le cadre est simple mais chaleureux, les gens sont souriants, et tu peux t'installer pour quelques heures de boulot dans une atmosphère qui fait du bien. Ici, pas de pression commerciale : tu viens, tu consommes à ton rythme, et tu bosses tranquille.
 
-WiFi dispo, calme, et des prix accessibles à tous. Noté 4,3/5 sur Google (37 avis). Ouvert du mardi au vendredi, 10h-17h. Fermé le week-end et le lundi. L'amplitude est limitée, mais pour une session de travail en milieu de semaine, c'est un choix qui a du sens, surtout si tu aimes les lieux portés par des valeurs.
+WiFi dispo, calme, et des prix accessibles à tous. Ouvert du mardi au vendredi, 10h-17h. Fermé le week-end et le lundi. L'amplitude est limitée, mais pour une session de travail en milieu de semaine, c'est un choix qui a du sens, surtout si tu aimes les lieux portés par des valeurs.
 
 Le café qui fait du bien au moral autant qu'à la productivité.
 
@@ -107,7 +107,7 @@ Le café qui fait du bien au moral autant qu'à la productivité.
 
 Chemin la Croix de Vauvert, côté périphérie sud. La Pause, c'est un café-bibliothèque avec des salons de détente et des espaces ouverts pour travailler. Des fauteuils chinés, des étagères pleines de livres, et une ambiance qui donne envie de s'enfoncer dans un fauteuil avec son ordi et de ne plus bouger. Le lieu est confortable dans le vrai sens du terme : pas tape-à-l'oeil, mais accueillant et reposant. L'espace est suffisamment grand pour ne pas se marcher dessus.
 
-WiFi, ambiance calme, et de quoi boire et manger. Noté 4,2/5 sur Google (32 avis). Ouvert tous les jours, de 11h30 à 23h30 (17h le dimanche). L'ouverture tardive en fait un des rares spots nîmois où tu peux bosser en soirée. Si tu es du genre noctambule productif, c'est ta planque.
+WiFi, ambiance calme, et de quoi boire et manger. Ouvert tous les jours, de 11h30 à 23h30 (17h le dimanche). L'ouverture tardive en fait un des rares spots nîmois où tu peux bosser en soirée. Si tu es du genre noctambule productif, c'est ta planque.
 
 Le repaire du soir pour les sessions de travail tardives, dans une ambiance café-bibliothèque.
 

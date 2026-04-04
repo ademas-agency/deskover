@@ -17,7 +17,7 @@ La ville est ultra-bien desservie (métro 1, La Défense, tram T2, RER A) et off
 
 ## Zecoworking
 
-Rue de l'Abreuvoir, dans le vieux Courbevoie. Zecoworking, c'est la bonne surprise du quartier. Noté 5/5 sur Google (7 avis), l'espace coche toutes les cases : WiFi, prises, grandes tables, terrasse, restauration sur place, et une ambiance calme qui donne envie de rester. Le tout à des tarifs accessibles. L'espace est ouvert 24h/24, 7j/7 pour les membres, ce qui te laisse une liberté totale sur tes horaires de travail. Le décor est soigné sans être tape-à-l'oeil, avec cette dose de convivialité qui manque souvent aux grands coworkings de chaîne.
+Rue de l'Abreuvoir, dans le vieux Courbevoie. Zecoworking, c'est la bonne surprise du quartier. Le tout à des tarifs accessibles. L'espace est ouvert 24h/24, 7j/7 pour les membres, ce qui te laisse une liberté totale sur tes horaires de travail. Le décor est soigné sans être tape-à-l'oeil, avec cette dose de convivialité qui manque souvent aux grands coworkings de chaîne.
 
 Recommandé par Konfian et le site officiel de Zecoworking. C'est le genre de lieu où tu te sens vite chez toi, où tu finis par connaître les autres coworkers et où tu reviens naturellement chaque semaine.
 
@@ -28,9 +28,7 @@ Notre coup de coeur à Courbevoie pour sa flexibilité et son ambiance.
 
 ## Industrious
 
-Place de la Défense, au pied des tours. Industrious, c'est du coworking premium pensé pour les pros qui veulent un cadre impeccable. L'espace est designé avec soin, les finitions sont soignées, et l'ambiance est studieuse sans être froide. On y croise des entrepreneurs, des consultants et des équipes de startups qui ont besoin d'un bureau satellite à La Défense sans louer 200 m2.
-
-Noté 4/5 sur Google (6 avis). Recommandé par Konfian et Bcloossois. Le positionnement en plein quartier d'affaires est un atout si tu as des rendez-vous dans le coin ou si tu veux profiter de l'écosystème La Défense (restos, commerces, transports) sans subir la vie de bureau classique.
+Place de la Défense, au pied des tours. Industrious, c'est du coworking premium pensé pour les pros qui veulent un cadre impeccable. L'espace est designé avec soin, les finitions sont soignées, et l'ambiance est studieuse sans être froide. On y croise des entrepreneurs, des consultants et des équipes de startups qui ont besoin d'un bureau satellite à La Défense sans louer 200 m2. Recommandé par Konfian et Bcloossois. Le positionnement en plein quartier d'affaires est un atout si tu as des rendez-vous dans le coin ou si tu veux profiter de l'écosystème La Défense (restos, commerces, transports) sans subir la vie de bureau classique.
 
 Pour ceux qui veulent le standing La Défense sans la rigidité du bureau corporate.
 
@@ -39,7 +37,7 @@ Pour ceux qui veulent le standing La Défense sans la rigidité du bureau corpor
 
 ## Comptoir Coffee Shop Esplanade
 
-Esplanade du Général de Gaulle, juste à la sortie 3 du métro Esplanade de la Défense. Ce café propose un bon café, des pâtisseries maison, et une terrasse agréable aux beaux jours. Noté 4,7/5 sur Google avec 315 avis, c'est un des spots les plus appréciés du quartier pour une pause ou une session de travail courte. L'ambiance est détendue, à mille lieues des cantines d'entreprise des tours voisines.
+Esplanade du Général de Gaulle, juste à la sortie 3 du métro Esplanade de la Défense. Ce café propose un bon café, des pâtisseries maison, et une terrasse agréable aux beaux jours. L'ambiance est détendue, à mille lieues des cantines d'entreprise des tours voisines.
 
 Ouvert du mardi au vendredi, 7h30-16h. C'est le spot idéal pour les matinées productives avec un bon café devant toi, mais les horaires limités et la fermeture le week-end en font plutôt un complément qu'un QG permanent.
 
@@ -50,7 +48,7 @@ Le bon café du matin avant d'attaquer la journée, dans un cadre qui respire.
 
 ## Now Smart Parc
 
-Avenue Dubonnet, dans un cadre verdoyant qui tranche avec le béton de La Défense. Now Smart Parc propose un coworking lumineux avec bureaux privatifs, salles de réunion, espaces collaboratifs, et un jardin avec WiFi pour travailler au vert. Noté 4,7/5 sur Google (21 avis). L'ambiance est calme et inspirante, loin de l'agitation du quartier d'affaires même si tu n'en es qu'à quelques minutes.
+Avenue Dubonnet, dans un cadre verdoyant qui tranche avec le béton de La Défense. Now Smart Parc propose un coworking lumineux avec bureaux privatifs, salles de réunion, espaces collaboratifs, et un jardin avec WiFi pour travailler au vert. L'ambiance est calme et inspirante, loin de l'agitation du quartier d'affaires même si tu n'en es qu'à quelques minutes.
 
 WiFi solide, prises partout. Ouvert du lundi au vendredi, 9h-18h. Le jardin est le vrai plus de cet espace : quand il fait beau, pouvoir bosser dehors avec une connexion fiable, c'est un luxe qu'on ne trouve pas souvent en Ile-de-France.
 
@@ -61,7 +59,7 @@ Le coworking au vert, idéal quand tu veux respirer sans quitter la ville.
 
 ## Now Tour Ciel
 
-Rue de Bezons, dans un espace premium de 1 300 m2. Now Tour Ciel, c'est 30 postes de travail, des salles de réunion, des espaces de détente et de restauration, le tout baigné de lumière naturelle. Noté 5/5 sur Google (2 avis seulement). L'espace dégage une énergie calme et professionnelle, avec des volumes généreux qui évitent la sensation d'être entassé.
+Rue de Bezons, dans un espace premium de 1 300 m2. Now Tour Ciel, c'est 30 postes de travail, des salles de réunion, des espaces de détente et de restauration, le tout baigné de lumière naturelle. Noté. L'espace dégage une énergie calme et professionnelle, avec des volumes généreux qui évitent la sensation d'être entassé.
 
 WiFi rapide, grandes tables, et une ambiance qui pousse à la concentration. Le cadre est moderne et inspirant, le genre d'endroit où tu te sens productif dès que tu poses ton sac.
 
@@ -72,7 +70,7 @@ Pour les sessions de deep work dans un cadre lumineux et spacieux.
 
 ## Niagara Café
 
-Boulevard Saint-Denis, près de l'Hôtel de Ville de Courbevoie. Le Niagara est un café de quartier vivant, avec une ambiance de brasserie parisienne classique. Noté 4,1/5 sur Google avec plus de 1 000 avis, c'est un lieu populaire avec une terrasse, de la restauration toute la journée, et une amplitude horaire canon : ouvert de 8h à 1h du matin en semaine, dès 10h le week-end.
+Boulevard Saint-Denis, près de l'Hôtel de Ville de Courbevoie. Le Niagara est un café de quartier vivant, avec une ambiance de brasserie parisienne classique.
 
 C'est un café avant d'être un espace de travail, donc pas de prises garanties ni de WiFi dédié, mais l'ambiance et les horaires en font un bon plan de secours pour les sessions courtes ou les fins de journée.
 

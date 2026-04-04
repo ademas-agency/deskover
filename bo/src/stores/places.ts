@@ -8,7 +8,6 @@ export const usePlacesStore = defineStore('places', () => {
   const places = ref<Place[]>([])
   const loading = ref(false)
   const error = ref<string | null>(null)
-  const editedPlaces = ref<Map<string, Partial<Place>>>(new Map())
 
   const totalPlaces = computed(() => places.value.length)
 
@@ -35,16 +34,7 @@ export const usePlacesStore = defineStore('places', () => {
     loading.value = true
     error.value = null
     try {
-      const data = await PlaceRepository.getAll()
-      places.value = data
-
-      // Apply any in-memory edits
-      editedPlaces.value.forEach((edits, id) => {
-        const place = places.value.find(p => p.google_place_id === id)
-        if (place) {
-          Object.assign(place, edits)
-        }
-      })
+      places.value = await PlaceRepository.getAll()
     } catch (e: any) {
       error.value = e.message || 'Erreur lors du chargement des lieux'
     } finally {
@@ -53,18 +43,20 @@ export const usePlacesStore = defineStore('places', () => {
   }
 
   function getPlaceById(id: string): Place | undefined {
-    return places.value.find(p => p.google_place_id === id)
+    return places.value.find(p => p.id === id)
   }
 
-  function savePlace(id: string, updates: Partial<Place>) {
-    const place = places.value.find(p => p.google_place_id === id)
+  async function savePlace(id: string, updates: Partial<Place>) {
+    const place = places.value.find(p => p.id === id)
     if (place) {
       Object.assign(place, updates)
-      editedPlaces.value.set(id, {
-        ...editedPlaces.value.get(id),
-        ...updates,
-      })
+      await PlaceRepository.save(place)
     }
+  }
+
+  async function deletePlace(id: string) {
+    await PlaceRepository.delete(id)
+    places.value = places.value.filter(p => p.id !== id)
   }
 
   function searchPlaces(query: string): Place[] {
@@ -88,6 +80,7 @@ export const usePlacesStore = defineStore('places', () => {
     fetchPlaces,
     getPlaceById,
     savePlace,
+    deletePlace,
     searchPlaces,
     filterByCategory,
   }

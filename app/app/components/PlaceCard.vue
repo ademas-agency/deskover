@@ -13,6 +13,7 @@ interface Place {
   city: string
   distance: string
   isOpen: boolean
+  nextOpen?: string
   tag?: string  // "Number one", "Coup de coeur", null
   image: string
   vitals: Vital[]
@@ -32,8 +33,9 @@ defineProps<{ place: Place }>()
         <span>{{ place.tag }}</span>
       </div>
       <!-- Status badge -->
-      <div class="absolute top-3 right-3 px-2.5 h-[28px] rounded-lg text-white text-[10px] font-bold uppercase backdrop-blur-md flex items-center justify-center" :style="{ background: place.isOpen ? 'rgba(91,122,94,0.92)' : 'rgba(170,76,77,0.92)' }">
-        {{ place.isOpen ? 'Ouvert' : 'Fermé' }}
+      <div class="absolute top-3 right-3 px-2.5 h-[28px] rounded-lg text-white text-[10px] font-bold backdrop-blur-md flex items-center justify-center" :style="{ background: place.isOpen ? 'rgba(91,122,94,0.92)' : 'rgba(170,76,77,0.92)' }">
+        <template v-if="place.isOpen">OUVERT</template>
+        <template v-else>{{ place.nextOpen || 'FERMÉ' }}</template>
       </div>
     </div>
     <!-- Body -->
