@@ -11,6 +11,43 @@ const hasSearched = ref(false)
 
 const mode = ref<'now' | 'later'>('now')
 
+// BAN autocomplete
+const suggestions = ref<any[]>([])
+const showSuggestions = ref(false)
+let debounceTimer: ReturnType<typeof setTimeout>
+
+async function onQueryInput() {
+  const q = query.value.trim()
+  if (q.length < 3) {
+    suggestions.value = []
+    showSuggestions.value = false
+    return
+  }
+
+  clearTimeout(debounceTimer)
+  debounceTimer = setTimeout(async () => {
+    try {
+      const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(q)}&limit=5&type=municipality`)
+      const data = await res.json()
+      suggestions.value = (data.features || []).map((f: any) => ({
+        label: f.properties.label,
+        city: f.properties.city || f.properties.name,
+        postcode: f.properties.postcode,
+        lat: f.geometry.coordinates[1],
+        lng: f.geometry.coordinates[0],
+      }))
+      showSuggestions.value = suggestions.value.length > 0
+    } catch {
+      suggestions.value = []
+    }
+  }, 300)
+}
+
+function selectSuggestion(s: any) {
+  query.value = s.city
+  showSuggestions.value = false
+}
+
 const criteriaFilters = reactive({
   wifi: false,
   prises: false,
@@ -89,15 +126,40 @@ function isActive(key: string) {
       <NuxtLink to="/" class="w-10 h-10 rounded-full bg-[var(--color-linen)] flex items-center justify-center flex-shrink-0">
         <UIcon name="lucide:chevron-left" class="w-5 h-5 text-[var(--color-espresso)]" />
       </NuxtLink>
-      <div class="flex-1 bg-white rounded-2xl shadow-[0_2px_12px_rgba(44,40,37,0.06)] flex items-center h-12 px-4 gap-3">
-        <UIcon name="lucide:search" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
-        <input
-          v-model="query"
-          type="text"
-          placeholder="Une ville, un quartier, un lieu..."
-          class="flex-1 bg-transparent text-[15px] text-[var(--color-espresso)] placeholder:text-[var(--color-steam)] outline-none"
-          autofocus
+      <div class="flex-1 relative">
+        <div class="bg-white rounded-2xl shadow-[0_2px_12px_rgba(44,40,37,0.06)] flex items-center h-12 px-4 gap-3">
+          <UIcon name="lucide:search" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
+          <input
+            v-model="query"
+            type="text"
+            placeholder="Une ville, un quartier, un lieu..."
+            class="flex-1 bg-transparent text-[15px] text-[var(--color-espresso)] placeholder:text-[var(--color-steam)] outline-none"
+            autofocus
+            @input="onQueryInput"
+            @focus="showSuggestions = suggestions.length > 0"
+          >
+          <button v-if="query" class="text-[var(--color-steam)]" @click="query = ''; suggestions = []; showSuggestions = false">
+            <UIcon name="lucide:x" class="w-4 h-4" />
+          </button>
+        </div>
+        <!-- Suggestions BAN -->
+        <div
+          v-if="showSuggestions"
+          class="absolute top-14 left-0 right-0 bg-white rounded-2xl shadow-[0_8px_24px_rgba(44,40,37,0.12)] overflow-hidden z-20"
         >
+          <button
+            v-for="s in suggestions"
+            :key="s.label"
+            class="w-full flex items-center gap-3 px-4 py-3 hover:bg-[var(--color-linen)] transition-colors text-left"
+            @click="selectSuggestion(s)"
+          >
+            <UIcon name="lucide:map-pin" class="w-4 h-4 text-[var(--color-steam)] flex-shrink-0" />
+            <div>
+              <div class="text-[14px] text-[var(--color-espresso)] font-medium">{{ s.city }}</div>
+              <div class="text-[11px] text-[var(--color-steam)]">{{ s.postcode }}</div>
+            </div>
+          </button>
+        </div>
       </div>
     </div>
 

@@ -5,7 +5,7 @@ city: Paris
 citySlug: paris-1e
 type: district
 keywords: ["café pour travailler Paris 1er", "coworking Paris 1er", "télétravailler Paris 1er", "où bosser Paris 1er", "café wifi Paris 1er"]
-places: ["bdfc6846-84a2-44f1-8b7e-4facdc56474b", "43911cea-77f9-4248-9b36-57f87f4e8ac9", "a40dde2d-297e-4404-bb23-d8f709528ece", "d03ac6b5-a32e-43df-a950-fc1f8e827cba", "aa34503a-2302-476e-9f28-ba0d8d1ea18f", "a967eef7-6da5-4434-8144-9d9cb0d5f48f", "e84b5e90-3678-4223-b7f4-d516bd125b79"]
+places: ["43911cea-77f9-4248-9b36-57f87f4e8ac9", "a40dde2d-297e-4404-bb23-d8f709528ece", "d03ac6b5-a32e-43df-a950-fc1f8e827cba", "aa34503a-2302-476e-9f28-ba0d8d1ea18f", "a967eef7-6da5-4434-8144-9d9cb0d5f48f", "e84b5e90-3678-4223-b7f4-d516bd125b79"]
 publishedAt: "2026-04-04"
 ---
 
@@ -14,17 +14,6 @@ publishedAt: "2026-04-04"
 Le 1er arrondissement, c'est le centre nerveux de Paris. Entre le quartier des Halles qui bourdonne du matin au soir, le calme inattendu des rues autour du Palais-Royal, et l'avenue de l'Opéra qui file tout droit vers les grands boulevards, l'arrondissement a cette particularité d'offrir des ambiances radicalement différentes selon la rue où tu te poses. Châtelet-Les Halles est un noeud de transports en commun qui te connecte à tout Paris, ce qui en fait un point de chute logique pour ceux qui bossent en mode nomade et ont besoin de bouger dans la journée.
 
 Côté spots de travail, le 1er ne manque pas de ressources. On y trouve un mélange de cafés-coworkings avec du caractère, d'espaces professionnels bien équipés, et de quelques adresses atypiques qui méritent le détour. On a fait le tri pour te proposer 7 lieux où poser ton ordi sans stress, du Louvre à Châtelet.
-
-## L'Anticafé Louvre
-
-Avenue de l'Opéra, à deux pas du Louvre et du Palais-Royal. L'Anticafé applique son concept bien rodé : tu paies au temps passé, et les boissons, snacks et friandises sont en libre-service. Résultat, tu t'installes sans compter et tu bosses aussi longtemps que tu veux sans surveiller ta note. La déco est colorée, un peu arty, avec un mobilier qui change de l'ordinaire. L'espace est pensé pour accueillir ceux qui travaillent : grandes tables, coins plus intimistes, et une ambiance concentrée sans être silencieuse.
-
-Côté pratique, le WiFi est fiable et les prises sont accessibles partout. Tu peux manger sur place, ce qui te permet de tenir toute la journée sans bouger. Ouvert 7j/7 de 8h à minuit, c'est une des rares adresses du quartier qui te laisse bosser aussi bien le matin tôt que le soir tard.
-
-Le spot parfait si tu veux t'installer pour la journée sans pression, avec tout inclus dans un forfait simple.
-
-::place-embed{id="bdfc6846-84a2-44f1-8b7e-4facdc56474b"}
-::
 
 ## Au QJ Paris
 

@@ -98,12 +98,12 @@ C'est tout. Le but c'est que toutes les photos aient le même rendu : **chaud, l
 
 ### Importer et placer
 3. Importer les 5 photos dans l'ordre : devanture, intérieur, détail, setup, tasse
-4. Chaque photo = **0.8 seconde** (ajuster la durée dans la timeline)
-5. Durée totale : **4 secondes**
+4. Chaque photo = **1.2 seconde** (assez pour voir, pas trop pour s'ennuyer)
+5. Durée totale : **6 secondes**
 
 ### Transitions
-6. Entre chaque photo : transition **"Fondu" (Dissolve)** de 0.3s
-7. Pas de transition fantaisie — juste du fondu doux
+6. **Cuts secs** — pas de fondu, pas de dissolve. Chaque photo claque.
+7. C'est le style Belly Media / Le Filtre. Plus punchy, plus moderne.
 
 ### Texte overlay
 8. Ajouter un texte en bas, qui reste fixe sur toute la durée :

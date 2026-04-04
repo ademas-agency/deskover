@@ -114,15 +114,60 @@ async function runSpeedTest() {
   }
 }
 
-function submitRating() {
-  // TODO: save to Supabase
-  console.log('Rating submitted:', { ...ratings, speedTest: speedTestResult.value })
+const submitError = ref('')
+const submitSuccess = ref(false)
+
+function ratingToNumber(key: string, value: string): number {
+  const maps: Record<string, Record<string, number>> = {
+    wifi: { 'Faible': 1, 'Bon': 2, 'Rapide': 3 },
+    prises: { 'Aucune': 1, 'Quelques-unes': 2, 'Plein': 3 },
+    food: { 'Boissons': 1, 'Snacks': 2, 'Repas': 3 },
+    style: { 'Cozy': 1, 'Design': 2, 'Canon': 3 },
+  }
+  return maps[key]?.[value] || 2
+}
+
+function getFingerprint() {
+  const stored = localStorage.getItem('deskover_fp')
+  if (stored) return stored
+  const fp = crypto.randomUUID()
+  localStorage.setItem('deskover_fp', fp)
+  return fp
+}
+
+async function submitRating() {
+  if (!place.value) return
+  submitError.value = ''
+
+  const client = useSupabaseClient()
+  const { error } = await client.from('ratings').insert({
+    place_id: place.value.id,
+    fingerprint: getFingerprint(),
+    wifi: ratingToNumber('wifi', ratings.wifi),
+    power: ratingToNumber('prises', ratings.prises),
+    noise: ratingToNumber('food', ratings.food),
+    comfort: ratingToNumber('style', ratings.style),
+  })
+
+  if (error) {
+    if (error.message?.includes('duplicate') || error.message?.includes('unique')) {
+      submitError.value = 'Tu as déjà noté ce lieu.'
+    } else {
+      submitError.value = 'Oups, une erreur est survenue.'
+    }
+    return
+  }
+
+  submitSuccess.value = true
   showContribute.value = false
-  // Reset
   ratings.wifi = ''
   ratings.prises = ''
   ratings.food = ''
   ratings.style = ''
+
+  // Refresh place data
+  place.value = await getById(route.params.id as string)
+  setTimeout(() => { submitSuccess.value = false }, 3000)
 }
 
 onMounted(async () => {
@@ -527,6 +572,9 @@ function categoryLabel(cat: string) {
 
               <!-- Submit -->
               <div class="px-5 pb-10">
+                <p v-if="submitError" class="text-center text-sm text-[var(--color-terracotta-500)] mb-3">
+                  {{ submitError }}
+                </p>
                 <button
                   class="w-full py-3.5 rounded-[14px] text-sm font-bold transition-all duration-200"
                   :class="hasRated ? 'bg-[var(--color-terracotta-500)] text-[var(--color-cream)]' : 'bg-[var(--color-parchment)] text-[var(--color-steam)]'"

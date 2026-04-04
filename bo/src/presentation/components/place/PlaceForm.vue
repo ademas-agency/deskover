@@ -3,11 +3,15 @@ import { ref, watch, computed } from 'vue'
 
 import type { Place, PlaceCategory } from '../../../core/domain/entities/Place'
 import { CATEGORY_LABELS, SIGNAL_LABELS } from '../../../core/domain/entities/Place'
+import { supabase } from '../../../infrastructure/api/client'
 import BaseInput from '../ui/BaseInput.vue'
 import BaseButton from '../ui/BaseButton.vue'
 import BaseCard from '../ui/BaseCard.vue'
 import BaseBadge from '../ui/BaseBadge.vue'
-import { Save, ExternalLink, Star, Clock, Globe, Phone, Instagram } from 'lucide-vue-next'
+import { Save, ExternalLink, Star, Clock, Globe, Phone, Instagram, Upload, Trash2, RefreshCw } from 'lucide-vue-next'
+
+const BUCKET = 'place-photos'
+const SUPABASE_STORAGE_BASE = `https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/${BUCKET}`
 
 const props = withDefaults(defineProps<{
   place: Place
@@ -21,6 +25,8 @@ const emit = defineEmits<{
 }>()
 
 const form = ref<Place>({ ...props.place })
+const uploading = ref(false)
+const photoError = ref('')
 
 watch(() => props.place, (newVal) => {
   form.value = { ...newVal }
@@ -33,22 +39,87 @@ const allSignals = [
 
 const categories: PlaceCategory[] = ['cafe', 'coffee_shop', 'coworking', 'tiers_lieu']
 
-const SUPABASE_STORAGE_BASE = 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos'
-
 function slugify(text: string): string {
   return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 }
 
-const supabasePhotoUrl = computed(() => {
+const currentPhotoUrl = computed(() => {
   if (form.value.photo_storage_path) {
     return `${SUPABASE_STORAGE_BASE}/${form.value.photo_storage_path}`
   }
-  if (form.value.city_key && form.value.name) {
-    const path = `${form.value.city_key}/${slugify(form.value.name)}.jpg`
-    return `${SUPABASE_STORAGE_BASE}/${path}`
-  }
-  return null
+  return form.value.photo_url || null
 })
+
+function getStoragePath(file: File): string {
+  const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+  return `${form.value.city_key}/${slugify(form.value.name)}.${ext}`
+}
+
+async function handlePhotoUpload(event: Event) {
+  const input = event.target as HTMLInputElement
+  const file = input.files?.[0]
+  if (!file) return
+
+  if (!file.type.startsWith('image/')) {
+    photoError.value = 'Le fichier doit être une image'
+    return
+  }
+
+  uploading.value = true
+  photoError.value = ''
+
+  try {
+    // Delete old photo if exists
+    if (form.value.photo_storage_path) {
+      await supabase.storage.from(BUCKET).remove([form.value.photo_storage_path])
+    }
+
+    const storagePath = getStoragePath(file)
+
+    const { error } = await supabase.storage
+      .from(BUCKET)
+      .upload(storagePath, file, { upsert: true, contentType: file.type })
+
+    if (error) throw error
+
+    form.value.photo_storage_path = storagePath
+    form.value.photo_url = ''
+  } catch (e: any) {
+    photoError.value = e.message || 'Erreur lors de l\'upload'
+  } finally {
+    uploading.value = false
+    input.value = ''
+  }
+}
+
+async function handlePhotoReplace(event: Event) {
+  await handlePhotoUpload(event)
+}
+
+async function handlePhotoDelete() {
+  if (!form.value.photo_storage_path) {
+    form.value.photo_url = ''
+    return
+  }
+
+  uploading.value = true
+  photoError.value = ''
+
+  try {
+    const { error } = await supabase.storage
+      .from(BUCKET)
+      .remove([form.value.photo_storage_path])
+
+    if (error) throw error
+
+    form.value.photo_storage_path = ''
+    form.value.photo_url = ''
+  } catch (e: any) {
+    photoError.value = e.message || 'Erreur lors de la suppression'
+  } finally {
+    uploading.value = false
+  }
+}
 
 function toggleSignal(signal: string) {
   const idx = form.value.signals.indexOf(signal)
@@ -69,19 +140,59 @@ function handleSave() {
     <!-- Photo de couverture -->
     <BaseCard title="Photo de couverture">
       <div class="space-y-4">
-        <div v-if="supabasePhotoUrl || form.photo_url" class="relative rounded-xl overflow-hidden bg-linen w-64" style="aspect-ratio: 16/9;">
-          <img :src="supabasePhotoUrl || form.photo_url" :alt="form.name" class="w-full h-full object-cover" />
+        <!-- Preview -->
+        <div v-if="currentPhotoUrl" class="relative rounded-xl overflow-hidden bg-linen w-80" style="aspect-ratio: 16/9;">
+          <img :src="currentPhotoUrl" :alt="form.name" class="w-full h-full object-cover" />
+          <div v-if="uploading" class="absolute inset-0 bg-black/40 flex items-center justify-center">
+            <div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
+          </div>
         </div>
-        <div v-else class="rounded-xl bg-linen flex items-center justify-center text-steam w-64" style="aspect-ratio: 16/9;">
+        <div v-else class="rounded-xl bg-linen flex items-center justify-center text-steam w-80" style="aspect-ratio: 16/9;">
           Aucune photo
         </div>
-        <p v-if="supabasePhotoUrl" class="text-xs text-steam truncate">
-          <a :href="supabasePhotoUrl" target="_blank" class="text-primary hover:underline">{{ supabasePhotoUrl }}</a>
+
+        <!-- URL -->
+        <p v-if="currentPhotoUrl" class="text-xs text-steam truncate max-w-80">
+          <a :href="currentPhotoUrl" target="_blank" class="text-primary hover:underline">{{ currentPhotoUrl }}</a>
         </p>
-        <p v-else-if="form.photo_url" class="text-xs text-steam truncate">
-          <a :href="form.photo_url" target="_blank" class="text-primary hover:underline">{{ form.photo_url }}</a>
-        </p>
-        <p v-else class="text-xs text-steam">Aucune image</p>
+
+        <!-- Error -->
+        <p v-if="photoError" class="text-xs text-red-500">{{ photoError }}</p>
+
+        <!-- Actions -->
+        <div class="flex gap-2">
+          <!-- Upload / Replace -->
+          <label
+            :class="[
+              'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium cursor-pointer transition-colors',
+              currentPhotoUrl
+                ? 'bg-white text-roast border border-steam/30 hover:border-primary/50'
+                : 'bg-primary text-white hover:bg-primary/90',
+            ]"
+          >
+            <component :is="currentPhotoUrl ? RefreshCw : Upload" :size="14" />
+            {{ currentPhotoUrl ? 'Remplacer' : 'Ajouter une photo' }}
+            <input
+              type="file"
+              accept="image/*"
+              class="hidden"
+              :disabled="uploading"
+              @change="currentPhotoUrl ? handlePhotoReplace($event) : handlePhotoUpload($event)"
+            />
+          </label>
+
+          <!-- Delete -->
+          <button
+            v-if="currentPhotoUrl"
+            type="button"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-white text-red-500 border border-red-200 hover:bg-red-50 transition-colors disabled:opacity-50"
+            :disabled="uploading"
+            @click="handlePhotoDelete"
+          >
+            <Trash2 :size="14" />
+            Supprimer
+          </button>
+        </div>
       </div>
     </BaseCard>
 
@@ -89,9 +200,8 @@ function handleSave() {
     <BaseCard title="Informations principales">
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <BaseInput
-          :modelValue="form.name"
+          v-model="form.name"
           label="Nom"
-          readonly
         />
         <div class="space-y-1">
           <label class="block text-sm font-medium text-roast">Categorie</label>
@@ -105,14 +215,12 @@ function handleSave() {
           </select>
         </div>
         <BaseInput
-          :modelValue="form.address"
+          v-model="form.address"
           label="Adresse"
-          readonly
         />
         <BaseInput
-          :modelValue="form.city"
+          v-model="form.city"
           label="Ville"
-          readonly
         />
       </div>
     </BaseCard>

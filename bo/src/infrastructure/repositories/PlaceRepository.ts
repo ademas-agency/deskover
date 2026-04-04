@@ -39,14 +39,26 @@ function rowToPlace(row: any): Place {
 
 export class PlaceRepository {
   static async getAll(): Promise<Place[]> {
-    const { data, error } = await supabase
-      .from('places')
-      .select('*, blog_mentions(*)')
-      .order('blog_mentions_count', { ascending: false })
-      .order('google_rating', { ascending: false, nullsFirst: false })
+    // Supabase retourne 1000 lignes max par défaut, on pagine
+    const all: any[] = []
+    let from = 0
+    const pageSize = 1000
 
-    if (error) throw new Error(error.message)
-    return (data || []).map(rowToPlace)
+    while (true) {
+      const { data, error } = await supabase
+        .from('places')
+        .select('*, blog_mentions(*)')
+        .order('curation_score', { ascending: false, nullsFirst: false })
+        .range(from, from + pageSize - 1)
+
+      if (error) throw new Error(error.message)
+      if (!data || data.length === 0) break
+      all.push(...data)
+      if (data.length < pageSize) break
+      from += pageSize
+    }
+
+    return all.map(rowToPlace)
   }
 
   static async getById(id: string): Promise<Place | undefined> {
@@ -61,19 +73,32 @@ export class PlaceRepository {
   }
 
   static async save(place: Place): Promise<void> {
-    const { error } = await supabase
+    const payload = {
+      name: place.name,
+      address: place.address,
+      city: place.city,
+      place_type: place.category,
+      description: place.description,
+      signals: place.signals,
+      website: place.website,
+      phone: place.phone,
+      instagram_handle: place.instagram,
+      photo_storage_path: place.photo_storage_path || null,
+      photo_url: place.photo_url || null,
+    }
+
+    console.log('[BO] Saving place', place.id, payload)
+
+    const { data, error, count } = await supabase
       .from('places')
-      .update({
-        place_type: place.category,
-        description: place.description,
-        signals: place.signals,
-        website: place.website,
-        phone: place.phone,
-        instagram_handle: place.instagram,
-      })
+      .update(payload)
       .eq('id', place.id)
+      .select()
+
+    console.log('[BO] Save result:', { data, error, count })
 
     if (error) throw new Error(error.message)
+    if (!data || data.length === 0) throw new Error('Aucune ligne mise à jour — ID introuvable: ' + place.id)
   }
 
   static async delete(id: string): Promise<void> {

@@ -29,13 +29,17 @@ export class PlaceService {
     }, {} as Record<string, number>)
   }
 
+  static normalize(text: string): string {
+    return text.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+  }
+
   static search(places: Place[], query: string): Place[] {
-    const q = query.toLowerCase()
+    const q = this.normalize(query)
     return places.filter(
       p =>
-        p.name.toLowerCase().includes(q) ||
-        p.city.toLowerCase().includes(q) ||
-        p.address.toLowerCase().includes(q)
+        this.normalize(p.name).includes(q) ||
+        this.normalize(p.city).includes(q) ||
+        this.normalize(p.address).includes(q)
     )
   }
 

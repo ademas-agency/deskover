@@ -207,17 +207,34 @@ export class SupabasePlaceRepository implements PlaceRepository {
 
   async search(query: string): Promise<Place[]> {
     const q = query.toLowerCase().trim()
+    const qNorm = q.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+
+    // Search with both original and accent-stripped versions
+    const filters = [
+      `name.ilike.%${q}%`, `city.ilike.%${q}%`, `address.ilike.%${q}%`,
+    ]
+    if (qNorm !== q) {
+      filters.push(`name.ilike.%${qNorm}%`, `city.ilike.%${qNorm}%`, `address.ilike.%${qNorm}%`)
+    }
 
     const { data, error } = await this.client
       .from('places')
       .select('*, blog_mentions(*)')
       .eq('status', 'approved')
-      .or(`name.ilike.%${q}%,city.ilike.%${q}%,address.ilike.%${q}%`)
-      .limit(20)
+      .or(filters.join(','))
+      .limit(30)
 
     if (error) throw error
 
-    return (data || []).map((row: any, i: number) =>
+    // Post-filter client-side for accent-insensitive matching
+    const normalize = (s: string) => s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+    const results = (data || []).filter((row: any) =>
+      normalize(row.name || '').includes(qNorm) ||
+      normalize(row.city || '').includes(qNorm) ||
+      normalize(row.address || '').includes(qNorm)
+    )
+
+    return results.map((row: any, i: number) =>
       rowToPlace(row, i, row.blog_mentions)
     )
   }
@@ -248,7 +265,12 @@ export class SupabasePlaceRepository implements PlaceRepository {
     if (filters.calme) query = query.contains('signals', ['calme'])
     if (filters.query) {
       const q = filters.query.toLowerCase()
-      query = query.or(`name.ilike.%${q}%,city.ilike.%${q}%`)
+      const qNorm = q.normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+      const parts = [`name.ilike.%${q}%`, `city.ilike.%${q}%`]
+      if (qNorm !== q) {
+        parts.push(`name.ilike.%${qNorm}%`, `city.ilike.%${qNorm}%`)
+      }
+      query = query.or(parts.join(','))
     }
 
     return query
@@ -260,7 +282,7 @@ export class SupabasePlaceRepository implements PlaceRepository {
         return query.order('google_rating', { ascending: false, nullsFirst: false })
       default:
         return query
-          .order('blog_mentions_count', { ascending: false })
+          .order('curation_score', { ascending: false, nullsFirst: false })
           .order('google_rating', { ascending: false, nullsFirst: false })
     }
   }

@@ -46,3 +46,25 @@ Strasbourg, on t'avait sous-estimé.
 ## Musique
 
 "ambient study" — volume 20%
+
+---
+
+## Montage vidéo (ffmpeg)
+
+Une fois les 5 photos générées/prises, les placer dans ce dossier avec ces noms :
+- `01-plafond.jpg` (ou `01-devanture.jpg` selon le lieu)
+- `02-interieur.jpg`
+- `03-detail.jpg`
+- `04-setup.jpg`
+- `05-cafe.jpg`
+
+Format requis : 1080x1350 (4:5 portrait). Si les photos sont dans un autre format, les recadrer avant.
+
+Puis me dire : "Génère le montage pour [nom du lieu]" et je lancerai ffmpeg avec :
+- Chaque photo affichée 0.8s
+- Fondu enchaîné 0.3s entre chaque
+- Texte overlay fixe (nom du lieu + ville + "— T.")
+- Durée totale ~5s, en boucle
+- Export MP4 1080x1350, prêt à poster comme Reel
+
+Si tu veux ajouter de la musique, place aussi un fichier `musique.mp3` dans le dossier.

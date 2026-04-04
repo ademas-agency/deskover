@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=390">
-<title>@deskover — Instagram Feed</title>
+<title>@deskover &mdash; Instagram Feed</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" rel="stylesheet">
@@ -205,13 +205,19 @@
     aspect-ratio: 3/4;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .ig-post:active {
+    opacity: 0.85;
   }
 
   /* ---- BADGES ---- */
   .badge {
     position: absolute;
-    top: 8px;
-    right: 8px;
+    top: 6px;
+    right: 6px;
     filter: drop-shadow(0 1px 3px rgba(0,0,0,0.5));
     z-index: 10;
   }
@@ -306,7 +312,7 @@
     left: 8px;
     font-family: 'Anton', sans-serif;
     font-size: 24px;
-    color: rgba(255,255,255,0.3);
+    color: rgba(255,255,255,0.2);
     z-index: 2;
   }
 
@@ -332,6 +338,13 @@
     font-size: 9px;
     color: var(--terracotta);
     margin-top: 2px;
+  }
+
+  .post-session .session-overlay .author {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 8px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 3px;
   }
 
   /* ---- LE GUIDE ---- */
@@ -388,6 +401,13 @@
     line-height: 1.4;
   }
 
+  .post-carnets .carnets-author {
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 9px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 3px;
+  }
+
   /* ---- TON QG ---- */
   .post-tonqg {
     background: var(--monstera);
@@ -430,14 +450,14 @@
     position: relative;
   }
 
-  .post-match .match-left {
+  .post-match .match-top {
     flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
   }
 
-  .post-match .match-right {
+  .post-match .match-bottom {
     flex: 1;
     display: flex;
     align-items: center;
@@ -471,6 +491,324 @@
     z-index: 2;
     box-shadow: 0 1px 4px rgba(0,0,0,0.15);
   }
+
+  .post-match .match-divider {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: white;
+    transform: translateY(-50%);
+  }
+
+  /* ======================================== */
+  /* ---- POST DETAIL OVERLAY ---- */
+  /* ======================================== */
+  .post-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 1000;
+    display: flex;
+    justify-content: center;
+    background: rgba(0,0,0,0.5);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.25s ease;
+  }
+
+  .post-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .post-overlay-inner {
+    width: 390px;
+    background: white;
+    overflow-y: auto;
+    transform: translateY(100%);
+    transition: transform 0.35s cubic-bezier(0.32, 0.72, 0, 1);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .post-overlay.active .post-overlay-inner {
+    transform: translateY(0);
+  }
+
+  .overlay-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px;
+    border-bottom: 1px solid #eee;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 10;
+  }
+
+  .overlay-back {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--espresso);
+    background: none;
+    border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .overlay-username {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--espresso);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .overlay-username .avatar-small {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--terracotta);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .overlay-username .avatar-small span {
+    font-family: 'Anton', sans-serif;
+    font-size: 11px;
+    color: white;
+  }
+
+  .overlay-image-wrap {
+    width: 100%;
+    aspect-ratio: 4/5;
+    position: relative;
+    overflow: hidden;
+    background: var(--parchment);
+  }
+
+  .overlay-image-wrap img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Cover for non-photo posts */
+  .overlay-cover {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 30px;
+  }
+
+  .overlay-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 12px 16px;
+  }
+
+  .overlay-action {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    color: var(--espresso);
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+  }
+
+  .overlay-action svg {
+    flex-shrink: 0;
+  }
+
+  .overlay-action-spacer {
+    flex: 1;
+  }
+
+  .overlay-action-share {
+    margin-left: auto;
+  }
+
+  .overlay-caption {
+    padding: 0 16px 16px;
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--espresso);
+  }
+
+  .overlay-caption strong {
+    font-weight: 700;
+    margin-right: 4px;
+  }
+
+  .caption-text {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .caption-text.expanded {
+    -webkit-line-clamp: unset;
+    display: block;
+  }
+
+  .caption-more {
+    color: var(--steam);
+    cursor: pointer;
+    font-size: 13px;
+    border: none;
+    background: none;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    padding: 0;
+    margin-top: 2px;
+    display: inline;
+  }
+
+  .overlay-hashtags {
+    padding: 0 16px 12px;
+    font-size: 12px;
+    color: var(--steam);
+    line-height: 1.6;
+  }
+
+  .overlay-date {
+    padding: 0 16px 20px;
+    font-size: 10px;
+    color: var(--steam);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* ---- CAROUSEL ---- */
+  .carousel-container {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 4/5;
+    overflow: hidden;
+  }
+
+  .carousel-track {
+    display: flex;
+    transition: transform 0.3s ease;
+    height: 100%;
+  }
+
+  .carousel-slide {
+    min-width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    text-align: center;
+  }
+
+  .carousel-slide.slide-photo {
+    padding: 0;
+    position: relative;
+  }
+
+  .carousel-slide.slide-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .carousel-slide.slide-photo .slide-photo-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 16px;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+  }
+
+  .carousel-slide.slide-split {
+    padding: 0;
+  }
+
+  .carousel-dots {
+    position: absolute;
+    bottom: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 6px;
+    z-index: 6;
+  }
+
+  .carousel-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.4);
+    cursor: pointer;
+  }
+
+  .carousel-dot.active {
+    background: white;
+  }
+
+  .carousel-arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 5;
+    border: none;
+    font-size: 14px;
+    color: #2C2825;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .carousel-arrow-left { left: 8px; }
+  .carousel-arrow-right { right: 8px; }
+
+  /* Heart animation */
+  .heart-animation {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    pointer-events: none;
+    z-index: 50;
+    animation: heartPop 0.8s ease forwards;
+  }
+
+  @keyframes heartPop {
+    0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+    15% { transform: translate(-50%, -50%) scale(1.2); opacity: 1; }
+    30% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    80% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
+    100% { transform: translate(-50%, -50%) scale(1); opacity: 0; }
+  }
 </style>
 </head>
 <body>
@@ -479,12 +817,8 @@
 
   <!-- ==================== HEADER ==================== -->
   <div class="ig-header">
-
-    <!-- Top row: avatar + stats -->
     <div class="ig-top-row">
-      <div class="ig-avatar">
-        <span>D</span>
-      </div>
+      <div class="ig-avatar"><span>D</span></div>
       <div class="ig-stats">
         <div>
           <div class="ig-stat-number">42</div>
@@ -501,7 +835,6 @@
       </div>
     </div>
 
-    <!-- Bio -->
     <div class="ig-bio">
       <div class="ig-bio-name">Deskover</div>
       <div class="ig-bio-desc">Les meilleurs spots pour bosser en France</div>
@@ -509,87 +842,56 @@
       <div class="ig-bio-link">deskover.fr</div>
     </div>
 
-    <!-- Buttons -->
     <div class="ig-buttons">
       <div class="ig-btn-follow">Suivre</div>
       <div class="ig-btn-message">Message</div>
     </div>
 
-    <!-- Highlights -->
     <div class="ig-highlights">
       <div class="ig-highlight">
         <div class="ig-highlight-circle">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M10 3L12.5 8L18 8.5L14 12.5L15 18L10 15L5 18L6 12.5L2 8.5L7.5 8L10 3Z" fill="#6B5B4E"/>
-          </svg>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 3L12.5 8L18 8.5L14 12.5L15 18L10 15L5 18L6 12.5L2 8.5L7.5 8L10 3Z" fill="#6B5B4E"/></svg>
         </div>
         <span class="ig-highlight-label">Coups de coeur</span>
       </div>
       <div class="ig-highlight">
         <div class="ig-highlight-circle">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M10 2C10 2 14 6 14 10C14 14 10 18 10 18C10 18 6 14 6 10C6 6 10 2 10 2Z" fill="#6B5B4E"/>
-            <circle cx="10" cy="10" r="2" fill="white"/>
-          </svg>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M10 2C10 2 14 6 14 10C14 14 10 18 10 18C10 18 6 14 6 10C6 6 10 2 10 2Z" fill="#6B5B4E"/><circle cx="10" cy="10" r="2" fill="white"/></svg>
         </div>
         <span class="ig-highlight-label">Paris</span>
       </div>
       <div class="ig-highlight">
         <div class="ig-highlight-circle">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <rect x="3" y="6" width="14" height="10" rx="2" fill="#6B5B4E"/>
-            <path d="M7 6V4C7 2.9 7.9 2 9 2H11C12.1 2 13 2.9 13 4V6" stroke="#6B5B4E" stroke-width="1.5" fill="none"/>
-          </svg>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><rect x="3" y="6" width="14" height="10" rx="2" fill="#6B5B4E"/><path d="M7 6V4C7 2.9 7.9 2 9 2H11C12.1 2 13 2.9 13 4V6" stroke="#6B5B4E" stroke-width="1.5" fill="none"/></svg>
         </div>
         <span class="ig-highlight-label">Villes</span>
       </div>
       <div class="ig-highlight">
         <div class="ig-highlight-circle">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M4 14L4 6" stroke="#6B5B4E" stroke-width="2" stroke-linecap="round"/>
-            <path d="M8 14L8 8" stroke="#6B5B4E" stroke-width="2" stroke-linecap="round"/>
-            <path d="M12 14L12 4" stroke="#6B5B4E" stroke-width="2" stroke-linecap="round"/>
-            <path d="M16 14L16 10" stroke="#6B5B4E" stroke-width="2" stroke-linecap="round"/>
-          </svg>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 14L4 6" stroke="#6B5B4E" stroke-width="2" stroke-linecap="round"/><path d="M8 14L8 8" stroke="#6B5B4E" stroke-width="2" stroke-linecap="round"/><path d="M12 14L12 4" stroke="#6B5B4E" stroke-width="2" stroke-linecap="round"/><path d="M16 14L16 10" stroke="#6B5B4E" stroke-width="2" stroke-linecap="round"/></svg>
         </div>
         <span class="ig-highlight-label">Vitals</span>
       </div>
       <div class="ig-highlight">
         <div class="ig-highlight-circle">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M4 16C4 16 4 12 10 12C16 12 16 16 16 16" stroke="#6B5B4E" stroke-width="1.5" fill="none"/>
-            <circle cx="10" cy="7" r="3.5" stroke="#6B5B4E" stroke-width="1.5" fill="none"/>
-          </svg>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 16C4 16 4 12 10 12C16 12 16 16 16 16" stroke="#6B5B4E" stroke-width="1.5" fill="none"/><circle cx="10" cy="7" r="3.5" stroke="#6B5B4E" stroke-width="1.5" fill="none"/></svg>
         </div>
         <span class="ig-highlight-label">Avis</span>
       </div>
       <div class="ig-highlight">
         <div class="ig-highlight-circle">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <circle cx="10" cy="10" r="6" stroke="#6B5B4E" stroke-width="1.5" fill="none"/>
-            <circle cx="10" cy="10" r="2.5" stroke="#6B5B4E" stroke-width="1.5" fill="none"/>
-            <line x1="10" y1="2" x2="10" y2="4" stroke="#6B5B4E" stroke-width="1.5"/>
-            <line x1="16" y1="10" x2="18" y2="10" stroke="#6B5B4E" stroke-width="1.5"/>
-          </svg>
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="6" stroke="#6B5B4E" stroke-width="1.5" fill="none"/><circle cx="10" cy="10" r="2.5" stroke="#6B5B4E" stroke-width="1.5" fill="none"/><line x1="10" y1="2" x2="10" y2="4" stroke="#6B5B4E" stroke-width="1.5"/><line x1="16" y1="10" x2="18" y2="10" stroke="#6B5B4E" stroke-width="1.5"/></svg>
         </div>
         <span class="ig-highlight-label">Coulisses</span>
       </div>
     </div>
 
-    <!-- Tabs -->
     <div class="ig-tabs">
       <div class="ig-tab active">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-          <rect x="1" y="1" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
-          <rect x="13" y="1" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
-          <rect x="1" y="13" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
-          <rect x="13" y="13" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/>
-        </svg>
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><rect x="1" y="1" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="13" y="1" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="1" y="13" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/><rect x="13" y="13" width="8" height="8" rx="1" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
       </div>
       <div class="ig-tab">
-        <svg width="22" height="22" viewBox="0 0 22 22" fill="none">
-          <polygon points="8,4 18,11 8,18" stroke="currentColor" stroke-width="1.5" fill="none"/>
-        </svg>
+        <svg width="22" height="22" viewBox="0 0 22 22" fill="none"><polygon points="8,4 18,11 8,18" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
       </div>
     </div>
   </div>
@@ -597,15 +899,10 @@
   <!-- ==================== GRID ==================== -->
   <div class="ig-grid">
 
-    <!-- ===== RANG&Eacute;E 1 ===== -->
-
-    <!-- 1. QG DU JOUR — La Recyclerie, Paris 18e -->
-    <div class="ig-post post-qg" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-18e/la-recyclerie.jpg');">
+    <!-- 1. QG DU JOUR — La Recyclerie -->
+    <div class="ig-post post-qg" onclick="openPost(1)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-18e/la-recyclerie.jpg');">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/>
-          <polygon points="7,5 13,9 7,13" fill="#2C2825"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
       </div>
       <div class="overlay">
         <span class="hook">On a pos&eacute; nos affaires</span>
@@ -614,78 +911,63 @@
       </div>
     </div>
 
-    <!-- 2. LE VERDICT D'AD&Eacute; — Wifi de comp&egrave;te -->
-    <div class="ig-post post-verdict">
+    <!-- 2. LE VERDICT D'AD&Eacute; — WiFi de comp&egrave;te -->
+    <div class="ig-post post-verdict" onclick="openPost(2)">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="2" y="3" width="11" height="13" rx="2" fill="rgba(255,255,255,0.9)"/>
-          <rect x="5" y="1" width="11" height="13" rx="2" fill="rgba(255,255,255,0.7)"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.9)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.75)"/></svg>
       </div>
       <span class="signature">Le verdict d'Ad&eacute;</span>
-      <span class="subject">Wifi de<br>comp&egrave;te</span>
-      <span class="subtitle">les spots qui cochent la case</span>
+      <span class="subject">WiFi de<br>comp&egrave;te</span>
+      <span class="subtitle">les spots o&ugrave; &ccedil;a ne coupe jamais</span>
     </div>
 
-    <!-- 3. SESSION DU MATIN — La Cafteuse, Grenoble -->
-    <div class="ig-post post-session" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/grenoble/la-cafteuse.jpg');">
+    <!-- 3. SESSION DU MATIN — La Cafteuse -->
+    <div class="ig-post post-session" onclick="openPost(3)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/grenoble/la-cafteuse.jpg');">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/>
-          <polygon points="7,5 13,9 7,13" fill="#2C2825"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
       </div>
       <span class="time-watermark">9H</span>
       <div class="session-overlay">
         <span class="place-name">La Cafteuse</span>
         <span class="city">Grenoble</span>
+        <span class="author">&mdash; T.</span>
       </div>
     </div>
 
-    <!-- ===== RANG&Eacute;E 2 ===== -->
-
-    <!-- 4. LE GUIDE — O&ugrave; bosser &agrave; Nantes -->
-    <div class="ig-post post-guide" style="background:var(--terracotta);">
+    <!-- 4. LE GUIDE — Nantes -->
+    <div class="ig-post post-guide" onclick="openPost(4)" style="background:var(--terracotta);">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="2" y="3" width="11" height="13" rx="2" fill="rgba(255,255,255,0.9)"/>
-          <rect x="5" y="1" width="11" height="13" rx="2" fill="rgba(255,255,255,0.7)"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.9)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.75)"/></svg>
       </div>
       <span class="guide-top">O&ugrave; bosser</span>
       <span class="guide-city">&agrave; Nantes</span>
     </div>
 
-    <!-- 5. LES CARNETS — Pavillon des Canaux, Paris 3e -->
-    <div class="ig-post post-carnets" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-3e/le-pavillon-des-canaux.jpg');">
-      <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/>
-          <polygon points="7,5 13,9 7,13" fill="#2C2825"/>
-        </svg>
+    <!-- 5. LES CARNETS — La Felicit&agrave; (REEL VID&Eacute;O) -->
+    <div class="ig-post post-carnets" onclick="openPost(5)" style="position:relative;overflow:hidden;">
+      <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;">
+        <source src="reel-la-felicita.mp4" type="video/mp4">
+      </video>
+      <div class="badge" style="z-index:2;">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
       </div>
-      <div class="carnets-overlay">
-        <span class="carnets-text">Mardi matin, Paris 3e.</span>
-        <span class="carnets-text" style="font-style:normal;opacity:0.5;font-size:9px;margin-top:4px;">— T.</span>
+      <div class="carnets-overlay" style="z-index:2;">
+        <span class="carnets-text">Mardi matin, Paris 13e.</span>
+        <span class="carnets-author">&mdash; T.</span>
       </div>
     </div>
 
     <!-- 6. TON QG — Bordeaux -->
-    <div class="ig-post post-tonqg">
+    <div class="ig-post post-tonqg" onclick="openPost(6)">
       <span class="tonqg-label">Ton QG</span>
       <span class="tonqg-city">&agrave; Bordeaux ?</span>
       <span class="tonqg-cta">Dis-nous tout</span>
     </div>
 
-    <!-- ===== RANG&Eacute;E 3 ===== -->
-
-    <!-- 7. QG DU JOUR — Black Bird Coffee, Marseille -->
-    <div class="ig-post post-qg" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/marseille/black-bird-coffee.jpg');">
+    <!-- 7. QG DU JOUR — Black Bird Coffee -->
+    <div class="ig-post post-qg" onclick="openPost(7)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/marseille/black-bird-coffee.jpg');">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/>
-          <polygon points="7,5 13,9 7,13" fill="#2C2825"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
       </div>
       <div class="overlay">
         <span class="hook">Un spot canon</span>
@@ -695,59 +977,47 @@
     </div>
 
     <!-- 8. MATCH — Caf&eacute; vs Coworking -->
-    <div class="ig-post post-match">
+    <div class="ig-post post-match" onclick="openPost(8)">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="2" y="3" width="11" height="13" rx="2" fill="rgba(255,255,255,0.9)"/>
-          <rect x="5" y="1" width="11" height="13" rx="2" fill="rgba(255,255,255,0.7)"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.9)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.75)"/></svg>
       </div>
-      <div class="match-left" style="background:var(--terracotta);">
+      <div class="match-top" style="background:var(--terracotta);">
         <span class="match-text" style="color:white;">Caf&eacute;</span>
       </div>
-      <div class="match-right" style="background:var(--cream);">
+      <div class="match-divider"></div>
+      <div class="match-bottom" style="background:var(--cream);">
         <span class="match-text" style="color:var(--espresso);">Coworking</span>
       </div>
       <div class="match-vs">vs</div>
     </div>
 
-    <!-- 9. SESSION DU MATIN — Sofffa, Lyon -->
-    <div class="ig-post post-session" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/lyon/sofffa.jpg');">
+    <!-- 9. SESSION DU MATIN — Sofffa -->
+    <div class="ig-post post-session" onclick="openPost(9)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/lyon/sofffa.jpg');">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/>
-          <polygon points="7,5 13,9 7,13" fill="#2C2825"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
       </div>
       <span class="time-watermark">8H30</span>
       <div class="session-overlay">
         <span class="place-name">Sofffa</span>
         <span class="city">Lyon</span>
+        <span class="author">&mdash; T.</span>
       </div>
     </div>
 
-    <!-- ===== RANG&Eacute;E 4 ===== -->
-
     <!-- 10. LE VERDICT D'AD&Eacute; — Ouvert le dimanche -->
-    <div class="ig-post post-verdict">
+    <div class="ig-post post-verdict" onclick="openPost(10)">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="2" y="3" width="11" height="13" rx="2" fill="rgba(255,255,255,0.9)"/>
-          <rect x="5" y="1" width="11" height="13" rx="2" fill="rgba(255,255,255,0.7)"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.9)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.75)"/></svg>
       </div>
       <span class="signature">Le verdict d'Ad&eacute;</span>
       <span class="subject">Ouvert le<br>dimanche</span>
       <span class="subtitle">nos spots pr&eacute;f&eacute;r&eacute;s</span>
     </div>
 
-    <!-- 11. QG DU JOUR — Le Nuage Caf&eacute;, Paris 11e -->
-    <div class="ig-post post-qg" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-11e/le-nuage-cafe.jpg');">
+    <!-- 11. QG DU JOUR — Le Nuage Caf&eacute; -->
+    <div class="ig-post post-qg" onclick="openPost(11)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-11e/le-nuage-cafe.jpg');">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/>
-          <polygon points="7,5 13,9 7,13" fill="#2C2825"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
       </div>
       <div class="overlay">
         <span class="place-name">Le Nuage Caf&eacute;</span>
@@ -755,48 +1025,37 @@
       </div>
     </div>
 
-    <!-- 12. LE GUIDE — Nos 5 spots &agrave; Lyon -->
-    <div class="ig-post post-guide" style="background:var(--espresso);">
+    <!-- 12. LE GUIDE — Lyon -->
+    <div class="ig-post post-guide" onclick="openPost(12)" style="background:var(--espresso);">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="2" y="3" width="11" height="13" rx="2" fill="rgba(255,255,255,0.9)"/>
-          <rect x="5" y="1" width="11" height="13" rx="2" fill="rgba(255,255,255,0.7)"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.9)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.75)"/></svg>
       </div>
       <span class="guide-top">Nos 5 spots</span>
       <span class="guide-city">&agrave; Lyon</span>
     </div>
 
-    <!-- ===== RANG&Eacute;E 5 ===== -->
-
-    <!-- 13. LES CARNETS — Anticaf&eacute;, Strasbourg -->
-    <div class="ig-post post-carnets" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/strasbourg/coworking-anticafe.jpg');">
+    <!-- 13. LES CARNETS — Pavillon des Canaux -->
+    <div class="ig-post post-carnets" onclick="openPost(13)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris/le-pavillon-des-canaux.jpg');">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/>
-          <polygon points="7,5 13,9 7,13" fill="#2C2825"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
       </div>
       <div class="carnets-overlay">
-        <span class="carnets-text">Jeudi apr&egrave;m, Strasbourg.</span>
-        <span class="carnets-text" style="font-style:normal;opacity:0.5;font-size:9px;margin-top:4px;">— T.</span>
+        <span class="carnets-text">Mardi apr&egrave;m, Paris 19e.</span>
+        <span class="carnets-author">&mdash; T.</span>
       </div>
     </div>
 
     <!-- 14. TON QG — Marseille -->
-    <div class="ig-post post-tonqg">
+    <div class="ig-post post-tonqg" onclick="openPost(14)">
       <span class="tonqg-label">Ton QG</span>
       <span class="tonqg-city">&agrave; Marseille ?</span>
       <span class="tonqg-cta">Dis-nous tout</span>
     </div>
 
-    <!-- 15. QG DU JOUR — Bazaar St So, Lille -->
-    <div class="ig-post post-qg" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/lille/bazaar-st-so.jpg');">
+    <!-- 15. QG DU JOUR — Bazaar St So -->
+    <div class="ig-post post-qg" onclick="openPost(15)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/lille/bazaar-st-so.jpg');">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/>
-          <polygon points="7,5 13,9 7,13" fill="#2C2825"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
       </div>
       <div class="overlay">
         <span class="place-name">Bazaar St So</span>
@@ -804,56 +1063,647 @@
       </div>
     </div>
 
-    <!-- ===== RANG&Eacute;E 6 ===== -->
-
-    <!-- 16. SESSION DU MATIN — Anticaf&eacute; Beaubourg, Paris 3e -->
-    <div class="ig-post post-session" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-3e/anticafe-beaubourg.jpg');">
+    <!-- 16. SESSION DU MATIN — Anticaf&eacute; Beaubourg -->
+    <div class="ig-post post-session" onclick="openPost(16)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-3e/anticafe-beaubourg.jpg');">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/>
-          <polygon points="7,5 13,9 7,13" fill="#2C2825"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
       </div>
       <span class="time-watermark">10H</span>
       <div class="session-overlay">
         <span class="place-name">Anticaf&eacute;</span>
         <span class="city">Paris 3e</span>
+        <span class="author">&mdash; T.</span>
       </div>
     </div>
 
     <!-- 17. MATCH — Paris 11e vs Paris 3e -->
-    <div class="ig-post post-match">
+    <div class="ig-post post-match" onclick="openPost(17)">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="2" y="3" width="11" height="13" rx="2" fill="rgba(255,255,255,0.9)"/>
-          <rect x="5" y="1" width="11" height="13" rx="2" fill="rgba(255,255,255,0.7)"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.9)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.75)"/></svg>
       </div>
-      <div class="match-left" style="background:var(--monstera);">
-        <span class="match-text" style="color:white;font-size:13px;">Paris<br>11e</span>
+      <div class="match-top" style="background:var(--monstera);">
+        <span class="match-text" style="color:white;">Paris 11e</span>
       </div>
-      <div class="match-right" style="background:var(--linen);">
-        <span class="match-text" style="color:var(--espresso);font-size:13px;">Paris<br>3e</span>
+      <div class="match-divider"></div>
+      <div class="match-bottom" style="background:var(--linen);">
+        <span class="match-text" style="color:var(--espresso);">Paris 3e</span>
       </div>
       <div class="match-vs">vs</div>
     </div>
 
     <!-- 18. LE VERDICT D'AD&Eacute; — Prises partout -->
-    <div class="ig-post post-verdict">
+    <div class="ig-post post-verdict" onclick="openPost(18)">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-          <rect x="2" y="3" width="11" height="13" rx="2" fill="rgba(255,255,255,0.9)"/>
-          <rect x="5" y="1" width="11" height="13" rx="2" fill="rgba(255,255,255,0.7)"/>
-        </svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.9)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.75)"/></svg>
       </div>
       <span class="signature">Le verdict d'Ad&eacute;</span>
       <span class="subject">Prises<br>partout</span>
       <span class="subtitle">on a compt&eacute; pour toi</span>
     </div>
 
-  </div>
+  </div><!-- /ig-grid -->
 
+</div><!-- /phone-frame -->
+
+<!-- ==================== POST DETAIL OVERLAY ==================== -->
+<div class="post-overlay" id="postOverlay">
+  <div class="post-overlay-inner" id="postOverlayInner">
+    <div class="overlay-header">
+      <button class="overlay-back" onclick="closePost()">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M13 4L7 10L13 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Retour
+      </button>
+      <div class="overlay-username">
+        <div class="avatar-small"><span>D</span></div>
+        deskover
+      </div>
+    </div>
+
+    <div class="overlay-image-wrap" id="overlayImage"></div>
+
+    <div class="overlay-actions">
+      <button class="overlay-action" id="likeBtn" onclick="toggleLike()">
+        <svg id="heartIcon" width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" stroke="var(--espresso)" stroke-width="1.5" fill="none"/></svg>
+        <span id="likeCount">847</span>
+      </button>
+      <button class="overlay-action">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v10z" stroke="var(--espresso)" stroke-width="1.5" fill="none"/></svg>
+        <span id="commentCount">23</span>
+      </button>
+      <div class="overlay-action-spacer"></div>
+      <button class="overlay-action overlay-action-share">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M22 2L11 13" stroke="var(--espresso)" stroke-width="1.5" stroke-linecap="round"/><path d="M22 2L15 22L11 13L2 9L22 2Z" stroke="var(--espresso)" stroke-width="1.5" stroke-linejoin="round" fill="none"/></svg>
+      </button>
+    </div>
+
+    <div class="overlay-caption" id="overlayCaption"></div>
+    <div class="overlay-hashtags" id="overlayHashtags"></div>
+    <div class="overlay-date" id="overlayDate"></div>
+  </div>
 </div>
+
+<script>
+const BASE = 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/';
+
+const posts = [
+  {
+    id: 1,
+    pillar: 'QG du jour',
+    title: 'La Recyclerie',
+    subtitle: 'Paris 18e',
+    imageType: 'photo',
+    image: BASE + 'paris-18e/la-recyclerie.jpg',
+    likes: 847,
+    comments: 23,
+    date: '7 avril 2026',
+    caption: 'La Recyclerie, Paris 18e.\n\nUne ancienne gare de la Petite Ceinture transform\u00e9e en lieu de vie \u00e9co-responsable. Tu entres, tu vois les plantes partout, les grandes tables en bois, la lumi\u00e8re qui traverse les verri\u00e8res. Et derri\u00e8re les fen\u00eatres, les rails sont devenus un jardin.\n\nWiFi solide, prises dispo, et surtout : cet endroit a une \u00e2me. Le caf\u00e9 est bon, la carte est locavore, et tu peux rester des heures sans que personne ne bronche.\n\nNotre premier QG. Celui par lequel tout a commenc\u00e9.\n\nRetrouve la fiche compl\u00e8te sur deskover.fr',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #caf\u00e9pourbosser #coffeeshopparis #paris18 #larecyclerie #caf\u00e9pourtravailler #coworkingparis #bosseraucaf\u00e9 #t\u00e9l\u00e9travailcaf\u00e9 #bureauxnomades #parisianvibes'
+  },
+  {
+    id: 2,
+    pillar: 'Le Verdict d\'Ad\u00e9',
+    title: 'WiFi de comp\u00e8te',
+    subtitle: '',
+    imageType: 'cover',
+    coverBg: '#2C2825',
+    coverHTML: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#AA4C4D;text-transform:uppercase;letter-spacing:2px;">Le verdict d\'Ad\u00e9</span><span style="font-family:Anton,sans-serif;font-size:36px;color:white;margin-top:12px;line-height:1.05;text-transform:uppercase;">WiFi de<br>comp\u00e8te</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#A89888;margin-top:10px;">les spots o\u00f9 \u00e7a ne coupe jamais</span>',
+    slides: [
+      { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:9px;color:#AA4C4D;text-transform:uppercase;letter-spacing:2px;">LE VERDICT D\'AD\u00c9</span><span style="font-family:Anton,sans-serif;font-size:24px;color:white;margin-top:12px;text-transform:uppercase;">WIFI DE COMP\u00c8TE</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#A89888;margin-top:8px;">les spots o\u00f9 \u00e7a ne coupe jamais</span>' },
+      { type: 'photo', image: 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-3e/anticafe-beaubourg.jpg', fallback: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=750&fit=crop', name: 'L\'ANTICAF\u00c9 BEAUBOURG', city: 'Paris 3e' },
+      { type: 'photo', image: 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/lyon/sofffa.jpg', name: 'SOFFFA', city: 'Lyon' },
+      { type: 'photo', image: 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/grenoble/la-cafteuse.jpg', name: 'LE PETIT PLATEAU', city: 'Grenoble' },
+      { type: 'photo', image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=750&fit=crop', name: 'HUBSY', city: 'Paris 11e' },
+      { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:14px;color:white;">Tu veux la liste compl\u00e8te ?</span><span style="font-family:Anton,sans-serif;font-size:18px;color:#AA4C4D;margin-top:12px;">deskover.fr</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#A89888;margin-top:10px;">\u2014 A.</span>' }
+    ],
+    likes: 634,
+    comments: 41,
+    date: '9 avril 2026',
+    caption: 'WiFi de comp\u00e8te.\n\nC\'est LE crit\u00e8re non n\u00e9gociable. Tu te poses, tu ouvres ton ordi, tu lances ta visio et... \u00e7a coupe. Le cauchemar.\n\nOn a rep\u00e9r\u00e9 les spots o\u00f9 le WiFi est rapide, stable, et test\u00e9 en conditions r\u00e9elles. Pas du \u00abWiFi gratuit\u00bb qui rame \u00e0 2 Mbps. Du vrai d\u00e9bit.\n\nNos pr\u00e9f\u00e9r\u00e9s dans ce carrousel. La liste compl\u00e8te sur l\'app.\n\n\u2014 A.',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #wificafe #cafewifi #coworkingfrance #bosseraucaf\u00e9 #caf\u00e9pourtravailler #wifirapide #t\u00e9l\u00e9travailcaf\u00e9 #digitalnomad #bureauxnomades #freelancelife'
+  },
+  {
+    id: 3,
+    pillar: 'Session du matin',
+    title: 'La Cafteuse',
+    subtitle: 'Grenoble',
+    imageType: 'photo',
+    image: BASE + 'grenoble/la-cafteuse.jpg',
+    likes: 512,
+    comments: 18,
+    date: '11 avril 2026',
+    caption: '9h, Grenoble.\n\nTu pousses la porte de La Cafteuse et tu tombes dans un autre monde. Des meubles chin\u00e9s partout, des vieilles lampes, des livres empil\u00e9s. C\'est un caf\u00e9-brocante et c\'est exactement aussi charmant que \u00e7a en a l\'air.\n\nOn s\'installe dans un fauteuil en cuir us\u00e9, on commande un caf\u00e9, et on dispara\u00eet. Le temps s\'arr\u00eate un peu ici. C\'est pas le spot le plus \u00abproductif\u00bb de la ville, mais c\'est celui o\u00f9 tu reviens quand tu as besoin de calme et d\'un endroit qui a de l\'\u00e2me.\n\nGrenoble cache bien ses p\u00e9pites.\n\n\u2014 T.',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #coffeeshopgrenoble #grenoble #caf\u00e9grenoble #lacafteuse #bosseraucaf\u00e9 #caf\u00e9pourtravailler #caf\u00e9brocante #grenoblecity #coffeeshopfrance #alpes'
+  },
+  {
+    id: 4,
+    pillar: 'Le Guide',
+    title: 'O\u00f9 bosser \u00e0 Nantes',
+    subtitle: '',
+    imageType: 'cover',
+    coverBg: '#AA4C4D',
+    coverHTML: '<span style="font-family:Anton,sans-serif;font-size:20px;color:white;text-transform:uppercase;opacity:0.85;">O\u00f9 bosser</span><span style="font-family:Anton,sans-serif;font-size:36px;color:white;text-transform:uppercase;margin-top:4px;line-height:1.05;">\u00c0 Nantes</span>',
+    slides: [
+      { type: 'cover', bg: '#AA4C4D', html: '<span style="font-family:Anton,sans-serif;font-size:18px;color:white;text-transform:uppercase;">O\u00d9 BOSSER</span><span style="font-family:Anton,sans-serif;font-size:32px;color:white;text-transform:uppercase;margin-top:4px;">\u00c0 NANTES</span>' },
+      { type: 'photo', image: 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/nantes/chapitre-t.jpg', fallback: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=750&fit=crop', name: 'CHAPITRE T', city: 'Nantes' },
+      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:18px;color:#2C2825;">LA CANTINA</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#6B5B4E;margin-top:6px;">Coworking + caf\u00e9</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#A89888;margin-top:6px;">WiFi rapide, prises partout, formule d\u00e9j</span>' },
+      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:18px;color:#2C2825;">LE NID</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#6B5B4E;margin-top:6px;">Bar panoramique</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#A89888;margin-top:6px;">Vue sur toute la ville, WiFi correct</span>' },
+      { type: 'cover', bg: '#AA4C4D', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:white;">Retrouve les 12 spots nantais</span><span style="font-family:Anton,sans-serif;font-size:16px;color:white;margin-top:10px;">deskover.fr</span>' }
+    ],
+    likes: 723,
+    comments: 35,
+    date: '14 avril 2026',
+    caption: 'Nantes, on t\'a pas oubli\u00e9.\n\nOn a arpent\u00e9 le centre, le quartier Bouffay, l\'\u00eele de Nantes. On a test\u00e9 les WiFi, compt\u00e9 les prises, bu pas mal de caf\u00e9s. Voici nos 4 spots pr\u00e9f\u00e9r\u00e9s pour poser son ordi \u00e0 Nantes.\n\nLe guide complet (avec les horaires, les prix et les vitals) est sur deskover.fr',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #nantes #coffeeshopnantes #coworkingnantes #nantesbosser #caf\u00e9nantes #bosseraucaf\u00e9 #nantescity #loireatlantique #coffeeshopfrance #t\u00e9l\u00e9travailcaf\u00e9'
+  },
+  {
+    id: 5,
+    pillar: 'Les Carnets',
+    title: 'La Felicit\u00e0',
+    subtitle: 'Paris 13e',
+    imageType: 'video',
+    image: 'reel-la-felicita.mp4',
+    likes: 891,
+    comments: 47,
+    date: '16 avril 2026',
+    caption: 'Mardi matin, Paris 13e.\n\nLa Felicit\u00e0. Tu entres et tu l\u00e8ves la t\u00eate. 30 m\u00e8tres de plafond en b\u00e9ton brut, des verri\u00e8res partout, une lumi\u00e8re de cath\u00e9drale. C\'est le plus grand restaurant d\'Europe et pourtant, \u00e0 10h un mardi, c\'est calme comme une biblioth\u00e8que.\n\nOn s\'installe aux grandes tables en bois, il y a des prises, le WiFi tient, le cappuccino est bon. Le lieu est tellement immense qu\'on n\'est jamais les uns sur les autres. Et quand midi arrive, tu te l\u00e8ves, tu fais 20 m\u00e8tres et tu manges une pizza au feu de bois.\n\nC\'est pas un caf\u00e9 cosy. C\'est un hangar magnifique. Et \u00e7a change tout.\n\n\u2014 T.',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #lafelicita #paris13 #stationf #coffeeshopparis #bosseraucaf\u00e9 #caf\u00e9pourtravailler #bigmamma #hallefreyssinet #coffeeshopfrance #parisianvibes'
+  },
+  {
+    id: 6,
+    pillar: 'Ton QG',
+    title: '\u00c0 Bordeaux ?',
+    subtitle: '',
+    imageType: 'cover',
+    coverBg: '#5B7A5E',
+    coverHTML: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:2px;">Ton QG</span><span style="font-family:Anton,sans-serif;font-size:28px;color:white;margin-top:8px;text-transform:uppercase;">\u00c0 Bordeaux ?</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:rgba(255,255,255,0.4);margin-top:10px;">Dis-nous tout</span>',
+    likes: 456,
+    comments: 89,
+    date: '18 avril 2026',
+    caption: 'Bordeaux, on sait que tu caches des p\u00e9pites.\n\nOn pr\u00e9pare notre guide et on veut pas passer \u00e0 c\u00f4t\u00e9 des meilleurs spots. T\'as un caf\u00e9 o\u00f9 tu adores bosser ? Un coworking secret ? Une terrasse avec du WiFi qui marche ?\n\nBalance en commentaire, on note tout.',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #bordeaux #coffeeshopbordeaux #coworkingbordeaux #bordeauxmaville #caf\u00e9bordeaux #bosseraucaf\u00e9 #bordeauxcity #gironde #coffeeshopfrance #tonqg'
+  },
+  {
+    id: 7,
+    pillar: 'QG du jour',
+    title: 'Black Bird Coffee',
+    subtitle: 'Marseille',
+    imageType: 'photo',
+    image: BASE + 'marseille/black-bird-coffee.jpg',
+    likes: 578,
+    comments: 15,
+    date: '13 avril 2026',
+    caption: 'Black Bird Coffee, Marseille.\n\nNoailles, un dimanche matin. T\'es \u00e0 deux rues du march\u00e9, \u00e7a sent les \u00e9pices et le caf\u00e9 frais. Tu pousses la porte, c\'est petit, c\'est chaleureux, et le caf\u00e9 est impeccable.\n\nC\'est pas le genre d\'endroit o\u00f9 tu restes toute la journ\u00e9e \u2014 c\'est le spot pour une session de 2-3h concentr\u00e9e, avec un espresso qui te remet les id\u00e9es en place.\n\nMarseille a ses codes, et on commence \u00e0 les comprendre.\n\nRetrouve la fiche sur deskover.fr',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #marseille #coffeeshopmarseille #caf\u00e9marseille #noailles #bosseraucaf\u00e9 #caf\u00e9pourtravailler #marseillelife #bouchesdurhone #coffeeshopfrance #specialtycoffee'
+  },
+  {
+    id: 8,
+    pillar: 'Match',
+    title: 'Caf\u00e9 vs Coworking',
+    subtitle: '',
+    imageType: 'cover',
+    coverBg: '#FAF7F2',
+    coverHTML: '<div style="display:flex;flex-direction:column;width:100%;height:100%;"><div style="flex:1;background:#AA4C4D;display:flex;align-items:center;justify-content:center;"><span style="font-family:Anton,sans-serif;font-size:24px;color:white;text-transform:uppercase;">Caf\u00e9</span></div><div style="height:2px;background:white;position:relative;"><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.15);font-family:Plus Jakarta Sans,sans-serif;font-size:13px;font-weight:600;color:#6B5B4E;">vs</div></div><div style="flex:1;background:#FAF7F2;display:flex;align-items:center;justify-content:center;"><span style="font-family:Anton,sans-serif;font-size:24px;color:#2C2825;text-transform:uppercase;">Coworking</span></div></div>',
+    slides: [
+      { type: 'split', topBg: '#AA4C4D', topText: 'CAF\u00c9', topColor: 'white', bottomBg: '#FAF7F2', bottomText: 'COWORKING', bottomColor: '#2C2825', label: '', vsSize: 28 },
+      { type: 'split', topBg: '#FAF7F2', topText: '2-5 euros (une conso)', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: '15-30 euros/jour', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'PRIX' },
+      { type: 'split', topBg: '#FAF7F2', topText: 'Vivante, bruits de fond', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Studieuse, calme', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'AMBIANCE' },
+      { type: 'split', topBg: '#FAF7F2', topText: 'Variable selon le caf\u00e9', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Pro, rapide, stable', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'WIFI' },
+      { type: 'split', topBg: '#FAF7F2', topText: 'Caf\u00e9, viennoiseries, lunch', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Machine \u00e0 caf\u00e9, distributeur', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'FOOD' },
+      { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Anton,sans-serif;font-size:16px;color:white;text-transform:uppercase;">LE VERDICT</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#A89888;margin-top:12px;line-height:1.5;">Le caf\u00e9 pour la flexibilit\u00e9. Le coworking pour le focus. Le combo des deux ? Imbattable.</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#AA4C4D;margin-top:10px;">\u2014 A.</span>' }
+    ],
+    likes: 1203,
+    comments: 67,
+    date: '21 avril 2026',
+    caption: 'Caf\u00e9 ou coworking ?\n\nC\'est LE d\u00e9bat. Et la vraie r\u00e9ponse, c\'est que \u00e7a d\u00e9pend de ta journ\u00e9e.\n\nBesoin de focus total, d\'un call important, de 8h non-stop ? Coworking. Besoin d\'un changement d\'air, d\'\u00e9crire un article, de brainstormer ? Caf\u00e9.\n\nNotre strat\u00e9gie : alterner. Un jour caf\u00e9, un jour coworking. Le meilleur des deux mondes.\n\nEt toi, team caf\u00e9 ou team coworking ?\n\n\u2014 A.',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #caf\u00e9vscoworking #coworkingfrance #bosseraucaf\u00e9 #caf\u00e9pourtravailler #coffeeshopfrance #freelancelife #digitalnomad #bureauxnomades #productivit\u00e9 #worklifestyle'
+  },
+  {
+    id: 9,
+    pillar: 'Session du matin',
+    title: 'Sofffa',
+    subtitle: 'Lyon',
+    imageType: 'photo',
+    image: BASE + 'lyon/sofffa.jpg',
+    likes: 689,
+    comments: 22,
+    date: '20 avril 2026',
+    caption: '8h30, Lyon.\n\nSofffa ouvre, la machine chauffe, le bois clair capte la lumi\u00e8re du matin. On monte en mezzanine, personne ne parle, tout le monde bosse. Le caf\u00e9 est excellent \u2014 c\'est du specialty, ils ne plaisantent pas.\n\nCe qu\'on aime ici : cette impression d\'\u00eatre dans un cocon suspendu au-dessus de la ville. Tu bosses dans ta bulle, et quand tu l\u00e8ves la t\u00eate, la lumi\u00e8re a chang\u00e9 et 3 heures sont pass\u00e9es.\n\nLyon, ville sous-cot\u00e9e pour bosser.\n\n\u2014 T.',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #lyon #coffeeshoplyon #sofffa #lyoncoffee #bosseraucaf\u00e9 #caf\u00e9pourtravailler #lyoncity #rhone #coffeeshopfrance #specialtycoffee'
+  },
+  {
+    id: 10,
+    pillar: 'Le Verdict d\'Ad\u00e9',
+    title: 'Ouvert le dimanche',
+    subtitle: '',
+    imageType: 'cover',
+    coverBg: '#2C2825',
+    coverHTML: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#AA4C4D;text-transform:uppercase;letter-spacing:2px;">Le verdict d\'Ad\u00e9</span><span style="font-family:Anton,sans-serif;font-size:36px;color:white;margin-top:12px;line-height:1.05;text-transform:uppercase;">Ouvert le<br>dimanche</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#A89888;margin-top:10px;">nos spots pr\u00e9f\u00e9r\u00e9s</span>',
+    slides: [
+      { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:9px;color:#AA4C4D;text-transform:uppercase;letter-spacing:2px;">LE VERDICT D\'AD\u00c9</span><span style="font-family:Anton,sans-serif;font-size:22px;color:white;margin-top:12px;text-transform:uppercase;">OUVERT LE DIMANCHE</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#A89888;margin-top:8px;">nos spots pr\u00e9f\u00e9r\u00e9s</span>' },
+      { type: 'photo', image: 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-3e/anticafe-beaubourg.jpg', fallback: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=750&fit=crop', name: 'L\'ANTICAF\u00c9 BEAUBOURG', city: 'Paris 3e \u2014 dim 9h-21h' },
+      { type: 'photo', image: 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-18e/la-recyclerie.jpg', name: 'LA RECYCLERIE', city: 'Paris 18e \u2014 dim 10h-22h' },
+      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:18px;color:#2C2825;">TERCERA</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#6B5B4E;margin-top:6px;">Grenoble \u2014 dim 10h-18h</span>' },
+      { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#A89888;">La liste compl\u00e8te sur</span><span style="font-family:Anton,sans-serif;font-size:16px;color:#AA4C4D;margin-top:10px;">deskover.fr</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#A89888;margin-top:10px;">\u2014 A.</span>' }
+    ],
+    likes: 934,
+    comments: 52,
+    date: '23 avril 2026',
+    caption: 'Ouvert le dimanche.\n\nLe dimanche, quand t\'as un livrable pour lundi et que tout est ferm\u00e9. On conna\u00eet. On a fait la liste des spots qui ouvrent le dimanche \u2014 et qui valent le d\u00e9tour, pas juste un Starbucks par d\u00e9faut.\n\nNos pr\u00e9f\u00e9r\u00e9s dans ce carrousel.\n\n\u2014 A.',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #ouvertledimanche #caf\u00e9ouvertdimanche #bosserledimanche #coffeeshopfrance #bosseraucaf\u00e9 #caf\u00e9pourtravailler #freelancelife #digitalnomad #weekendwork #dimanche'
+  },
+  {
+    id: 11,
+    pillar: 'QG du jour',
+    title: 'Le Nuage Caf\u00e9',
+    subtitle: 'Paris 11e',
+    imageType: 'photo',
+    image: BASE + 'paris-11e/le-nuage-cafe.jpg',
+    fallbackImage: 'https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=600&h=750&fit=crop',
+    likes: 421,
+    comments: 12,
+    date: '25 avril 2026',
+    caption: 'Le Nuage Caf\u00e9, Paris 11e.\n\nUn petit coffee shop de quartier o\u00f9 on se sent tout de suite bien. C\'est pas grand, c\'est pas tape-\u00e0-l\'\u0153il, mais c\'est exactement ce qu\'il faut : du bon caf\u00e9, du calme, et cette ambiance o\u00f9 tu bosses sans t\'en rendre compte.\n\nLe genre de spot qu\'on garde pour les jours o\u00f9 on a besoin de concentration. Pas de bruit, pas de passage, juste toi et ton caf\u00e9.\n\nRetrouve la fiche sur deskover.fr',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #paris11 #coffeeshopparis #lenuagecaf\u00e9 #oberkampf #bosseraucaf\u00e9 #caf\u00e9pourtravailler #parisianvibes #coffeeshopfrance #caf\u00e9cosy #bureauxnomades'
+  },
+  {
+    id: 12,
+    pillar: 'Le Guide',
+    title: 'Nos 5 spots \u00e0 Lyon',
+    subtitle: '',
+    imageType: 'cover',
+    coverBg: '#2C2825',
+    coverHTML: '<span style="font-family:Anton,sans-serif;font-size:20px;color:white;text-transform:uppercase;opacity:0.85;">Nos 5 spots</span><span style="font-family:Anton,sans-serif;font-size:36px;color:white;text-transform:uppercase;margin-top:4px;line-height:1.05;">\u00c0 Lyon</span>',
+    slides: [
+      { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Anton,sans-serif;font-size:18px;color:white;text-transform:uppercase;">NOS 5 SPOTS</span><span style="font-family:Anton,sans-serif;font-size:32px;color:white;text-transform:uppercase;margin-top:4px;">\u00c0 LYON</span>' },
+      { type: 'photo', image: 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/lyon/sofffa.jpg', name: 'SOFFFA', city: 'Lyon \u2014 Mezzanine en bois, caf\u00e9 de sp\u00e9cialit\u00e9' },
+      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:16px;color:#2C2825;">L\'ANTICAF\u00c9 LYON</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#6B5B4E;margin-top:6px;">Paiement au temps, boissons illimit\u00e9es</span>' },
+      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:16px;color:#2C2825;">PUZZLE CAF\u00c9</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#6B5B4E;margin-top:6px;">Quartier calme, WiFi solide</span>' },
+      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:16px;color:#2C2825;">LE LUMINARIUM</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#6B5B4E;margin-top:6px;">Lumineux, spacieux, id\u00e9al longues sessions</span>' },
+      { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#A89888;">Le guide complet sur</span><span style="font-family:Anton,sans-serif;font-size:16px;color:#AA4C4D;margin-top:10px;">deskover.fr</span>' }
+    ],
+    likes: 812,
+    comments: 38,
+    date: '27 avril 2026',
+    caption: 'Lyon, on revient toujours.\n\nC\'est la ville o\u00f9 on bosse le mieux apr\u00e8s Paris. Les coffee shops sont canon, les prix sont doux, et il y a ce truc dans l\'air \u2014 peut-\u00eatre la lumi\u00e8re sur la Sa\u00f4ne \u2014 qui rend les sessions de travail meilleures.\n\nNos 5 spots pr\u00e9f\u00e9r\u00e9s dans ce carrousel. Le guide complet (avec les horaires, les vitals et la carte) est sur deskover.fr',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #lyon #coffeeshoplyon #lyoncoffee #coworkinglyon #bosseraucaf\u00e9 #caf\u00e9pourtravailler #lyoncity #rhone #coffeeshopfrance #guidelyon'
+  },
+  {
+    id: 13,
+    pillar: 'Les Carnets',
+    title: 'Pavillon des Canaux',
+    subtitle: 'Paris 19e',
+    imageType: 'photo',
+    image: BASE + 'paris/le-pavillon-des-canaux.jpg',
+    likes: 1047,
+    comments: 56,
+    date: '23 avril 2026',
+    caption: 'Mardi apr\u00e8m, Paris 19e.\n\nLe Pavillon des Canaux, c\'est une maison. Litt\u00e9ralement. Tu entres, il y a une chambre avec un lit (oui, tu peux t\'y installer pour bosser), une salle de bain avec une baignoire transform\u00e9e en canap\u00e9, un salon avec une chemin\u00e9e. Et tout \u00e7a, c\'est un caf\u00e9.\n\nC\'est le genre d\'endroit que tu ne trouves nulle part ailleurs. Tu bosses assis sur un lit avec vue sur le canal de l\'Ourcq et tu te demandes pourquoi tous les caf\u00e9s ne sont pas comme \u00e7a.\n\n\u2014 T.',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #pavillondescanaux #paris19 #canaldelourcq #coffeeshopparis #bosseraucaf\u00e9 #caf\u00e9pourtravailler #lieuinsolite #pariscaf\u00e9 #coffeeshopfrance #bureauxnomades'
+  },
+  {
+    id: 14,
+    pillar: 'Ton QG',
+    title: '\u00c0 Marseille ?',
+    subtitle: '',
+    imageType: 'cover',
+    coverBg: '#5B7A5E',
+    coverHTML: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:2px;">Ton QG</span><span style="font-family:Anton,sans-serif;font-size:28px;color:white;margin-top:8px;text-transform:uppercase;">\u00c0 Marseille ?</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:rgba(255,255,255,0.4);margin-top:10px;">Dis-nous tout</span>',
+    likes: 387,
+    comments: 72,
+    date: '30 avril 2026',
+    caption: 'Marseille, \u00e0 ton tour.\n\nOn commence \u00e0 conna\u00eetre le Vieux-Port et Noailles, mais on sait qu\'on passe \u00e0 c\u00f4t\u00e9 de plein de spots. T\'as un caf\u00e9 o\u00f9 tu bosses r\u00e9guli\u00e8rement ? Un endroit avec vue mer et WiFi ? Un coworking cach\u00e9 ?\n\nDis-nous en commentaire, on ajoute tout sur l\'app.',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #marseille #coffeeshopmarseille #coworkingmarseille #marseillelife #caf\u00e9marseille #bosseraucaf\u00e9 #marseillefl\u00e2ne #bouchesdurhone #coffeeshopfrance #tonqg'
+  },
+  {
+    id: 15,
+    pillar: 'QG du jour',
+    title: 'Bazaar St So',
+    subtitle: 'Lille',
+    imageType: 'photo',
+    image: BASE + 'lille/bazaar-st-so.jpg',
+    likes: 534,
+    comments: 19,
+    date: '2 mai 2026',
+    caption: 'Bazaar St So, Lille.\n\nSaint-Sauveur, un quartier qui bouge. Le Bazaar, c\'est un tiers-lieu dans un ancien b\u00e2timent industriel : hauts plafonds, d\u00e9co r\u00e9cup, grandes tabl\u00e9es. C\'est brut, c\'est vivant, et \u00e7a marche.\n\nLe WiFi est correct, les prises sont l\u00e0, et l\'ambiance est pile entre \u00abcaf\u00e9 de quartier\u00bb et \u00abatelier d\'artiste\u00bb. Le midi ils font des plats maison, et le soir \u00e7a devient bar.\n\nLille, on revient vite.\n\nRetrouve la fiche sur deskover.fr',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #lille #coffeeshoplille #bazaarstso #lillecity #bosseraucaf\u00e9 #caf\u00e9pourtravailler #nordpasdecalais #tierslieu #coffeeshopfrance #lillemaville'
+  },
+  {
+    id: 16,
+    pillar: 'Session du matin',
+    title: 'Anticaf\u00e9 Beaubourg',
+    subtitle: 'Paris 3e',
+    imageType: 'photo',
+    image: BASE + 'paris-3e/anticafe-beaubourg.jpg',
+    fallbackImage: 'https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=600&h=750&fit=crop',
+    likes: 756,
+    comments: 31,
+    date: '4 mai 2026',
+    caption: '10h, Paris 3e.\n\nL\'Anticaf\u00e9 Beaubourg un dimanche matin. Tout le monde bosse dans un silence quasi religieux. Tu te sers un caf\u00e9 \u00e0 la machine, tu t\'installes, et tu rentres dans ta bulle.\n\nLe concept est simple : tu paies au temps (5 euros de l\'heure), les boissons et les snacks sont illimit\u00e9s. R\u00e9sultat : z\u00e9ro culpabilit\u00e9. Tu restes 1h ou 6h, m\u00eame tarif \u00e0 l\'heure.\n\nC\'est notre spot par d\u00e9faut quand on est dans le Marais. On y revient toujours.\n\n\u2014 T.',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #paris3 #coffeeshopparis #anticaf\u00e9 #lemarais #bosseraucaf\u00e9 #caf\u00e9pourtravailler #coworkingparis #parisianvibes #coffeeshopfrance #payautempspas'
+  },
+  {
+    id: 17,
+    pillar: 'Match',
+    title: 'Paris 11e vs Paris 3e',
+    subtitle: '',
+    imageType: 'cover',
+    coverBg: '#F3EDE4',
+    coverHTML: '<div style="display:flex;flex-direction:column;width:100%;height:100%;"><div style="flex:1;background:#5B7A5E;display:flex;align-items:center;justify-content:center;"><span style="font-family:Anton,sans-serif;font-size:24px;color:white;text-transform:uppercase;">Paris 11e</span></div><div style="height:2px;background:white;position:relative;"><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.15);font-family:Plus Jakarta Sans,sans-serif;font-size:13px;font-weight:600;color:#6B5B4E;">vs</div></div><div style="flex:1;background:#F3EDE4;display:flex;align-items:center;justify-content:center;"><span style="font-family:Anton,sans-serif;font-size:24px;color:#2C2825;text-transform:uppercase;">Paris 3e</span></div></div>',
+    slides: [
+      { type: 'split', topBg: '#5B7A5E', topText: 'PARIS 11E', topColor: 'white', bottomBg: '#F3EDE4', bottomText: 'PARIS 3E', bottomColor: '#2C2825', label: '', vsSize: 28 },
+      { type: 'split', topBg: '#FAF7F2', topText: 'Branch\u00e9, Oberkampf, \u00e9nergie', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Calme, Marais, librairies', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'AMBIANCE' },
+      { type: 'split', topBg: '#FAF7F2', topText: 'Le Nuage, Caf\u00e9 Craft, Hubsy', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Anticaf\u00e9, Boot Caf\u00e9, The Hood', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'NOS SPOTS' },
+      { type: 'split', topBg: '#FAF7F2', topText: '3-4 euros le caf\u00e9', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: '4-6 euros (zone touristique)', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'PRIX' },
+      { type: 'split', topBg: '#FAF7F2', topText: 'La diversit\u00e9 et l\'\u00e9nergie', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Le calme et la beaut\u00e9', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'LE +' },
+      { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Anton,sans-serif;font-size:16px;color:white;text-transform:uppercase;">LE VERDICT</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#A89888;margin-top:12px;line-height:1.5;">Le 11e pour l\'\u00e9nergie. Le 3e pour le focus. Nous on alterne.</span>' }
+    ],
+    likes: 945,
+    comments: 58,
+    date: '5 mai 2026',
+    caption: 'Paris 11e vs Paris 3e.\n\nLes deux arrondissements o\u00f9 on bosse le plus. Le 11e, c\'est l\'\u00e9nergie d\'Oberkampf, les coffee shops \u00e0 chaque coin de rue, l\'ambiance \u00abtout le monde est freelance\u00bb. Le 3e, c\'est le calme du Marais, l\'Anticaf\u00e9, les rues pav\u00e9es.\n\nLa vraie r\u00e9ponse ? \u00c7a d\u00e9pend de ta mood. Nous on alterne : le 11e quand on a besoin de bouger, le 3e quand on a besoin de se poser.\n\nEt toi, tu bosses o\u00f9 \u00e0 Paris ?',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #paris11 #paris3 #coffeeshopparis #oberkampf #lemarais #bosseraucaf\u00e9 #caf\u00e9pourtravailler #parisianvibes #coffeeshopfrance #arrondissements'
+  },
+  {
+    id: 18,
+    pillar: 'Le Verdict d\'Ad\u00e9',
+    title: 'Prises partout',
+    subtitle: '',
+    imageType: 'cover',
+    coverBg: '#2C2825',
+    coverHTML: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#AA4C4D;text-transform:uppercase;letter-spacing:2px;">Le verdict d\'Ad\u00e9</span><span style="font-family:Anton,sans-serif;font-size:36px;color:white;margin-top:12px;line-height:1.05;text-transform:uppercase;">Prises<br>partout</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#A89888;margin-top:10px;">on a compt\u00e9 pour toi</span>',
+    slides: [
+      { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:9px;color:#AA4C4D;text-transform:uppercase;letter-spacing:2px;">LE VERDICT D\'AD\u00c9</span><span style="font-family:Anton,sans-serif;font-size:22px;color:white;margin-top:12px;text-transform:uppercase;">PRISES PARTOUT</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#A89888;margin-top:8px;">on a compt\u00e9 pour toi</span>' },
+      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:16px;color:#2C2825;">L\'IMPERTINENCE</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#6B5B4E;margin-top:6px;">Grenoble</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#5B7A5E;margin-top:6px;">Prises \u00e0 chaque place</span>' },
+      { type: 'photo', image: 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-18e/la-recyclerie.jpg', name: 'LA RECYCLERIE', city: 'Paris 18e \u2014 Prises sur les grandes tables' },
+      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:16px;color:#2C2825;">CHAPITRE T</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#6B5B4E;margin-top:6px;">Nantes</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#5B7A5E;margin-top:6px;">Prises au comptoir et aux tables</span>' },
+      { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#A89888;">La liste compl\u00e8te sur</span><span style="font-family:Anton,sans-serif;font-size:16px;color:#AA4C4D;margin-top:10px;">deskover.fr</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#A89888;margin-top:10px;">\u2014 A.</span>' }
+    ],
+    likes: 678,
+    comments: 29,
+    date: '7 mai 2026',
+    caption: 'Prises partout.\n\nLe cauchemar du bosseur nomade : 12% de batterie, pas de prise en vue. On conna\u00eet.\n\nOn a rep\u00e9r\u00e9 les spots o\u00f9 tu n\'auras JAMAIS ce probl\u00e8me. Des prises \u00e0 chaque place, parfois m\u00eame des multiprises sur les tables. Le r\u00eave.\n\nNos champions dans ce carrousel. La liste compl\u00e8te sur deskover.fr\n\n\u2014 A.',
+    hashtags: '#o\u00f9travailler #t\u00e9l\u00e9travail #remotework #freelancefrance #deskover #prises\u00e9lectriques #caf\u00e9avecprises #coworkingfrance #bosseraucaf\u00e9 #caf\u00e9pourtravailler #batteriefaible #charger #freelancelife #digitalnomad #bureauxnomades'
+  }
+];
+
+let currentPostId = null;
+let isLiked = false;
+let touchStartY = 0;
+let currentSlide = 0;
+let carouselTouchStartX = 0;
+let carouselTouchStartY = 0;
+let totalSlides = 0;
+
+function buildSlideHTML(slide) {
+  if (slide.type === 'photo') {
+    let fallbackAttr = slide.fallback ? ' onerror="this.src=\'' + slide.fallback + '\'"' : '';
+    return '<div class="carousel-slide slide-photo">' +
+      '<img src="' + slide.image + '" alt="' + (slide.name || '') + '"' + fallbackAttr + '>' +
+      '<div class="slide-photo-overlay">' +
+        '<div style="font-family:Anton,sans-serif;font-size:14px;color:white;text-transform:uppercase;">' + slide.name + '</div>' +
+        '<div style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#AA4C4D;margin-top:2px;">' + slide.city + '</div>' +
+      '</div>' +
+    '</div>';
+  } else if (slide.type === 'split') {
+    var topFontFamily = slide.topFont || 'Anton';
+    var topFontSize = slide.topFontSize || '22px';
+    var bottomFontFamily = slide.bottomFont || 'Anton';
+    var bottomFontSize = slide.bottomFontSize || '22px';
+    var textTransform = (topFontFamily === 'Anton') ? 'text-transform:uppercase;' : '';
+    var labelHTML = slide.label ? '<div style="position:absolute;top:16px;left:50%;transform:translateX(-50%);font-family:Anton,sans-serif;font-size:12px;color:#A89888;text-transform:uppercase;letter-spacing:1px;z-index:3;">' + slide.label + '</div>' : '';
+    var vsHTML = '<div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:' + (slide.vsSize || 28) + 'px;height:' + (slide.vsSize || 28) + 'px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.15);font-family:Plus Jakarta Sans,sans-serif;font-size:11px;font-weight:600;color:#6B5B4E;z-index:3;">vs</div>';
+    return '<div class="carousel-slide slide-split" style="position:relative;">' +
+      labelHTML +
+      '<div style="display:flex;flex-direction:column;width:100%;height:100%;">' +
+        '<div style="flex:1;background:' + slide.topBg + ';display:flex;align-items:center;justify-content:center;padding:16px;">' +
+          '<span style="font-family:' + topFontFamily + ',sans-serif;font-size:' + topFontSize + ';color:' + slide.topColor + ';' + textTransform + 'text-align:center;">' + slide.topText + '</span>' +
+        '</div>' +
+        '<div style="height:2px;background:white;position:relative;">' + vsHTML + '</div>' +
+        '<div style="flex:1;background:' + slide.bottomBg + ';display:flex;align-items:center;justify-content:center;padding:16px;">' +
+          '<span style="font-family:' + (slide.bottomFont || bottomFontFamily) + ',sans-serif;font-size:' + bottomFontSize + ';color:' + slide.bottomColor + ';' + textTransform + 'text-align:center;">' + slide.bottomText + '</span>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  } else {
+    // cover type
+    return '<div class="carousel-slide" style="background:' + slide.bg + ';">' + slide.html + '</div>';
+  }
+}
+
+function goToSlide(index) {
+  if (index < 0) index = 0;
+  if (index >= totalSlides) index = totalSlides - 1;
+  currentSlide = index;
+  var track = document.querySelector('.carousel-track');
+  if (track) track.style.transform = 'translateX(-' + (index * 100) + '%)';
+  document.querySelectorAll('.carousel-dot').forEach(function(d, i) {
+    d.classList.toggle('active', i === index);
+  });
+}
+
+function openPost(id) {
+  const post = posts.find(p => p.id === id);
+  if (!post) return;
+
+  currentPostId = id;
+  isLiked = false;
+  currentSlide = 0;
+
+  const overlay = document.getElementById('postOverlay');
+  const inner = document.getElementById('postOverlayInner');
+  const imageWrap = document.getElementById('overlayImage');
+
+  // Build carousel or single image/cover
+  if (post.slides && post.slides.length > 0) {
+    totalSlides = post.slides.length;
+    var slidesHTML = '';
+    post.slides.forEach(function(slide) {
+      slidesHTML += buildSlideHTML(slide);
+    });
+    var dotsHTML = '<div class="carousel-dots">';
+    for (var i = 0; i < totalSlides; i++) {
+      dotsHTML += '<div class="carousel-dot' + (i === 0 ? ' active' : '') + '" onclick="goToSlide(' + i + ')"></div>';
+    }
+    dotsHTML += '</div>';
+    imageWrap.innerHTML = '<div class="carousel-container">' +
+      '<div class="carousel-track">' + slidesHTML + '</div>' +
+      dotsHTML +
+      '<button class="carousel-arrow carousel-arrow-left" onclick="goToSlide(currentSlide - 1)">\u2039</button>' +
+      '<button class="carousel-arrow carousel-arrow-right" onclick="goToSlide(currentSlide + 1)">\u203a</button>' +
+    '</div>';
+    // Touch swipe for carousel
+    var container = imageWrap.querySelector('.carousel-container');
+    container.addEventListener('touchstart', function(e) {
+      carouselTouchStartX = e.touches[0].clientX;
+      carouselTouchStartY = e.touches[0].clientY;
+    }, { passive: true });
+    container.addEventListener('touchend', function(e) {
+      var diffX = e.changedTouches[0].clientX - carouselTouchStartX;
+      var diffY = e.changedTouches[0].clientY - carouselTouchStartY;
+      if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 40) {
+        if (diffX < 0) goToSlide(currentSlide + 1);
+        else goToSlide(currentSlide - 1);
+      }
+    }, { passive: true });
+  } else if (post.imageType === 'video') {
+    imageWrap.innerHTML = '<video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;"><source src="' + post.image + '" type="video/mp4"></video>';
+  } else if (post.imageType === 'photo') {
+    const img = document.createElement('img');
+    img.src = post.image;
+    img.alt = post.title;
+    img.style.width = '100%';
+    img.style.height = '100%';
+    img.style.objectFit = 'cover';
+    if (post.fallbackImage) {
+      img.onerror = function() { this.src = post.fallbackImage; };
+    }
+    imageWrap.innerHTML = '';
+    imageWrap.appendChild(img);
+  } else {
+    imageWrap.innerHTML = '<div class="overlay-cover" style="background:' + post.coverBg + ';">' + post.coverHTML + '</div>';
+  }
+
+  // Double-tap heart
+  imageWrap.ondblclick = function(e) {
+    if (!isLiked) toggleLike();
+    showHeartAnimation(imageWrap);
+  };
+
+  // Actions
+  document.getElementById('likeCount').textContent = formatNumber(post.likes);
+  document.getElementById('commentCount').textContent = post.comments;
+  updateHeartIcon();
+
+  // Caption
+  const captionEl = document.getElementById('overlayCaption');
+  const lines = post.caption.replace(/\n/g, '<br>');
+  captionEl.innerHTML = '<strong>deskover</strong> <span class="caption-text" id="captionText">' + lines + '</span><br><button class="caption-more" id="captionMore" onclick="toggleCaption()">... plus</button>';
+
+  // Hashtags
+  document.getElementById('overlayHashtags').textContent = post.hashtags;
+
+  // Date
+  document.getElementById('overlayDate').textContent = post.date;
+
+  // Show overlay
+  overlay.classList.add('active');
+  inner.scrollTop = 0;
+  document.body.style.overflow = 'hidden';
+
+  // Check if caption needs "more" button
+  requestAnimationFrame(() => {
+    const captionText = document.getElementById('captionText');
+    const moreBtn = document.getElementById('captionMore');
+    if (captionText && captionText.scrollHeight <= captionText.clientHeight + 2) {
+      moreBtn.style.display = 'none';
+    } else {
+      moreBtn.style.display = 'inline';
+    }
+  });
+}
+
+function closePost() {
+  const overlay = document.getElementById('postOverlay');
+  overlay.classList.remove('active');
+  document.body.style.overflow = '';
+  currentPostId = null;
+}
+
+function toggleCaption() {
+  const captionText = document.getElementById('captionText');
+  const moreBtn = document.getElementById('captionMore');
+  if (captionText.classList.contains('expanded')) {
+    captionText.classList.remove('expanded');
+    moreBtn.textContent = '... plus';
+  } else {
+    captionText.classList.add('expanded');
+    moreBtn.textContent = '... moins';
+  }
+}
+
+function toggleLike() {
+  isLiked = !isLiked;
+  const post = posts.find(p => p.id === currentPostId);
+  if (!post) return;
+  const count = isLiked ? post.likes + 1 : post.likes;
+  document.getElementById('likeCount').textContent = formatNumber(count);
+  updateHeartIcon();
+}
+
+function updateHeartIcon() {
+  const icon = document.getElementById('heartIcon');
+  const path = icon.querySelector('path');
+  if (isLiked) {
+    path.setAttribute('fill', '#AA4C4D');
+    path.setAttribute('stroke', '#AA4C4D');
+  } else {
+    path.setAttribute('fill', 'none');
+    path.setAttribute('stroke', 'var(--espresso)');
+  }
+}
+
+function showHeartAnimation(container) {
+  const heart = document.createElement('div');
+  heart.className = 'heart-animation';
+  heart.innerHTML = '<svg width="80" height="80" viewBox="0 0 24 24" fill="#AA4C4D"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>';
+  container.style.position = 'relative';
+  container.appendChild(heart);
+  setTimeout(() => heart.remove(), 900);
+}
+
+function formatNumber(n) {
+  if (n >= 1000) {
+    return (n / 1000).toFixed(1).replace('.0', '') + 'k';
+  }
+  return n.toString();
+}
+
+// Swipe down to close
+const overlayInner = document.getElementById('postOverlayInner');
+overlayInner.addEventListener('touchstart', function(e) {
+  if (this.scrollTop <= 0) {
+    touchStartY = e.touches[0].clientY;
+  } else {
+    touchStartY = null;
+  }
+}, { passive: true });
+
+overlayInner.addEventListener('touchmove', function(e) {
+  if (touchStartY === null) return;
+  const diff = e.touches[0].clientY - touchStartY;
+  if (diff > 80) {
+    closePost();
+    touchStartY = null;
+  }
+}, { passive: true });
+
+// Close on backdrop click
+document.getElementById('postOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closePost();
+});
+
+// Fallback images for posts 11 and 16 in the grid
+document.addEventListener('DOMContentLoaded', function() {
+  // Post 11 - Le Nuage Cafe
+  var post11 = document.querySelectorAll('.ig-post')[10];
+  if (post11) {
+    var testImg11 = new Image();
+    testImg11.onerror = function() {
+      post11.style.backgroundImage = "url('https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=600&h=750&fit=crop')";
+    };
+    testImg11.src = 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-11e/le-nuage-cafe.jpg';
+  }
+  // Post 16 - Anticafe Beaubourg
+  var post16 = document.querySelectorAll('.ig-post')[15];
+  if (post16) {
+    var testImg16 = new Image();
+    testImg16.onerror = function() {
+      post16.style.backgroundImage = "url('https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=600&h=750&fit=crop')";
+    };
+    testImg16.src = 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-3e/anticafe-beaubourg.jpg';
+  }
+});
+</script>
 
 </body>
 </html>

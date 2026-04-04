@@ -41,7 +41,7 @@ defineProps<{ place: Place }>()
     <!-- Body -->
     <div class="p-[18px]">
       <h2 class="font-display text-xl text-[var(--color-espresso)] tracking-[0.02em]">{{ place.name }}</h2>
-      <p class="text-xs text-[var(--color-steam)] mt-1">{{ place.type }} · {{ place.neighborhood }}, {{ place.city }} · {{ place.distance }}</p>
+      <p class="text-xs text-[var(--color-steam)] mt-1">{{ place.type }}<template v-if="place.neighborhood"> · {{ place.neighborhood }}</template><template v-if="place.city"> · {{ place.city }}</template><template v-if="place.distance"> · {{ place.distance }}</template></p>
       <!-- Vitals -->
       <PlaceVitals :vitals="place.vitals" class="mt-3.5" />
     </div>
