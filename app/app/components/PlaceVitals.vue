@@ -13,6 +13,10 @@ withDefaults(defineProps<{
   size: 'md'
 })
 
+const emit = defineEmits<{
+  'vital-click': [label: string]
+}>()
+
 const statusColor = (status: string) => {
   switch (status) {
     case 'good': return 'text-[var(--color-monstera)]'
@@ -35,7 +39,8 @@ const iconSize = (size: string) => {
     <div
       v-for="(vital, i) in vitals"
       :key="vital.label"
-      class="flex-1 flex flex-col items-center gap-[3px] relative"
+      class="flex-1 flex flex-col items-center gap-[3px] relative cursor-pointer"
+      @click="emit('vital-click', vital.label)"
     >
       <!-- Separator -->
       <div v-if="i > 0" class="absolute left-0 top-2 bottom-2 w-px bg-[var(--color-parchment)]" />

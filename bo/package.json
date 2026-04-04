@@ -1,0 +1,33 @@
+{
+  "name": "bo",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vue-tsc -b && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.101.1",
+    "@tiptap/extension-image": "^3.22.1",
+    "@tiptap/extension-link": "^3.22.1",
+    "@tiptap/starter-kit": "^3.22.1",
+    "@tiptap/vue-3": "^3.22.1",
+    "leaflet": "^1.9.4",
+    "lucide-vue-next": "^1.0.0",
+    "pinia": "^3.0.4",
+    "vue": "^3.5.30",
+    "vue-router": "^4.6.4"
+  },
+  "devDependencies": {
+    "@tailwindcss/vite": "^4.2.2",
+    "@types/node": "^24.12.0",
+    "@vitejs/plugin-vue": "^5.2.4",
+    "@vue/tsconfig": "^0.9.0",
+    "tailwindcss": "^4.2.2",
+    "typescript": "~5.9.3",
+    "vite": "^6.4.1",
+    "vue-tsc": "^3.2.5"
+  }
+}

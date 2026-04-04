@@ -17,6 +17,7 @@ export function usePlaces() {
 
   return {
     getAll: (filters?: PlaceFilters, sortBy?: PlaceSortBy) => repo.getAll(filters, sortBy),
+    getAllForMap: () => (repo as SupabasePlaceRepository).getAllForMap(),
     getById: (id: string) => repo.getById(id),
     getByCity: (citySlug: string, filters?: PlaceFilters) => repo.getByCity(citySlug, filters),
     search: (query: string) => repo.search(query),

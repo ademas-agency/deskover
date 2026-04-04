@@ -41,8 +41,15 @@ function rowToPlace(row: any, index: number, mentions?: any[]): Place {
   if (index === 0) tag = 'Number one'
   else if (index === 1) tag = 'Coup de coeur'
 
-  const blogMentions: BlogMention[] = (mentions || []).map((m: any) => ({
-    url: m.url,
+  const seenBaseUrls = new Set<string>()
+  const blogMentions: BlogMention[] = (mentions || []).filter((m: any) => {
+    // Strip query params for deduplication (tracking params like srsltid cause duplicates)
+    const baseUrl = m.url?.split('?')[0] || ''
+    if (!baseUrl || seenBaseUrls.has(baseUrl)) return false
+    seenBaseUrls.add(baseUrl)
+    return true
+  }).map((m: any) => ({
+    url: m.url?.split('?')[0] || m.url,
     title: m.title || '',
     source: m.source || ''
   }))
@@ -71,6 +78,7 @@ function rowToPlace(row: any, index: number, mentions?: any[]): Place {
     businessStatus: row.business_status,
     isOpen: row.business_status === 'OPERATIONAL',
     blogMentions,
+    instagram: row.instagram_handle || undefined,
     tag
   }
 }
@@ -93,6 +101,19 @@ export class SupabasePlaceRepository implements PlaceRepository {
 
     return (data || []).map((row: any, i: number) =>
       rowToPlace(row, i, row.blog_mentions)
+    )
+  }
+
+  async getAllForMap(): Promise<Place[]> {
+    const { data, error } = await this.client
+      .from('places')
+      .select('id,name,slug,place_type,city,city_key,arrondissement,latitude,longitude,signals,photo_url,photo_storage_path,business_status')
+      .eq('status', 'approved')
+
+    if (error) throw error
+
+    return (data || []).map((row: any, i: number) =>
+      rowToPlace(row, i)
     )
   }
 

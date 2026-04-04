@@ -1,0 +1,123 @@
+<script setup lang="ts">
+import { ref, onMounted, watch, computed } from 'vue'
+import { usePlacesStore } from '@/stores/places'
+import { useRouter } from 'vue-router'
+import { MapPin, Filter } from 'lucide-vue-next'
+import L from 'leaflet'
+import 'leaflet/dist/leaflet.css'
+
+const store = usePlacesStore()
+const router = useRouter()
+const mapContainer = ref<HTMLElement | null>(null)
+let map: L.Map | null = null
+let markerLayer: L.LayerGroup | null = null
+
+const categoryFilter = ref('')
+const categories = [
+  { value: '', label: 'Toutes' },
+  { value: 'cafe', label: 'Cafés' },
+  { value: 'coffee_shop', label: 'Coffee Shops' },
+  { value: 'coworking', label: 'Coworking' },
+  { value: 'tiers_lieu', label: 'Tiers-lieux' }
+]
+
+const categoryColors: Record<string, string> = {
+  cafe: '#AA4C4D',
+  coffee_shop: '#8B3A3B',
+  coworking: '#5B7A5E',
+  tiers_lieu: '#D4A84B',
+  library: '#6B5B4E'
+}
+
+const filteredPlaces = computed(() => {
+  if (!store.places.length) return []
+  const withCoords = store.places.filter(p => p.latitude && p.longitude)
+  return categoryFilter.value
+    ? withCoords.filter(p => p.category === categoryFilter.value)
+    : withCoords
+})
+
+function updateMarkers() {
+  if (!map || !markerLayer) return
+  markerLayer.clearLayers()
+
+  filteredPlaces.value.forEach(place => {
+    const color = categoryColors[place.category] || '#AA4C4D'
+    const icon = L.divIcon({
+      className: '',
+      html: `<div style="width:10px;height:10px;background:${color};border:2px solid white;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div>`,
+      iconSize: [10, 10],
+      iconAnchor: [5, 5]
+    })
+
+    const marker = L.marker([place.latitude, place.longitude], { icon })
+    marker.bindPopup(`
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;min-width:180px;">
+        ${place.photo_url ? `<img src="${place.photo_url}" style="width:100%;height:80px;object-fit:cover;border-radius:6px;margin-bottom:6px;">` : ''}
+        <div style="font-weight:700;font-size:13px;color:#2C2825;">${place.name}</div>
+        <div style="font-size:11px;color:#6B5B4E;margin-top:2px;">${place.city}${place.arrondissement ? ' ' + place.arrondissement + 'e' : ''}</div>
+        <div style="font-size:10px;color:#A89888;margin-top:2px;">${place.category}</div>
+      </div>
+    `, { maxWidth: 250 })
+
+    marker.on('click', () => {
+      if (place.google_place_id) {
+        // Double click to navigate
+        marker.on('dblclick', () => router.push(`/places/${place.google_place_id}`))
+      }
+    })
+
+    markerLayer!.addLayer(marker)
+  })
+}
+
+onMounted(async () => {
+  if (!store.places.length) {
+    await store.fetchPlaces()
+  }
+
+  if (!mapContainer.value) return
+
+  map = L.map(mapContainer.value).setView([46.603354, 1.888334], 6)
+
+  L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+    attribution: '&copy; OpenStreetMap &copy; CARTO',
+    maxZoom: 19
+  }).addTo(map)
+
+  markerLayer = L.layerGroup().addTo(map)
+  updateMarkers()
+})
+
+watch(categoryFilter, () => updateMarkers())
+watch(() => store.places.length, () => updateMarkers())
+</script>
+
+<template>
+  <div>
+    <div class="flex items-center justify-between mb-4">
+      <div class="flex items-center gap-2 bg-white rounded-xl px-4 py-2 shadow-sm">
+        <Filter class="w-4 h-4 text-[#A89888]" />
+        <select
+          v-model="categoryFilter"
+          class="bg-transparent border-none text-sm text-[#2C2825] font-medium focus:outline-none cursor-pointer"
+        >
+          <option v-for="cat in categories" :key="cat.value" :value="cat.value">{{ cat.label }}</option>
+        </select>
+      </div>
+      <span class="flex items-center gap-1.5 text-sm text-[#6B5B4E]">
+        <MapPin class="w-4 h-4" />
+        {{ filteredPlaces.length }} lieux
+      </span>
+    </div>
+
+    <div class="flex items-center gap-4 mb-3 text-xs text-[#6B5B4E]">
+      <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#AA4C4D]"></span> Cafés</span>
+      <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#8B3A3B]"></span> Coffee Shops</span>
+      <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#5B7A5E]"></span> Coworking</span>
+      <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#D4A84B]"></span> Tiers-lieux</span>
+    </div>
+
+    <div ref="mapContainer" class="w-full rounded-2xl overflow-hidden shadow-sm" style="height: calc(100vh - 200px);"></div>
+  </div>
+</template>

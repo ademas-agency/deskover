@@ -53,6 +53,9 @@ export interface Place {
   // Press
   blogMentions: BlogMention[]
 
+  // Social
+  instagram?: string
+
   // Tags
   tag?: string  // "Number one", "Coup de coeur"
   distance?: string

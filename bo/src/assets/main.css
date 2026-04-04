@@ -1,0 +1,75 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+
+  --color-primary: #AA4C4D;
+  --color-primary-light: #C06B6C;
+  --color-primary-dark: #8A3A3B;
+  --color-background: #FAF7F2;
+  --color-sidebar: #2C2825;
+  --color-espresso: #2C2825;
+  --color-roast: #6B5B4E;
+  --color-steam: #A89888;
+  --color-monstera: #5B7A5E;
+  --color-edison: #D4A84B;
+  --color-linen: #F3EDE4;
+  --color-cream: #FAF7F2;
+}
+
+body {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  background-color: #FAF7F2;
+  color: #2C2825;
+}
+
+/* TipTap editor styles */
+.tiptap-editor .ProseMirror {
+  min-height: 300px;
+  padding: 1rem;
+  outline: none;
+}
+
+.tiptap-editor .ProseMirror p {
+  margin-bottom: 0.75rem;
+}
+
+.tiptap-editor .ProseMirror h1,
+.tiptap-editor .ProseMirror h2,
+.tiptap-editor .ProseMirror h3 {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  margin-top: 1rem;
+}
+
+.tiptap-editor .ProseMirror h1 { font-size: 1.5rem; }
+.tiptap-editor .ProseMirror h2 { font-size: 1.25rem; }
+.tiptap-editor .ProseMirror h3 { font-size: 1.125rem; }
+
+.tiptap-editor .ProseMirror ul,
+.tiptap-editor .ProseMirror ol {
+  padding-left: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.tiptap-editor .ProseMirror ul { list-style-type: disc; }
+.tiptap-editor .ProseMirror ol { list-style-type: decimal; }
+
+.tiptap-editor .ProseMirror blockquote {
+  border-left: 3px solid #AA4C4D;
+  padding-left: 1rem;
+  margin-left: 0;
+  color: #6B5B4E;
+}
+
+.tiptap-editor .ProseMirror a {
+  color: #AA4C4D;
+  text-decoration: underline;
+}
+
+.tiptap-editor .ProseMirror img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.5rem;
+  margin: 1rem 0;
+}

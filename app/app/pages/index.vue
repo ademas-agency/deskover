@@ -103,8 +103,16 @@ const press = [
       <!-- Titre -->
       <div class="px-4 pb-1">
         <h2 class="font-display text-xl text-[var(--color-espresso)] tracking-[0.04em]">NOS COUPS DE COEUR</h2>
-        <p class="text-[13px] text-[var(--color-steam)] mt-0.5">près de toi</p>
       </div>
+
+      <!-- FAB Carte (fixed bottom center) -->
+      <NuxtLink
+        to="/carte"
+        class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 bg-[var(--color-espresso)] text-white px-5 py-3 rounded-full shadow-[0_4px_20px_rgba(44,40,37,0.3)] hover:shadow-[0_6px_28px_rgba(44,40,37,0.4)] transition-all duration-200"
+      >
+        <UIcon name="lucide:map" class="w-[18px] h-[18px]" />
+        <span class="text-[13px] font-semibold">Carte</span>
+      </NuxtLink>
 
       <!-- Cards -->
       <div class="px-4 pt-4 flex flex-col gap-5">

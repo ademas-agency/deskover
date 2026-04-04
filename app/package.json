@@ -15,6 +15,7 @@
     "@iconify-json/simple-icons": "^1.2.75",
     "@nuxt/ui": "^4.6.0",
     "@nuxtjs/supabase": "^2.0.4",
+    "maplibre-gl": "^5.22.0",
     "nuxt": "^4.4.2",
     "tailwindcss": "^4.2.2"
   },
