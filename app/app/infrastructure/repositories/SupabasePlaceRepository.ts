@@ -168,7 +168,7 @@ export class SupabasePlaceRepository implements PlaceRepository {
   async getAllForMap(): Promise<Place[]> {
     const { data, error } = await this.client
       .from('places')
-      .select('id,name,slug,place_type,city,city_key,arrondissement,latitude,longitude,signals,photo_url,photo_storage_path,business_status')
+      .select('id,name,slug,place_type,city,city_key,arrondissement,latitude,longitude,signals,photo_url,photo_storage_path,photos,opening_hours,business_status')
       .eq('status', 'approved')
       .neq('business_status', 'CLOSED_PERMANENTLY')
 

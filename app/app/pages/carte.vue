@@ -22,16 +22,23 @@ const selectedPlacePhotos = computed(() => {
   if (!selectedPlace.value) return [FALLBACK_PHOTO]
   const photos: string[] = []
   if (selectedPlace.value.photoUrl) photos.push(selectedPlace.value.photoUrl)
+  if (selectedPlace.value.photos?.length) {
+    for (const p of selectedPlace.value.photos) {
+      if (!photos.includes(p)) photos.push(p)
+    }
+  }
   return photos.length > 0 ? photos : [FALLBACK_PHOTO]
 })
 
 const mapFilters = ref([
-  { label: 'WiFi', value: 'wifi', icon: 'lucide:wifi', active: false },
-  { label: 'Prises', value: 'prises', icon: 'lucide:zap', active: false },
-  { label: 'Food', value: 'food', icon: 'lucide:utensils', active: false },
+  { label: 'Meilleur WiFi', value: 'wifi', icon: 'lucide:wifi', active: false },
+  { label: 'Ouvert maintenant', value: 'ouvert', icon: 'lucide:clock', active: false },
+  { label: 'Bosser au calme', value: 'calme', icon: 'lucide:volume-x', active: false },
+  { label: 'Terrasses', value: 'terrasse', icon: 'lucide:sun', active: false },
+  { label: 'Bien manger', value: 'food', icon: 'lucide:utensils', active: false },
+  { label: 'Coworkings', value: 'coworking', icon: 'lucide:building-2', active: false },
   { label: 'Cafés', value: 'cafe', icon: 'lucide:coffee', active: false },
-  { label: 'Coworking', value: 'coworking', icon: 'lucide:building-2', active: false },
-  { label: 'Calme', value: 'calme', icon: 'lucide:ear', active: false },
+  { label: 'Prises', value: 'prises', icon: 'lucide:zap', active: false },
 ])
 
 function toggleMapFilter(value: string) {
@@ -46,14 +53,63 @@ function getFilteredPlaces(): Place[] {
 
   return places.value.filter(p => {
     for (const a of active) {
-      if (['cafe', 'coffee_shop', 'coworking', 'tiers_lieu'].includes(a) && p.category !== a) return false
+      if (a === 'cafe' && p.category !== 'cafe' && p.category !== 'coffee_shop') return false
+      if (a === 'coworking' && p.category !== 'coworking') return false
       if (a === 'wifi' && !p.signals.includes('wifi')) return false
       if (a === 'prises' && !p.signals.includes('prises')) return false
       if (a === 'food' && !p.signals.includes('food')) return false
       if (a === 'calme' && !p.signals.includes('calme')) return false
+      if (a === 'terrasse' && !p.signals.includes('terrasse')) return false
+      if (a === 'ouvert' && !p.isOpen) return false
     }
     return true
   })
+}
+
+const allMarkers: maplibregl.Marker[] = []
+let selectedMarkerId: string | null = null
+
+function createMarkers(filteredPlaces: Place[]) {
+  if (!map) return
+  // Remove old markers
+  allMarkers.forEach(m => m.remove())
+  allMarkers.length = 0
+
+  filteredPlaces
+    .filter(p => p.latitude && p.longitude)
+    .forEach(p => {
+      const color = categoryColors[p.category] || '#AA4C4D'
+      const isSelected = p.id === selectedMarkerId
+      const w = isSelected ? 56 : 44
+      const h = isSelected ? 72 : 56
+      const radius = 8
+
+      const el = document.createElement('div')
+      el.style.cursor = 'pointer'
+
+      if (p.photoUrl) {
+        el.innerHTML = `<div style="width:${w}px;height:${h}px;border-radius:${radius}px;overflow:hidden;border:${isSelected ? 3 : 2}px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,${isSelected ? 0.4 : 0.2});background:${color};transition:all 0.15s;">
+          <img src="${p.photoUrl}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+          <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;">${p.name.charAt(0)}</div>
+        </div>`
+      } else {
+        el.innerHTML = `<div style="width:${w}px;height:${h}px;border-radius:${radius}px;border:${isSelected ? 3 : 2}px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,${isSelected ? 0.4 : 0.2});background:${color};display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;transition:all 0.15s;">
+          ${p.name.charAt(0)}
+        </div>`
+      }
+
+      el.addEventListener('click', () => {
+        selectedMarkerId = p.id
+        selectPlace(p)
+        createMarkers(filteredPlaces)
+      })
+
+      const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
+        .setLngLat([p.longitude, p.latitude])
+        .addTo(map!)
+
+      allMarkers.push(marker)
+    })
 }
 
 function applyMapFilters() {
@@ -147,51 +203,6 @@ onMounted(async () => {
     trackUserLocation: true
   }), 'bottom-right')
 
-  const allMarkers: maplibregl.Marker[] = []
-  let selectedMarkerId: string | null = null
-
-  function createMarkers(filteredPlaces: Place[]) {
-    // Remove old markers
-    allMarkers.forEach(m => m.remove())
-    allMarkers.length = 0
-
-    filteredPlaces
-      .filter(p => p.latitude && p.longitude)
-      .forEach(p => {
-        const color = categoryColors[p.category] || '#AA4C4D'
-        const isSelected = p.id === selectedMarkerId
-        const w = isSelected ? 56 : 44
-        const h = isSelected ? 72 : 56
-        const radius = 8
-
-        const el = document.createElement('div')
-        el.style.cursor = 'pointer'
-
-        if (p.photoUrl) {
-          el.innerHTML = `<div style="width:${w}px;height:${h}px;border-radius:${radius}px;overflow:hidden;border:${isSelected ? 3 : 2}px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,${isSelected ? 0.4 : 0.2});background:${color};transition:all 0.15s;">
-            <img src="${p.photoUrl}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
-            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;">${p.name.charAt(0)}</div>
-          </div>`
-        } else {
-          el.innerHTML = `<div style="width:${w}px;height:${h}px;border-radius:${radius}px;border:${isSelected ? 3 : 2}px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,${isSelected ? 0.4 : 0.2});background:${color};display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;transition:all 0.15s;">
-            ${p.name.charAt(0)}
-          </div>`
-        }
-
-        el.addEventListener('click', () => {
-          selectedMarkerId = p.id
-          selectPlace(p)
-          createMarkers(filteredPlaces)
-        })
-
-        const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
-          .setLngLat([p.longitude, p.latitude])
-          .addTo(map!)
-
-        allMarkers.push(marker)
-      })
-  }
-
   // Also store source for filter logic
   map.on('load', () => {
     const geojson = {
@@ -239,21 +250,29 @@ function categoryLabel(cat: string) {
     <!-- Map -->
     <div ref="mapContainer" class="w-full h-full" />
 
-    <!-- Back button -->
+    <!-- Back button (mobile: chevron) -->
     <NuxtLink
       to="/"
-      class="absolute top-[52px] left-4 z-10 w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center"
+      class="absolute top-[52px] left-4 z-10 w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center lg:hidden"
     >
       <UIcon name="lucide:chevron-left" class="w-5 h-5 text-[var(--color-espresso)]" />
     </NuxtLink>
 
+    <!-- Close button (desktop: croix) -->
+    <NuxtLink
+      to="/"
+      class="hidden lg:flex absolute top-4 right-4 z-10 w-11 h-11 rounded-full bg-white shadow-lg items-center justify-center"
+    >
+      <UIcon name="lucide:x" class="w-5 h-5 text-[var(--color-espresso)]" />
+    </NuxtLink>
+
     <!-- Filters bar -->
-    <div class="absolute top-[52px] left-16 right-4 z-10 flex gap-2 overflow-x-auto no-scrollbar">
+    <div class="absolute top-[52px] left-16 right-0 lg:top-4 lg:left-4 lg:right-16 z-10 flex gap-2 overflow-x-auto no-scrollbar pr-4 lg:pr-0">
       <button
         v-for="f in mapFilters"
         :key="f.value"
-        class="flex-shrink-0 flex items-center gap-1.5 px-3.5 h-10 rounded-full text-[12px] font-semibold transition-all duration-200 whitespace-nowrap"
-        :class="f.active ? 'bg-[var(--color-terracotta-500)] text-white' : 'bg-white text-[var(--color-espresso)]'"
+        class="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl text-[13px] font-semibold transition-all duration-200 whitespace-nowrap border shadow-sm"
+        :class="f.active ? 'bg-[var(--color-espresso)] text-white border-[var(--color-espresso)] shadow-[0_2px_8px_rgba(44,40,37,0.2)]' : 'bg-white text-[var(--color-roast)] border-[var(--color-parchment)]'"
         @click="toggleMapFilter(f.value)"
       >
         <UIcon :name="f.icon" class="w-4 h-4" />
@@ -270,8 +289,8 @@ function categoryLabel(cat: string) {
       leave-from-class="translate-y-0 opacity-100"
       leave-to-class="translate-y-full opacity-0"
     >
-      <div v-if="showCard && selectedPlace" class="absolute bottom-6 left-4 right-4 z-20">
-        <div class="bg-white rounded-[20px] shadow-2xl overflow-hidden relative" @click="goToPlace">
+      <div v-if="showCard && selectedPlace" class="absolute bottom-6 left-4 right-4 lg:left-auto lg:right-6 lg:w-[400px] z-20">
+        <div class="bg-white rounded-[20px] shadow-2xl overflow-hidden relative cursor-pointer" @click="goToPlace">
           <!-- Photo slider -->
           <div class="h-[180px] relative overflow-hidden">
             <div
@@ -293,6 +312,21 @@ function categoryLabel(cat: string) {
               </div>
             </div>
             <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+            <!-- Carousel arrows -->
+            <template v-if="selectedPlacePhotos.length > 1">
+              <button
+                class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center hover:bg-black/50 transition-colors"
+                @click.stop="currentPhotoIdx = (currentPhotoIdx - 1 + selectedPlacePhotos.length) % selectedPlacePhotos.length; photoSlider?.scrollTo({ left: currentPhotoIdx * photoSlider!.clientWidth, behavior: 'smooth' })"
+              >
+                <UIcon name="lucide:chevron-left" class="w-4 h-4 text-white" />
+              </button>
+              <button
+                class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center hover:bg-black/50 transition-colors"
+                @click.stop="currentPhotoIdx = (currentPhotoIdx + 1) % selectedPlacePhotos.length; photoSlider?.scrollTo({ left: currentPhotoIdx * photoSlider!.clientWidth, behavior: 'smooth' })"
+              >
+                <UIcon name="lucide:chevron-right" class="w-4 h-4 text-white" />
+              </button>
+            </template>
             <!-- Dots indicator -->
             <div v-if="selectedPlacePhotos.length > 1" class="absolute bottom-12 left-0 right-0 flex justify-center gap-1.5 pointer-events-none">
               <span

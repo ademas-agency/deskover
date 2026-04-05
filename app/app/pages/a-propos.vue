@@ -9,10 +9,6 @@ useHead({
 
 <template>
   <div class="min-h-screen bg-[var(--color-cream)]">
-    <!-- Header desktop only -->
-    <div class="hidden lg:block">
-      <DeskoverHeader />
-    </div>
 
     <!-- Header sticky mobile -->
     <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 flex justify-between items-center lg:hidden">
@@ -76,6 +72,7 @@ useHead({
     </div>
 
     <!-- Footer -->
+    <FabCarte />
     <DeskoverFooter class="mt-6" />
   </div>
 </template>

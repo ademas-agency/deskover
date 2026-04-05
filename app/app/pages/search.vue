@@ -121,13 +121,16 @@ function isActive(key: string) {
 
 <template>
   <div class="min-h-screen bg-[var(--color-cream)] pb-24 lg:pb-0">
-    <!-- Header desktop only -->
-    <div class="hidden lg:block">
-      <DeskoverHeader />
+
+    <!-- Close button (desktop only) -->
+    <div class="hidden lg:flex justify-end px-8 pt-4 lg:max-w-[680px] lg:mx-auto">
+      <NuxtLink to="/" class="w-10 h-10 rounded-full bg-[var(--color-linen)] flex items-center justify-center">
+        <UIcon name="lucide:x" class="w-5 h-5 text-[var(--color-espresso)]" />
+      </NuxtLink>
     </div>
 
     <!-- Header -->
-    <div class="px-4 pt-[52px] lg:pt-0 pb-3 flex items-center gap-3 lg:max-w-[680px] lg:mx-auto">
+    <div class="px-5 pt-[52px] lg:pt-4 lg:px-8 pb-3 flex items-center gap-3 lg:max-w-[680px] lg:mx-auto">
       <NuxtLink to="/" class="w-10 h-10 rounded-full bg-[var(--color-linen)] flex items-center justify-center flex-shrink-0 lg:hidden">
         <UIcon name="lucide:chevron-left" class="w-5 h-5 text-[var(--color-espresso)]" />
       </NuxtLink>
@@ -168,7 +171,7 @@ function isActive(key: string) {
       </div>
     </div>
 
-    <div class="px-4 lg:max-w-[680px] lg:mx-auto">
+    <div class="px-5 lg:px-8 lg:max-w-[680px] lg:mx-auto">
       <!-- Mode: Maintenant / Plus tard -->
       <div class="flex bg-[var(--color-linen)] rounded-2xl p-1 mt-1">
         <button
@@ -211,7 +214,7 @@ function isActive(key: string) {
 
         <!-- Time range -->
         <p class="text-[10px] font-bold uppercase tracking-wide text-[var(--color-steam)] mt-3 mb-1.5">De</p>
-        <div class="flex gap-1.5 overflow-x-auto no-scrollbar -mx-4 px-4">
+        <div class="flex gap-1.5 overflow-x-auto no-scrollbar -mx-5 px-5 lg:-mx-8 lg:px-8">
           <button
             v-for="t in timeSlots"
             :key="'from-'+t"
@@ -222,7 +225,7 @@ function isActive(key: string) {
         </div>
 
         <p class="text-[10px] font-bold uppercase tracking-wide text-[var(--color-steam)] mt-2.5 mb-1.5">À</p>
-        <div class="flex gap-1.5 overflow-x-auto no-scrollbar -mx-4 px-4">
+        <div class="flex gap-1.5 overflow-x-auto no-scrollbar -mx-5 px-5 lg:-mx-8 lg:px-8">
           <button
             v-for="t in timeSlots"
             :key="'to-'+t"
@@ -290,7 +293,7 @@ function isActive(key: string) {
     </div>
 
     <!-- Fixed CTA -->
-    <div class="fixed bottom-0 left-0 right-0 p-4 pb-8 bg-gradient-to-t from-[var(--color-cream)] via-[var(--color-cream)] to-transparent z-40 lg:static lg:mt-8 lg:p-0 lg:bg-transparent lg:pb-0 lg:max-w-[680px] lg:mx-auto">
+    <div class="fixed bottom-0 left-0 right-0 p-5 pb-8 bg-gradient-to-t from-[var(--color-cream)] via-[var(--color-cream)] to-transparent z-40 lg:static lg:mt-8 lg:p-0 lg:bg-transparent lg:pb-0 lg:max-w-[680px] lg:mx-auto lg:px-8">
       <button
         class="w-full rounded-2xl font-bold bg-[var(--color-terracotta-500)] text-[var(--color-cream)] shadow-[0_4px_20px_rgba(170,76,77,0.25)] active:scale-[0.98] transition-transform"
         style="height: 56px;"
@@ -299,5 +302,6 @@ function isActive(key: string) {
         <span class="font-display text-[15px] tracking-[0.06em]">VOIR LES LIEUX</span>
       </button>
     </div>
+    <FabCarte />
   </div>
 </template>

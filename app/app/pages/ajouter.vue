@@ -161,10 +161,6 @@ async function submit() {
 
 <template>
   <div class="min-h-screen bg-[var(--color-cream)] pb-24 lg:pb-0">
-    <!-- Header desktop only -->
-    <div class="hidden lg:block">
-      <DeskoverHeader />
-    </div>
 
     <!-- Header mobile -->
     <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 flex justify-between items-center lg:hidden">
@@ -283,5 +279,6 @@ async function submit() {
         Retour à l'accueil
       </NuxtLink>
     </div>
+    <FabCarte />
   </div>
 </template>

@@ -117,6 +117,24 @@ async function runSpeedTest() {
   }
 }
 
+const dayLabels: Record<string, string> = {
+  monday: 'Lundi', tuesday: 'Mardi', wednesday: 'Mercredi',
+  thursday: 'Jeudi', friday: 'Vendredi', saturday: 'Samedi', sunday: 'Dimanche'
+}
+const dayOrder = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday']
+const todayKey = computed(() => dayOrder[new Date().getDay() === 0 ? 6 : new Date().getDay() - 1])
+
+const formattedHours = computed(() => {
+  if (!place.value?.openingHours) return []
+  return dayOrder.map(d => ({
+    day: dayLabels[d],
+    hours: place.value!.openingHours![d] || 'Fermé',
+    isToday: d === todayKey.value
+  }))
+})
+
+const showAllHours = ref(false)
+
 const submitError = ref('')
 const submitSuccess = ref(false)
 
@@ -303,24 +321,19 @@ function categoryLabel(cat: string) {
 <template>
   <div class="min-h-screen bg-[var(--color-cream)]">
   <div v-if="place" class="pb-28 lg:pb-0">
-    <!-- Header desktop only (wrapper needed: DeskoverHeader has multiple roots) -->
-    <div class="hidden lg:block">
-      <DeskoverHeader />
-    </div>
 
     <!-- Photo hero / carrousel -->
-    <div class="relative h-[260px] lg:h-[400px] overflow-hidden lg:container-deskover lg:mt-6 lg:rounded-2xl">
+    <div class="relative h-[260px] lg:h-[400px] overflow-hidden">
       <img
         :src="allPhotos[currentPhoto]"
         :alt="place.name"
-        class="w-full h-full object-cover transition-opacity duration-300"
+        class="w-full h-full object-cover transition-opacity duration-300 rounded-b-[24px] lg:rounded-b-none"
         :key="currentPhoto"
-        style="border-radius: 0 0 24px 24px;"
       >
-      <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent" style="border-radius: 0 0 24px 24px;" />
+      <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent rounded-b-[24px] lg:rounded-b-none" />
 
-      <!-- Header overlay -->
-      <div class="absolute top-[52px] left-4 right-4 flex justify-between items-center lg:top-4">
+      <!-- Header overlay (mobile) -->
+      <div class="absolute top-[52px] left-4 right-4 flex justify-between items-center lg:hidden">
         <button
           @click="goBack"
           class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center"
@@ -337,6 +350,16 @@ function categoryLabel(cat: string) {
         </div>
       </div>
 
+      <!-- Top bar overlay (desktop) -->
+      <div class="hidden lg:block absolute top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-10 pt-6 lg:container-deskover">
+          <NuxtLink to="/" class="font-display text-base text-white tracking-[0.15em]">DESKOVER</NuxtLink>
+          <NuxtLink to="/search">
+            <UIcon name="lucide:search" class="w-[22px] h-[22px] text-white" />
+          </NuxtLink>
+        </div>
+      </div>
+
       <!-- Dots -->
       <div v-if="allPhotos.length > 1" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
         <button
@@ -350,7 +373,7 @@ function categoryLabel(cat: string) {
     </div>
 
     <!-- Desktop: 2 colonnes | Mobile: empilé -->
-    <div class="lg:max-w-[1080px] lg:mx-auto lg:grid lg:grid-cols-[1fr_340px] lg:gap-10 lg:px-12 lg:mt-8">
+    <div class="lg:container-deskover lg:grid lg:grid-cols-[1fr_340px] lg:gap-10 lg:mt-8">
 
       <!-- Colonne principale -->
       <div>
@@ -418,6 +441,29 @@ function categoryLabel(cat: string) {
           </div>
         </div>
 
+        <!-- Horaires (mobile only) -->
+        <div v-if="formattedHours.length" class="px-4 mt-5 lg:hidden">
+          <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-3">HORAIRES</div>
+          <div class="bg-white rounded-[14px] p-4 shadow-[0_2px_8px_rgba(44,40,37,0.06)]">
+            <template v-for="(h, i) in formattedHours" :key="h.day">
+              <div
+                v-if="showAllHours || h.isToday"
+                class="flex justify-between py-1.5 text-sm"
+                :class="h.isToday ? 'font-bold text-[var(--color-espresso)]' : 'text-[var(--color-roast)]'"
+              >
+                <span>{{ h.day }}</span>
+                <span>{{ h.hours }}</span>
+              </div>
+            </template>
+            <button
+              class="text-[12px] text-[var(--color-terracotta-500)] font-semibold mt-2"
+              @click="showAllHours = !showAllHours"
+            >
+              {{ showAllHours ? 'Masquer' : 'Voir tous les horaires' }}
+            </button>
+          </div>
+        </div>
+
         <!-- Séparateur -->
         <div class="text-center py-5 text-[var(--color-steam)] text-sm tracking-[4px]">· · ·</div>
 
@@ -468,6 +514,20 @@ function categoryLabel(cat: string) {
               </div>
             </div>
 
+            <!-- Horaires desktop -->
+            <div v-if="formattedHours.length" class="mt-4 pt-4 border-t border-[var(--color-parchment)]">
+              <div class="font-display text-[11px] text-[var(--color-steam)] tracking-[0.1em] mb-2">HORAIRES</div>
+              <div
+                v-for="h in formattedHours"
+                :key="h.day"
+                class="flex justify-between py-1 text-[13px]"
+                :class="h.isToday ? 'font-bold text-[var(--color-espresso)]' : 'text-[var(--color-roast)]'"
+              >
+                <span>{{ h.day }}</span>
+                <span>{{ h.hours }}</span>
+              </div>
+            </div>
+
             <!-- Bouton itinéraire desktop -->
             <a
               :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`"
@@ -504,6 +564,7 @@ function categoryLabel(cat: string) {
     </div>
 
     <!-- Footer desktop -->
+    <FabCarte />
     <DeskoverFooter class="hidden lg:block mt-12" />
 
   </div>

@@ -27,35 +27,26 @@ function categoryLabel(cat: string) {
   >
     <article class="bg-white rounded-[20px] overflow-hidden shadow-[0_4px_16px_rgba(44,40,37,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(44,40,37,0.12)]">
       <!-- Image -->
-      <div class="relative h-[200px] overflow-hidden">
+      <div class="relative h-[300px] overflow-hidden">
         <img
           :src="place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop'"
           :alt="place.name"
-          class="w-full h-full object-cover"
+          class="w-full h-full object-cover object-center"
         >
-        <!-- Tag -->
-        <div
-          v-if="place.tag"
-          class="absolute top-3 left-3 flex items-center gap-1.5 px-3 rounded-lg text-white text-[10px] font-bold uppercase tracking-wide leading-[28px]"
-          :style="{ background: place.tag === 'Number one' ? '#AA4C4D' : 'rgba(170,76,77,0.85)' }"
-        >
-          <UIcon v-if="place.tag === 'Number one'" name="lucide:crown" class="w-3.5 h-3.5" />
-          <span>{{ place.tag }}</span>
-        </div>
         <!-- Status badge -->
         <div
           class="absolute top-3 right-3 px-2.5 h-[28px] rounded-lg text-white text-[10px] font-bold uppercase backdrop-blur-md flex items-center justify-center"
           :style="{ background: place.isOpen ? 'rgba(91,122,94,0.92)' : 'rgba(170,76,77,0.92)' }"
         >
-          {{ place.isOpen ? 'Ouvert' : 'Fermé' }}
+          {{ place.isOpen ? 'Ouvert' : (place.nextOpen || 'Fermé') }}
         </div>
       </div>
       <!-- Body -->
       <div class="p-[18px]">
-        <h3 class="font-display text-xl text-[var(--color-espresso)] tracking-[0.02em] uppercase m-0">
+        <h3 class="font-display text-xl text-[var(--color-espresso)] tracking-[0.02em] uppercase m-0 text-left">
           {{ place.name }}
         </h3>
-        <p class="text-xs text-[var(--color-steam)] mt-1 !p-0">
+        <p class="text-xs text-[var(--color-steam)] mt-1 !p-0 text-left">
           {{ categoryLabel(place.category) }} · {{ place.city }}
         </p>
         <!-- Vitals -->

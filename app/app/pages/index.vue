@@ -155,30 +155,27 @@ const articles = [
 
 <template>
   <div class="min-h-screen bg-[var(--color-cream)]">
-    <!-- Header desktop only (wrapper needed: DeskoverHeader has multiple roots) -->
-    <div class="hidden lg:block">
-      <DeskoverHeader />
-    </div>
-
     <!-- HERO -->
-    <section class="relative h-[85vh] lg:h-[50vh] overflow-hidden">
+    <section class="relative h-[85vh] lg:h-[60vh] overflow-hidden">
       <img
         src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=1200&fit=crop"
         alt="Intérieur café"
-        class="w-full h-full object-cover animate-[heroZoom_25s_ease-in-out_infinite_alternate]"
+        class="w-full h-full object-cover"
       >
       <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[rgba(17,17,17,0.92)]" />
 
-      <!-- Top bar (mobile only) -->
-      <div class="absolute top-0 left-0 right-0 flex items-center justify-between px-5 pt-[52px] z-10 lg:hidden">
-        <span class="font-display text-base text-white tracking-[0.15em]">DESKOVER</span>
-        <NuxtLink to="/search">
-          <UIcon name="lucide:search" class="w-[22px] h-[22px] text-white" />
-        </NuxtLink>
+      <!-- Top bar overlay (mobile + desktop) -->
+      <div class="absolute top-0 left-0 right-0 z-10">
+        <div class="flex items-center justify-between px-5 pt-[52px] lg:pt-6 lg:px-10 lg:container-deskover">
+          <span class="font-display text-base text-white tracking-[0.15em]">DESKOVER</span>
+          <NuxtLink to="/search">
+            <UIcon name="lucide:search" class="w-[22px] h-[22px] text-white" />
+          </NuxtLink>
+        </div>
       </div>
 
       <!-- Hero content -->
-      <div class="absolute bottom-12 left-5 right-5 z-10">
+      <div class="absolute bottom-12 left-5 right-5 z-10 lg:container-deskover lg:left-0 lg:right-0">
         <h1 class="font-display text-[44px] text-white leading-[0.95]">
           LES MEILLEURS<br>
           SPOTS POUR<br>
@@ -200,7 +197,7 @@ const articles = [
     <section class="bg-[var(--color-cream)] rounded-t-3xl -mt-6 relative z-10 lg:rounded-none lg:mt-0">
       <!-- Quick filters -->
       <div class="lg:container-deskover">
-        <div class="flex gap-2.5 overflow-x-auto no-scrollbar px-4 py-8">
+        <div class="flex gap-2.5 overflow-x-auto no-scrollbar px-4 py-6 lg:flex-wrap lg:py-8">
           <button
             v-for="qf in quickFilters"
             :key="qf.key"
@@ -222,14 +219,7 @@ const articles = [
         <p v-if="pageSubtitle" class="text-[13px] text-[var(--color-roast)] mt-1.5 leading-relaxed">{{ pageSubtitle }}</p>
       </div>
 
-      <!-- FAB Carte (mobile only) -->
-      <NuxtLink
-        to="/carte"
-        class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 bg-[var(--color-espresso)] text-white px-5 py-3 rounded-full shadow-[0_4px_20px_rgba(44,40,37,0.3)] hover:shadow-[0_6px_28px_rgba(44,40,37,0.4)] transition-all duration-200 lg:hidden"
-      >
-        <UIcon name="lucide:map" class="w-[18px] h-[18px]" />
-        <span class="text-[13px] font-semibold">Carte</span>
-      </NuxtLink>
+      <FabCarte />
 
       <!-- Cards -->
       <div class="px-4 pt-4 flex flex-col gap-5 md:grid md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:container-deskover">
@@ -300,11 +290,6 @@ const articles = [
 </template>
 
 <style>
-@keyframes heroZoom {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.12); }
-}
-
 @keyframes scrollDown {
   0% { top: -6px; }
   100% { top: 24px; }
