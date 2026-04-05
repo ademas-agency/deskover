@@ -1,9 +1,11 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { Bell } from 'lucide-vue-next'
+import { useRoute, useRouter } from 'vue-router'
+import { Bell, LogOut } from 'lucide-vue-next'
+import { supabase } from '../../../infrastructure/api/client'
 
 const route = useRoute()
+const router = useRouter()
 
 const pageTitle = computed(() => {
   const titles: Record<string, string> = {
@@ -13,9 +15,15 @@ const pageTitle = computed(() => {
     map: 'Carte',
     articles: 'Articles',
     'article-edit': 'Modifier l\'article',
+    messages: 'Messages',
   }
   return titles[route.name as string] || 'Deskover'
 })
+
+async function logout() {
+  await supabase.auth.signOut()
+  router.push('/login')
+}
 </script>
 
 <template>
@@ -24,6 +32,13 @@ const pageTitle = computed(() => {
     <div class="flex items-center gap-4">
       <button class="p-2 text-roast hover:text-espresso rounded-lg hover:bg-linen transition-colors">
         <Bell :size="18" />
+      </button>
+      <button
+        @click="logout"
+        class="p-2 text-roast hover:text-primary rounded-lg hover:bg-linen transition-colors"
+        title="Se déconnecter"
+      >
+        <LogOut :size="18" />
       </button>
       <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center text-sm font-bold">
         D

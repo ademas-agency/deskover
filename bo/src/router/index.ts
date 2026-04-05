@@ -1,8 +1,15 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import { supabase } from '../infrastructure/api/client'
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../presentation/views/LoginView.vue'),
+      meta: { public: true },
+    },
     {
       path: '/',
       name: 'dashboard',
@@ -39,6 +46,17 @@ const router = createRouter({
       component: () => import('../presentation/views/MessagesView.vue'),
     },
   ],
+})
+
+// Auth guard
+router.beforeEach(async (to) => {
+  if (to.meta.public) return true
+
+  const { data: { session } } = await supabase.auth.getSession()
+  if (!session) {
+    return { name: 'login' }
+  }
+  return true
 })
 
 export default router
