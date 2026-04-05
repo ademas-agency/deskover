@@ -34,6 +34,7 @@ export default defineNuxtConfig({
       htmlAttrs: { lang: 'fr' },
       meta: [
         { name: 'viewport', content: 'width=device-width, initial-scale=1, viewport-fit=cover' },
+        { name: 'apple-mobile-web-app-status-bar-style', content: 'black-translucent' },
         { name: 'description', content: 'Deskover sélectionne les meilleurs endroits pour travailler : cafés, bibliothèques, coworkings. WiFi, prises, ambiance — tout est noté.' },
         { name: 'theme-color', content: '#AA4C4D' },
         { property: 'og:title', content: 'Deskover — Trouve ton spot pour bosser' },
