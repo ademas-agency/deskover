@@ -57,10 +57,10 @@ body {
 
 /* Safe area utilities for PWA edge-to-edge */
 .pt-safe {
-  padding-top: max(env(safe-area-inset-top, 0px) + 8px, 32px);
+  padding-top: max(env(safe-area-inset-top, 0px) + 4px, 16px);
 }
 .top-safe {
-  top: max(env(safe-area-inset-top, 0px) + 8px, 32px);
+  top: max(env(safe-area-inset-top, 0px) + 4px, 16px);
 }
 .pb-safe {
   padding-bottom: env(safe-area-inset-bottom, 0px);

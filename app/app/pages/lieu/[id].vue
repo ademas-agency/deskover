@@ -405,7 +405,7 @@ function categoryLabel(cat: string) {
         </div>
 
         <!-- Bouton itinéraire (mobile only) -->
-        <div class="px-4 mt-4 lg:hidden">
+        <div class="px-4 mt-5 lg:hidden">
           <a
             :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`"
             target="_blank"
