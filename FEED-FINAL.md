@@ -65,13 +65,13 @@ Document opérationnel - 5 avril 2026
 - Sticker : aucun
 
 **Story 2 - Paris 3e (Le Marais)**
-- Visuel : Photo Anticafé Beaubourg + bandeau info
-- Texte overlay : "Paris 3e / Anticafé Beaubourg / 5 euros de l'heure, boissons illimitées / Le spot par défaut du Marais"
+- Visuel : Photo Hubsy + bandeau info
+- Texte overlay : "Paris 3e / Hubsy / 5 euros de l'heure, boissons illimitées / Le spot par défaut du Marais"
 - Sticker : lien vers deskover.fr
 
-**Story 3 - Paris 11e (Oberkampf)**
+**Story 3 - Paris 5e (Oberkampf)**
 - Visuel : Photo Le Nuage Café + bandeau info
-- Texte overlay : "Paris 11e / Le Nuage Café / 6 tables, zéro bruit / Pour les jours où tu as besoin de silence"
+- Texte overlay : "Paris 5e / Le Nuage Café / 6 tables, zéro bruit / Pour les jours où tu as besoin de silence"
 - Sticker : lien vers deskover.fr
 
 **Story 4 - Paris 13e (Station F / Tolbiac)**
@@ -101,7 +101,7 @@ Document opérationnel - 5 avril 2026
 **Couverture** : Fond monstera (#4A6741), texte Anton uppercase blanc "VILLES"
 
 **Story 1 - Intro**
-- Visuel : Fond monstera, texte blanc "Nos spots dans toute la France" + sous-texte "Lyon, Grenoble, Bordeaux, Nantes, Toulouse, Marseille, Strasbourg, Rennes"
+- Visuel : Fond monstera, texte blanc "Nos spots dans toute la France" + sous-texte "Lyon, Grenoble, Marseille, Aix-en-Provence, Tours, Orléans"
 - Sticker : aucun
 
 **Story 2 - Lyon**
@@ -116,12 +116,12 @@ Document opérationnel - 5 avril 2026
 
 **Story 4 - Nantes**
 - Visuel : Photo d'un spot nantais + nom ville
-- Texte overlay : "Nantes / 4 spots testés et validés / Le remote work s'y est installé naturellement"
+- Texte overlay : "Nantes / 4 spots repérés par la communauté / Le remote work s'y est installé naturellement"
 - Sticker : lien vers guide Nantes sur deskover.fr
 
 **Story 5 - Bordeaux**
 - Visuel : Fond monstera + texte
-- Texte overlay : "Bordeaux / On prépare le guide / Balance ton spot en DM"
+- Texte overlay : "Bordeaux / On repère les meilleurs spots / Balance ton spot en DM"
 - Sticker : question "Ton QG à Bordeaux ?"
 
 **Story 6 - Marseille**
@@ -360,7 +360,7 @@ Retrouve la fiche sur deskover.fr. Tu as un spot chargé en souvenirs comme celu
 
 **Caption :**
 
-Nantes, on t'a pas oublié. On a arpenté le centre, le quartier Bouffay, l'île de Nantes. On a testé les WiFi, compté les prises, bu pas mal de cafés.
+Nantes, on t'a pas oublié. On a repéré les meilleurs spots du centre, du quartier Bouffay, l'île de Nantes. Les retours de la communauté sont unanimes sur ces 4 adresses.
 
 Le critère numéro 1 : pouvoir poser son ordi, se connecter, et bosser 2-3 heures sans prise de tête. Le numéro 2 : que le café soit bon et l'ambiance agréable.
 
@@ -416,7 +416,7 @@ Tu connais un lieu aussi dingue pour bosser ? On est curieux.
 
 **Caption :**
 
-Bordeaux, on sait que tu caches des pépites.
+Bordeaux, on sait que tu caches des pépites. On n'y a pas encore posé nos affaires mais on prépare le terrain.
 
 On prépare notre guide et on a besoin de toi. Les Chartrons, Saint-Michel, la Victoire - on a nos pistes, mais on veut pas passer à côté de ton spot secret.
 
@@ -546,7 +546,7 @@ Les adresses où tout est carré, c'est par ici. Et toi, c'est quoi ton critère
 
 **Lieux mentionnés (vérifiés dans la base - top blog_mentions avec signal wifi) :**
 - La Permanence, Paris 5e (37 mentions blog, 24h/24, wifi)
-- Le 10h10, Paris 3e (37 mentions blog, wifi, coworking)
+- La Permanence, Paris 5e (37 mentions blog, wifi, coworking)
 - La Recyclerie, Paris 18e (29 mentions blog, wifi)
 - Le Pavillon des Canaux, Paris 19e (25 mentions blog, wifi)
 
@@ -573,16 +573,16 @@ Et toi, t'as déjà eu un WiFi de café qui t'a bluffé ? Dis-nous où.
 
 ---
 
-### POST 13 - QG DU JOUR : LE NUAGE CAFÉ, PARIS 11E (RÉÉCRIT)
+### POST 13 - QG DU JOUR : LE NUAGE CAFÉ, PARIS 5E (RÉÉCRIT)
 
 **Pilier** : QG du jour
 **Position grille** : Rangée 3, colonne 3 (droite)
-**Visuel** : Photo intérieur Le Nuage Café (petit, murs blancs, comptoir bois, lumière fenêtre). Bandeau bas espresso. Texte cream "LE NUAGE CAFÉ / PARIS 11E" + accroche edison "Le silence du 11e"
+**Visuel** : Photo intérieur Le Nuage Café (petit, murs blancs, comptoir bois, lumière fenêtre). Bandeau bas espresso. Texte cream "LE NUAGE CAFÉ / PARIS 5E" + accroche edison "Le silence du 5e"
 **Voix** : Les deux
 
 **Caption :**
 
-Rue Jean-Pierre Timbaud, Paris 11e. Tu passes devant dix fois sans le voir. Le Nuage, c'est un tout petit café avec 6 tables, des murs blancs, et un comptoir en bois qui prend toute la place. Rien de spectaculaire. Et c'est exactement pour ça que ça marche.
+Rue des Carmes, Paris 5e. Tu passes devant dix fois sans le voir. Le Nuage, c'est un tout petit café avec 6 tables, des murs blancs, et un comptoir en bois qui prend toute la place. Rien de spectaculaire. Et c'est exactement pour ça que ça marche.
 
 Thomas a flashé sur la lumière du matin qui entre par la vitrine et dessine des rectangles parfaits sur les tables. Adé a flashé sur le calme rare pour le quartier et la multiprise partagée près de la fenêtre.
 
@@ -590,7 +590,7 @@ WiFi correct, et le matin entre 9h et 11h, tu es quasi seul. Le patron connaît 
 
 C'est le spot qu'on garde pour les jours où on a besoin de concentration totale. Pas de distraction, pas de passage. Juste du café et du silence.
 
-Retrouve la fiche sur deskover.fr. Tu bosses dans le 11e ? Dis-nous ton QG en commentaire.
+Retrouve la fiche sur deskover.fr. Tu bosses dans le 5e ? Dis-nous ton QG en commentaire.
 
 -- T. & A.
 
@@ -701,7 +701,7 @@ Trois espaces, trois ambiances : un coin salon feutré pour le deep work, un esp
 
 WiFi haut débit, prises bien réparties, grandes tables, et un calme qui surprend pour un lieu aussi central. Google leur donne 4.8 sur 5 et on comprend pourquoi.
 
-Le genre de spot qu'on aurait aimé trouver plus tôt. Toulouse, tu nous avais caché ça.
+Un spot que la communauté nous a fait découvrir. Toulouse, tu nous avais caché ça.
 
 Retrouve la fiche sur deskover.fr. Tu connais d'autres pépites à Toulouse ?
 
@@ -711,20 +711,20 @@ Retrouve la fiche sur deskover.fr. Tu connais d'autres pépites à Toulouse ?
 #remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #toulouseremotework #cafetoulouse #bosseratoulouse #coworkingtoulouse #deskover
 
 **Stories associées** : Story Eurêkafé dans highlight VILLES (Toulouse)
-**Note** : Remplace le post Bazaar St So de Lille. Thomas et Adé n'ont jamais travaillé à Lille. Toulouse fait partie de leurs villes.
+**Note** : Remplace le post Bazaar St So de Lille. Thomas et Adé n'ont pas encore travaillé à Toulouse mais le lieu est recommandé par la communauté.
 
 ---
 
-### POST 18 - SESSION DU MATIN : ANTICAFÉ BEAUBOURG, PARIS 3E
+### POST 18 - SESSION DU MATIN : HUBSY, PARIS 3E
 
 **Pilier** : Session du matin
 **Position grille** : Rangée 2, colonne 1 (gauche)
-**Visuel** : Photo ambiance Anticafé (gens qui bossent, lumière douce, machine à café). Overlay texte discret "10H / PARIS 3E / Anticafé Beaubourg". Watermark horaire à 35% d'opacité.
+**Visuel** : Photo ambiance Hubsy (gens qui bossent, lumière douce, machine à café). Overlay texte discret "10H / PARIS 3E / Hubsy". Watermark horaire à 35% d'opacité.
 **Voix** : Les deux
 
 **Caption :**
 
-10h, Paris 3e. L'Anticafé Beaubourg un dimanche matin. Tout le monde bosse dans un silence quasi religieux.
+10h, Paris 3e. L'Hubsy un dimanche matin. Tout le monde bosse dans un silence quasi religieux.
 
 Tu te sers un café à la machine, tu t'installes, et tu rentres dans ta bulle. Le concept est simple : tu paies au temps (5 euros de l'heure), les boissons et les snacks sont illimités. Résultat : zéro culpabilité. Tu restes 1h ou 6h, même tarif à l'heure.
 
@@ -737,7 +737,7 @@ Et toi, tu connaissais le concept de l'anticafé ? Dis-nous si tu as testé.
 **Hashtags :**
 #remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #parisremotework #cafeparis #paris3 #anticafe #deskover
 
-**Stories associées** : Story Anticafé dans highlight PARIS
+**Stories associées** : Story Hubsy dans highlight PARIS
 **Note** : Signature changée de "-- T." à "-- T. & A." car le contenu mélange ambiance (Thomas) et infos pratiques (Adé).
 
 ---
@@ -751,11 +751,11 @@ Et toi, tu connaissais le concept de l'anticafé ? Dis-nous si tu as testé.
 
 **Caption :**
 
-Paris 11e vs Paris 3e. Les deux arrondissements où on bosse le plus.
+Paris 5e vs Paris 3e. Les deux arrondissements où on bosse le plus.
 
 Le 11e, c'est l'énergie d'Oberkampf, les cafés à chaque coin de rue, l'ambiance "tout le monde est freelance". Tu t'installes, tu bosses, tu changes de spot à midi. C'est vivant, c'est stimulant.
 
-Le 3e, c'est le calme du Marais, l'Anticafé, les rues pavées. Tu te poses et tu ne bouges plus de la journée. C'est feutré, c'est concentré.
+Le 3e, c'est le calme du Marais, Hubsy, les rues pavées. Tu te poses et tu ne bouges plus de la journée. C'est feutré, c'est concentré.
 
 La vraie réponse ? Ça dépend de ta mood. Nous on alterne : le 11e quand on a besoin de bouger, le 3e quand on a besoin de se poser.
 
@@ -780,7 +780,7 @@ Swipe pour le comparatif complet. Et toi, tu bosses où à Paris ?
 
 **Lieux mentionnés (vérifiés dans la base - top blog_mentions avec signal prises) :**
 - La Permanence, Paris 5e (37 mentions blog, prises, 24h/24)
-- Le 10h10, Paris 3e (37 mentions blog, prises)
+- La Permanence, Paris 5e (37 mentions blog, prises)
 - Le Nuage Café, Paris 5e (39 mentions blog, prises listées dans signals)
 - Hubsy Café Coworking, Paris 3e (19 mentions blog, prises)
 
@@ -819,7 +819,7 @@ RANGÉE 1 (haut - derniers publiés)
 
 RANGÉE 2
 | Session PHOTO       | QG PHOTO              | Ton QG EDISON       |
-| Post 18 - Anticafé  | Post 17 - Eurêkafé    | Post 16 - Marseille |
+| Post 18 - Hubsy  | Post 17 - Eurêkafé    | Post 16 - Marseille |
 
 RANGÉE 3
 | Carnets PHOTO       | Guide ESPRESSO        | QG PHOTO            |
@@ -924,7 +924,7 @@ RANGÉE 7 (bas - premiers publiés)
 - [ ] Photos de présentation Thomas et Adé prêtes (sans visage, en situation de travail)
 - [ ] Photos de La Recyclerie, Black Bird Coffee, La Cafteuse disponibles
 - [ ] Photos de Sofffa, Le Nuage Café, La Felicità disponibles
-- [ ] Photos de Le Pavillon des Canaux, Anticafé Beaubourg disponibles
+- [ ] Photos de Le Pavillon des Canaux, Hubsy disponibles
 - [ ] Photos de Eurêkafé Toulouse disponibles (contacter le lieu si besoin)
 
 ### Programmation
@@ -975,7 +975,7 @@ RANGÉE 7 (bas - premiers publiés)
 9. **Signatures systématiques** : chaque post a sa signature (-- T., -- A., ou -- T. & A.)
 10. **"Specialty" supprimé** : remplacé par "le café est excellent, ils ne plaisantent pas" dans Sofffa
 11. **Différenciation visuelle** : Verdict WiFi (espresso) vs Verdict Prises (cream), Ton QG Bordeaux (monstera) vs Ton QG Marseille (edison)
-12. **Lieux des Guides/Verdicts** : uniquement des lieux vérifiés dans enriched-places.json avec des blog_mentions (La Permanence 37, Le 10h10 37, Le Nuage Café 39, La Recyclerie 29, Le Pavillon des Canaux 25, Hubsy 19)
+12. **Lieux des Guides/Verdicts** : uniquement des lieux vérifiés dans enriched-places.json avec des blog_mentions (La Permanence 37, La Permanence 37, Le Nuage Café 39, La Recyclerie 29, Le Pavillon des Canaux 25, Hubsy 19)
 13. **Mot "laptop"** : absent de toutes les captions (remplacé par "ordi")
 14. **Mots interdits** : aucune occurrence de "découvrez", "n'hésitez pas", "incontournable", "en effet", "ainsi", "par ailleurs"
 15. **Tutoiement** : 100% systématique, zéro vouvoiement
