@@ -1,0 +1,27 @@
+{
+  "name": "Deskover",
+  "short_name": "Deskover",
+  "description": "Trouve ton spot pour bosser. Les meilleurs cafés, coworkings et tiers-lieux pour télétravailler.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAF7F2",
+  "theme_color": "#AA4C4D",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

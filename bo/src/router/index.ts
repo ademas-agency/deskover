@@ -33,6 +33,11 @@ const router = createRouter({
       name: 'article-edit',
       component: () => import('../presentation/views/ArticleEditView.vue'),
     },
+    {
+      path: '/messages',
+      name: 'messages',
+      component: () => import('../presentation/views/MessagesView.vue'),
+    },
   ],
 })
 

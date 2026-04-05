@@ -14,7 +14,7 @@
           {{ city.name }}
         </NuxtLink>
       </div>
-      <NuxtLink to="/articles" class="inline-block mt-3 text-xs text-[var(--color-terracotta-500)] font-semibold">Tous nos guides →</NuxtLink>
+      <NuxtLink to="/" class="inline-block mt-3 text-xs text-[var(--color-terracotta-500)] font-semibold">Tous nos guides →</NuxtLink>
     </div>
 
     <!-- Deskover -->
@@ -24,6 +24,8 @@
         <NuxtLink to="/a-propos" class="text-[13px] text-white/70 hover:text-[var(--color-terracotta-500)] transition-colors">Qui sommes-nous</NuxtLink>
         <NuxtLink to="/ajouter" class="text-[13px] text-white/70 hover:text-[var(--color-terracotta-500)] transition-colors">Proposer un lieu</NuxtLink>
         <NuxtLink to="/contact" class="text-[13px] text-white/70 hover:text-[var(--color-terracotta-500)] transition-colors">Contact</NuxtLink>
+        <NuxtLink to="/mentions-legales" class="text-[13px] text-white/70 hover:text-[var(--color-terracotta-500)] transition-colors">Mentions légales</NuxtLink>
+        <NuxtLink to="/confidentialite" class="text-[13px] text-white/70 hover:text-[var(--color-terracotta-500)] transition-colors">Confidentialité</NuxtLink>
       </div>
     </div>
 

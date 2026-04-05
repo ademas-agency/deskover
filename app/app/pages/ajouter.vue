@@ -229,9 +229,12 @@ async function submit() {
         </div>
       </div>
 
-      <!-- Bouton suivant -->
+    </div>
+
+    <!-- CTA fixe en bas (étape 1) -->
+    <div v-if="step === 1" class="fixed bottom-0 left-0 right-0 p-4 pb-9 bg-gradient-to-t from-[var(--color-cream)] via-[var(--color-cream)] to-transparent z-40">
       <button
-        class="w-full mt-8 py-3.5 rounded-2xl text-sm font-bold transition-all"
+        class="w-full py-3.5 rounded-2xl text-sm font-bold transition-all"
         :class="canGoStep2() ? 'bg-[var(--color-terracotta-500)] text-white' : 'bg-[var(--color-parchment)] text-[var(--color-steam)]'"
         :disabled="!canGoStep2()"
         @click="step = 2"

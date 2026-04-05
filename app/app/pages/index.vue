@@ -69,33 +69,33 @@ watch(computedFilters, () => loadPlaces())
 
 const articles = [
   {
-    title: 'Bosser en terrasse sans galérer',
-    slug: '#',
-    tag: 'LIFESTYLE',
+    title: 'Où travailler à Lyon',
+    slug: 'travailler-lyon',
+    tag: 'GUIDE',
     img: 'https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=600&h=400&fit=crop'
   },
   {
-    title: 'L\'étiquette du télétravailleur en café',
-    slug: '#',
-    tag: 'PRATIQUE',
+    title: 'Où travailler à Bordeaux',
+    slug: 'travailler-bordeaux',
+    tag: 'GUIDE',
     img: 'https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=600&h=400&fit=crop'
   },
   {
-    title: 'Combien de temps tu peux rester avec un seul café ?',
-    slug: '#',
-    tag: 'PRATIQUE',
+    title: 'Où travailler à Nantes',
+    slug: 'travailler-nantes',
+    tag: 'GUIDE',
     img: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=400&fit=crop'
   },
   {
-    title: 'Les indispensables dans ton sac pour bosser en café',
-    slug: '#',
-    tag: 'ÉQUIPEMENT',
+    title: 'Les meilleurs spots du Marais',
+    slug: 'travailler-paris-3e',
+    tag: 'PARIS',
     img: 'https://images.unsplash.com/photo-1553531384-cc64ac80f931?w=600&h=400&fit=crop'
   },
   {
-    title: 'Pourquoi on bosse mieux en café qu\'à la maison',
-    slug: '#',
-    tag: 'LIFESTYLE',
+    title: 'Où bosser dans le 11e',
+    slug: 'travailler-paris-11e',
+    tag: 'PARIS',
     img: 'https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=600&h=400&fit=crop'
   }
 ]
@@ -122,13 +122,12 @@ const articles = [
 
       <!-- Hero content -->
       <div class="absolute bottom-12 left-5 right-5 z-10">
-        <div class="text-xs uppercase tracking-[0.2em] text-white/60 mb-3">Paris</div>
         <h1 class="font-display text-[44px] text-white leading-[0.95]">
           LES MEILLEURS<br>
           SPOTS POUR<br>
           BOSSER
         </h1>
-        <p class="text-[13px] text-white/50 italic mt-3">Sélection Deskover</p>
+        <p class="text-[13px] text-white/50 mt-3">Autour de toi, quand tu en as besoin</p>
 
         <!-- Scroll indicator -->
         <div class="flex flex-col items-center mt-5">

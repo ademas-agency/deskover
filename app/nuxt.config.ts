@@ -2,8 +2,19 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
     '@nuxt/ui',
-    '@nuxtjs/supabase'
+    '@nuxtjs/supabase',
+    '@vite-pwa/nuxt'
   ],
+
+  pwa: {
+    manifest: false,
+    devOptions: { enabled: false },
+    workbox: {
+      navigateFallback: undefined,
+      globPatterns: ['**/*.{js,css,html,svg,ico,woff2}'],
+      maximumFileSizeToCacheInBytes: 3 * 1024 * 1024,
+    },
+  },
 
   supabase: {
     url: process.env.SUPABASE_URL,
@@ -29,7 +40,9 @@ export default defineNuxtConfig({
         { property: 'og:type', content: 'website' }
       ],
       link: [
-        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }
+        { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'manifest', href: '/manifest.json' },
+        { rel: 'apple-touch-icon', href: '/icon-192.png' }
       ]
     },
     pageTransition: { name: 'page', mode: 'out-in' }
@@ -37,9 +50,6 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/': { prerender: true },
-    '/articles/**': { isr: 3600 },
-    '/ville/**': { isr: 3600 },
-    '/lieu/**': { swr: 600 }
   },
 
   compatibilityDate: '2025-01-15',

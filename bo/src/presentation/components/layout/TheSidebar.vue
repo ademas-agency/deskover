@@ -6,7 +6,7 @@ import {
   MapPin,
   Map,
   FileText,
-  Settings,
+  MessageSquare,
 } from 'lucide-vue-next'
 
 const route = useRoute()
@@ -16,6 +16,7 @@ const navigation = [
   { name: 'Lieux', path: '/places', icon: MapPin },
   { name: 'Carte', path: '/map', icon: Map },
   { name: 'Articles', path: '/articles', icon: FileText },
+  { name: 'Messages', path: '/messages', icon: MessageSquare },
 ]
 
 function isActive(path: string): boolean {
