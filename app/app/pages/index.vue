@@ -170,8 +170,8 @@ const articles = [
           <PlaceCard :place="{
             name: place.name,
             type: place.category === 'coffee_shop' ? 'Coffee Shop' : place.category === 'cafe' ? 'Café' : place.category === 'coworking' ? 'Coworking' : place.category === 'tiers_lieu' ? 'Tiers-lieu' : place.category,
-            neighborhood: place.arrondissement ? `${place.city} ${place.arrondissement}e` : place.city,
-            city: place.city,
+            neighborhood: place.arrondissement ? `${place.city} ${place.arrondissement}e` : '',
+            city: place.address || place.city,
             distance: place.distance || '',
             isOpen: place.isOpen ?? true,
             nextOpen: place.nextOpen,
