@@ -113,9 +113,6 @@ async function submit() {
               : 'bg-white text-[var(--color-espresso)] border-[var(--color-parchment)] hover:border-[var(--color-terracotta-500)]'"
             @click="select(i + 1)"
           >
-            <span class="text-2xl block mb-1">
-              {{ i === 0 ? '😕' : i === 1 ? '😐' : '😊' }}
-            </span>
             <span class="text-xs font-semibold">{{ option }}</span>
           </button>
         </div>
@@ -132,7 +129,7 @@ async function submit() {
       <!-- Step: Done -->
       <template v-if="step === 5 && !submitting">
         <div class="text-center py-8">
-          <span class="text-4xl">🎉</span>
+          <UIcon name="lucide:check-circle" class="w-12 h-12 text-[var(--color-monstera)] mx-auto" />
           <p class="font-display text-lg text-[var(--color-espresso)] mt-3">Merci pour ton avis</p>
           <p class="text-sm text-[var(--color-steam)] mt-1">Ça aide toute la communauté.</p>
         </div>

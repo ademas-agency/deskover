@@ -11,7 +11,7 @@ const store = usePlacesStore()
 
 const searchQuery = ref('')
 const categoryFilter = ref<PlaceCategory | ''>('')
-const statusFilter = ref<'all' | 'with_photo' | 'no_description' | 'to_enrich'>('all')
+const statusFilter = ref<'all' | 'pending' | 'with_photo' | 'no_description' | 'to_enrich'>('all')
 const currentPage = ref(1)
 const pageSize = 20
 
@@ -38,7 +38,9 @@ const filteredPlaces = computed(() => {
   }
 
   // Status filter
-  if (statusFilter.value === 'with_photo') {
+  if (statusFilter.value === 'pending') {
+    result = result.filter(p => p.status === 'pending')
+  } else if (statusFilter.value === 'with_photo') {
     result = result.filter(p => p.photo_url)
   } else if (statusFilter.value === 'no_description') {
     result = result.filter(p => !p.description || p.description.trim() === '')
@@ -98,6 +100,7 @@ watch([searchQuery, categoryFilter, statusFilter], () => {
             class="w-full rounded-lg border border-steam/30 bg-white px-3 py-2 text-sm text-espresso outline-none focus:border-primary"
           >
             <option value="all">Tous</option>
+            <option value="pending">🔶 En attente de validation</option>
             <option value="with_photo">Avec photo</option>
             <option value="no_description">Sans description</option>
             <option value="to_enrich">A enrichir</option>

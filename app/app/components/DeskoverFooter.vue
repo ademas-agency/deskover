@@ -22,7 +22,7 @@
       <div class="text-[10px] font-bold uppercase tracking-[0.12em] text-white/40 mb-3.5">Deskover</div>
       <div class="flex flex-col gap-2.5">
         <NuxtLink to="/a-propos" class="text-[13px] text-white/70 hover:text-[var(--color-terracotta-500)] transition-colors">Qui sommes-nous</NuxtLink>
-        <NuxtLink to="/contribuer" class="text-[13px] text-white/70 hover:text-[var(--color-terracotta-500)] transition-colors">Proposer un lieu</NuxtLink>
+        <NuxtLink to="/ajouter" class="text-[13px] text-white/70 hover:text-[var(--color-terracotta-500)] transition-colors">Proposer un lieu</NuxtLink>
         <NuxtLink to="/contact" class="text-[13px] text-white/70 hover:text-[var(--color-terracotta-500)] transition-colors">Contact</NuxtLink>
       </div>
     </div>

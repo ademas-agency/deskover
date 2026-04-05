@@ -90,7 +90,7 @@ const articles = [
     title: 'Les indispensables dans ton sac pour bosser en café',
     slug: '#',
     tag: 'ÉQUIPEMENT',
-    img: 'https://images.unsplash.com/photo-1497515114889-1c06568aeccc?w=600&h=400&fit=crop'
+    img: 'https://images.unsplash.com/photo-1553531384-cc64ac80f931?w=600&h=400&fit=crop'
   },
   {
     title: 'Pourquoi on bosse mieux en café qu\'à la maison',

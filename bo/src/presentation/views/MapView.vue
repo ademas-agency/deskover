@@ -21,12 +21,20 @@ const categories = [
   { value: 'tiers_lieu', label: 'Tiers-lieux' }
 ]
 
+const STORAGE_BASE = 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos'
+
 const categoryColors: Record<string, string> = {
   cafe: '#AA4C4D',
   coffee_shop: '#8B3A3B',
   coworking: '#5B7A5E',
   tiers_lieu: '#D4A84B',
   library: '#6B5B4E'
+}
+
+function getPhotoUrl(place: any): string {
+  if (place.photo_storage_path) return `${STORAGE_BASE}/${place.photo_storage_path}`
+  if (place.photo_url) return place.photo_url
+  return ''
 }
 
 const filteredPlaces = computed(() => {
@@ -43,29 +51,33 @@ function updateMarkers() {
 
   filteredPlaces.value.forEach(place => {
     const color = categoryColors[place.category] || '#AA4C4D'
+    const photo = getPhotoUrl(place)
+    const size = 44
+
     const icon = L.divIcon({
       className: '',
-      html: `<div style="width:10px;height:10px;background:${color};border:2px solid white;border-radius:50%;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div>`,
-      iconSize: [10, 10],
-      iconAnchor: [5, 5]
+      html: photo
+        ? `<div style="width:${size}px;height:${size}px;border-radius:50%;border:3px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,0.25);overflow:hidden;background:${color};cursor:pointer;">
+            <img src="${photo}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.parentElement.innerHTML='<div style=\\'width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:white;font-size:16px;font-weight:700;\\'>${place.name.charAt(0)}</div>'" />
+          </div>`
+        : `<div style="width:${size}px;height:${size}px;border-radius:50%;border:3px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,0.25);background:${color};display:flex;align-items:center;justify-content:center;color:white;font-size:16px;font-weight:700;cursor:pointer;">
+            ${place.name.charAt(0)}
+          </div>`,
+      iconSize: [size, size],
+      iconAnchor: [size / 2, size / 2]
     })
 
     const marker = L.marker([place.latitude, place.longitude], { icon })
     marker.bindPopup(`
       <div style="font-family:'Plus Jakarta Sans',sans-serif;min-width:180px;">
-        ${place.photo_url ? `<img src="${place.photo_url}" style="width:100%;height:80px;object-fit:cover;border-radius:6px;margin-bottom:6px;">` : ''}
+        ${photo ? `<img src="${photo}" style="width:100%;height:80px;object-fit:cover;border-radius:6px;margin-bottom:6px;">` : ''}
         <div style="font-weight:700;font-size:13px;color:#2C2825;">${place.name}</div>
         <div style="font-size:11px;color:#6B5B4E;margin-top:2px;">${place.city}${place.arrondissement ? ' ' + place.arrondissement + 'e' : ''}</div>
         <div style="font-size:10px;color:#A89888;margin-top:2px;">${place.category}</div>
       </div>
     `, { maxWidth: 250 })
 
-    marker.on('click', () => {
-      if (place.id) {
-        // Double click to navigate
-        marker.on('dblclick', () => router.push(`/places/${place.id}`))
-      }
-    })
+    marker.on('dblclick', () => router.push(`/places/${place.id}`))
 
     markerLayer!.addLayer(marker)
   })

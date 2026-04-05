@@ -25,6 +25,8 @@ export const usePlacesStore = defineStore('places', () => {
     PlaceService.getPlacesToEnrich(places.value)
   )
 
+  const pendingCount = computed(() => places.value.filter(p => p.status === 'pending').length)
+
   const cities = computed(() => {
     const citySet = new Set(places.value.map(p => p.city))
     return Array.from(citySet).sort()
@@ -54,6 +56,22 @@ export const usePlacesStore = defineStore('places', () => {
     }
   }
 
+  async function approvePlace(id: string) {
+    const place = places.value.find(p => p.id === id)
+    if (place) {
+      place.status = 'approved'
+      await PlaceRepository.updateStatus(id, 'approved')
+    }
+  }
+
+  async function rejectPlace(id: string) {
+    const place = places.value.find(p => p.id === id)
+    if (place) {
+      place.status = 'rejected'
+      await PlaceRepository.updateStatus(id, 'rejected')
+    }
+  }
+
   async function deletePlace(id: string) {
     await PlaceRepository.delete(id)
     places.value = places.value.filter(p => p.id !== id)
@@ -80,7 +98,10 @@ export const usePlacesStore = defineStore('places', () => {
     fetchPlaces,
     getPlaceById,
     savePlace,
+    approvePlace,
+    rejectPlace,
     deletePlace,
+    pendingCount,
     searchPlaces,
     filterByCategory,
   }

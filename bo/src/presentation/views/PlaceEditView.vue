@@ -6,7 +6,7 @@ import { useNotificationsStore } from '../../stores/notifications'
 import type { Place } from '../../core/domain/entities/Place'
 import PlaceForm from '../components/place/PlaceForm.vue'
 import BaseButton from '../components/ui/BaseButton.vue'
-import { ArrowLeft, Trash2 } from 'lucide-vue-next'
+import { ArrowLeft, Trash2, Check, X } from 'lucide-vue-next'
 
 const route = useRoute()
 const router = useRouter()
@@ -38,6 +38,26 @@ async function handleSave(updatedPlace: Place) {
     notifications.error(e.message || 'Erreur lors de la sauvegarde')
   } finally {
     saving.value = false
+  }
+}
+
+async function handleApprove() {
+  try {
+    await store.approvePlace(placeId.value)
+    if (place.value) place.value.status = 'approved'
+    notifications.success('Lieu approuvé et visible sur le site')
+  } catch (e: any) {
+    notifications.error(e.message || 'Erreur')
+  }
+}
+
+async function handleReject() {
+  try {
+    await store.rejectPlace(placeId.value)
+    notifications.success('Lieu rejeté')
+    router.push({ name: 'places' })
+  } catch (e: any) {
+    notifications.error(e.message || 'Erreur')
   }
 }
 
@@ -96,6 +116,30 @@ async function handleDelete() {
         <Trash2 :size="16" />
         Supprimer
       </BaseButton>
+    </div>
+
+    <!-- Pending banner -->
+    <div v-if="place?.status === 'pending'" class="bg-amber-50 border border-amber-200 rounded-xl p-4 flex items-center justify-between">
+      <div>
+        <p class="text-sm font-semibold text-amber-800">Suggestion utilisateur - en attente de validation</p>
+        <p class="text-xs text-amber-600 mt-1">Ce lieu a été proposé par un utilisateur. Vérifie les infos avant de valider.</p>
+      </div>
+      <div class="flex gap-2 ml-4">
+        <button
+          class="px-4 py-2 rounded-lg text-sm font-medium bg-green-500 text-white hover:bg-green-600 transition-colors flex items-center gap-1.5"
+          @click="handleApprove"
+        >
+          <Check :size="16" />
+          Approuver
+        </button>
+        <button
+          class="px-4 py-2 rounded-lg text-sm font-medium bg-red-500 text-white hover:bg-red-600 transition-colors flex items-center gap-1.5"
+          @click="handleReject"
+        >
+          <X :size="16" />
+          Rejeter
+        </button>
+      </div>
     </div>
 
     <!-- Loading -->

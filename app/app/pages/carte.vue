@@ -10,7 +10,19 @@ const mapContainer = ref<HTMLElement | null>(null)
 const places = ref<Place[]>([])
 const selectedPlace = ref<Place | null>(null)
 const showCard = ref(false)
+const photoSlider = ref<HTMLElement | null>(null)
+const currentPhotoIdx = ref(0)
 let map: maplibregl.Map | null = null
+
+const STORAGE_BASE = 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos'
+const FALLBACK_PHOTO = 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=300&fit=crop'
+
+const selectedPlacePhotos = computed(() => {
+  if (!selectedPlace.value) return [FALLBACK_PHOTO]
+  const photos: string[] = []
+  if (selectedPlace.value.photoUrl) photos.push(selectedPlace.value.photoUrl)
+  return photos.length > 0 ? photos : [FALLBACK_PHOTO]
+})
 
 const mapFilters = ref([
   { label: 'WiFi', value: 'wifi', icon: 'lucide:wifi', active: false },
@@ -27,30 +39,25 @@ function toggleMapFilter(value: string) {
   applyMapFilters()
 }
 
-function applyMapFilters() {
-  if (!map || !map.getSource('places')) return
-
+function getFilteredPlaces(): Place[] {
   const active = mapFilters.value.filter(f => f.active).map(f => f.value)
-  if (active.length === 0) {
-    // No filter → show all
-    map.setFilter('places-circles', null)
-    return
-  }
+  if (active.length === 0) return places.value
 
-  // Build filter expression
-  const conditions: any[] = ['all']
-  for (const a of active) {
-    if (['cafe', 'coffee_shop', 'coworking', 'tiers_lieu'].includes(a)) {
-      conditions.push(['==', ['get', 'category'], a])
+  return places.value.filter(p => {
+    for (const a of active) {
+      if (['cafe', 'coffee_shop', 'coworking', 'tiers_lieu'].includes(a) && p.category !== a) return false
+      if (a === 'wifi' && !p.signals.includes('wifi')) return false
+      if (a === 'prises' && !p.signals.includes('prises')) return false
+      if (a === 'food' && !p.signals.includes('food')) return false
+      if (a === 'calme' && !p.signals.includes('calme')) return false
     }
-  }
-  // For vitals, we stored signals in properties
-  if (active.includes('wifi')) conditions.push(['==', ['get', 'hasWifi'], true])
-  if (active.includes('prises')) conditions.push(['==', ['get', 'hasPrises'], true])
-  if (active.includes('food')) conditions.push(['==', ['get', 'hasFood'], true])
-  if (active.includes('calme')) conditions.push(['==', ['get', 'hasCalme'], true])
+    return true
+  })
+}
 
-  map.setFilter('places-circles', conditions.length > 1 ? conditions : null)
+function applyMapFilters() {
+  if (!map) return
+  createMarkers(getFilteredPlaces())
 }
 
 const categoryColors: Record<string, string> = {
@@ -64,9 +71,19 @@ const categoryColors: Record<string, string> = {
 function selectPlace(place: Place) {
   selectedPlace.value = place
   showCard.value = true
+  currentPhotoIdx.value = 0
   if (map) {
     map.flyTo({ center: [place.longitude, place.latitude], zoom: 15, duration: 600 })
   }
+  nextTick(() => {
+    if (photoSlider.value) {
+      photoSlider.value.scrollLeft = 0
+      photoSlider.value.onscroll = () => {
+        const w = photoSlider.value!.clientWidth
+        if (w > 0) currentPhotoIdx.value = Math.round(photoSlider.value!.scrollLeft / w)
+      }
+    }
+  })
 }
 
 function closeCard() {
@@ -130,10 +147,53 @@ onMounted(async () => {
     trackUserLocation: true
   }), 'bottom-right')
 
-  let selectedMarker: maplibregl.Marker | null = null
+  const allMarkers: maplibregl.Marker[] = []
+  let selectedMarkerId: string | null = null
 
+  function createMarkers(filteredPlaces: Place[]) {
+    // Remove old markers
+    allMarkers.forEach(m => m.remove())
+    allMarkers.length = 0
+
+    filteredPlaces
+      .filter(p => p.latitude && p.longitude)
+      .forEach(p => {
+        const color = categoryColors[p.category] || '#AA4C4D'
+        const isSelected = p.id === selectedMarkerId
+        const w = isSelected ? 56 : 44
+        const h = isSelected ? 72 : 56
+        const radius = 8
+
+        const el = document.createElement('div')
+        el.style.cursor = 'pointer'
+
+        if (p.photoUrl) {
+          el.innerHTML = `<div style="width:${w}px;height:${h}px;border-radius:${radius}px;overflow:hidden;border:${isSelected ? 3 : 2}px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,${isSelected ? 0.4 : 0.2});background:${color};transition:all 0.15s;">
+            <img src="${p.photoUrl}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;">${p.name.charAt(0)}</div>
+          </div>`
+        } else {
+          el.innerHTML = `<div style="width:${w}px;height:${h}px;border-radius:${radius}px;border:${isSelected ? 3 : 2}px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,${isSelected ? 0.4 : 0.2});background:${color};display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;transition:all 0.15s;">
+            ${p.name.charAt(0)}
+          </div>`
+        }
+
+        el.addEventListener('click', () => {
+          selectedMarkerId = p.id
+          selectPlace(p)
+          createMarkers(filteredPlaces)
+        })
+
+        const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
+          .setLngLat([p.longitude, p.latitude])
+          .addTo(map!)
+
+        allMarkers.push(marker)
+      })
+  }
+
+  // Also store source for filter logic
   map.on('load', () => {
-    // GeoJSON source — all places
     const geojson = {
       type: 'FeatureCollection' as const,
       features: places.value
@@ -152,53 +212,10 @@ onMounted(async () => {
           }
         }))
     }
-
     map!.addSource('places', { type: 'geojson', data: geojson })
 
-    // WebGL circles — fast, no lag
-    map!.addLayer({
-      id: 'places-circles',
-      type: 'circle',
-      source: 'places',
-      paint: {
-        'circle-radius': ['interpolate', ['linear'], ['zoom'], 8, 3, 13, 6, 16, 10],
-        'circle-color': ['get', 'color'],
-        'circle-stroke-width': 2,
-        'circle-stroke-color': '#ffffff',
-        'circle-opacity': 0.9
-      }
-    })
-
-    // Click → select place + show photo marker
-    map!.on('click', 'places-circles', (e: any) => {
-      if (e.features?.[0]) {
-        const id = e.features[0].properties.id
-        const place = places.value.find(p => p.id === id)
-        if (place) {
-          selectPlace(place)
-          showPhotoMarker(place)
-        }
-      }
-    })
-
-    map!.on('mouseenter', 'places-circles', () => { map!.getCanvas().style.cursor = 'pointer' })
-    map!.on('mouseleave', 'places-circles', () => { map!.getCanvas().style.cursor = '' })
+    createMarkers(places.value)
   })
-
-  function showPhotoMarker(place: Place) {
-    // Remove previous
-    if (selectedMarker) { selectedMarker.remove(); selectedMarker = null }
-
-    const color = categoryColors[place.category] || '#AA4C4D'
-    const el = document.createElement('div')
-    el.innerHTML = place.photoUrl
-      ? `<div style="width:52px;height:52px;border-radius:14px;overflow:hidden;border:3px solid ${color};box-shadow:0 4px 12px rgba(0,0,0,0.25);background:${color};"><img src="${place.photoUrl}" style="width:100%;height:100%;object-fit:cover;display:block;"></div>`
-      : `<div style="width:36px;height:36px;border-radius:50%;background:${color};border:3px solid white;box-shadow:0 3px 10px rgba(0,0,0,0.25);"></div>`
-
-    selectedMarker = new maplibregl.Marker({ element: el, anchor: 'center' })
-      .setLngLat([place.longitude, place.latitude])
-      .addTo(map!)
-  }
 })
 
 onUnmounted(() => {
@@ -255,15 +272,37 @@ function categoryLabel(cat: string) {
     >
       <div v-if="showCard && selectedPlace" class="absolute bottom-6 left-4 right-4 z-20">
         <div class="bg-white rounded-[20px] shadow-2xl overflow-hidden relative" @click="goToPlace">
-          <!-- Photo banner -->
-          <div class="h-[120px] relative overflow-hidden">
-            <img
-              :src="selectedPlace.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=300&fit=crop'"
-              :alt="selectedPlace.name"
-              class="w-full h-full object-cover"
+          <!-- Photo slider -->
+          <div class="h-[180px] relative overflow-hidden">
+            <div
+              ref="photoSlider"
+              class="flex h-full overflow-x-auto snap-x snap-mandatory no-scrollbar"
+              @click.stop
             >
-            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
-            <div class="absolute bottom-3 left-4 right-4">
+              <div
+                v-for="(photo, idx) in selectedPlacePhotos"
+                :key="idx"
+                class="w-full h-full flex-shrink-0 snap-center"
+                @click="goToPlace"
+              >
+                <img
+                  :src="photo"
+                  :alt="selectedPlace.name"
+                  class="w-full h-full object-cover"
+                >
+              </div>
+            </div>
+            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
+            <!-- Dots indicator -->
+            <div v-if="selectedPlacePhotos.length > 1" class="absolute bottom-12 left-0 right-0 flex justify-center gap-1.5 pointer-events-none">
+              <span
+                v-for="(_, idx) in selectedPlacePhotos"
+                :key="idx"
+                class="w-1.5 h-1.5 rounded-full"
+                :class="idx === currentPhotoIdx ? 'bg-white' : 'bg-white/50'"
+              />
+            </div>
+            <div class="absolute bottom-3 left-4 right-4 pointer-events-none">
               <div class="font-display text-lg text-white leading-tight">{{ selectedPlace.name }}</div>
               <div class="text-[11px] text-white/80 mt-0.5">{{ categoryLabel(selectedPlace.category) }} · {{ selectedPlace.city }}</div>
             </div>

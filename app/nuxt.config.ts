@@ -2,8 +2,7 @@ export default defineNuxtConfig({
   modules: [
     '@nuxt/eslint',
     '@nuxt/ui',
-    '@nuxtjs/supabase',
-    '@nuxt/content'
+    '@nuxtjs/supabase'
   ],
 
   supabase: {
@@ -37,7 +36,10 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    '/': { prerender: true }
+    '/': { prerender: true },
+    '/articles/**': { isr: 3600 },
+    '/ville/**': { isr: 3600 },
+    '/lieu/**': { swr: 600 }
   },
 
   compatibilityDate: '2025-01-15',

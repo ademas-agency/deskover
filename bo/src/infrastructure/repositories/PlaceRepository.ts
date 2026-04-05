@@ -101,6 +101,15 @@ export class PlaceRepository {
     if (!data || data.length === 0) throw new Error('Aucune ligne mise à jour — ID introuvable: ' + place.id)
   }
 
+  static async updateStatus(id: string, status: string): Promise<void> {
+    const { error } = await supabase
+      .from('places')
+      .update({ status })
+      .eq('id', id)
+
+    if (error) throw new Error(error.message)
+  }
+
   static async delete(id: string): Promise<void> {
     // Delete blog_mentions first (foreign key)
     await supabase.from('blog_mentions').delete().eq('place_id', id)
