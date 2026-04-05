@@ -253,7 +253,7 @@ function categoryLabel(cat: string) {
     <!-- Back button (mobile: chevron) -->
     <NuxtLink
       to="/"
-      class="absolute top-[52px] left-4 z-10 w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center lg:hidden"
+      class="absolute top-safe left-4 z-10 w-11 h-11 rounded-full bg-white shadow-lg flex items-center justify-center lg:hidden"
     >
       <UIcon name="lucide:chevron-left" class="w-5 h-5 text-[var(--color-espresso)]" />
     </NuxtLink>
@@ -267,7 +267,7 @@ function categoryLabel(cat: string) {
     </NuxtLink>
 
     <!-- Filters bar -->
-    <div class="absolute top-[52px] left-16 right-0 lg:top-4 lg:left-4 lg:right-16 z-10 flex gap-2 overflow-x-auto no-scrollbar pr-4 lg:pr-0">
+    <div class="absolute top-safe left-16 right-0 lg:top-4 lg:left-4 lg:right-16 z-10 flex gap-2 overflow-x-auto no-scrollbar pr-4 lg:pr-0">
       <button
         v-for="f in mapFilters"
         :key="f.value"

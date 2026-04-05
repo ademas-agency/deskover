@@ -198,7 +198,7 @@ useHead({
     <template v-else>
 
       <!-- Header sticky mobile -->
-      <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 flex justify-between items-center lg:hidden">
+      <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 pt-safe flex justify-between items-center lg:hidden">
         <NuxtLink to="/" class="flex items-center">
           <UIcon name="lucide:chevron-left" class="w-6 h-6 text-[var(--color-espresso)]" />
         </NuxtLink>

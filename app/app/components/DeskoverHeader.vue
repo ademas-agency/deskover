@@ -21,7 +21,7 @@ function isActive(path: string) {
 <template>
   <!-- Mobile header -->
   <header
-    class="lg:hidden flex items-center justify-between px-5 pt-[52px] pb-4"
+    class="lg:hidden flex items-center justify-between px-5 pt-safe pb-4"
     :class="{
       'bg-[var(--color-cream)]': variant === 'light',
       'bg-[var(--color-espresso)]': variant === 'dark',

@@ -45,7 +45,7 @@ const pageSubtitle = computed(() => {
     case 'calme': return 'Zéro bruit de fond, concentration maximale.'
     case 'terrasse': return 'Aux beaux jours, on veut le combo boulot-soleil-café.'
     case 'food': return 'Parce qu\'on bosse mieux le ventre plein.'
-    case 'ouvert': return 'Pas de mauvaise surprise, ces spots sont ouverts en ce moment.'
+    case 'ouvert': return 'Tu peux y aller, ces spots sont ouverts en ce moment.'
     case 'coworking': return 'Des vrais espaces pensés pour bosser, avec tout ce qu\'il faut.'
     case 'cafe': return 'L\'art de poser son laptop entre deux expressos.'
     default: return ''
@@ -166,7 +166,7 @@ const articles = [
 
       <!-- Top bar overlay (mobile + desktop) -->
       <div class="absolute top-0 left-0 right-0 z-10">
-        <div class="flex items-center justify-between px-5 pt-[52px] lg:pt-6 lg:px-10 lg:container-deskover">
+        <div class="flex items-center justify-between px-5 pt-safe lg:pt-6 lg:px-10 lg:container-deskover">
           <span class="font-display text-base text-white tracking-[0.15em]">DESKOVER</span>
           <NuxtLink to="/search">
             <UIcon name="lucide:search" class="w-[22px] h-[22px] text-white" />

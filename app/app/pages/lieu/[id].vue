@@ -333,7 +333,7 @@ function categoryLabel(cat: string) {
       <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent rounded-b-[24px] lg:rounded-b-none" />
 
       <!-- Header overlay (mobile) -->
-      <div class="absolute top-[52px] left-4 right-4 flex justify-between items-center lg:hidden">
+      <div class="absolute top-safe left-4 right-4 flex justify-between items-center lg:hidden">
         <button
           @click="goBack"
           class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center"
@@ -443,29 +443,22 @@ function categoryLabel(cat: string) {
 
         <!-- Horaires (mobile only) -->
         <div v-if="formattedHours.length" class="px-4 mt-5 lg:hidden">
-          <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-3">HORAIRES</div>
+          <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mt-8 mb-3">HORAIRES</div>
           <div class="bg-white rounded-[14px] p-4 shadow-[0_2px_8px_rgba(44,40,37,0.06)]">
-            <template v-for="(h, i) in formattedHours" :key="h.day">
-              <div
-                v-if="showAllHours || h.isToday"
-                class="flex justify-between py-1.5 text-sm"
-                :class="h.isToday ? 'font-bold text-[var(--color-espresso)]' : 'text-[var(--color-roast)]'"
-              >
-                <span>{{ h.day }}</span>
-                <span>{{ h.hours }}</span>
-              </div>
-            </template>
-            <button
-              class="text-[12px] text-[var(--color-terracotta-500)] font-semibold mt-2"
-              @click="showAllHours = !showAllHours"
+            <div
+              v-for="h in formattedHours"
+              :key="h.day"
+              class="flex justify-between py-1.5 text-sm"
+              :class="h.isToday ? 'font-bold text-[var(--color-espresso)]' : 'text-[var(--color-roast)]'"
             >
-              {{ showAllHours ? 'Masquer' : 'Voir tous les horaires' }}
-            </button>
+              <span>{{ h.day }}</span>
+              <span>{{ h.hours }}</span>
+            </div>
           </div>
         </div>
 
         <!-- Séparateur -->
-        <div class="text-center py-5 text-[var(--color-steam)] text-sm tracking-[4px]">· · ·</div>
+        <div class="text-center py-5 text-[var(--color-steam)] text-xl tracking-[4px]">· · ·</div>
 
         <!-- Vu dans -->
         <div v-if="place.blogMentions.length" class="px-4 lg:px-0">
