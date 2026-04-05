@@ -45,8 +45,11 @@ useHead({
 
 <template>
   <div class="min-h-screen bg-[var(--color-cream)]">
-    <!-- Header -->
-    <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 flex justify-between items-center">
+    <!-- Header desktop -->
+    <DeskoverHeader class="hidden lg:block" />
+
+    <!-- Header mobile -->
+    <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 flex justify-between items-center lg:hidden">
       <NuxtLink to="/" class="flex items-center">
         <UIcon name="lucide:chevron-left" class="w-6 h-6 text-[var(--color-espresso)]" />
       </NuxtLink>
@@ -55,7 +58,7 @@ useHead({
     </div>
 
     <!-- Hero -->
-    <div class="px-5 pt-6 pb-4">
+    <div class="px-5 pt-6 pb-4 lg:max-w-[1080px] lg:mx-auto">
       <div class="text-[11px] font-bold uppercase tracking-[0.08em] text-[var(--color-terracotta-500)] mb-2">
         {{ places.length }} spots
       </div>
@@ -68,7 +71,7 @@ useHead({
     </div>
 
     <!-- Lien vers l'article -->
-    <div class="px-5 mb-4">
+    <div class="px-5 mb-4 lg:max-w-[1080px] lg:mx-auto">
       <NuxtLink
         :to="`/articles/${articleSlug}`"
         class="flex items-center justify-between bg-[var(--color-linen)] px-4 py-3.5 rounded-[14px]"
@@ -82,12 +85,12 @@ useHead({
     </div>
 
     <!-- Liste des lieux -->
-    <div class="px-5 pb-24">
+    <div class="px-5 pb-24 lg:max-w-[1080px] lg:mx-auto">
       <div v-if="loading" class="text-center py-12">
         <div class="w-8 h-8 border-3 border-[var(--color-terracotta-500)] border-t-transparent rounded-full animate-spin mx-auto" />
       </div>
 
-      <div v-else class="flex flex-col gap-4">
+      <div v-else class="flex flex-col gap-4 md:grid md:grid-cols-2 lg:grid-cols-3">
         <NuxtLink
           v-for="(place, i) in places"
           :key="place.id"

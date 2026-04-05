@@ -83,6 +83,29 @@ body::before {
   background-size: 256px 256px;
 }
 
+/* Desktop container */
+.container-deskover {
+  width: 100%;
+  max-width: 1440px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+}
+@media (min-width: 768px) {
+  .container-deskover { padding-left: 2rem; padding-right: 2rem; }
+}
+@media (min-width: 1024px) {
+  .container-deskover { padding-left: 3rem; padding-right: 3rem; }
+}
+
+/* Prose column for articles/editorial */
+.prose-column {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 /* Easing tokens */
 :root {
   --ease-coffee: cubic-bezier(0.25, 0.46, 0.45, 0.94);

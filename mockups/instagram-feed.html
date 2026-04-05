@@ -232,12 +232,15 @@
   }
 
   .post-qg .overlay {
-    padding: 10px 8px 8px;
-    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
+    padding: 0 10px 12px;
+    background: linear-gradient(to top, rgba(0,0,0,0.65) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    flex: 1;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
   }
 
   .post-qg .overlay .hook {
@@ -258,7 +261,7 @@
   .post-qg .overlay .city {
     font-family: 'Plus Jakarta Sans', sans-serif;
     font-size: 9px;
-    color: var(--terracotta);
+    color: rgba(255,255,255,0.8);
     margin-top: 2px;
   }
 
@@ -496,6 +499,62 @@
     height: 2px;
     background: white;
     transform: translateY(-50%);
+  }
+
+  /* ---- LE SPLIT (reel lifestyle) ---- */
+  .post-split {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  .post-split .split-top {
+    flex: 1;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .post-split .split-bottom {
+    flex: 1;
+    background-size: cover;
+    background-position: center;
+  }
+
+  .post-split .split-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-family: 'Anton', sans-serif;
+    font-size: 14px;
+    color: var(--cream);
+    text-transform: uppercase;
+    text-align: center;
+    line-height: 1.2;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+    z-index: 2;
+    white-space: nowrap;
+  }
+
+  .post-split .split-divider {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    right: 10%;
+    height: 1px;
+    background: rgba(250,247,242,0.4);
+    transform: translateY(-50%);
+    z-index: 1;
+  }
+
+  .post-split .split-signature {
+    position: absolute;
+    bottom: 8px;
+    right: 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 8px;
+    color: rgba(250,247,242,0.5);
+    z-index: 2;
   }
 
   /* ======================================== */
@@ -904,22 +963,34 @@
 
     <!-- ===== RANG&Eacute;E 1 (haut - derniers publi&eacute;s) ===== -->
 
-    <!-- Pos 20. LE VERDICT D'AD&Eacute; - Prises partout (fond CREAM) -->
-    <div class="ig-post post-verdict" style="background:var(--cream);" onclick="openPost(20)">
+    <!-- Post 21. Le spot : Pavillon des Canaux (photo + overlay) -->
+    <div class="ig-post post-qg" onclick="openPost(21)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris/le-pavillon-des-canaux.jpg');background-size:cover;background-position:center;">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(0,0,0,0.4)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(0,0,0,0.25)"/></svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
       </div>
-      <span class="signature" style="color:var(--terracotta);">Le verdict d'Ad&eacute;</span>
-      <span class="subject" style="color:var(--espresso);">Prises<br>partout</span>
-      <span class="subtitle" style="color:var(--steam);">Z&eacute;ro stress batterie, garanti</span>
+      <div class="overlay">
+        <span class="place-name">Le Pavillon des Canaux</span>
+        <span class="city" style="color:white;">Paris 19e</span>
+      </div>
     </div>
 
-    <!-- Pos 19. MATCH - Paris 11e vs Paris 3e -->
+    <!-- Post 20. Le spot : La Permanence (photo fallback + overlay) -->
+    <div class="ig-post post-qg" onclick="openPost(20)" style="background-image:url('https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=600&h=750&fit=crop');background-size:cover;background-position:center;">
+      <div class="badge">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
+      </div>
+      <div class="overlay">
+        <span class="place-name">La Permanence</span>
+        <span class="city">Paris 5e</span>
+      </div>
+    </div>
+
+    <!-- Post 19. Match : Paris 11e vs Paris 3e -->
     <div class="ig-post post-match" onclick="openPost(19)">
       <div class="badge">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.9)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.75)"/></svg>
       </div>
-      <div class="match-top" style="background:var(--monstera);">
+      <div class="match-top" style="background:var(--terracotta);">
         <span class="match-text" style="color:white;">Paris 11e</span>
       </div>
       <div class="match-divider"></div>
@@ -929,87 +1000,51 @@
       <div class="match-vs">vs</div>
     </div>
 
-    <!-- Pos 18. SESSION DU MATIN - Hubsy, Paris 3e -->
-    <div class="ig-post post-session" onclick="openPost(18)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris/hubsy-cafe-coworking.jpg');">
-      <span class="time-watermark">10H</span>
-      <div class="session-overlay">
-        <span class="place-name">Hubsy</span>
-        <span class="city">Paris 3e</span>
-        <span class="author">&mdash; T. &amp; A.</span>
+    <!-- Post 18. Le spot : Belle Lurette, Lyon (photo fallback + overlay) -->
+    <div class="ig-post post-qg" onclick="openPost(18)" style="background-image:url('https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=600&h=750&fit=crop');background-size:cover;background-position:center;">
+      <div class="badge">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
+      </div>
+      <div class="overlay">
+        <span class="place-name">Belle Lurette</span>
+        <span class="city">Lyon</span>
       </div>
     </div>
 
     <!-- ===== RANG&Eacute;E 2 ===== -->
 
-    <!-- Pos 17. QG DU JOUR - Eur&ecirc;kaf&eacute;, Toulouse -->
-    <div class="ig-post post-qg" onclick="openPost(17)" style="background-image:url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=750&fit=crop');">
-      <div class="overlay">
-        <span class="hook">Trois ambiances, un seul lieu</span>
-        <span class="place-name">Eur&ecirc;kaf&eacute;</span>
-        <span class="city">Toulouse</span>
-      </div>
-    </div>
-
-    <!-- Pos 16. TON QG - Marseille (fond EDISON) -->
-    <div class="ig-post post-tonqg" style="background:var(--edison);" onclick="openPost(16)">
+    <!-- Post 17. Ton QG : Marseille (fond monstera) -->
+    <div class="ig-post post-tonqg" style="background:var(--monstera);" onclick="openPost(17)">
       <span class="tonqg-label">Ton QG</span>
-      <span class="tonqg-city" style="color:var(--espresso);">Marseille</span>
-      <span class="tonqg-cta" style="color:rgba(0,0,0,0.4);">Ton spot avec vue mer et WiFi, il est o&ugrave; ?</span>
+      <span class="tonqg-city">&agrave; Marseille ?</span>
+      
     </div>
 
-    <!-- Pos 15. LES CARNETS - Pavillon des Canaux, Paris 19e -->
-    <div class="ig-post post-carnets" onclick="openPost(15)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris/le-pavillon-des-canaux.jpg');">
+    <!-- Post 16. Verdict d'Ad&eacute; : Prises partout (fond espresso) -->
+    <div class="ig-post post-verdict" style="background:var(--espresso);" onclick="openPost(16)">
       <div class="badge">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.9)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.75)"/></svg>
       </div>
-      <div class="carnets-overlay">
-        <span class="carnets-text">Mardi apr&egrave;m, Paris 19e.</span>
-        <span class="carnets-author">&mdash; T.</span>
+      <span class="signature" style="color:var(--terracotta);">Le verdict d'Ad&eacute;</span>
+      <span class="subject" style="color:white;">Prises<br>partout</span>
+    </div>
+
+    <!-- Post 15. Le split : Thomas &agrave; Aix (reel split haut/bas) -->
+    <div class="ig-post post-split" onclick="openPost(15)">
+      <div class="badge">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
       </div>
+      <div class="split-top" style="background-image:url('https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=400&h=300&fit=crop');"></div>
+      <div class="split-bottom" style="background-image:url('https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=400&h=300&fit=crop');"></div>
+      <div class="split-divider"></div>
+      <div class="split-text">14h / Aix-en-Provence</div>
+      <div class="split-signature">&mdash; T.</div>
     </div>
 
     <!-- ===== RANG&Eacute;E 3 ===== -->
 
-    <!-- Pos 14. LE GUIDE - Nos 5 spots &agrave; Lyon (fond ESPRESSO) -->
-    <div class="ig-post post-guide" onclick="openPost(14)" style="background:var(--espresso);">
-      <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.9)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.75)"/></svg>
-      </div>
-      <span class="guide-top">Nos 5 spots</span>
-      <span class="guide-city">&agrave; Lyon</span>
-    </div>
-
-    <!-- Pos 13. QG DU JOUR - Le Nuage Caf&eacute;, Paris 5e -->
-    <div class="ig-post post-qg" onclick="openPost(13)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-5e/le-nuage-cafe.jpg');">
-      <div class="overlay">
-        <span class="hook">Le silence du 5e</span>
-        <span class="place-name">Le Nuage Caf&eacute;</span>
-        <span class="city">Paris 5e</span>
-      </div>
-    </div>
-
-    <!-- Pos 12. LE VERDICT D'AD&Eacute; - WiFi de comp&egrave;te (fond CREAM pour varier) -->
-    <div class="ig-post post-verdict" style="background:var(--cream);" onclick="openPost(12)">
-      <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(0,0,0,0.4)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(0,0,0,0.25)"/></svg>
-      </div>
-      <span class="signature" style="color:var(--terracotta);">Le verdict d'Ad&eacute;</span>
-      <span class="subject" style="color:var(--espresso);">WiFi de<br>comp&egrave;te</span>
-      <span class="subtitle" style="color:var(--steam);">Les spots o&ugrave; le d&eacute;bit ne te l&acirc;che jamais</span>
-    </div>
-
-    <!-- ===== RANG&Eacute;E 4 ===== -->
-
-    <!-- Pos 11. PR&Eacute;SENTATION - Ad&eacute; (L'efficace) -->
-    <div class="ig-post post-qg" onclick="openPost(11)" style="background-image:url('../app/public/img/thomas-cafe-2.jpeg');background-size:cover;background-position:center;">
-      <div style="position:absolute;bottom:0;left:0;right:0;padding:10px;background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,transparent 100%);">
-        <div style="font-family:Anton;font-size:15px;color:white;text-transform:uppercase;">Ad&eacute;</div>
-        <div style="font-family:'Plus Jakarta Sans';font-size:9px;color:var(--terracotta);">L'efficace</div>
-      </div>
-    </div>
-
-    <!-- Pos 10. MATCH - Caf&eacute; vs Coworking -->
-    <div class="ig-post post-match" onclick="openPost(10)">
+    <!-- Post 14. Match : Caf&eacute; vs Coworking -->
+    <div class="ig-post post-match" onclick="openPost(14)">
       <div class="badge">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.9)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.75)"/></svg>
       </div>
@@ -1023,35 +1058,40 @@
       <div class="match-vs">vs</div>
     </div>
 
-    <!-- Pos 9. SESSION DU MATIN - Sofffa, Lyon -->
-    <div class="ig-post post-session" onclick="openPost(9)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/lyon/sofffa.jpg');">
-      <span class="time-watermark">8H30</span>
-      <div class="session-overlay">
-        <span class="place-name">Sofffa</span>
-        <span class="city">Lyon</span>
-        <span class="author">&mdash; T.</span>
+    <!-- Post 13. Le spot : Le Nuage Caf&eacute;, Paris 5e (photo + overlay) -->
+    <div class="ig-post post-qg" onclick="openPost(13)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-5e/le-nuage-cafe.jpg');background-size:cover;background-position:center;">
+      <div class="badge">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
+      </div>
+      <div class="overlay">
+        <span class="place-name">Le Nuage Caf&eacute;</span>
+        <span class="city">Paris 5e</span>
       </div>
     </div>
 
-    <!-- ===== RANG&Eacute;E 5 ===== -->
-
-    <!-- Pos 8. PR&Eacute;SENTATION - Thomas (L'esth&egrave;te) -->
-    <div class="ig-post post-qg" onclick="openPost(8)" style="background-image:url('../app/public/img/thomas-cafe-1.jpeg');background-size:cover;background-position:center;">
+    <!-- Post 12. Pr&eacute;sentation : Ad&eacute; (L'efficace) -->
+    <div class="ig-post post-qg" onclick="openPost(12)" style="background-image:url('../app/public/img/thomas-cafe-2.jpeg');background-size:cover;background-position:center;">
       <div style="position:absolute;bottom:0;left:0;right:0;padding:10px;background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,transparent 100%);">
-        <div style="font-family:Anton;font-size:15px;color:white;text-transform:uppercase;">Thomas</div>
-        <div style="font-family:'Plus Jakarta Sans';font-size:9px;color:var(--terracotta);">L'esth&egrave;te</div>
+        <div style="font-family:Anton;font-size:15px;color:white;text-transform:uppercase;">Ad&eacute;</div>
+        <div style="font-family:'Plus Jakarta Sans';font-size:9px;color:rgba(255,255,255,0.8);">L'efficace</div>
       </div>
     </div>
 
-    <!-- Pos 7. TON QG - Bordeaux (fond MONSTERA) -->
-    <div class="ig-post post-tonqg" style="background:var(--monstera);" onclick="openPost(7)">
-      <span class="tonqg-label">Ton QG</span>
-      <span class="tonqg-city">&agrave; Bordeaux ?</span>
-      <span class="tonqg-cta">On pr&eacute;pare le guide. Aide-nous.</span>
+    <!-- ===== RANG&Eacute;E 4 ===== -->
+
+    <!-- Post 11. Le Guide : Paris (carrousel, photo Pavillon des Canaux + overlay) -->
+    <div class="ig-post post-qg" onclick="openPost(11)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris/le-pavillon-des-canaux.jpg');background-size:cover;background-position:center;">
+      <div class="badge">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.9)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.75)"/></svg>
+      </div>
+      <div class="overlay">
+        <span class="place-name">Nos spots</span>
+        <span class="city">&agrave; Paris</span>
+      </div>
     </div>
 
-    <!-- Pos 6. LES CARNETS - La Felicit&agrave;, Paris 13e (REEL VID&Eacute;O) -->
-    <div class="ig-post post-carnets" onclick="openPost(6)" style="position:relative;overflow:hidden;">
+    <!-- Post 10. Le spot : La Felicit&agrave;, Paris 13e (VID&Eacute;O reel) -->
+    <div class="ig-post post-carnets" onclick="openPost(10)" style="position:relative;overflow:hidden;">
       <video autoplay muted loop playsinline style="width:100%;height:100%;object-fit:cover;position:absolute;top:0;left:0;">
         <source src="reel-la-felicita.mp4" type="video/mp4">
       </video>
@@ -1059,26 +1099,77 @@
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
       </div>
       <div class="carnets-overlay" style="z-index:2;">
-        <span class="carnets-text">Mardi matin, Paris 13e.</span>
+        <span class="carnets-text" style="font-style:italic;">Mardi matin, Paris 13e.</span>
         <span class="carnets-author">&mdash; T.</span>
+      </div>
+    </div>
+
+    <!-- Post 9. Verdict d'Ad&eacute; : WiFi de comp&eacute;t' (fond espresso) -->
+    <div class="ig-post post-verdict" style="background:var(--espresso);" onclick="openPost(9)">
+      <div class="badge">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.9)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.75)"/></svg>
+      </div>
+      <span class="signature" style="color:var(--terracotta);">Le verdict d'Ad&eacute;</span>
+      <span class="subject" style="color:white;">WiFi de<br>comp&eacute;t'</span>
+    </div>
+
+    <!-- ===== RANG&Eacute;E 5 ===== -->
+
+    <!-- Post 8. Le split : Thomas &agrave; Orl&eacute;ans (reel split haut/bas) -->
+    <div class="ig-post post-split" onclick="openPost(8)">
+      <div class="badge">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
+      </div>
+      <div class="split-top" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop');"></div>
+      <div class="split-bottom" style="background-image:url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&h=300&fit=crop');"></div>
+      <div class="split-divider"></div>
+      <div class="split-text">9h / Orl&eacute;ans</div>
+      <div class="split-signature">&mdash; T.</div>
+    </div>
+
+    <!-- Post 7. Ton QG : Bordeaux (fond monstera) -->
+    <div class="ig-post post-tonqg" style="background:var(--monstera);" onclick="openPost(7)">
+      <span class="tonqg-label">Ton QG</span>
+      <span class="tonqg-city">&agrave; Bordeaux ?</span>
+      
+    </div>
+
+    <!-- Post 6. Le spot : La Cafteuse, Grenoble (photo + overlay) -->
+    <div class="ig-post post-qg" onclick="openPost(6)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/grenoble/la-cafteuse.jpg');background-size:cover;background-position:center;">
+      <div class="badge">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
+      </div>
+      <div class="overlay">
+        <span class="place-name">La Cafteuse</span>
+        <span class="city">Grenoble</span>
       </div>
     </div>
 
     <!-- ===== RANG&Eacute;E 6 ===== -->
 
-    <!-- Pos 5. LE GUIDE - O&ugrave; bosser &agrave; Nantes (fond TERRACOTTA) -->
-    <div class="ig-post post-guide" onclick="openPost(5)" style="background:var(--terracotta);">
+    <!-- Post 5. Pr&eacute;sentation : Thomas (L'esth&egrave;te) -->
+    <div class="ig-post post-qg" onclick="openPost(5)" style="background-image:url('../app/public/img/thomas-cafe-1.jpeg');background-size:cover;background-position:center;">
+      <div style="position:absolute;bottom:0;left:0;right:0;padding:10px;background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,transparent 100%);">
+        <div style="font-family:Anton;font-size:15px;color:white;text-transform:uppercase;">Thomas</div>
+        <div style="font-family:'Plus Jakarta Sans';font-size:9px;color:rgba(255,255,255,0.8);">L'esth&egrave;te</div>
+      </div>
+    </div>
+
+    <!-- Post 4. Le Guide : Lyon (carrousel, photo fallback + overlay) -->
+    <div class="ig-post post-qg" onclick="openPost(4)" style="background-image:url('https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=600&h=750&fit=crop');background-size:cover;background-position:center;">
       <div class="badge">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.9)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.75)"/></svg>
       </div>
-      <span class="guide-top">O&ugrave; bosser</span>
-      <span class="guide-city">&agrave; Nantes</span>
+      <div class="overlay">
+        <span class="place-name">Nos spots</span>
+        <span class="city">&agrave; Lyon</span>
+      </div>
     </div>
 
-    <!-- Pos 4. QG DU JOUR - Black Bird Coffee, Marseille -->
-    <div class="ig-post post-qg" onclick="openPost(4)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/marseille/black-bird-coffee.jpg');">
+    <!-- Post 3. Le spot : Black Bird Coffee, Marseille (photo + overlay) -->
+    <div class="ig-post post-qg" onclick="openPost(3)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/marseille/black-bird-coffee.jpg');background-size:cover;background-position:center;">
       <div class="overlay">
-        <span class="hook">L&agrave; o&ugrave; Ademas est n&eacute;</span>
+        <span class="city">L&agrave; o&ugrave; tout a commenc&eacute;</span>
         <span class="place-name">Black Bird Coffee</span>
         <span class="city">Marseille</span>
       </div>
@@ -1086,33 +1177,25 @@
 
     <!-- ===== RANG&Eacute;E 7 (bas - premiers publi&eacute;s) ===== -->
 
-    <!-- Pos 3. SESSION DU MATIN - La Cafteuse, Grenoble -->
-    <div class="ig-post post-session" onclick="openPost(3)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/grenoble/la-cafteuse.jpg');">
-      <span class="time-watermark">9H</span>
-      <div class="session-overlay">
-        <span class="place-name">La Cafteuse</span>
-        <span class="city">Grenoble</span>
-        <span class="author">&mdash; T.</span>
+    <!-- Post 1. Le spot : La Recyclerie, Paris 18e (photo + overlay) -->
+    <div class="ig-post post-qg" onclick="openPost(1)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-18e/la-recyclerie.jpg');background-size:cover;background-position:center;">
+      <div class="badge">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
       </div>
-    </div>
-
-    <!-- Pos 2. QG DU JOUR - La Recyclerie, Paris 18e -->
-    <div class="ig-post post-qg" onclick="openPost(2)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-18e/la-recyclerie.jpg');">
       <div class="overlay">
-        <span class="hook">On a pos&eacute; nos affaires</span>
         <span class="place-name">La Recyclerie</span>
         <span class="city">Paris 18e</span>
       </div>
     </div>
 
-    <!-- Pos 1. PR&Eacute;SENTATION - Ad&eacute; &amp; Thomas (Le duo) -->
-    <div class="ig-post post-qg" onclick="openPost(1)" style="background-image:url('../app/public/img/ade-thomas-cafe.png');background-size:cover;background-position:center;">
+    <!-- Post 2. Le duo : Ad&eacute; &amp; Thomas (photo, badge carrousel) -->
+    <div class="ig-post post-qg" onclick="openPost(2)" style="background-image:url('../app/public/img/ade-thomas-cafe.png');background-size:cover;background-position:center;">
       <div class="badge">
-        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="2" y="3" width="11" height="13" rx="2" fill="rgba(255,255,255,0.9)"/><rect x="5" y="1" width="11" height="13" rx="2" fill="rgba(255,255,255,0.7)"/></svg>
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.9)"/><rect x="5" y="1" width="12" height="16" rx="2" fill="rgba(255,255,255,0.75)"/></svg>
       </div>
       <div style="position:absolute;bottom:0;left:0;right:0;padding:10px;background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,transparent 100%);">
         <div style="font-family:Anton;font-size:14px;color:white;text-transform:uppercase;">Ad&eacute; &amp; Thomas</div>
-        <div style="font-family:'Plus Jakarta Sans';font-size:9px;color:var(--terracotta);">Le duo derri&egrave;re Deskover</div>
+        <div style="font-family:'Plus Jakarta Sans';font-size:9px;color:rgba(255,255,255,0.8);">Le duo</div>
       </div>
     </div>
 
@@ -1164,6 +1247,19 @@ var FALLBACK = 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&
 var posts = [
   {
     id: 1,
+    pillar: 'Le spot',
+    title: 'La Recyclerie',
+    subtitle: 'Paris 18e',
+    imageType: 'photo',
+    image: BASE + 'paris-18e/la-recyclerie.jpg',
+    likes: 847,
+    comments: 23,
+    date: '7 avril 2026',
+    caption: 'La Recyclerie, Paris 18e.\n\nUne ancienne gare de la Petite Ceinture. Tu pousses la porte, il y a des plantes partout, des grandes tables en bois, et derri\u00e8re les fen\u00eatres les rails sont devenus un jardin.\n\nWiFi solide, prises sur les grandes tables, et tu peux rester toute la journ\u00e9e sans probl\u00e8me. Le caf\u00e9 est bon, la carte est locavore.\n\nUn de nos spots pr\u00e9f\u00e9r\u00e9s \u00e0 Paris.\n\nTu connais la Recyclerie ? Dis-nous en commentaire.',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #parisremotework #cafeparis #paris18 #larecyclerie #deskover'
+  },
+  {
+    id: 2,
     pillar: 'Pr\u00e9sentation',
     title: 'Ad\u00e9 & Thomas',
     subtitle: 'Le duo',
@@ -1171,84 +1267,70 @@ var posts = [
     image: '../app/public/img/ade-thomas-cafe.png',
     likes: 891,
     comments: 47,
-    date: '7 avril 2026',
-    caption: 'On est Ad\u00e9 et Thomas.\n\nOn bosse dans des caf\u00e9s depuis 3 ans. On a pos\u00e9 nos ordis sur des centaines de tables, test\u00e9 des centaines de WiFi, bu des litres de caf\u00e9 dans toute la France. On a gal\u00e9r\u00e9 (WiFi en panne, z\u00e9ro prises, serveur qui te regarde de travers au bout d\'une heure). Et on a trouv\u00e9 des p\u00e9pites.\n\nThomas rep\u00e8re les lieux qui ont de l\'\u00e2me. Ad\u00e9 v\u00e9rifie que tout fonctionne.\n\nDeskover, c\'est nos meilleures adresses. Celles qu\'on file aux gens qu\'on aime bien.\n\nTu bosses souvent hors de chez toi ? Alors on va bien s\'entendre.\n\n-- T. & A.',
+    date: '8 avril 2026',
+    caption: 'On est Ad\u00e9 et Thomas.\n\nOn bosse depuis des caf\u00e9s, en d\u00e9placement, \u00e0 Paris, Lyon, Grenoble, Marseille. Et on en avait marre de perdre du temps \u00e0 chercher le bon endroit.\n\nAlors on a cr\u00e9\u00e9 Deskover. Les meilleurs spots pour bosser, ville par ville.\n\nademas.studio / deskover.fr',
     hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #bosserhorsdechez #teletravailleur #bureaualternative #workcafe #deskover'
   },
   {
-    id: 2,
-    pillar: 'QG du jour',
-    title: 'La Recyclerie',
-    subtitle: 'Paris 18e',
-    imageType: 'photo',
-    image: BASE + 'paris-18e/la-recyclerie.jpg',
-    likes: 847,
-    comments: 23,
-    date: '8 avril 2026',
-    caption: 'Tu descends \u00e0 Porte de Clignancourt, tu marches trois minutes, et tu tombes sur une ancienne gare de la Petite Ceinture transform\u00e9e en lieu de vie. Les plantes partout, les grandes tables en bois, la lumi\u00e8re qui traverse les verri\u00e8res. Derri\u00e8re les fen\u00eatres, les rails sont devenus un jardin.\n\nWiFi solide, prises dispo, et surtout : cet endroit a une \u00e2me. Le caf\u00e9 est bon, la carte est locavore, et tu peux rester des heures sans que personne ne bronche.\n\nNotre premier QG. Celui par lequel tout a commenc\u00e9.\n\nTu connais un meilleur spot dans le 18e ? On veut savoir.\n\nRetrouve la fiche compl\u00e8te sur deskover.fr\n\n-- T. & A.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #parisremotework #cafeparis #paris18 #larecyclerie #deskover'
-  },
-  {
     id: 3,
-    pillar: 'Session du matin',
-    title: 'La Cafteuse',
-    subtitle: 'Grenoble',
-    imageType: 'photo',
-    image: BASE + 'grenoble/la-cafteuse.jpg',
-    likes: 512,
-    comments: 18,
-    date: '11 avril 2026',
-    caption: '9h, Grenoble. Tu pousses la porte de La Cafteuse et tu tombes dans un autre monde. Des meubles chin\u00e9s partout, des vieilles lampes, des livres empil\u00e9s. C\'est un caf\u00e9-brocante et c\'est exactement aussi charmant que \u00e7a en a l\'air.\n\nOn s\'installe dans un fauteuil en cuir us\u00e9, on commande un caf\u00e9, et on dispara\u00eet. Le temps s\'arr\u00eate un peu ici.\n\nC\'est pas le spot le plus \"productif\" de la ville, mais c\'est celui o\u00f9 tu reviens quand tu as besoin de calme et d\'un endroit qui a de l\'\u00e2me.\n\nGrenoble cache bien ses p\u00e9pites. Et toi, tu en connais d\'autres l\u00e0-bas ?\n\n-- T.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #grenobleremotework #cafegrenoble #bosseragrenoble #sessiondumatin #deskover'
-  },
-  {
-    id: 4,
-    pillar: 'QG du jour',
+    pillar: 'Le spot',
     title: 'Black Bird Coffee',
     subtitle: 'Marseille',
     imageType: 'photo',
     image: BASE + 'marseille/black-bird-coffee.jpg',
     likes: 578,
     comments: 15,
+    date: '11 avril 2026',
+    caption: 'Black Bird Coffee, Marseille.\n\nCours Julien, novembre 2024. On venait de cr\u00e9er notre studio et c\'est ici qu\'on a boss\u00e9 sur notre tout premier projet. Un espresso au comptoir, un WiFi qui tient, et on a encha\u00een\u00e9 les heures sans voir le temps passer.\n\nLe caf\u00e9 est impeccable, l\'espace est chaleureux. Le genre de spot o\u00f9 tu reviens \u00e0 chaque passage \u00e0 Marseille.\n\nL\u00e0 o\u00f9 tout a commenc\u00e9 pour nous.',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #marseilleremotework #cafemarseille #bosseramarseille #coursjulien #deskover'
+  },
+  {
+    id: 4,
+    pillar: 'Le Guide',
+    title: 'Nos spots \u00e0 Lyon',
+    subtitle: '',
+    imageType: 'photo',
+    image: 'https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=600&h=750&fit=crop',
+    slides: [
+      { type: 'photo', image: 'https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=600&h=750&fit=crop', name: 'NOS SPOTS', city: '\u00c0 LYON' },
+      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:18px;color:#2C2825;">BELLE LURETTE</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#6B5B4E;margin-top:6px;">Caf\u00e9-brocante, Lyon 7e</span>' },
+      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:18px;color:#2C2825;">SLAKE COFFEE HOUSE</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#6B5B4E;margin-top:6px;">Caf\u00e9 de sp\u00e9cialit\u00e9</span>' },
+      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:18px;color:#2C2825;">L\'ANTICAF\u00c9</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#6B5B4E;margin-top:6px;">Paiement au temps</span>' },
+      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:18px;color:#2C2825;">MAMA WORKS</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#6B5B4E;margin-top:6px;">Coworking</span>' },
+      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:18px;color:#2C2825;">LE R</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#6B5B4E;margin-top:6px;">Caf\u00e9-restaurant</span>' },
+      { type: 'cover', bg: '#FAF7F2', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#2C2825;">Le guide complet sur</span><span style="font-family:Anton,sans-serif;font-size:16px;color:#AA4C4D;margin-top:10px;">deskover.fr</span>' }
+    ],
+    likes: 812,
+    comments: 38,
     date: '13 avril 2026',
-    caption: 'Noailles, un dimanche matin. T\'es \u00e0 deux rues du march\u00e9, \u00e7a sent les \u00e9pices et le caf\u00e9 frais. Tu pousses la porte, c\'est petit, c\'est chaleureux, et le caf\u00e9 est impeccable.\n\nC\'est ici qu\'on a lanc\u00e9 notre tout premier projet en tant qu\'Ademas Studio, d\u00e9but 2024. On venait de cr\u00e9er la bo\u00eete, on avait un ordi chacun et un brief \u00e0 boucler. On a pass\u00e9 trois jours \u00e0 cette table du fond, entre deux caf\u00e9s et le bruit du march\u00e9 dehors. Ce spot, c\'est notre point de d\u00e9part.\n\nC\'est pas le genre d\'endroit o\u00f9 tu restes toute la journ\u00e9e. C\'est le spot pour une session de 2-3h concentr\u00e9e, avec un caf\u00e9 qui te remet les id\u00e9es en place. WiFi correct, quelques prises, et une \u00e9nergie qui ne ressemble \u00e0 rien d\'autre.\n\nMarseille a ses codes. Ici, on a commenc\u00e9 \u00e0 les comprendre.\n\nRetrouve la fiche sur deskover.fr. Tu as un spot charg\u00e9 en souvenirs comme celui-l\u00e0 ? Dis-nous.\n\n-- T. & A.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #marseilleremotework #cafemarseille #bosseramarseille #noailles #deskover'
+    caption: 'Lyon, nos 5 spots pour bosser.\n\nC\'est la ville o\u00f9 on revient toujours. Les caf\u00e9s sont beaux, les prix sont doux, et il y a cette lumi\u00e8re sur la Sa\u00f4ne qui rend les journ\u00e9es de travail meilleures.\n\nBelle Lurette, Slake Coffee House, l\'Anticaf\u00e9, Mama Works, Le R. Nos pr\u00e9f\u00e9r\u00e9s dans ce carrousel.\n\nLe guide complet est sur deskover.fr\n\nEt toi, tu bosses o\u00f9 \u00e0 Lyon ?',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #lyonremotework #cafelyon #bosserlyon #lyoncoffeeshop #deskover'
   },
   {
     id: 5,
-    pillar: 'Le Guide',
-    title: 'O\u00f9 bosser \u00e0 Nantes',
-    subtitle: '',
-    imageType: 'cover',
-    coverBg: '#AA4C4D',
-    coverHTML: '<span style="font-family:Anton,sans-serif;font-size:20px;color:white;text-transform:uppercase;opacity:0.85;">O\u00f9 bosser</span><span style="font-family:Anton,sans-serif;font-size:36px;color:white;text-transform:uppercase;margin-top:4px;line-height:1.05;">\u00c0 Nantes</span>',
-    slides: [
-      { type: 'cover', bg: '#AA4C4D', html: '<span style="font-family:Anton,sans-serif;font-size:18px;color:white;text-transform:uppercase;">O\u00d9 BOSSER \u00c0 NANTES</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:rgba(255,255,255,0.7);margin-top:8px;">4 spots valid\u00e9s par Deskover</span>' },
-      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:18px;color:#2C2825;">MADELEINE CAF\u00c9</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#6B5B4E;margin-top:6px;">Centre-ville</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#A89888;margin-top:6px;">WiFi rapide, bon caf\u00e9, ambiance calme</span>' },
-      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:18px;color:#2C2825;">LA CANTINA</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#6B5B4E;margin-top:6px;">Coworking + caf\u00e9</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#A89888;margin-top:6px;">WiFi rapide, prises partout, formule d\u00e9j</span>' },
-      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:18px;color:#2C2825;">LE NID</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#6B5B4E;margin-top:6px;">Bar panoramique</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#A89888;margin-top:6px;">Vue sur toute la ville, WiFi correct</span>' },
-      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:18px;color:#2C2825;">SPOT N\u00b04</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#6B5B4E;margin-top:6px;">\u00cele de Nantes</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#A89888;margin-top:6px;">Quartier cr\u00e9atif, grandes tables</span>' },
-      { type: 'cover', bg: '#FAF7F2', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#2C2825;">Le guide complet sur</span><span style="font-family:Anton,sans-serif;font-size:16px;color:#AA4C4D;margin-top:10px;">deskover.fr</span>' },
-      { type: 'cover', bg: '#AA4C4D', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:13px;color:white;">Sauvegarde ce post pour ta prochaine session \u00e0 Nantes</span>' }
-    ],
-    likes: 723,
-    comments: 35,
+    pillar: 'Pr\u00e9sentation',
+    title: 'Thomas',
+    subtitle: 'L\'esth\u00e8te',
+    imageType: 'photo',
+    image: '../app/public/img/thomas-cafe-1.jpeg',
+    likes: 634,
+    comments: 28,
     date: '14 avril 2026',
-    caption: 'Nantes, on t\'a pas oubli\u00e9. On a rep\u00e9r\u00e9 les meilleurs spots du centre, du quartier Bouffay, l\'\u00eele de Nantes. Les retours de la communaut\u00e9 sont unanimes sur ces 4 adresses.\n\nLe crit\u00e8re num\u00e9ro 1 : pouvoir poser son ordi, se connecter, et bosser 2-3 heures sans prise de t\u00eate. Le num\u00e9ro 2 : que le caf\u00e9 soit bon et l\'ambiance agr\u00e9able.\n\nVoici nos 4 spots pr\u00e9f\u00e9r\u00e9s. Swipe pour la s\u00e9lection.\n\nLe guide complet (avec les horaires, les prix et les Vitals) est sur deskover.fr\n\nSi tu es nantais et qu\'on a rat\u00e9 ton spot pr\u00e9f\u00e9r\u00e9, on veut le savoir. Balance en commentaire.\n\n-- A.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #nantesremotework #cafenantes #bosseranantes #coworkingnantes #deskover'
+    caption: 'Paris, Orl\u00e9ans, Aix-en-Provence. Toujours \u00e0 la recherche du spot parfait.\n\nCe que je cherche dans un lieu : l\'\u00e9nergie, la lumi\u00e8re, un bon caf\u00e9. Si je sens que l\'endroit a quelque chose, je pose mes affaires et je reste.\n\nMes spots pr\u00e9f\u00e9r\u00e9s, je les partage ici.',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #bosserhorsdechez #teletravailleur #bureaualternative #workcafe #deskover'
   },
   {
     id: 6,
-    pillar: 'Les Carnets',
-    title: 'La Felicit\u00e0',
-    subtitle: 'Paris 13e',
-    imageType: 'video',
-    image: 'reel-la-felicita.mp4',
-    likes: 891,
-    comments: 47,
+    pillar: 'Le spot',
+    title: 'La Cafteuse',
+    subtitle: 'Grenoble',
+    imageType: 'photo',
+    image: BASE + 'grenoble/la-cafteuse.jpg',
+    likes: 512,
+    comments: 18,
     date: '16 avril 2026',
-    caption: 'Mardi matin, Paris 13e. La Felicit\u00e0. Tu entres et tu l\u00e8ves la t\u00eate. 30 m\u00e8tres de plafond en b\u00e9ton brut, des verri\u00e8res partout, une lumi\u00e8re de cath\u00e9drale.\n\nC\'est le plus grand restaurant d\'Europe et pourtant, \u00e0 10h un mardi, c\'est calme comme une biblioth\u00e8que. On s\'installe aux grandes tables en bois, il y a des prises, le WiFi tient, le caf\u00e9 est bon.\n\nLe lieu est tellement immense qu\'on n\'est jamais les uns sur les autres. Et quand midi arrive, tu te l\u00e8ves, tu fais 20 m\u00e8tres et tu manges une pizza au feu de bois.\n\nC\'est pas un caf\u00e9 cosy. C\'est un hangar magnifique. Et \u00e7a change tout.\n\nTu connais un lieu aussi dingue pour bosser ? On est curieux.\n\n-- T.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #parisremotework #cafeparis #paris13 #lafelicita #deskover'
+    caption: 'La Cafteuse, Grenoble.\n\nRue Thiers, un caf\u00e9-brocante. Des meubles chin\u00e9s, des vieilles lampes, des livres empil\u00e9s sur les \u00e9tag\u00e8res. C\'est exactement aussi charmant que \u00e7a en a l\'air.\n\nOn s\'installe, on commande un caf\u00e9, et le temps ralentit un peu. Pas le spot le plus \u00e9quip\u00e9 de la ville, mais celui o\u00f9 tu reviens quand tu as besoin de calme et d\'un endroit qui a de l\'\u00e2me.\n\nGrenoble cache bien ses p\u00e9pites. Tu en connais d\'autres ?',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #grenobleremotework #cafegrenoble #bosseragrenoble #lacafteuse #deskover'
   },
   {
     id: 7,
@@ -1257,41 +1339,108 @@ var posts = [
     subtitle: '',
     imageType: 'cover',
     coverBg: '#5B7A5E',
-    coverHTML: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:2px;">Ton QG</span><span style="font-family:Anton,sans-serif;font-size:26px;color:white;margin-top:8px;text-transform:uppercase;">TON QG \u00c0 BORDEAUX ?</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:rgba(255,255,255,0.4);margin-top:10px;">On pr\u00e9pare le guide. Aide-nous.</span>',
+    coverHTML: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:2px;">Ton QG</span><span style="font-family:Anton,sans-serif;font-size:26px;color:white;margin-top:8px;text-transform:uppercase;">\u00c0 BORDEAUX ?</span>',
     likes: 456,
     comments: 89,
     date: '18 avril 2026',
-    caption: 'Bordeaux, on sait que tu caches des p\u00e9pites. On n\'y a pas encore pos\u00e9 nos affaires mais on pr\u00e9pare le terrain.\n\nOn pr\u00e9pare notre guide et on a besoin de toi. Les Chartrons, Saint-Michel, la Victoire - on a nos pistes, mais on veut pas passer \u00e0 c\u00f4t\u00e9 de ton spot secret.\n\nT\'as un caf\u00e9 o\u00f9 tu adores bosser ? Un endroit avec une terrasse couverte et du WiFi qui tient ? Un coworking que personne ne conna\u00eet ?\n\nBalance en commentaire. Le nom, le quartier, et un mot pour dire pourquoi c\'est bien. On note tout, et les meilleurs finiront dans le guide.\n\n-- T. & A.',
+    caption: 'Ton QG \u00e0 Bordeaux ?\n\nOn n\'y a pas encore pos\u00e9 nos affaires mais on sait que la ville cache des p\u00e9pites.\n\nTu as un caf\u00e9 o\u00f9 tu adores bosser ? Un coworking secret ? Balance en commentaire, on ajoute tout sur l\'app.',
     hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #bordeauxremotework #cafebordeaux #bosserabordeaux #coworkingbordeaux #deskover'
   },
   {
     id: 8,
-    pillar: 'Pr\u00e9sentation',
-    title: 'Thomas',
-    subtitle: 'L\'esth\u00e8te',
-    imageType: 'photo',
-    image: '../app/public/img/thomas-cafe-1.jpeg',
-    likes: 634,
-    comments: 28,
+    pillar: 'Le split',
+    title: 'Thomas \u00e0 Orl\u00e9ans',
+    subtitle: '',
+    imageType: 'cover',
+    coverBg: '#2C2825',
+    coverHTML: '<div style="display:flex;flex-direction:column;width:100%;height:100%;"><div style="flex:1;background:url(https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=375&fit=crop) center/cover;"></div><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:Anton,sans-serif;font-size:22px;color:#FAF7F2;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,0.5);z-index:2;">9h / ORL\u00c9ANS</div><div style="flex:1;background:url(https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=375&fit=crop) center/cover;"></div></div>',
+    likes: 489,
+    comments: 22,
     date: '20 avril 2026',
-    caption: 'Moi c\'est Thomas.\n\nJe bosse dans des caf\u00e9s depuis 3 ans et j\'ai un probl\u00e8me : je ne peux pas entrer dans un lieu sans analyser la lumi\u00e8re, le mobilier, l\'ambiance. En 10 secondes je sais si c\'est le bon endroit.\n\nUn comptoir en bois clair, des ampoules Edison, la lumi\u00e8re du matin qui entre par la verri\u00e8re, l\'odeur du caf\u00e9 qui vient d\'\u00eatre moulu. C\'est tout \u00e7a qui fait qu\'on bosse mieux quelque part que chez soi.\n\nMes spots pr\u00e9f\u00e9r\u00e9s, je les partage ici. Et toi, c\'est quoi le premier truc que tu regardes en entrant dans un caf\u00e9 ?',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #bosserhorsdechez #teletravailleur #bureaualternative #workcafe #deskover'
+    caption: '9h, Orl\u00e9ans. Mails, double espresso, et la journ\u00e9e peut commencer.\n\n- T.',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #orleansremotework #cafeorleans #bosseraorleans #deskover'
   },
   {
     id: 9,
-    pillar: 'Session du matin',
-    title: 'Sofffa',
-    subtitle: 'Lyon',
-    imageType: 'photo',
-    image: BASE + 'lyon/sofffa.jpg',
-    likes: 689,
-    comments: 22,
+    pillar: 'Le Verdict d\'Ad\u00e9',
+    title: 'WiFi de comp\u00e9t\'',
+    subtitle: '',
+    imageType: 'cover',
+    coverBg: '#2C2825',
+    coverHTML: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#AA4C4D;text-transform:uppercase;letter-spacing:2px;">Le verdict d\'Ad\u00e9</span><span style="font-family:Anton,sans-serif;font-size:36px;color:white;margin-top:12px;line-height:1.05;text-transform:uppercase;">WiFi de<br>comp\u00e9t\'</span>',
+    slides: [
+      { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:9px;color:#AA4C4D;text-transform:uppercase;letter-spacing:2px;">LE VERDICT D\'AD\u00c9</span><span style="font-family:Anton,sans-serif;font-size:24px;color:white;margin-top:12px;text-transform:uppercase;">WIFI DE COMP\u00c9T\'</span>' },
+      { type: 'cover', bg: '#FAF7F2', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:14px;color:#2C2825;">La liste compl\u00e8te sur</span><span style="font-family:Anton,sans-serif;font-size:18px;color:#AA4C4D;margin-top:12px;">deskover.fr</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#A89888;margin-top:10px;">- A.</span>' }
+    ],
+    likes: 634,
+    comments: 41,
     date: '21 avril 2026',
-    caption: '8h30, Lyon. Sofffa ouvre, la machine chauffe, le bois clair capte la lumi\u00e8re du matin.\n\nOn monte en mezzanine, personne ne parle, tout le monde bosse. Le caf\u00e9 est excellent, ils ne plaisantent pas. Ce qu\'on aime ici : cette impression d\'\u00eatre dans un cocon suspendu au-dessus de la ville.\n\nTu bosses dans ta bulle, et quand tu l\u00e8ves la t\u00eate, la lumi\u00e8re a chang\u00e9 et 3 heures sont pass\u00e9es.\n\nLyon, ville sous-cot\u00e9e pour bosser. Tu confirmes ou tu contestes ?\n\n-- T.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #lyonremotework #cafelyon #bosserlyon #coworkinglyon #deskover'
+    caption: 'WiFi de comp\u00e9t\'.\n\nC\'est LE crit\u00e8re. Tu te poses, tu ouvres ton ordi, tu lances ta visio et \u00e7a coupe. Le cauchemar.\n\nOn a rep\u00e9r\u00e9 les spots o\u00f9 le WiFi est rapide, stable, test\u00e9 en conditions r\u00e9elles. Pas du \"WiFi gratuit\" qui rame. Du vrai d\u00e9bit.\n\nLa liste dans ce carrousel.\n\n- A.',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #wificafe #bosserhorsdechez #teletravailleur #verdictade #deskover'
   },
   {
     id: 10,
+    pillar: 'Le spot',
+    title: 'La Felicit\u00e0',
+    subtitle: 'Paris 13e',
+    imageType: 'video',
+    image: 'reel-la-felicita.mp4',
+    likes: 891,
+    comments: 47,
+    date: '23 avril 2026',
+    caption: 'La Felicit\u00e0, Paris 13e.\n\nTu entres et tu l\u00e8ves la t\u00eate. 30 m\u00e8tres de plafond en b\u00e9ton brut, des verri\u00e8res partout, une lumi\u00e8re de cath\u00e9drale. C\'est le plus grand restaurant d\'Europe et pourtant, \u00e0 10h un mardi, c\'est calme comme une biblioth\u00e8que.\n\nOn s\'installe aux grandes tables en bois, il y a des prises, le WiFi tient, le cappuccino est bon. Et quand midi arrive, tu te l\u00e8ves, tu fais 20 m\u00e8tres et tu manges une pizza au feu de bois.\n\nC\'est pas un caf\u00e9 cosy. C\'est un hangar magnifique. Et \u00e7a change tout.\n\n- T.',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #parisremotework #cafeparis #paris13 #lafelicita #deskover'
+  },
+  {
+    id: 11,
+    pillar: 'Le Guide',
+    title: 'Nos spots \u00e0 Paris',
+    subtitle: '',
+    imageType: 'photo',
+    image: BASE + 'paris/le-pavillon-des-canaux.jpg',
+    slides: [
+      { type: 'photo', image: BASE + 'paris/le-pavillon-des-canaux.jpg', name: 'NOS SPOTS', city: '\u00c0 PARIS' },
+      { type: 'photo', image: BASE + 'paris-5e/le-nuage-cafe.jpg', name: 'LE NUAGE CAF\u00c9', city: 'Paris 5e' },
+      { type: 'photo', image: 'https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=600&h=750&fit=crop', name: 'LA PERMANENCE', city: 'Paris 5e' },
+      { type: 'photo', image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=600&h=750&fit=crop', name: 'HUBSY', city: 'Paris 3e' },
+      { type: 'photo', image: BASE + 'paris/le-pavillon-des-canaux.jpg', name: 'PAVILLON DES CANAUX', city: 'Paris 19e' },
+      { type: 'photo', image: BASE + 'paris-18e/la-recyclerie.jpg', name: 'LA RECYCLERIE', city: 'Paris 18e' },
+      { type: 'cover', bg: '#FAF7F2', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#2C2825;">Le guide complet sur</span><span style="font-family:Anton,sans-serif;font-size:16px;color:#AA4C4D;margin-top:10px;">deskover.fr</span>' }
+    ],
+    likes: 1047,
+    comments: 56,
+    date: '25 avril 2026',
+    caption: 'Paris, nos spots pour bosser.\n\nLe Nuage Caf\u00e9 dans le 5e, La Permanence \u00e0 deux pas du Jardin des Plantes, Hubsy dans le 3e, Le Pavillon des Canaux sur le canal de l\'Ourcq, La Recyclerie dans le 18e.\n\nNos pr\u00e9f\u00e9r\u00e9s dans ce carrousel. Le guide complet est sur deskover.fr\n\nEt toi, c\'est quoi ton QG \u00e0 Paris ?',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #parisremotework #cafeparis #bosseraparis #parisfreelance #deskover'
+  },
+  {
+    id: 12,
+    pillar: 'Pr\u00e9sentation',
+    title: 'Ad\u00e9',
+    subtitle: 'L\'efficace',
+    imageType: 'photo',
+    image: '../app/public/img/thomas-cafe-2.jpeg',
+    likes: 712,
+    comments: 35,
+    date: '27 avril 2026',
+    caption: 'Paris, Grenoble, Marseille, Tours. Je bosse en remote, souvent en d\u00e9placement.\n\nMon premier r\u00e9flexe en entrant dans un caf\u00e9 : le WiFi. Mon deuxi\u00e8me : les prises. Mon troisi\u00e8me : est-ce que je vais pouvoir rester 3 heures tranquille.\n\nQuand je te recommande un spot, tu sais que tout fonctionne. Tu t\'installes, tu bosses, c\'est r\u00e9gl\u00e9.\n\n- A.',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #bosserhorsdechez #teletravailleur #bureaualternative #workcafe #deskover'
+  },
+  {
+    id: 13,
+    pillar: 'Le spot',
+    title: 'Le Nuage Caf\u00e9',
+    subtitle: 'Paris 5e',
+    imageType: 'photo',
+    image: BASE + 'paris-5e/le-nuage-cafe.jpg',
+    likes: 421,
+    comments: 12,
+    date: '29 avril 2026',
+    caption: 'Le Nuage Caf\u00e9, Paris 5e.\n\nRue des Carmes, un tout petit caf\u00e9 avec 6 tables, des murs blancs et un comptoir en bois. Tu passes devant dix fois sans le voir. Rien de spectaculaire. Et c\'est exactement pour \u00e7a que \u00e7a marche.\n\nIci, personne ne parle fort. Tu poses ton ordi, tu commandes, et tu disparais dans ta bulle. Le WiFi est bon, le caf\u00e9 aussi.\n\nPour les jours o\u00f9 tu as besoin de silence.\n\nTu bosses dans le 5e ? Dis-nous ton QG en commentaire.',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #parisremotework #cafeparis #paris5 #lenuagecafe #deskover'
+  },
+  {
+    id: 14,
     pillar: 'Match',
     title: 'Caf\u00e9 vs Coworking',
     subtitle: '',
@@ -1300,150 +1449,72 @@ var posts = [
     coverHTML: '<div style="display:flex;flex-direction:column;width:100%;height:100%;"><div style="flex:1;background:#AA4C4D;display:flex;align-items:center;justify-content:center;"><span style="font-family:Anton,sans-serif;font-size:24px;color:white;text-transform:uppercase;">Caf\u00e9</span></div><div style="height:2px;background:white;position:relative;"><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.15);font-family:Plus Jakarta Sans,sans-serif;font-size:13px;font-weight:600;color:#6B5B4E;">vs</div></div><div style="flex:1;background:#FAF7F2;display:flex;align-items:center;justify-content:center;"><span style="font-family:Anton,sans-serif;font-size:24px;color:#2C2825;text-transform:uppercase;">Coworking</span></div></div>',
     slides: [
       { type: 'split', topBg: '#AA4C4D', topText: 'CAF\u00c9', topColor: 'white', bottomBg: '#FAF7F2', bottomText: 'COWORKING', bottomColor: '#2C2825', label: 'LE MATCH', vsSize: 28 },
-      { type: 'split', topBg: '#FAF7F2', topText: '2-5 euros (une conso)', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: '15-30 euros/jour', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'PRIX' },
-      { type: 'split', topBg: '#FAF7F2', topText: 'Vivante, bruits de fond', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Studieuse, calme', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'AMBIANCE' },
-      { type: 'split', topBg: '#FAF7F2', topText: 'Variable selon le caf\u00e9', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Pro, rapide, stable', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'WIFI' },
-      { type: 'split', topBg: '#FAF7F2', topText: 'Caf\u00e9, viennoiseries, lunch', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Machine \u00e0 caf\u00e9, distributeur', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'FOOD' },
       { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Anton,sans-serif;font-size:16px;color:white;text-transform:uppercase;">ET TOI ?</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:13px;color:#A89888;margin-top:12px;line-height:1.5;">Team caf\u00e9 ou team coworking ?</span>' }
     ],
     likes: 1203,
     comments: 67,
-    date: '23 avril 2026',
-    caption: 'Caf\u00e9 ou coworking ? C\'est LE d\u00e9bat. Et la vraie r\u00e9ponse, c\'est que \u00e7a d\u00e9pend de ta journ\u00e9e.\n\nBesoin de focus total, d\'un call important, de 8h non-stop ? Coworking. Besoin d\'un changement d\'air, d\'\u00e9crire un article, de brainstormer ? Caf\u00e9.\n\nNotre strat\u00e9gie : alterner. Un jour caf\u00e9, un jour coworking. Le meilleur des deux mondes.\n\nSwipe pour le comparatif d\u00e9taill\u00e9. Et toi, team caf\u00e9 ou team coworking ? On parie que les commentaires vont \u00eatre anim\u00e9s.\n\n-- A.',
+    date: '1 mai 2026',
+    caption: 'Caf\u00e9 vs coworking.\n\nLe d\u00e9bat. La vraie r\u00e9ponse : \u00e7a d\u00e9pend de ta journ\u00e9e.\n\nBesoin de focus total et d\'un call important ? Coworking. Besoin d\'un changement d\'air et d\'inspiration ? Caf\u00e9.\n\nNotre strat\u00e9gie : alterner. Un jour caf\u00e9, un jour coworking. Le meilleur des deux mondes.\n\nEt toi, team caf\u00e9 ou team coworking ?',
     hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #bosserhorsdechez #teletravailleur #cafevscoworking #workcafe #deskover'
   },
   {
-    id: 11,
-    pillar: 'Pr\u00e9sentation',
-    title: 'Ad\u00e9',
-    subtitle: 'L\'efficace',
-    imageType: 'photo',
-    image: '../app/public/img/thomas-cafe-2.jpeg',
-    likes: 712,
-    comments: 35,
-    date: '25 avril 2026',
-    caption: 'Moi c\'est Ad\u00e9.\n\nJe bosse en remote, souvent en d\u00e9placement. Mon premier r\u00e9flexe en entrant dans un caf\u00e9 : le WiFi. Mon deuxi\u00e8me : les prises. Mon troisi\u00e8me : est-ce que je vais pouvoir rester 3 heures sans qu\'on me regarde de travers.\n\nQuand je te recommande un spot, tu sais que tout fonctionne. Pas de mauvaise surprise. Tu t\'installes, tu bosses, c\'est r\u00e9gl\u00e9.\n\nLes adresses o\u00f9 tout est carr\u00e9, c\'est par ici. Et toi, c\'est quoi ton crit\u00e8re num\u00e9ro 1 ?\n\n-- A.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #bosserhorsdechez #teletravailleur #bureaualternative #workcafe #deskover'
-  },
-  {
-    id: 12,
-    pillar: 'Le Verdict d\'Ad\u00e9',
-    title: 'WiFi de comp\u00e8te',
-    subtitle: '',
-    imageType: 'cover',
-    coverBg: '#FAF7F2',
-    coverHTML: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#AA4C4D;text-transform:uppercase;letter-spacing:2px;">Le verdict d\'Ad\u00e9</span><span style="font-family:Anton,sans-serif;font-size:36px;color:#2C2825;margin-top:12px;line-height:1.05;text-transform:uppercase;">WiFi de<br>comp\u00e8te</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#A89888;margin-top:10px;">Les spots o\u00f9 le d\u00e9bit ne te l\u00e2che jamais</span>',
-    slides: [
-      { type: 'cover', bg: '#FAF7F2', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:9px;color:#AA4C4D;text-transform:uppercase;letter-spacing:2px;">LE VERDICT D\'AD\u00c9</span><span style="font-family:Anton,sans-serif;font-size:24px;color:#2C2825;margin-top:12px;text-transform:uppercase;">WIFI DE COMP\u00c8TE</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#A89888;margin-top:8px;">Les spots o\u00f9 le d\u00e9bit ne te l\u00e2che jamais</span>' },
-      { type: 'photo', image: BASE + 'paris/la-permanence.jpg', fallback: FALLBACK, name: 'LA PERMANENCE', city: 'Paris 5e' },
-      { type: 'photo', image: BASE + 'paris-18e/la-recyclerie.jpg', name: 'LA RECYCLERIE', city: 'Paris 18e' },
-      { type: 'photo', image: BASE + 'paris/le-pavillon-des-canaux.jpg', name: 'PAVILLON DES CANAUX', city: 'Paris 19e' },
-      { type: 'photo', image: BASE + 'paris/hubsy-cafe-coworking.jpg', fallback: FALLBACK, name: 'HUBSY', city: 'Paris 3e' },
-      { type: 'cover', bg: '#FAF7F2', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:14px;color:#2C2825;">La liste compl\u00e8te sur</span><span style="font-family:Anton,sans-serif;font-size:18px;color:#AA4C4D;margin-top:12px;">deskover.fr</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#A89888;margin-top:10px;">-- A.</span>' }
-    ],
-    likes: 634,
-    comments: 41,
-    date: '27 avril 2026',
-    caption: 'WiFi de comp\u00e8te. C\'est LE crit\u00e8re non n\u00e9gociable.\n\nTu te poses, tu ouvres ton ordi, tu lances ta visio et... \u00e7a coupe. On conna\u00eet. On a tous v\u00e9cu ce moment o\u00f9 tu fixes la barre de chargement en te demandant pourquoi tu n\'es pas rest\u00e9 chez toi.\n\nOn a rep\u00e9r\u00e9 les spots o\u00f9 le WiFi est rapide, stable, et test\u00e9 en conditions r\u00e9elles. Pas du \"WiFi gratuit\" qui rame \u00e0 2 Mbps. Du vrai d\u00e9bit, celui qui tient m\u00eame quand la salle est pleine.\n\nSwipe pour nos champions. La liste compl\u00e8te est sur deskover.fr\n\nEt toi, t\'as d\u00e9j\u00e0 eu un WiFi de caf\u00e9 qui t\'a bluff\u00e9 ? Dis-nous o\u00f9.\n\n-- A.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #wificafe #bosserhorsdechez #teletravailleur #verdictade #deskover'
-  },
-  {
-    id: 13,
-    pillar: 'QG du jour',
-    title: 'Le Nuage Caf\u00e9',
-    subtitle: 'Paris 5e',
-    imageType: 'photo',
-    image: BASE + 'paris-5e/le-nuage-cafe.jpg',
-    fallbackImage: FALLBACK,
-    likes: 421,
-    comments: 12,
-    date: '29 avril 2026',
-    caption: 'Rue des Carmes, Paris 5e. Tu passes devant dix fois sans le voir. Le Nuage, c\'est un tout petit caf\u00e9 avec 6 tables, des murs blancs, et un comptoir en bois qui prend toute la place. Rien de spectaculaire. Et c\'est exactement pour \u00e7a que \u00e7a marche.\n\nThomas a flash\u00e9 sur la lumi\u00e8re du matin qui entre par la vitrine et dessine des rectangles parfaits sur les tables. Ad\u00e9 a flash\u00e9 sur le calme rare pour le quartier et la multiprise partag\u00e9e pr\u00e8s de la fen\u00eatre.\n\nWiFi correct, et le matin entre 9h et 11h, tu es quasi seul. Le patron conna\u00eet les habitu\u00e9s, il ne te fait pas les gros yeux si tu restes.\n\nC\'est le spot qu\'on garde pour les jours o\u00f9 on a besoin de concentration totale. Pas de distraction, pas de passage. Juste du caf\u00e9 et du silence.\n\nRetrouve la fiche sur deskover.fr. Tu bosses dans le 5e ? Dis-nous ton QG en commentaire.\n\n-- T. & A.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #parisremotework #cafeparis #paris11 #oberkampf #deskover'
-  },
-  {
-    id: 14,
-    pillar: 'Le Guide',
-    title: 'Nos 5 spots \u00e0 Lyon',
+    id: 15,
+    pillar: 'Le split',
+    title: 'Thomas \u00e0 Aix',
     subtitle: '',
     imageType: 'cover',
     coverBg: '#2C2825',
-    coverHTML: '<span style="font-family:Anton,sans-serif;font-size:20px;color:white;text-transform:uppercase;opacity:0.85;">Nos 5 spots</span><span style="font-family:Anton,sans-serif;font-size:36px;color:white;text-transform:uppercase;margin-top:4px;line-height:1.05;">\u00c0 Lyon</span>',
-    slides: [
-      { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Anton,sans-serif;font-size:18px;color:white;text-transform:uppercase;">NOS 5 SPOTS \u00c0 LYON</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#A89888;margin-top:8px;">Test\u00e9s, valid\u00e9s, approuv\u00e9s</span>' },
-      { type: 'photo', image: BASE + 'lyon/sofffa.jpg', name: 'SOFFFA', city: 'Lyon - Mezzanine en bois, caf\u00e9 excellent' },
-      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:16px;color:#2C2825;">L\'ANTICAF\u00c9 LYON</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#6B5B4E;margin-top:6px;">Paiement au temps, boissons illimit\u00e9es</span>' },
-      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:16px;color:#2C2825;">PUZZLE CAF\u00c9</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#6B5B4E;margin-top:6px;">Quartier calme, WiFi solide</span>' },
-      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:16px;color:#2C2825;">LE LUMINARIUM</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#6B5B4E;margin-top:6px;">Lumineux, spacieux, id\u00e9al longues sessions</span>' },
-      { type: 'cover', bg: '#F3EDE4', html: '<span style="font-family:Anton,sans-serif;font-size:16px;color:#2C2825;">MOK COFFEE</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#6B5B4E;margin-top:6px;">Croix-Rousse, caf\u00e9 de qualit\u00e9</span>' },
-      { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#A89888;">Le guide complet sur</span><span style="font-family:Anton,sans-serif;font-size:16px;color:#AA4C4D;margin-top:10px;">deskover.fr</span>' }
-    ],
-    likes: 812,
-    comments: 38,
-    date: '1 mai 2026',
-    caption: 'Lyon, on revient toujours. C\'est la ville o\u00f9 on bosse le mieux apr\u00e8s Paris.\n\nLes caf\u00e9s sont canon, les prix sont doux, et il y a ce truc dans l\'air - peut-\u00eatre la lumi\u00e8re sur la Sa\u00f4ne - qui rend les sessions de travail meilleures. La Presqu\'\u00eele et la Croix-Rousse regorgent de spots, et on n\'a jamais manqu\u00e9 d\'adresses.\n\nNos 5 pr\u00e9f\u00e9r\u00e9s dans ce carrousel. Chaque slide te donne l\'essentiel : WiFi, prises, ambiance, verdict.\n\nLe guide complet (avec les horaires, les Vitals et la carte) est sur deskover.fr\n\nLes Lyonnais, dites-nous ce qu\'on a rat\u00e9. On est s\u00fbrs qu\'il y a des p\u00e9pites qu\'on n\'a pas encore trouv\u00e9es.\n\n-- T. & A.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #lyonremotework #cafelyon #bosserlyon #lyoncoffeeshop #deskover'
-  },
-  {
-    id: 15,
-    pillar: 'Les Carnets',
-    title: 'Pavillon des Canaux',
-    subtitle: 'Paris 19e',
-    imageType: 'photo',
-    image: BASE + 'paris/le-pavillon-des-canaux.jpg',
-    slides: [
-      { type: 'photo', image: BASE + 'paris/le-pavillon-des-canaux.jpg', name: 'PAVILLON DES CANAUX', city: 'Paris 19e - Ext\u00e9rieur' },
-      { type: 'photo', image: FALLBACK, name: 'LA CHAMBRE', city: 'Le lit-bureau avec vue canal' },
-      { type: 'photo', image: FALLBACK, name: 'LA SALLE DE BAIN', city: 'Baignoire transform\u00e9e en canap\u00e9' },
-      { type: 'photo', image: FALLBACK, name: 'LE SETUP', city: 'Ordi sur le lit, vue canal' },
-      { type: 'photo', image: FALLBACK, name: 'LE SALON', city: 'Chemin\u00e9e et ambiance cosy' }
-    ],
-    likes: 1047,
-    comments: 56,
+    coverHTML: '<div style="display:flex;flex-direction:column;width:100%;height:100%;"><div style="flex:1;background:url(https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=600&h=375&fit=crop) center/cover;"></div><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:Anton,sans-serif;font-size:22px;color:#FAF7F2;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,0.5);z-index:2;">14h / AIX</div><div style="flex:1;background:url(https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=600&h=375&fit=crop) center/cover;"></div></div>',
+    likes: 523,
+    comments: 19,
     date: '3 mai 2026',
-    caption: 'Mardi apr\u00e8m, Paris 19e. Le Pavillon des Canaux, c\'est une maison. Litt\u00e9ralement.\n\nTu entres, il y a une chambre avec un lit (oui, tu peux t\'y installer pour bosser), une salle de bain avec une baignoire transform\u00e9e en canap\u00e9, un salon avec une chemin\u00e9e. Et tout \u00e7a, c\'est un caf\u00e9.\n\nC\'est le genre d\'endroit que tu ne trouves nulle part ailleurs. Tu bosses assis sur un lit avec vue sur le canal de l\'Ourcq et tu te demandes pourquoi tous les caf\u00e9s ne sont pas comme \u00e7a.\n\nWiFi dispo, prises pr\u00e9sentes, et une ambiance tellement unique que tu n\'as pas envie de partir.\n\nTag quelqu\'un qui doit absolument tester cet endroit.\n\n-- T.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #parisremotework #cafeparis #paris19 #pavillondescanaux #deskover'
+    caption: '14h, Aix-en-Provence. Compta, playlist chill, et un caf\u00e9 qui commence \u00e0 refroidir.\n\n- T.',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #aixenprovence #deskover'
   },
   {
     id: 16,
-    pillar: 'Ton QG',
-    title: 'Marseille',
+    pillar: 'Le Verdict d\'Ad\u00e9',
+    title: 'Prises partout',
     subtitle: '',
     imageType: 'cover',
-    coverBg: '#D4A84B',
-    coverHTML: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:rgba(0,0,0,0.5);text-transform:uppercase;letter-spacing:2px;">Ton QG</span><span style="font-family:Anton,sans-serif;font-size:28px;color:#2C2825;margin-top:8px;text-transform:uppercase;">MARSEILLE</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:rgba(0,0,0,0.4);margin-top:10px;">Ton spot avec vue mer et WiFi, il est o\u00f9 ?</span>',
-    likes: 387,
-    comments: 72,
+    coverBg: '#2C2825',
+    coverHTML: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#AA4C4D;text-transform:uppercase;letter-spacing:2px;">Le verdict d\'Ad\u00e9</span><span style="font-family:Anton,sans-serif;font-size:36px;color:white;margin-top:12px;line-height:1.05;text-transform:uppercase;">Prises<br>partout</span>',
+    slides: [
+      { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:9px;color:#AA4C4D;text-transform:uppercase;letter-spacing:2px;">LE VERDICT D\'AD\u00c9</span><span style="font-family:Anton,sans-serif;font-size:22px;color:white;margin-top:12px;text-transform:uppercase;">PRISES PARTOUT</span>' },
+      { type: 'cover', bg: '#FAF7F2', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:14px;color:#2C2825;">La liste compl\u00e8te sur</span><span style="font-family:Anton,sans-serif;font-size:18px;color:#AA4C4D;margin-top:12px;">deskover.fr</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#A89888;margin-top:10px;">- A.</span>' }
+    ],
+    likes: 678,
+    comments: 29,
     date: '5 mai 2026',
-    caption: 'Marseille, \u00e0 ton tour.\n\nOn commence \u00e0 conna\u00eetre le Vieux-Port et Noailles (merci Black Bird Coffee). Mais Marseille c\'est immense et on sait qu\'on passe \u00e0 c\u00f4t\u00e9 de plein de spots.\n\nT\'as un caf\u00e9 o\u00f9 tu bosses avec vue sur la mer ? Un coworking cach\u00e9 du c\u00f4t\u00e9 du Panier ? Un tiers-lieu dans une calanque (on r\u00eave mais sait-on jamais) ?\n\nDonne-nous le nom et le quartier en commentaire. On pr\u00e9pare le guide et on ne veut rater aucune p\u00e9pite. Les meilleurs finiront sur deskover.fr\n\n-- T. & A.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #marseilleremotework #cafemarseille #bosseramarseille #coworkingmarseille #deskover'
+    caption: 'Prises partout.\n\n12% de batterie, pas de prise en vue. On conna\u00eet.\n\nOn a rep\u00e9r\u00e9 les spots o\u00f9 tu n\'auras jamais ce probl\u00e8me. Des prises \u00e0 chaque place, parfois m\u00eame des multiprises sur les tables.\n\nNos champions dans ce carrousel.\n\n- A.',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #bosserhorsdechez #teletravailleur #priseselectriques #verdictade #deskover'
   },
   {
     id: 17,
-    pillar: 'QG du jour',
-    title: 'Eur\u00eakaf\u00e9',
-    subtitle: 'Toulouse',
-    imageType: 'photo',
-    image: FALLBACK,
-    likes: 534,
-    comments: 19,
+    pillar: 'Ton QG',
+    title: '\u00c0 Marseille ?',
+    subtitle: '',
+    imageType: 'cover',
+    coverBg: '#5B7A5E',
+    coverHTML: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:rgba(255,255,255,0.6);text-transform:uppercase;letter-spacing:2px;">Ton QG</span><span style="font-family:Anton,sans-serif;font-size:26px;color:white;margin-top:8px;text-transform:uppercase;">\u00c0 MARSEILLE ?</span>',
+    likes: 387,
+    comments: 72,
     date: '7 mai 2026',
-    caption: 'Toulouse, impasse Colombette. Tu descends une petite rue \u00e0 deux pas du centre et tu tombes sur l\'Eur\u00eakaf\u00e9. Dehors, rien ne le signale vraiment. Dedans, c\'est une autre histoire.\n\nTrois espaces, trois ambiances : un coin salon feutr\u00e9 pour le deep work, un espace plus ouvert pour les sessions \u00e0 plusieurs, et une terrasse pour les jours o\u00f9 le soleil toulousain fait son boulot. Le concept : tu paies ta place, les consommations sont \u00e0 volont\u00e9 en libre-service.\n\nWiFi haut d\u00e9bit, prises bien r\u00e9parties, grandes tables, et un calme qui surprend pour un lieu aussi central. Google leur donne 4.8 sur 5 et on comprend pourquoi.\n\nUn spot que la communaut\u00e9 nous a fait d\u00e9couvrir. Toulouse, tu nous avais cach\u00e9 \u00e7a.\n\nRetrouve la fiche sur deskover.fr. Tu connais d\'autres p\u00e9pites \u00e0 Toulouse ?\n\n-- T. & A.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #toulouseremotework #cafetoulouse #bosseratoulouse #coworkingtoulouse #deskover'
+    caption: 'Ton QG \u00e0 Marseille ?\n\nOn adore cette ville. Black Bird Coffee sur le Cours Julien, c\'est notre base. Mais on est s\u00fbrs qu\'on passe \u00e0 c\u00f4t\u00e9 de plein de spots.\n\nTu bosses d\'o\u00f9 \u00e0 Marseille ?',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #marseilleremotework #cafemarseille #bosseramarseille #coworkingmarseille #deskover'
   },
   {
     id: 18,
-    pillar: 'Session du matin',
-    title: 'Hubsy',
-    subtitle: 'Paris 3e',
+    pillar: 'Le spot',
+    title: 'Belle Lurette',
+    subtitle: 'Lyon',
     imageType: 'photo',
-    image: BASE + 'paris/hubsy-cafe-coworking.jpg',
-    fallbackImage: FALLBACK,
-    likes: 756,
-    comments: 31,
+    image: 'https://images.unsplash.com/photo-1445116572660-236099ec97a0?w=600&h=750&fit=crop',
+    likes: 534,
+    comments: 19,
     date: '9 mai 2026',
-    caption: '10h, Paris 3e. L\'Hubsy un dimanche matin. Tout le monde bosse dans un silence quasi religieux.\n\nTu te sers un caf\u00e9 \u00e0 la machine, tu t\'installes, et tu rentres dans ta bulle. Le concept est simple : tu paies au temps (5 euros de l\'heure), les boissons et les snacks sont illimit\u00e9s. R\u00e9sultat : z\u00e9ro culpabilit\u00e9. Tu restes 1h ou 6h, m\u00eame tarif \u00e0 l\'heure.\n\nC\'est notre spot par d\u00e9faut quand on est dans le Marais. On y revient toujours.\n\nEt toi, tu connaissais le concept de l\'anticaf\u00e9 ? Dis-nous si tu as test\u00e9.\n\n-- T. & A.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #parisremotework #cafeparis #paris3 #anticafe #deskover'
+    caption: 'Belle Lurette, Lyon.\n\nUn caf\u00e9-brocante dans le 7e. Meubles chin\u00e9s, vaisselle d\u00e9pareill\u00e9e, et un caf\u00e9 qui donne envie de rester toute la matin\u00e9e.\n\nOn ne l\'a pas encore test\u00e9 en vrai mais tout ce qu\'on voit nous pla\u00eet. Si tu y es all\u00e9, dis-nous ce que tu en penses.\n\nLyon, on arrive bient\u00f4t.',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #lyonremotework #cafelyon #bosserlyon #bellelurette #deskover'
   },
   {
     id: 19,
@@ -1455,38 +1526,26 @@ var posts = [
     coverHTML: '<div style="display:flex;flex-direction:column;width:100%;height:100%;"><div style="flex:1;background:#5B7A5E;display:flex;align-items:center;justify-content:center;"><span style="font-family:Anton,sans-serif;font-size:24px;color:white;text-transform:uppercase;">Paris 11e</span></div><div style="height:2px;background:white;position:relative;"><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.15);font-family:Plus Jakarta Sans,sans-serif;font-size:13px;font-weight:600;color:#6B5B4E;">vs</div></div><div style="flex:1;background:#FAF7F2;display:flex;align-items:center;justify-content:center;"><span style="font-family:Anton,sans-serif;font-size:24px;color:#2C2825;text-transform:uppercase;">Paris 3e</span></div></div>',
     slides: [
       { type: 'split', topBg: '#5B7A5E', topText: 'PARIS 11E', topColor: 'white', bottomBg: '#FAF7F2', bottomText: 'PARIS 3E', bottomColor: '#2C2825', label: 'LE MATCH DES ARRONDISSEMENTS', vsSize: 28 },
-      { type: 'split', topBg: '#FAF7F2', topText: 'Branch\u00e9, Oberkampf, \u00e9nergie', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Calme, Marais, rues pav\u00e9es', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'AMBIANCE' },
-      { type: 'split', topBg: '#FAF7F2', topText: 'Caf\u00e9s \u00e0 chaque coin de rue', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Hubsy, Boot Caf\u00e9, The Hood', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'NOS SPOTS' },
-      { type: 'split', topBg: '#FAF7F2', topText: '3-4 euros le caf\u00e9', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: '4-6 euros (zone touristique)', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'PRIX' },
-      { type: 'split', topBg: '#FAF7F2', topText: 'La diversit\u00e9 et l\'\u00e9nergie', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Le calme et la beaut\u00e9', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'LE +' },
       { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Anton,sans-serif;font-size:16px;color:white;text-transform:uppercase;">ET TOI ?</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:13px;color:#A89888;margin-top:12px;line-height:1.5;">Tu bosses o\u00f9 \u00e0 Paris ?</span>' }
     ],
     likes: 945,
     comments: 58,
     date: '11 mai 2026',
-    caption: 'Paris 5e vs Paris 3e. Les deux arrondissements o\u00f9 on bosse le plus.\n\nLe 11e, c\'est l\'\u00e9nergie d\'Oberkampf, les caf\u00e9s \u00e0 chaque coin de rue, l\'ambiance \"tout le monde est freelance\". Tu t\'installes, tu bosses, tu changes de spot \u00e0 midi. C\'est vivant, c\'est stimulant.\n\nLe 3e, c\'est le calme du Marais, Hubsy, les rues pav\u00e9es. Tu te poses et tu ne bouges plus de la journ\u00e9e. C\'est feutr\u00e9, c\'est concentr\u00e9.\n\nLa vraie r\u00e9ponse ? \u00c7a d\u00e9pend de ta mood. Nous on alterne : le 11e quand on a besoin de bouger, le 3e quand on a besoin de se poser.\n\nSwipe pour le comparatif complet. Et toi, tu bosses o\u00f9 \u00e0 Paris ?\n\n-- T. & A.',
+    caption: 'Paris 11e vs Paris 3e.\n\nLe 11e, c\'est l\'\u00e9nergie d\'Oberkampf, les caf\u00e9s \u00e0 chaque coin de rue, l\'ambiance \"tout le monde bosse sur son ordi\". Tu t\'installes, tu bosses, tu changes de spot \u00e0 midi.\n\nLe 3e, c\'est le calme du Marais, Hubsy, les rues pav\u00e9es. Tu te poses et tu ne bouges plus de la journ\u00e9e.\n\nNous on alterne. Et toi, tu bosses o\u00f9 \u00e0 Paris ?',
     hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #parisremotework #cafeparis #parisfreelance #bosseraparis #deskover'
   },
   {
     id: 20,
-    pillar: 'Le Verdict d\'Ad\u00e9',
-    title: 'Prises partout',
-    subtitle: '',
-    imageType: 'cover',
-    coverBg: '#FAF7F2',
-    coverHTML: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#AA4C4D;text-transform:uppercase;letter-spacing:2px;">Le verdict d\'Ad\u00e9</span><span style="font-family:Anton,sans-serif;font-size:36px;color:#2C2825;margin-top:12px;line-height:1.05;text-transform:uppercase;">Prises<br>partout</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:#A89888;margin-top:10px;">Z\u00e9ro stress batterie, garanti</span>',
-    slides: [
-      { type: 'cover', bg: '#FAF7F2', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:9px;color:#AA4C4D;text-transform:uppercase;letter-spacing:2px;">LE VERDICT D\'AD\u00c9</span><span style="font-family:Anton,sans-serif;font-size:22px;color:#2C2825;margin-top:12px;text-transform:uppercase;">PRISES PARTOUT</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#A89888;margin-top:8px;">Z\u00e9ro stress batterie, garanti</span>' },
-      { type: 'photo', image: BASE + 'paris/la-permanence.jpg', fallback: FALLBACK, name: 'LA PERMANENCE', city: 'Paris 5e - Prises partout, 24h/24' },
-      { type: 'photo', image: BASE + 'paris-5e/le-nuage-cafe.jpg', fallback: FALLBACK, name: 'LE NUAGE CAF\u00c9', city: 'Paris 5e - Multiprise pr\u00e8s de la fen\u00eatre' },
-      { type: 'photo', image: BASE + 'paris/hubsy-cafe-coworking.jpg', fallback: FALLBACK, name: 'HUBSY', city: 'Paris 3e - Prises \u00e0 chaque place' },
-      { type: 'cover', bg: '#FAF7F2', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:14px;color:#2C2825;">La liste compl\u00e8te sur</span><span style="font-family:Anton,sans-serif;font-size:18px;color:#AA4C4D;margin-top:12px;">deskover.fr</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#A89888;margin-top:10px;">-- A.</span>' }
-    ],
-    likes: 678,
-    comments: 29,
+    pillar: 'Le spot',
+    title: 'La Permanence',
+    subtitle: 'Paris 5e',
+    imageType: 'photo',
+    image: 'https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=600&h=750&fit=crop',
+    likes: 756,
+    comments: 31,
     date: '13 mai 2026',
-    caption: '12% de batterie. Pas de prise en vue. Le cauchemar.\n\nOn a tous v\u00e9cu ce moment de panique o\u00f9 tu regardes ton \u00e9cran s\'\u00e9teindre lentement pendant que ton document n\'est pas sauvegard\u00e9. Plus jamais.\n\nOn a rep\u00e9r\u00e9 les spots o\u00f9 tu n\'auras JAMAIS ce probl\u00e8me. Des prises \u00e0 chaque place, parfois m\u00eame des multiprises sur les tables. Le genre d\'endroit o\u00f9 tu arrives avec 5% et tu repars \u00e0 100%.\n\nNos champions dans ce carrousel. La liste compl\u00e8te sur deskover.fr\n\nT\'as un spot o\u00f9 les prises sont partout ? Partage-le, on l\'ajoute.\n\n-- A.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #bosserhorsdechez #teletravailleur #priseselectriques #verdictade #deskover'
+    caption: 'La Permanence, Paris 5e.\n\nRue du Fer \u00e0 Moulin, \u00e0 deux pas du Jardin des Plantes. Un caf\u00e9-coworking lumineux, des grandes tables, et une ambiance studieuse qui te met direct dans le bain.\n\nWiFi rapide, prises partout, et tu peux rester toute la journ\u00e9e. Un des spots les plus recommand\u00e9s de Paris, et on comprend pourquoi.\n\nTu connais La Permanence ?',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #parisremotework #cafeparis #paris5 #lapermanence #deskover'
   }
 ];
 

@@ -47,8 +47,11 @@ useHead({
 
 <template>
   <div class="min-h-screen bg-[var(--color-cream)]">
-    <!-- Header sticky -->
-    <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 flex justify-between items-center">
+    <!-- Header desktop -->
+    <DeskoverHeader class="hidden lg:block" />
+
+    <!-- Header sticky mobile -->
+    <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 flex justify-between items-center lg:hidden">
       <NuxtLink to="/" class="flex items-center">
         <UIcon name="lucide:chevron-left" class="w-6 h-6 text-[var(--color-espresso)]" />
       </NuxtLink>
@@ -57,7 +60,7 @@ useHead({
     </div>
 
     <!-- Contenu -->
-    <div class="px-5 pt-6 pb-24">
+    <div class="px-5 pt-6 pb-24 lg:pb-0 lg:max-w-[600px] lg:mx-auto">
       <h1 class="font-display text-[22px] text-[var(--color-espresso)]">On t'écoute</h1>
       <p class="text-[14px] text-[var(--color-roast)] mt-2">
         Une question, un lieu à signaler, un bug, une idée ? Écris-nous, on lit tout.
@@ -109,7 +112,7 @@ useHead({
       </form>
 
       <!-- CTA fixe en bas -->
-      <div v-if="!submitted" class="fixed bottom-0 left-0 right-0 p-4 pb-9 bg-gradient-to-t from-[var(--color-cream)] via-[var(--color-cream)] to-transparent z-40">
+      <div v-if="!submitted" class="fixed bottom-0 left-0 right-0 p-4 pb-9 bg-gradient-to-t from-[var(--color-cream)] via-[var(--color-cream)] to-transparent z-40 lg:static lg:mt-8 lg:p-0 lg:bg-transparent lg:pb-0">
         <button
           class="w-full py-3.5 rounded-2xl text-sm font-bold transition-all"
           :class="canSubmit ? 'bg-[var(--color-terracotta-500)] text-white' : 'bg-[var(--color-parchment)] text-[var(--color-steam)]'"

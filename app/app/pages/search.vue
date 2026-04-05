@@ -120,10 +120,13 @@ function isActive(key: string) {
 </script>
 
 <template>
-  <div class="min-h-screen bg-[var(--color-cream)] pb-24">
+  <div class="min-h-screen bg-[var(--color-cream)] pb-24 lg:pb-0">
+    <!-- Header desktop -->
+    <DeskoverHeader class="hidden lg:block" />
+
     <!-- Header -->
-    <div class="px-4 pt-[52px] pb-3 flex items-center gap-3">
-      <NuxtLink to="/" class="w-10 h-10 rounded-full bg-[var(--color-linen)] flex items-center justify-center flex-shrink-0">
+    <div class="px-4 pt-[52px] lg:pt-0 pb-3 flex items-center gap-3 lg:max-w-[680px] lg:mx-auto">
+      <NuxtLink to="/" class="w-10 h-10 rounded-full bg-[var(--color-linen)] flex items-center justify-center flex-shrink-0 lg:hidden">
         <UIcon name="lucide:chevron-left" class="w-5 h-5 text-[var(--color-espresso)]" />
       </NuxtLink>
       <div class="flex-1 relative">
@@ -163,7 +166,7 @@ function isActive(key: string) {
       </div>
     </div>
 
-    <div class="px-4">
+    <div class="px-4 lg:max-w-[680px] lg:mx-auto">
       <!-- Mode: Maintenant / Plus tard -->
       <div class="flex bg-[var(--color-linen)] rounded-2xl p-1 mt-1">
         <button
@@ -251,7 +254,7 @@ function isActive(key: string) {
       <!-- Type de lieu — 2 col grid -->
       <h3 class="font-display text-[17px] text-[var(--color-espresso)] tracking-[0.06em] mt-6">TYPE DE LIEU</h3>
 
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-2 mt-3">
         <button
           v-for="cat in categories"
           :key="cat.value"
@@ -285,7 +288,7 @@ function isActive(key: string) {
     </div>
 
     <!-- Fixed CTA -->
-    <div class="fixed bottom-0 left-0 right-0 p-4 pb-8 bg-gradient-to-t from-[var(--color-cream)] via-[var(--color-cream)] to-transparent z-40">
+    <div class="fixed bottom-0 left-0 right-0 p-4 pb-8 bg-gradient-to-t from-[var(--color-cream)] via-[var(--color-cream)] to-transparent z-40 lg:static lg:mt-8 lg:p-0 lg:bg-transparent lg:pb-0 lg:max-w-[680px] lg:mx-auto">
       <button
         class="w-full rounded-2xl font-bold bg-[var(--color-terracotta-500)] text-[var(--color-cream)] shadow-[0_4px_20px_rgba(170,76,77,0.25)] active:scale-[0.98] transition-transform"
         style="height: 56px;"

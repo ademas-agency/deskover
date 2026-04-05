@@ -280,9 +280,12 @@ function categoryLabel(cat: string) {
 </script>
 
 <template>
-  <div v-if="place" class="min-h-screen bg-[var(--color-cream)] pb-28">
+  <div v-if="place" class="min-h-screen bg-[var(--color-cream)] pb-28 lg:pb-0">
+    <!-- Header desktop -->
+    <DeskoverHeader class="hidden lg:block" />
+
     <!-- Photo hero -->
-    <div class="relative h-[260px] overflow-hidden">
+    <div class="relative h-[260px] lg:h-[400px] overflow-hidden lg:container-deskover lg:mt-6 lg:rounded-2xl">
       <img
         :src="place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop'"
         :alt="place.name"
@@ -291,8 +294,8 @@ function categoryLabel(cat: string) {
       >
       <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent" style="border-radius: 0 0 24px 24px;" />
 
-      <!-- Header overlay -->
-      <div class="absolute top-[52px] left-4 right-4 flex justify-between items-center">
+      <!-- Header overlay (mobile only) -->
+      <div class="absolute top-[52px] left-4 right-4 flex justify-between items-center lg:top-4">
         <button
           @click="goBack"
           class="w-10 h-10 rounded-full bg-white/20 backdrop-blur-lg flex items-center justify-center"
@@ -324,89 +327,138 @@ function categoryLabel(cat: string) {
       </div>
     </div>
 
-    <!-- Nom + catégorie -->
-    <div class="px-4 pt-5">
-      <h1 class="font-display text-[22px] text-[var(--color-espresso)]">{{ place.name }}</h1>
-      <p class="text-[13px] text-[var(--color-steam)] mt-1">
-        {{ categoryLabel(place.category) }} · {{ place.city }}
-      </p>
-    </div>
+    <!-- Desktop: 2 colonnes | Mobile: empilé -->
+    <div class="lg:max-w-[1080px] lg:mx-auto lg:grid lg:grid-cols-[1fr_340px] lg:gap-10 lg:px-12 lg:mt-8">
 
-    <!-- Bouton itinéraire -->
-    <div class="px-4 mt-4">
-      <a
-        :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`"
-        target="_blank"
-        class="block bg-[var(--color-espresso)] text-[var(--color-cream)] text-sm font-semibold py-3.5 rounded-[14px] text-center"
-      >
-        <UIcon name="lucide:navigation" class="w-4 h-4 inline mr-2" />
-        Itinéraire
-      </a>
-    </div>
+      <!-- Colonne principale -->
+      <div>
+        <!-- Nom + catégorie -->
+        <div class="px-4 pt-5 lg:px-0">
+          <h1 class="font-display text-[22px] lg:text-[28px] text-[var(--color-espresso)]">{{ place.name }}</h1>
+          <p class="text-[13px] text-[var(--color-steam)] mt-1">
+            {{ categoryLabel(place.category) }} · {{ place.city }}
+          </p>
+        </div>
 
-    <!-- Vitals -->
-    <div class="px-4 mt-5">
-      <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-2.5">LES VITALS</div>
-      <PlaceVitals :vitals="place.vitals" size="lg" @vital-click="onVitalClick" />
-    </div>
-
-    <!-- Infos -->
-    <div class="px-4 mt-5">
-      <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-3">INFOS</div>
-      <div class="flex flex-col gap-4">
-        <!-- Adresse -->
-        <div class="flex items-center gap-3">
-          <UIcon name="lucide:map-pin" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
-          <span class="text-sm text-[var(--color-roast)]">{{ place.address }}</span>
-        </div>
-        <!-- Téléphone -->
-        <div v-if="place.phone" class="flex items-center gap-3">
-          <UIcon name="lucide:phone" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
-          <a :href="`tel:${place.phone}`" class="text-sm text-[var(--color-roast)]">{{ place.phone }}</a>
-        </div>
-        <!-- Site web -->
-        <div v-if="place.website" class="flex items-center gap-3">
-          <UIcon name="lucide:globe" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
-          <a :href="place.website" target="_blank" class="text-sm text-[var(--color-terracotta-500)] font-medium">Site web</a>
-        </div>
-        <!-- Instagram -->
-        <div v-if="place.instagram" class="flex items-center gap-3">
-          <UIcon name="simple-icons:instagram" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
+        <!-- Bouton itinéraire (mobile only) -->
+        <div class="px-4 mt-4 lg:hidden">
           <a
-            :href="`https://www.instagram.com/${place.instagram.replace('@', '')}/`"
+            :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`"
             target="_blank"
-            class="text-sm text-[var(--color-terracotta-500)] font-medium"
+            class="block bg-[var(--color-espresso)] text-[var(--color-cream)] text-sm font-semibold py-3.5 rounded-[14px] text-center"
           >
-            @{{ place.instagram.replace('@', '') }}
+            <UIcon name="lucide:navigation" class="w-4 h-4 inline mr-2" />
+            Itinéraire
           </a>
         </div>
+
+        <!-- Vitals -->
+        <div class="px-4 mt-5 lg:px-0">
+          <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-2.5">LES VITALS</div>
+          <PlaceVitals :vitals="place.vitals" size="lg" @vital-click="onVitalClick" />
+        </div>
+
+        <!-- Infos (mobile only - desktop dans sidebar) -->
+        <div class="px-4 mt-5 lg:hidden">
+          <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-3">INFOS</div>
+          <div class="flex flex-col gap-4">
+            <div class="flex items-center gap-3">
+              <UIcon name="lucide:map-pin" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
+              <span class="text-sm text-[var(--color-roast)]">{{ place.address }}</span>
+            </div>
+            <div v-if="place.phone" class="flex items-center gap-3">
+              <UIcon name="lucide:phone" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
+              <a :href="`tel:${place.phone}`" class="text-sm text-[var(--color-roast)]">{{ place.phone }}</a>
+            </div>
+            <div v-if="place.website" class="flex items-center gap-3">
+              <UIcon name="lucide:globe" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
+              <a :href="place.website" target="_blank" class="text-sm text-[var(--color-terracotta-500)] font-medium">Site web</a>
+            </div>
+            <div v-if="place.instagram" class="flex items-center gap-3">
+              <UIcon name="simple-icons:instagram" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
+              <a :href="`https://www.instagram.com/${place.instagram.replace('@', '')}/`" target="_blank" class="text-sm text-[var(--color-terracotta-500)] font-medium">
+                @{{ place.instagram.replace('@', '') }}
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Séparateur -->
+        <div class="text-center py-5 text-[var(--color-steam)] text-sm tracking-[4px]">· · ·</div>
+
+        <!-- Vu dans -->
+        <div v-if="place.blogMentions.length" class="px-4 lg:px-0">
+          <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-2.5">VU DANS</div>
+          <div class="flex flex-col gap-2.5">
+            <a
+              v-for="mention in place.blogMentions.slice(0, 3)"
+              :key="mention.url"
+              :href="mention.url"
+              target="_blank"
+              rel="noopener"
+              class="block bg-white rounded-[14px] p-4 shadow-[0_2px_8px_rgba(44,40,37,0.06)] hover:shadow-[0_4px_12px_rgba(44,40,37,0.1)] transition-shadow"
+            >
+              <div class="text-[10px] text-[var(--color-terracotta-500)] font-bold uppercase">{{ mention.source }}</div>
+              <div class="text-sm text-[var(--color-espresso)] font-semibold mt-1">{{ mention.title }}</div>
+              <div class="text-xs text-[var(--color-terracotta-500)] mt-1.5">Lire l'article →</div>
+            </a>
+          </div>
+        </div>
       </div>
+
+      <!-- Sidebar desktop (infos pratiques) -->
+      <aside class="hidden lg:block">
+        <div class="sticky top-[80px]">
+          <!-- Card infos pratiques -->
+          <div class="bg-white rounded-2xl p-6 shadow-[0_2px_12px_rgba(44,40,37,0.06)]">
+            <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-4">INFOS PRATIQUES</div>
+            <div class="flex flex-col gap-4">
+              <div class="flex items-center gap-3">
+                <UIcon name="lucide:map-pin" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
+                <span class="text-sm text-[var(--color-roast)]">{{ place.address }}</span>
+              </div>
+              <div v-if="place.phone" class="flex items-center gap-3">
+                <UIcon name="lucide:phone" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
+                <a :href="`tel:${place.phone}`" class="text-sm text-[var(--color-roast)]">{{ place.phone }}</a>
+              </div>
+              <div v-if="place.website" class="flex items-center gap-3">
+                <UIcon name="lucide:globe" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
+                <a :href="place.website" target="_blank" class="text-sm text-[var(--color-terracotta-500)] font-medium">Site web</a>
+              </div>
+              <div v-if="place.instagram" class="flex items-center gap-3">
+                <UIcon name="simple-icons:instagram" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
+                <a :href="`https://www.instagram.com/${place.instagram.replace('@', '')}/`" target="_blank" class="text-sm text-[var(--color-terracotta-500)] font-medium">
+                  @{{ place.instagram.replace('@', '') }}
+                </a>
+              </div>
+            </div>
+
+            <!-- Bouton itinéraire desktop -->
+            <a
+              :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`"
+              target="_blank"
+              class="block bg-[var(--color-espresso)] text-[var(--color-cream)] text-sm font-semibold py-3 rounded-[14px] text-center mt-5"
+            >
+              <UIcon name="lucide:navigation" class="w-4 h-4 inline mr-2" />
+              Itinéraire
+            </a>
+          </div>
+
+          <!-- CTA Donner mon avis (desktop) -->
+          <button
+            class="w-full bg-[var(--color-terracotta-500)] text-[var(--color-cream)] text-sm font-bold py-3.5 rounded-[14px] flex items-center justify-center gap-2 mt-4"
+            @click="showContribute = true"
+          >
+            <UIcon name="lucide:sparkles" class="w-[18px] h-[18px]" />
+            Donner mon avis
+          </button>
+        </div>
+      </aside>
+
     </div>
 
-    <!-- Séparateur -->
-    <div class="text-center py-5 text-[var(--color-steam)] text-sm tracking-[4px]">· · ·</div>
-
-    <!-- Vu dans -->
-    <div v-if="place.blogMentions.length" class="px-4">
-      <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-2.5">VU DANS</div>
-      <div class="flex flex-col gap-2.5">
-        <a
-          v-for="mention in place.blogMentions.slice(0, 3)"
-          :key="mention.url"
-          :href="mention.url"
-          target="_blank"
-          rel="noopener"
-          class="block bg-white rounded-[14px] p-4 shadow-[0_2px_8px_rgba(44,40,37,0.06)] hover:shadow-[0_4px_12px_rgba(44,40,37,0.1)] transition-shadow"
-        >
-          <div class="text-[10px] text-[var(--color-terracotta-500)] font-bold uppercase">{{ mention.source }}</div>
-          <div class="text-sm text-[var(--color-espresso)] font-semibold mt-1">{{ mention.title }}</div>
-          <div class="text-xs text-[var(--color-terracotta-500)] mt-1.5">Lire l'article →</div>
-        </a>
-      </div>
-    </div>
-
-    <!-- CTA sticky -->
-    <div class="fixed bottom-0 left-0 right-0 p-4 pb-9 bg-gradient-to-t from-[var(--color-cream)] via-[var(--color-cream)] to-transparent z-50">
+    <!-- CTA sticky (mobile only) -->
+    <div class="fixed bottom-0 left-0 right-0 p-4 pb-9 bg-gradient-to-t from-[var(--color-cream)] via-[var(--color-cream)] to-transparent z-50 lg:hidden">
       <button
         class="w-full bg-[var(--color-terracotta-500)] text-[var(--color-cream)] text-sm font-bold py-3.5 rounded-[14px] flex items-center justify-center gap-2"
         @click="showContribute = true"
@@ -415,6 +467,9 @@ function categoryLabel(cat: string) {
         Donner mon avis
       </button>
     </div>
+
+    <!-- Footer desktop -->
+    <DeskoverFooter class="hidden lg:block mt-12" />
 
     <!-- Contribute Bottom Sheet -->
     <Teleport to="body">

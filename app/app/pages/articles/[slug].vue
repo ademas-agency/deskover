@@ -89,8 +89,11 @@ useHead({
     </div>
 
     <template v-else>
-      <!-- Header sticky -->
-      <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 flex justify-between items-center">
+      <!-- Header desktop -->
+      <DeskoverHeader class="hidden lg:block" />
+
+      <!-- Header sticky mobile -->
+      <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 flex justify-between items-center lg:hidden">
         <NuxtLink to="/" class="flex items-center">
           <UIcon name="lucide:chevron-left" class="w-6 h-6 text-[var(--color-espresso)]" />
         </NuxtLink>
@@ -99,7 +102,7 @@ useHead({
       </div>
 
       <!-- Photo hero -->
-      <div class="relative h-[240px] overflow-hidden" style="border-radius: 0 0 20px 20px;">
+      <div class="relative h-[240px] lg:h-[480px] lg:rounded-2xl lg:mx-12 overflow-hidden rounded-b-[20px]">
         <img
           :src="article.cover_image || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop'"
           :alt="article.title"
@@ -109,11 +112,11 @@ useHead({
       </div>
 
       <!-- Chapeau -->
-      <div class="px-5 pt-6">
+      <div class="px-5 pt-6 lg:max-w-[720px] lg:mx-auto">
         <div class="text-[11px] font-bold uppercase tracking-[0.08em] text-[var(--color-terracotta-500)] mb-2.5">
           GUIDE · {{ (article.city || '').toUpperCase() }}
         </div>
-        <h1 class="font-display text-[28px] text-[var(--color-espresso)] leading-[1.05] uppercase">
+        <h1 class="font-display text-[28px] lg:text-[44px] text-[var(--color-espresso)] leading-[1.05] uppercase">
           {{ article.title }}
         </h1>
         <p class="text-[15px] text-[var(--color-roast)] leading-relaxed mt-3">
@@ -125,7 +128,7 @@ useHead({
       </div>
 
       <!-- Contenu Markdown rendu -->
-      <div class="article-body">
+      <div class="article-body lg:max-w-[720px] lg:mx-auto">
         <template v-for="(block, i) in contentBlocks" :key="i">
           <div v-if="block.type === 'html'" v-html="block.html" />
           <PlaceEmbed v-else-if="block.type === 'place'" :id="block.placeId" />
@@ -133,7 +136,7 @@ useHead({
       </div>
 
       <!-- Encart contribution -->
-      <div class="mx-5 mt-8 bg-[var(--color-terracotta-500)] rounded-2xl p-5">
+      <div class="mx-5 mt-8 bg-[var(--color-terracotta-500)] rounded-2xl p-5 lg:max-w-[720px] lg:mx-auto">
         <div class="font-display text-lg text-white">TU CONNAIS UN SPOT ?</div>
         <div class="text-sm text-white/80 mt-1.5">Contribue en 10 secondes et aide la communauté.</div>
         <NuxtLink to="/search" class="inline-block bg-white text-[var(--color-terracotta-500)] text-[13px] font-bold px-5 py-3 rounded-xl mt-3.5">
@@ -142,7 +145,7 @@ useHead({
       </div>
 
       <!-- Lien vers la page ville -->
-      <div v-if="article.city_slug" class="px-5 mt-6 mb-8">
+      <div v-if="article.city_slug" class="px-5 mt-6 mb-8 lg:max-w-[720px] lg:mx-auto">
         <NuxtLink
           :to="`/ville/${article.city_slug}`"
           class="flex items-center justify-between bg-[var(--color-linen)] px-4 py-3.5 rounded-[14px]"
@@ -169,6 +172,24 @@ useHead({
   padding: 0 20px;
   margin-top: 48px;
   text-transform: uppercase;
+}
+
+@media (min-width: 1024px) {
+  .article-body h2 {
+    font-size: 26px;
+    padding: 0;
+  }
+  .article-body p {
+    font-size: 16px;
+    padding: 0;
+  }
+  .article-body h3 {
+    padding: 0;
+  }
+  .article-body ul {
+    padding-left: 20px;
+    padding-right: 0;
+  }
 }
 
 .article-body h2::before {

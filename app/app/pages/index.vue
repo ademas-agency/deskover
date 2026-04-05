@@ -103,8 +103,11 @@ const articles = [
 
 <template>
   <div class="min-h-screen bg-[var(--color-cream)]">
+    <!-- Header desktop -->
+    <DeskoverHeader class="hidden lg:block" />
+
     <!-- HERO -->
-    <section class="relative h-[85vh] overflow-hidden">
+    <section class="relative h-[85vh] lg:h-[60vh] overflow-hidden lg:container-deskover lg:rounded-2xl lg:mt-4">
       <img
         src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=1200&fit=crop"
         alt="Intérieur café"
@@ -112,8 +115,8 @@ const articles = [
       >
       <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[rgba(17,17,17,0.92)]" />
 
-      <!-- Top bar -->
-      <div class="absolute top-0 left-0 right-0 flex items-center justify-between px-5 pt-[52px] z-10">
+      <!-- Top bar (mobile only) -->
+      <div class="absolute top-0 left-0 right-0 flex items-center justify-between px-5 pt-[52px] z-10 lg:hidden">
         <span class="font-display text-base text-white tracking-[0.15em]">DESKOVER</span>
         <NuxtLink to="/search">
           <UIcon name="lucide:search" class="w-[22px] h-[22px] text-white" />
@@ -145,22 +148,22 @@ const articles = [
       <FilterChips :filters="activeFilters" @toggle="toggleFilter" />
 
       <!-- Titre -->
-      <div class="px-4 pb-1">
+      <div class="px-4 pb-1 lg:container-deskover">
         <h2 class="font-display text-xl text-[var(--color-espresso)] tracking-[0.04em]">{{ pageTitle }}</h2>
         <p v-if="searchQuery" class="text-[13px] text-[var(--color-steam)] mt-0.5">{{ places.length }} lieu{{ places.length > 1 ? 'x' : '' }} trouvé{{ places.length > 1 ? 's' : '' }}</p>
       </div>
 
-      <!-- FAB Carte (fixed bottom center) -->
+      <!-- FAB Carte (mobile only) -->
       <NuxtLink
         to="/carte"
-        class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 bg-[var(--color-espresso)] text-white px-5 py-3 rounded-full shadow-[0_4px_20px_rgba(44,40,37,0.3)] hover:shadow-[0_6px_28px_rgba(44,40,37,0.4)] transition-all duration-200"
+        class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-2 bg-[var(--color-espresso)] text-white px-5 py-3 rounded-full shadow-[0_4px_20px_rgba(44,40,37,0.3)] hover:shadow-[0_6px_28px_rgba(44,40,37,0.4)] transition-all duration-200 lg:hidden"
       >
         <UIcon name="lucide:map" class="w-[18px] h-[18px]" />
         <span class="text-[13px] font-semibold">Carte</span>
       </NuxtLink>
 
       <!-- Cards -->
-      <div class="px-4 pt-4 flex flex-col gap-5">
+      <div class="px-4 pt-4 flex flex-col gap-5 md:grid md:grid-cols-2 md:gap-5 lg:grid-cols-3 lg:container-deskover">
         <NuxtLink
           v-for="place in (places || []).slice(0, 20)"
           :key="place.id"
@@ -183,7 +186,7 @@ const articles = [
       </div>
 
       <!-- Nos articles -->
-      <div class="px-4 mt-10">
+      <div class="px-4 mt-10 lg:container-deskover">
         <h2 class="font-display text-xl text-[var(--color-espresso)] tracking-[0.04em]">À LIRE</h2>
         <p class="text-[13px] text-[var(--color-roast)] mt-1.5 leading-relaxed mb-5">
           Guides, conseils, retours d'expérience. Tout ce qu'on aurait aimé savoir avant de poser notre ordi.
@@ -202,8 +205,8 @@ const articles = [
           </div>
         </NuxtLink>
 
-        <!-- Articles secondaires (grid 2 colonnes) -->
-        <div class="grid grid-cols-2 gap-2.5 mt-3">
+        <!-- Articles secondaires -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 mt-3">
           <NuxtLink
             v-for="article in articles.slice(1)"
             :key="article.slug + article.title"

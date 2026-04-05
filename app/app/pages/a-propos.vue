@@ -9,8 +9,11 @@ useHead({
 
 <template>
   <div class="min-h-screen bg-[var(--color-cream)]">
-    <!-- Header sticky -->
-    <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 flex justify-between items-center">
+    <!-- Header desktop -->
+    <DeskoverHeader class="hidden lg:block" />
+
+    <!-- Header sticky mobile -->
+    <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 flex justify-between items-center lg:hidden">
       <NuxtLink to="/" class="flex items-center">
         <UIcon name="lucide:chevron-left" class="w-6 h-6 text-[var(--color-espresso)]" />
       </NuxtLink>
@@ -18,11 +21,11 @@ useHead({
       <div class="w-6" />
     </div>
 
-    <div class="px-5 pt-4 pb-4">
+    <div class="px-5 pt-4 pb-4 lg:max-w-[720px] lg:mx-auto">
       <div class="text-[11px] font-bold uppercase tracking-[0.08em] text-[var(--color-terracotta-500)] mb-2.5">
         POURQUOI DESKOVER
       </div>
-      <h1 class="font-display text-[28px] text-[var(--color-espresso)] leading-[1.05] uppercase">
+      <h1 class="font-display text-[28px] lg:text-[44px] text-[var(--color-espresso)] leading-[1.05] uppercase">
         Pour ne plus galérer
       </h1>
 

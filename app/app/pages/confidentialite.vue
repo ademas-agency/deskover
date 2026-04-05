@@ -7,7 +7,10 @@ useHead({
 
 <template>
   <div class="min-h-screen bg-[var(--color-cream)]">
-    <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 flex justify-between items-center">
+    <!-- Header desktop -->
+    <DeskoverHeader class="hidden lg:block" />
+
+    <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 flex justify-between items-center lg:hidden">
       <NuxtLink to="/" class="flex items-center">
         <UIcon name="lucide:chevron-left" class="w-6 h-6 text-[var(--color-espresso)]" />
       </NuxtLink>
@@ -15,7 +18,7 @@ useHead({
       <div class="w-6" />
     </div>
 
-    <div class="px-5 pt-4 pb-16 max-w-2xl mx-auto">
+    <div class="px-5 pt-4 pb-16 max-w-2xl mx-auto lg:max-w-[720px]">
       <h1 class="font-display text-[28px] text-[var(--color-espresso)] leading-[1.05] uppercase mb-6">Confidentialité</h1>
 
       <div class="text-[14px] text-[var(--color-roast)] leading-relaxed space-y-4">
