@@ -3,20 +3,19 @@ const route = useRoute()
 const slug = route.params.slug as string
 const client = useSupabaseClient()
 
-const article = ref<any>(null)
-const loading = ref(true)
-
-onMounted(async () => {
-  const { data } = await client
-    .from('articles')
-    .select('*')
-    .eq('slug', slug)
-    .eq('published', true)
-    .single()
-
-  article.value = data
-  loading.value = false
-})
+const { data: article, status } = await useAsyncData(
+  `article-${slug}`,
+  async () => {
+    const { data } = await client
+      .from('articles')
+      .select('*')
+      .eq('slug', slug)
+      .eq('published', true)
+      .single()
+    return data
+  }
+)
+const loading = computed(() => status.value === 'pending')
 
 const contentBlocks = computed(() => {
   if (!article.value?.content) return []
@@ -89,8 +88,10 @@ useHead({
     </div>
 
     <template v-else>
-      <!-- Header desktop -->
-      <DeskoverHeader class="hidden lg:block" />
+      <!-- Header desktop only (wrapper needed: DeskoverHeader has multiple roots) -->
+      <div class="hidden lg:block">
+        <DeskoverHeader />
+      </div>
 
       <!-- Header sticky mobile -->
       <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 flex justify-between items-center lg:hidden">

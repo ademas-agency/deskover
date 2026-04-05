@@ -8,6 +8,13 @@ import BaseCard from '../components/ui/BaseCard.vue'
 import BaseBadge from '../components/ui/BaseBadge.vue'
 import { CATEGORY_LABELS } from '../../core/domain/entities/Place'
 import { MapPin, FileText, TrendingUp, AlertTriangle } from 'lucide-vue-next'
+import type { Place } from '../../core/domain/entities/Place'
+
+const STORAGE_BASE = 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos'
+function getThumb(place: Place): string | null {
+  if (place.photo_storage_path) return `${STORAGE_BASE}/${place.photo_storage_path}`
+  return place.photo_url || null
+}
 
 const placesStore = usePlacesStore()
 const articlesStore = useArticlesStore()
@@ -44,7 +51,7 @@ const topCities = computed(() => {
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
       <!-- Lieux a enrichir -->
-      <BaseCard title="Lieux a enrichir" :padding="false">
+      <BaseCard title="Lieux à enrichir" :padding="false">
         <div class="divide-y divide-steam/5">
           <div
             v-for="place in placesStore.toEnrich.slice(0, 6)"
@@ -54,8 +61,8 @@ const topCities = computed(() => {
           >
             <div class="w-8 h-8 rounded-lg overflow-hidden bg-linen flex-shrink-0">
               <img
-                v-if="place.photo_url"
-                :src="place.photo_url"
+                v-if="getThumb(place)"
+                :src="getThumb(place)!"
                 :alt="place.name"
                 class="w-full h-full object-cover"
                 loading="lazy"
@@ -76,10 +83,16 @@ const topCities = computed(() => {
                 desc.
               </span>
               <span
-                v-if="!place.photo_url"
+                v-if="!getThumb(place)"
                 class="text-[10px] px-1.5 py-0.5 rounded bg-edison/10 text-edison"
               >
                 photo
+              </span>
+              <span
+                v-if="!place.signals?.length"
+                class="text-[10px] px-1.5 py-0.5 rounded bg-purple-50 text-purple-500"
+              >
+                signaux
               </span>
             </div>
           </div>
@@ -110,7 +123,7 @@ const topCities = computed(() => {
       </BaseCard>
 
       <!-- Articles recents -->
-      <BaseCard title="Articles recents" :padding="false">
+      <BaseCard title="Articles récents" :padding="false">
         <div v-if="articlesStore.articles.length" class="divide-y divide-steam/5">
           <div
             v-for="article in articlesStore.articles.slice(0, 5)"
@@ -143,8 +156,8 @@ const topCities = computed(() => {
           >
             <div class="w-8 h-8 rounded-lg overflow-hidden bg-linen flex-shrink-0">
               <img
-                v-if="place.photo_url"
-                :src="place.photo_url"
+                v-if="getThumb(place)"
+                :src="getThumb(place)!"
                 :alt="place.name"
                 class="w-full h-full object-cover"
                 loading="lazy"

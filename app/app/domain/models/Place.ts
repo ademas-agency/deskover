@@ -57,8 +57,11 @@ export interface Place {
   // Social
   instagram?: string
 
+  // Photos
+  photos?: string[]
+
   // Tags
-  tag?: string  // "Number one", "Coup de coeur"
+  tag?: string
   distance?: string
 }
 
@@ -70,6 +73,7 @@ export interface PlaceFilters {
   food?: boolean
   style?: boolean
   calme?: boolean
+  terrasse?: boolean
   query?: string
 }
 

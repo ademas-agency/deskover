@@ -34,6 +34,9 @@ function rowToPlace(row: any): Place {
     business_status: row.business_status || '',
     status: row.status || '',
     instagram: row.instagram_handle || '',
+    curation_score: row.curation_score ?? 0,
+    photos: row.photos || [],
+    last_verified_at: row.last_verified_at || null,
   }
 }
 
@@ -85,20 +88,17 @@ export class PlaceRepository {
       instagram_handle: place.instagram,
       photo_storage_path: place.photo_storage_path || null,
       photo_url: place.photo_url || null,
+      curation_score: place.curation_score,
+      photos: place.photos || [],
+      last_verified_at: place.last_verified_at,
     }
 
-    console.log('[BO] Saving place', place.id, payload)
-
-    const { data, error, count } = await supabase
+    const { error } = await supabase
       .from('places')
       .update(payload)
       .eq('id', place.id)
-      .select()
-
-    console.log('[BO] Save result:', { data, error, count })
 
     if (error) throw new Error(error.message)
-    if (!data || data.length === 0) throw new Error('Aucune ligne mise à jour — ID introuvable: ' + place.id)
   }
 
   static async updateStatus(id: string, status: string): Promise<void> {

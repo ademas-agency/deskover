@@ -121,8 +121,10 @@ function isActive(key: string) {
 
 <template>
   <div class="min-h-screen bg-[var(--color-cream)] pb-24 lg:pb-0">
-    <!-- Header desktop -->
-    <DeskoverHeader class="hidden lg:block" />
+    <!-- Header desktop only -->
+    <div class="hidden lg:block">
+      <DeskoverHeader />
+    </div>
 
     <!-- Header -->
     <div class="px-4 pt-[52px] lg:pt-0 pb-3 flex items-center gap-3 lg:max-w-[680px] lg:mx-auto">

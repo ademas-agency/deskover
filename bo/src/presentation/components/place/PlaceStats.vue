@@ -1,15 +1,24 @@
 <script setup lang="ts">
-import { MapPin, Image, FileText, AlertTriangle } from 'lucide-vue-next'
+import { useRouter } from 'vue-router'
+import { MapPin, Image, FileText } from 'lucide-vue-next'
 import { usePlacesStore } from '../../../stores/places'
 import { CATEGORY_LABELS } from '../../../core/domain/entities/Place'
 
 const store = usePlacesStore()
+const router = useRouter()
+
+function goToList(filter: string) {
+  router.push({ name: 'places', query: { filter } })
+}
 </script>
 
 <template>
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
     <!-- Total -->
-    <div class="bg-white rounded-xl border border-steam/15 shadow-sm p-5">
+    <div
+      class="bg-white rounded-xl border border-steam/15 shadow-sm p-5 cursor-pointer hover:border-primary/30 transition-colors"
+      @click="goToList('all')"
+    >
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
           <MapPin :size="20" class="text-primary" />
@@ -28,7 +37,7 @@ const store = usePlacesStore()
           <MapPin :size="20" class="text-monstera" />
         </div>
         <div>
-          <p class="text-sm font-bold text-espresso">Par categorie</p>
+          <p class="text-sm font-bold text-espresso">Par catégorie</p>
         </div>
       </div>
       <div class="space-y-1">
@@ -40,7 +49,10 @@ const store = usePlacesStore()
     </div>
 
     <!-- Sans photo -->
-    <div class="bg-white rounded-xl border border-steam/15 shadow-sm p-5">
+    <div
+      class="bg-white rounded-xl border border-steam/15 shadow-sm p-5 cursor-pointer hover:border-edison/30 transition-colors"
+      @click="goToList('no_photo')"
+    >
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-lg bg-edison/10 flex items-center justify-center">
           <Image :size="20" class="text-edison" />
@@ -53,7 +65,10 @@ const store = usePlacesStore()
     </div>
 
     <!-- Sans description -->
-    <div class="bg-white rounded-xl border border-steam/15 shadow-sm p-5">
+    <div
+      class="bg-white rounded-xl border border-steam/15 shadow-sm p-5 cursor-pointer hover:border-red-200 transition-colors"
+      @click="goToList('no_description')"
+    >
       <div class="flex items-center gap-3">
         <div class="w-10 h-10 rounded-lg bg-red-50 flex items-center justify-center">
           <FileText :size="20" class="text-red-500" />

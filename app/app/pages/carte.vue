@@ -7,7 +7,8 @@ const { getAllForMap } = usePlaces()
 const router = useRouter()
 
 const mapContainer = ref<HTMLElement | null>(null)
-const places = ref<Place[]>([])
+const { data: placesData } = await useAsyncData('carte-places', () => getAllForMap())
+const places = computed(() => placesData.value || [])
 const selectedPlace = ref<Place | null>(null)
 const showCard = ref(false)
 const photoSlider = ref<HTMLElement | null>(null)
@@ -98,7 +99,6 @@ function goToPlace() {
 }
 
 onMounted(async () => {
-  places.value = await getAllForMap()
   if (!mapContainer.value) return
 
   // Get user location first, fallback to Paris

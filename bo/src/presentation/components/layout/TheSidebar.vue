@@ -28,9 +28,9 @@ function isActive(path: string): boolean {
 <template>
   <aside class="fixed inset-y-0 left-0 w-64 bg-sidebar flex flex-col z-30">
     <!-- Logo -->
-    <div class="px-6 py-6 border-b border-white/10">
+    <div class="font-display px-6 py-6 border-b border-white/10">
       <h1 class="text-xl font-bold text-white tracking-tight">
-        <span class="text-primary">Desk</span>over
+        Deskover
       </h1>
       <p class="text-xs text-steam mt-0.5">Backoffice</p>
     </div>

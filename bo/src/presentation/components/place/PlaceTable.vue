@@ -6,6 +6,13 @@ import { CATEGORY_LABELS } from '../../../core/domain/entities/Place'
 import BaseBadge from '../ui/BaseBadge.vue'
 import { ExternalLink, MapPin } from 'lucide-vue-next'
 
+const STORAGE_BASE = 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos'
+
+function getThumb(place: Place): string | null {
+  if (place.photo_storage_path) return `${STORAGE_BASE}/${place.photo_storage_path}`
+  return place.photo_url || null
+}
+
 const props = defineProps<{
   places: Place[]
   currentPage: number
@@ -59,6 +66,7 @@ function getCategoryVariant(category: string): 'primary' | 'success' | 'warning'
             <th class="px-4 py-3 text-left text-xs font-semibold text-roast uppercase tracking-wider">Ville</th>
             <th class="px-4 py-3 text-left text-xs font-semibold text-roast uppercase tracking-wider">Categorie</th>
             <th class="px-4 py-3 text-left text-xs font-semibold text-roast uppercase tracking-wider">Signaux</th>
+            <th class="px-4 py-3 text-left text-xs font-semibold text-roast uppercase tracking-wider">Poids</th>
             <th class="px-4 py-3 text-left text-xs font-semibold text-roast uppercase tracking-wider">Note</th>
             <th class="px-4 py-3"></th>
           </tr>
@@ -73,8 +81,8 @@ function getCategoryVariant(category: string): 'primary' | 'success' | 'warning'
             <td class="px-4 py-3">
               <div class="w-12 h-12 rounded-lg overflow-hidden bg-linen flex-shrink-0">
                 <img
-                  v-if="place.photo_url"
-                  :src="place.photo_url"
+                  v-if="getThumb(place)"
+                  :src="getThumb(place)!"
                   :alt="place.name"
                   class="w-full h-full object-cover"
                   loading="lazy"
@@ -112,6 +120,18 @@ function getCategoryVariant(category: string): 'primary' | 'success' | 'warning'
                   +{{ place.signals.length - 3 }}
                 </span>
               </div>
+            </td>
+            <td class="px-4 py-3">
+              <span
+                v-if="place.curation_score !== 0"
+                :class="[
+                  'text-xs font-bold px-2 py-0.5 rounded-full',
+                  place.curation_score > 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600'
+                ]"
+              >
+                {{ place.curation_score > 0 ? '+' : '' }}{{ place.curation_score }}
+              </span>
+              <span v-else class="text-xs text-steam">0</span>
             </td>
             <td class="px-4 py-3">
               <span v-if="place.google_rating" class="text-sm font-medium text-espresso">

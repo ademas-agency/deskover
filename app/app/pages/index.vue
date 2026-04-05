@@ -2,70 +2,122 @@
 import type { PlaceFilters } from '~/domain/models/Place'
 
 const { getAll } = usePlaces()
-const route = useRoute()
+// Quick filter cards — editorial picks that combine filter + sort
+const quickFilters = [
+  { key: 'recos', label: 'Nos recos', icon: 'lucide:sparkles', filter: {} as PlaceFilters, sort: 'relevance' as const },
+  { key: 'proche', label: 'Les plus proches', icon: 'lucide:map-pin', filter: {} as PlaceFilters, sort: 'distance' as const },
+  { key: 'ouvert', label: 'Ouvert maintenant', icon: 'lucide:clock', filter: {} as PlaceFilters, sort: 'relevance' as const, openOnly: true },
+  { key: 'wifi', label: 'Meilleur WiFi', icon: 'lucide:wifi', filter: { wifi: true } as PlaceFilters, sort: 'relevance' as const },
+  { key: 'calme', label: 'Bosser au calme', icon: 'lucide:volume-x', filter: { calme: true } as PlaceFilters, sort: 'relevance' as const },
+  { key: 'terrasse', label: 'Terrasses', icon: 'lucide:sun', filter: { terrasse: true } as PlaceFilters, sort: 'relevance' as const },
+  { key: 'food', label: 'Bien manger', icon: 'lucide:utensils', filter: { food: true } as PlaceFilters, sort: 'relevance' as const },
+  { key: 'coworking', label: 'Coworkings', icon: 'lucide:building-2', filter: { category: 'coworking' } as PlaceFilters, sort: 'relevance' as const },
+  { key: 'cafe', label: 'Cafés', icon: 'lucide:coffee', filter: { category: 'cafe' } as PlaceFilters, sort: 'relevance' as const },
+]
 
-// Read filters from URL query params (set by /search page)
-const urlQuery = route.query
+const activeQuickFilter = ref('recos')
 
-const activeFilters = ref([
-  { label: 'WiFi', value: 'wifi', active: !!urlQuery.wifi },
-  { label: 'Prises', value: 'prises', active: !!urlQuery.prises },
-  { label: 'Food', value: 'food', active: !!urlQuery.food },
-  { label: 'Style', value: 'style', active: !!urlQuery.style },
-  { label: 'Cafés', value: 'cafe', active: urlQuery.type === 'cafe' },
-  { label: 'Coffee Shops', value: 'coffee_shop', active: urlQuery.type === 'coffee_shop' },
-  { label: 'Coworking', value: 'coworking', active: urlQuery.type === 'coworking' },
-  { label: 'Tiers-lieux', value: 'tiers_lieu', active: urlQuery.type === 'tiers_lieu' }
-])
+function setQuickFilter(key: string) {
+  activeQuickFilter.value = activeQuickFilter.value === key ? 'recos' : key
+}
 
-const searchQuery = (urlQuery.q as string) || ''
-const filterOpen = !!urlQuery.open
-const hasFilters = Object.keys(urlQuery).length > 0
+const currentFilter = computed(() => quickFilters.find(f => f.key === activeQuickFilter.value) || quickFilters[0])
 
-// Title based on filters
 const pageTitle = computed(() => {
-  if (searchQuery) return searchQuery.toUpperCase()
-  const type = urlQuery.type as string
-  if (type === 'cafe') return 'LES MEILLEURS CAFÉS'
-  if (type === 'coffee_shop') return 'COFFEE SHOPS'
-  if (type === 'coworking') return 'COWORKINGS'
-  if (type === 'tiers_lieu') return 'TIERS-LIEUX'
-  return 'NOS COUPS DE COEUR'
-})
-
-function toggleFilter(value: string) {
-  const filter = activeFilters.value.find(f => f.value === value)
-  if (filter) filter.active = !filter.active
-}
-
-const computedFilters = computed<PlaceFilters>(() => {
-  const f: PlaceFilters = {}
-  const active = activeFilters.value.filter(x => x.active).map(x => x.value)
-  if (active.includes('wifi')) f.wifi = true
-  if (active.includes('prises')) f.prises = true
-  if (active.includes('food')) f.food = true
-  if (active.includes('style')) f.calme = true
-  const cats = active.filter(v => ['cafe', 'coffee_shop', 'coworking', 'tiers_lieu'].includes(v))
-  if (cats.length === 1) f.category = cats[0]
-  if (searchQuery) f.query = searchQuery
-  return f
-})
-
-const places = ref<any[]>([])
-const loading = ref(true)
-
-async function loadPlaces() {
-  loading.value = true
-  let results = await getAll(computedFilters.value)
-  if (filterOpen) {
-    results = results.filter(p => p.isOpen !== false)
+  switch (activeQuickFilter.value) {
+    case 'proche': return 'LES PLUS PROCHES'
+    case 'wifi': return 'MEILLEUR WIFI'
+    case 'calme': return 'BOSSER AU CALME'
+    case 'terrasse': return 'TERRASSES'
+    case 'food': return 'BIEN MANGER'
+    case 'ouvert': return 'OUVERT MAINTENANT'
+    case 'coworking': return 'COWORKINGS'
+    case 'cafe': return 'CAFÉS'
+    default: return 'NOS RECOS'
   }
-  places.value = results
-  loading.value = false
+})
+
+const pageSubtitle = computed(() => {
+  switch (activeQuickFilter.value) {
+    case 'recos': return 'Les pépites choisies par Deskover.'
+    case 'proche': return 'Pour ta réunion qui commence dans 10 minutes.'
+    case 'wifi': return 'Du débit, du vrai.'
+    case 'calme': return 'Zéro bruit de fond, concentration maximale.'
+    case 'terrasse': return 'Aux beaux jours, on veut le combo boulot-soleil-café.'
+    case 'food': return 'Parce qu\'on bosse mieux le ventre plein.'
+    case 'ouvert': return 'Pas de mauvaise surprise, ces spots sont ouverts en ce moment.'
+    case 'coworking': return 'Des vrais espaces pensés pour bosser, avec tout ce qu\'il faut.'
+    case 'cafe': return 'L\'art de poser son laptop entre deux expressos.'
+    default: return ''
+  }
+})
+
+const { data: rawPlaces, status } = await useAsyncData(
+  'home-places',
+  () => getAll(currentFilter.value.filter),
+  { watch: [currentFilter] }
+)
+const loading = computed(() => status.value === 'pending')
+
+// Geolocation: enrich with distance + sort by proximity client-side
+const userCoords = ref<{ lat: number; lng: number } | null>(null)
+
+function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
+  const R = 6371
+  const toRad = (d: number) => d * Math.PI / 180
+  const dLat = toRad(lat2 - lat1)
+  const dLon = toRad(lon2 - lon1)
+  const a = Math.sin(dLat / 2) ** 2 + Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a))
 }
 
-onMounted(() => loadPlaces())
-watch(computedFilters, () => loadPlaces())
+function formatDistance(km: number): string {
+  if (km < 1) return `${Math.round(km * 1000)}\u00A0m`
+  return `${km.toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 })}\u00A0km`
+}
+
+const places = computed(() => {
+  let list = rawPlaces.value || []
+
+  // Filter open only
+  if (currentFilter.value.openOnly) {
+    list = list.filter(p => p.isOpen !== false)
+  }
+
+  // Enrich with distance if geoloc available
+  if (!userCoords.value) return list
+
+  const { lat, lng } = userCoords.value
+  let withDist = list.map(p => ({
+    ...p,
+    _distKm: haversineKm(lat, lng, p.latitude, p.longitude),
+    distance: formatDistance(haversineKm(lat, lng, p.latitude, p.longitude)),
+  }))
+
+  // Ne montrer que les lieux à moins de 10 km (sauf "Le plus proche" qui montre tout trié)
+  const MAX_KM = 10
+  if (currentFilter.value.sort !== 'distance') {
+    const nearby = withDist.filter(p => p._distKm <= MAX_KM)
+    if (nearby.length >= 3) withDist = nearby
+  }
+
+  // Sort by distance only when "Le plus proche" is active
+  if (currentFilter.value.sort === 'distance') {
+    return withDist.sort((a, b) => a._distKm - b._distKm)
+  }
+
+  return withDist
+})
+
+onMounted(() => {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => { userCoords.value = { lat: pos.coords.latitude, lng: pos.coords.longitude } },
+      () => {},
+      { timeout: 5000 }
+    )
+  }
+})
 
 const articles = [
   {
@@ -103,8 +155,10 @@ const articles = [
 
 <template>
   <div class="min-h-screen bg-[var(--color-cream)]">
-    <!-- Header desktop -->
-    <DeskoverHeader class="hidden lg:block" />
+    <!-- Header desktop only (wrapper needed: DeskoverHeader has multiple roots) -->
+    <div class="hidden lg:block">
+      <DeskoverHeader />
+    </div>
 
     <!-- HERO -->
     <section class="relative h-[85vh] lg:h-[50vh] overflow-hidden">
@@ -144,15 +198,28 @@ const articles = [
 
     <!-- CLASSEMENT -->
     <section class="bg-[var(--color-cream)] rounded-t-3xl -mt-6 relative z-10 lg:rounded-none lg:mt-0">
-      <!-- Filtres -->
+      <!-- Quick filters -->
       <div class="lg:container-deskover">
-        <FilterChips :filters="activeFilters" @toggle="toggleFilter" />
+        <div class="flex gap-2.5 overflow-x-auto no-scrollbar px-4 py-8">
+          <button
+            v-for="qf in quickFilters"
+            :key="qf.key"
+            class="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl text-[13px] font-semibold whitespace-nowrap border"
+            :class="activeQuickFilter === qf.key
+              ? 'bg-[var(--color-espresso)] text-white border-[var(--color-espresso)] shadow-[0_2px_8px_rgba(44,40,37,0.2)]'
+              : 'bg-white text-[var(--color-roast)] border-[var(--color-parchment)]'"
+            @click="setQuickFilter(qf.key)"
+          >
+            <UIcon :name="qf.icon" class="w-4 h-4" />
+            {{ qf.label }}
+          </button>
+        </div>
       </div>
 
       <!-- Titre -->
       <div class="px-4 pb-1 lg:container-deskover">
         <h2 class="font-display text-xl text-[var(--color-espresso)] tracking-[0.04em]">{{ pageTitle }}</h2>
-        <p v-if="searchQuery" class="text-[13px] text-[var(--color-steam)] mt-0.5">{{ places.length }} lieu{{ places.length > 1 ? 'x' : '' }} trouvé{{ places.length > 1 ? 's' : '' }}</p>
+        <p v-if="pageSubtitle" class="text-[13px] text-[var(--color-roast)] mt-1.5 leading-relaxed">{{ pageSubtitle }}</p>
       </div>
 
       <!-- FAB Carte (mobile only) -->
@@ -175,13 +242,14 @@ const articles = [
           <PlaceCard :place="{
             name: place.name,
             type: place.category === 'coffee_shop' ? 'Coffee Shop' : place.category === 'cafe' ? 'Café' : place.category === 'coworking' ? 'Coworking' : place.category === 'tiers_lieu' ? 'Tiers-lieu' : place.category,
-            neighborhood: place.arrondissement ? `${place.city} ${place.arrondissement}e` : '',
+            neighborhood: '',
             city: place.address || place.city,
             distance: place.distance || '',
             isOpen: place.isOpen ?? true,
             nextOpen: place.nextOpen,
             tag: place.tag,
             image: place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop',
+            images: place.photos || [],
             vitals: place.vitals
           }" />
         </NuxtLink>

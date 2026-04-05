@@ -3,16 +3,16 @@ const route = useRoute()
 const slug = route.params.slug as string
 const { getByCity, getCities } = usePlaces()
 
-const places = ref<any[]>([])
-const city = ref<any>(null)
-const loading = ref(true)
-
-onMounted(async () => {
-  const cities = await getCities()
-  city.value = cities.find((c: any) => c.slug === slug)
-  places.value = await getByCity(slug)
-  loading.value = false
-})
+const { data: asyncData, status } = await useAsyncData(
+  `ville-${slug}`,
+  async () => {
+    const [cities, placesResult] = await Promise.all([getCities(), getByCity(slug)])
+    return { city: cities.find((c: any) => c.slug === slug) || null, places: placesResult }
+  }
+)
+const places = computed(() => asyncData.value?.places || [])
+const city = computed(() => asyncData.value?.city || null)
+const loading = computed(() => status.value === 'pending')
 
 function categoryLabel(cat: string) {
   switch (cat) {
@@ -45,8 +45,10 @@ useHead({
 
 <template>
   <div class="min-h-screen bg-[var(--color-cream)]">
-    <!-- Header desktop -->
-    <DeskoverHeader class="hidden lg:block" />
+    <!-- Header desktop only -->
+    <div class="hidden lg:block">
+      <DeskoverHeader />
+    </div>
 
     <!-- Header mobile -->
     <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 flex justify-between items-center lg:hidden">
@@ -105,8 +107,9 @@ useHead({
               city: place.address || place.city,
               distance: '',
               isOpen: place.isOpen ?? true,
-              tag: i === 0 ? 'Number one' : i === 1 ? 'Coup de coeur' : undefined,
+              tag: i === 0 ? 'Deskovered #1' : i === 1 ? 'Deskovered #2' : i === 2 ? 'Deskovered #3' : undefined,
               image: place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop',
+              images: place.photos || [],
               vitals: place.vitals,
             }"
           />

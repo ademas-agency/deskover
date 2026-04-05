@@ -8,7 +8,7 @@ import BaseInput from '../ui/BaseInput.vue'
 import BaseButton from '../ui/BaseButton.vue'
 import BaseCard from '../ui/BaseCard.vue'
 import BaseBadge from '../ui/BaseBadge.vue'
-import { Save, ExternalLink, Star, Clock, Globe, Phone, Instagram, Upload, Trash2, RefreshCw } from 'lucide-vue-next'
+import { Save, ExternalLink, Star, Clock, Globe, Phone, Instagram, Upload, Trash2, RefreshCw, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ImageIcon, Crown, CheckCircle } from 'lucide-vue-next'
 
 const BUCKET = 'place-photos'
 const SUPABASE_STORAGE_BASE = `https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/${BUCKET}`
@@ -121,6 +121,178 @@ async function handlePhotoDelete() {
   }
 }
 
+// --- Curation score helpers ---
+const curationLabel = computed(() => {
+  const s = form.value.curation_score
+  if (s >= 8) return { text: 'Très mis en avant', color: 'text-green-700 bg-green-50' }
+  if (s >= 4) return { text: 'Mis en avant', color: 'text-green-600 bg-green-50' }
+  if (s >= 1) return { text: 'Léger boost', color: 'text-emerald-600 bg-emerald-50' }
+  if (s === 0) return { text: 'Neutre', color: 'text-gray-500 bg-gray-50' }
+  if (s >= -4) return { text: 'Rétrogradé', color: 'text-orange-600 bg-orange-50' }
+  return { text: 'Très rétrogradé', color: 'text-red-600 bg-red-50' }
+})
+
+// --- Verification ---
+function markAsVerified() {
+  form.value.last_verified_at = new Date().toISOString()
+}
+
+const verifiedAgo = computed(() => {
+  if (!form.value.last_verified_at) return null
+  const d = new Date(form.value.last_verified_at)
+  const days = Math.floor((Date.now() - d.getTime()) / 86400000)
+  if (days === 0) return "Aujourd'hui"
+  if (days === 1) return 'Hier'
+  if (days < 30) return `Il y a ${days} jours`
+  if (days < 365) return `Il y a ${Math.floor(days / 30)} mois`
+  return `Il y a ${Math.floor(days / 365)} an(s)`
+})
+
+function bumpScore(delta: number) {
+  form.value.curation_score = Math.max(-10, Math.min(10, form.value.curation_score + delta))
+}
+
+// --- Gallery helpers ---
+function getPhotoFullUrl(path: string) {
+  return `${SUPABASE_STORAGE_BASE}/${path}`
+}
+
+const allPhotos = computed(() => {
+  const photos: { path: string; url: string; isCover: boolean }[] = []
+  if (form.value.photo_storage_path) {
+    photos.push({ path: form.value.photo_storage_path, url: getPhotoFullUrl(form.value.photo_storage_path), isCover: true })
+  } else if (form.value.photo_url) {
+    photos.push({ path: '', url: form.value.photo_url, isCover: true })
+  }
+  for (const p of (form.value.photos || [])) {
+    photos.push({ path: p, url: getPhotoFullUrl(p), isCover: false })
+  }
+  return photos
+})
+
+async function handleGalleryUpload(event: Event) {
+  const input = event.target as HTMLInputElement
+  const files = input.files
+  if (!files?.length) return
+  await uploadFiles(Array.from(files))
+  input.value = ''
+}
+
+async function setAsCover(photo: { path: string; url: string; isCover: boolean }) {
+  if (photo.isCover || !photo.path) return
+
+  // Move current cover to gallery
+  if (form.value.photo_storage_path) {
+    if (!form.value.photos) form.value.photos = []
+    form.value.photos.push(form.value.photo_storage_path)
+  }
+
+  // Remove new cover from gallery
+  form.value.photos = (form.value.photos || []).filter(p => p !== photo.path)
+
+  // Set as cover
+  form.value.photo_storage_path = photo.path
+  form.value.photo_url = ''
+}
+
+async function deletePhoto(photo: { path: string; url: string; isCover: boolean }) {
+  uploading.value = true
+  photoError.value = ''
+
+  try {
+    if (photo.path) {
+      await supabase.storage.from(BUCKET).remove([photo.path])
+    }
+
+    if (photo.isCover) {
+      // Promote first gallery photo to cover
+      const gallery = form.value.photos || []
+      if (gallery.length > 0) {
+        form.value.photo_storage_path = gallery[0]
+        form.value.photos = gallery.slice(1)
+      } else {
+        form.value.photo_storage_path = ''
+        form.value.photo_url = ''
+      }
+    } else {
+      form.value.photos = (form.value.photos || []).filter(p => p !== photo.path)
+    }
+  } catch (e: any) {
+    photoError.value = e.message || 'Erreur lors de la suppression'
+  } finally {
+    uploading.value = false
+  }
+}
+
+// --- Drag & drop upload ---
+const dragging = ref(false)
+
+function onDragOver(e: DragEvent) {
+  e.preventDefault()
+  dragging.value = true
+}
+
+function onDragLeave() {
+  dragging.value = false
+}
+
+async function onDrop(e: DragEvent) {
+  e.preventDefault()
+  dragging.value = false
+  const files = e.dataTransfer?.files
+  if (!files?.length) return
+  await uploadFiles(Array.from(files))
+}
+
+async function uploadFiles(files: File[]) {
+  uploading.value = true
+  photoError.value = ''
+
+  try {
+    for (const file of files) {
+      if (!file.type.startsWith('image/')) continue
+
+      const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+      const idx = (form.value.photos || []).length + 1
+      const storagePath = `${form.value.city_key}/${slugify(form.value.name)}-${idx}-${Date.now()}.${ext}`
+
+      const { error } = await supabase.storage
+        .from(BUCKET)
+        .upload(storagePath, file, { upsert: true, contentType: file.type })
+
+      if (error) throw error
+
+      if (!form.value.photo_storage_path && !form.value.photo_url) {
+        form.value.photo_storage_path = storagePath
+      } else {
+        if (!form.value.photos) form.value.photos = []
+        form.value.photos.push(storagePath)
+      }
+    }
+  } catch (e: any) {
+    photoError.value = e.message || 'Erreur lors de l\'upload'
+  } finally {
+    uploading.value = false
+  }
+}
+
+// --- Reorder photos with arrows ---
+function movePhoto(idx: number, direction: -1 | 1) {
+  const targetIdx = idx + direction
+  if (targetIdx < 0 || targetIdx >= allPhotos.value.length) return
+
+  const all: string[] = []
+  if (form.value.photo_storage_path) all.push(form.value.photo_storage_path)
+  all.push(...(form.value.photos || []))
+
+  const [moved] = all.splice(idx, 1)
+  all.splice(targetIdx, 0, moved)
+
+  form.value.photo_storage_path = all[0] || ''
+  form.value.photo_url = ''
+  form.value.photos = all.slice(1)
+}
+
 function toggleSignal(signal: string) {
   const idx = form.value.signals.indexOf(signal)
   if (idx >= 0) {
@@ -137,62 +309,183 @@ function handleSave() {
 
 <template>
   <form @submit.prevent="handleSave" class="space-y-6">
-    <!-- Photo de couverture -->
-    <BaseCard title="Photo de couverture">
-      <div class="space-y-4">
-        <!-- Preview -->
-        <div v-if="currentPhotoUrl" class="relative rounded-xl overflow-hidden bg-linen w-80" style="aspect-ratio: 16/9;">
-          <img :src="currentPhotoUrl" :alt="form.name" class="w-full h-full object-cover" />
-          <div v-if="uploading" class="absolute inset-0 bg-black/40 flex items-center justify-center">
-            <div class="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-          </div>
+    <!-- Vérification manuelle -->
+    <BaseCard title="Vérification">
+      <div class="flex items-center justify-between">
+        <div>
+          <p v-if="form.last_verified_at" class="text-sm text-espresso">
+            <span class="font-semibold">Dernière vérification :</span>
+            {{ new Date(form.last_verified_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) }}
+            <span class="text-steam ml-1">({{ verifiedAgo }})</span>
+          </p>
+          <p v-else class="text-sm text-edison font-medium">Jamais vérifié</p>
         </div>
-        <div v-else class="rounded-xl bg-linen flex items-center justify-center text-steam w-80" style="aspect-ratio: 16/9;">
-          Aucune photo
+        <button
+          type="button"
+          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-monstera/10 text-monstera hover:bg-monstera/20 transition-colors"
+          @click="markAsVerified"
+        >
+          <CheckCircle :size="16" />
+          Marquer comme vérifié
+        </button>
+      </div>
+    </BaseCard>
+
+    <!-- Poids / Curation -->
+    <BaseCard title="Poids dans le classement">
+      <div class="space-y-4">
+        <div class="flex items-center gap-4">
+          <button
+            type="button"
+            class="w-10 h-10 rounded-lg border border-steam/30 bg-white hover:bg-red-50 hover:border-red-200 flex items-center justify-center transition-colors"
+            @click="bumpScore(-1)"
+          >
+            <ChevronDown :size="20" class="text-red-500" />
+          </button>
+
+          <div class="flex-1">
+            <input
+              type="range"
+              min="-10"
+              max="10"
+              step="1"
+              v-model.number="form.curation_score"
+              class="w-full accent-primary"
+            />
+            <div class="flex justify-between text-[10px] text-steam mt-0.5">
+              <span>-10</span>
+              <span>0</span>
+              <span>+10</span>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            class="w-10 h-10 rounded-lg border border-steam/30 bg-white hover:bg-green-50 hover:border-green-200 flex items-center justify-center transition-colors"
+            @click="bumpScore(1)"
+          >
+            <ChevronUp :size="20" class="text-green-500" />
+          </button>
         </div>
 
-        <!-- URL -->
-        <p v-if="currentPhotoUrl" class="text-xs text-steam truncate max-w-80">
-          <a :href="currentPhotoUrl" target="_blank" class="text-primary hover:underline">{{ currentPhotoUrl }}</a>
+        <div class="flex items-center gap-3">
+          <span class="text-2xl font-bold text-espresso tabular-nums">{{ form.curation_score }}</span>
+          <span :class="['text-xs font-semibold px-2.5 py-1 rounded-full', curationLabel.color]">
+            {{ curationLabel.text }}
+          </span>
+        </div>
+
+        <p class="text-xs text-steam">
+          Les lieux sont triés par poids décroissant puis par note Google. Un poids de 0 = classement naturel.
         </p>
+      </div>
+    </BaseCard>
+
+    <!-- Photos -->
+    <BaseCard title="Photos">
+      <div
+        class="space-y-4"
+        @dragover="onDragOver"
+        @dragleave="onDragLeave"
+        @drop="onDrop"
+      >
+        <!-- Drop zone overlay -->
+        <div
+          v-if="dragging"
+          class="rounded-xl border-2 border-dashed border-primary bg-primary/5 flex flex-col items-center justify-center py-12 pointer-events-none"
+        >
+          <Upload :size="32" class="text-primary mb-2" />
+          <span class="text-sm font-semibold text-primary">Dépose tes photos ici</span>
+        </div>
+
+        <!-- Gallery grid -->
+        <div v-if="allPhotos.length && !dragging" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+          <div
+            v-for="(photo, idx) in allPhotos"
+            :key="photo.path || photo.url"
+            class="relative group rounded-xl overflow-hidden bg-linen"
+            style="aspect-ratio: 4/3;"
+          >
+            <img :src="photo.url" :alt="`Photo ${idx + 1}`" class="w-full h-full object-cover" />
+
+            <!-- Cover badge -->
+            <div v-if="photo.isCover" class="absolute top-2 left-2 flex items-center gap-1 bg-primary text-white text-[10px] font-bold px-2 py-1 rounded-md">
+              <Crown :size="10" />
+              Couverture
+            </div>
+
+            <!-- Position badge -->
+            <div class="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/50 text-white text-[10px] font-bold flex items-center justify-center">
+              {{ idx + 1 }}
+            </div>
+
+            <!-- Hover actions -->
+            <div class="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-end justify-between p-2 opacity-0 group-hover:opacity-100">
+              <!-- Move arrows -->
+              <div class="flex gap-1">
+                <button
+                  v-if="idx > 0"
+                  type="button"
+                  class="w-7 h-7 rounded-lg bg-white/90 flex items-center justify-center hover:bg-white transition-colors"
+                  title="Déplacer avant"
+                  @click="movePhoto(idx, -1)"
+                >
+                  <ChevronLeft :size="14" class="text-espresso" />
+                </button>
+                <button
+                  v-if="idx < allPhotos.length - 1"
+                  type="button"
+                  class="w-7 h-7 rounded-lg bg-white/90 flex items-center justify-center hover:bg-white transition-colors"
+                  title="Déplacer après"
+                  @click="movePhoto(idx, 1)"
+                >
+                  <ChevronRight :size="14" class="text-espresso" />
+                </button>
+              </div>
+              <!-- Delete -->
+              <button
+                type="button"
+                class="w-7 h-7 rounded-lg bg-white/90 flex items-center justify-center hover:bg-red-50 transition-colors"
+                title="Supprimer"
+                @click="deletePhoto(photo)"
+              >
+                <Trash2 :size="14" class="text-red-500" />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div v-else-if="!dragging" class="rounded-xl border-2 border-dashed border-steam/30 flex flex-col items-center justify-center text-steam py-10">
+          <ImageIcon :size="32" class="mb-2 opacity-50" />
+          <span class="text-sm">Glisse des photos ici ou utilise le bouton ci-dessous</span>
+        </div>
+
+        <!-- Loading overlay -->
+        <div v-if="uploading" class="flex items-center gap-2 text-sm text-steam">
+          <div class="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          Upload en cours...
+        </div>
 
         <!-- Error -->
         <p v-if="photoError" class="text-xs text-red-500">{{ photoError }}</p>
 
-        <!-- Actions -->
-        <div class="flex gap-2">
-          <!-- Upload / Replace -->
-          <label
-            :class="[
-              'inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium cursor-pointer transition-colors',
-              currentPhotoUrl
-                ? 'bg-white text-roast border border-steam/30 hover:border-primary/50'
-                : 'bg-primary text-white hover:bg-primary/90',
-            ]"
-          >
-            <component :is="currentPhotoUrl ? RefreshCw : Upload" :size="14" />
-            {{ currentPhotoUrl ? 'Remplacer' : 'Ajouter une photo' }}
-            <input
-              type="file"
-              accept="image/*"
-              class="hidden"
-              :disabled="uploading"
-              @change="currentPhotoUrl ? handlePhotoReplace($event) : handlePhotoUpload($event)"
-            />
-          </label>
-
-          <!-- Delete -->
-          <button
-            v-if="currentPhotoUrl"
-            type="button"
-            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium bg-white text-red-500 border border-red-200 hover:bg-red-50 transition-colors disabled:opacity-50"
+        <!-- Upload button -->
+        <label class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium cursor-pointer transition-colors bg-primary text-white hover:bg-primary/90">
+          <Upload :size="14" />
+          Ajouter des photos
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            class="hidden"
             :disabled="uploading"
-            @click="handlePhotoDelete"
-          >
-            <Trash2 :size="14" />
-            Supprimer
-          </button>
-        </div>
+            @change="handleGalleryUpload($event)"
+          />
+        </label>
+
+        <p class="text-xs text-steam">
+          Glisse-dépose des fichiers ou clique sur le bouton. Utilise les flèches pour réordonner. La première est la couverture.
+        </p>
       </div>
     </BaseCard>
 

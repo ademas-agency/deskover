@@ -11,7 +11,7 @@ export class PlaceService {
 
   static getPlacesToEnrich(places: Place[]): Place[] {
     return places.filter(
-      p => !p.description || !p.photo_url || p.signals.length === 0
+      p => !p.description || (!p.photo_url && !p.photo_storage_path) || p.signals.length === 0
     )
   }
 

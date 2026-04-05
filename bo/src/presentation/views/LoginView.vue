@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { supabase } from '../../infrastructure/api/client'
+import { supabaseAuth as supabase } from '../../infrastructure/api/client'
 
 const router = useRouter()
 const email = ref('')

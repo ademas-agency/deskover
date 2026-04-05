@@ -32,12 +32,15 @@ export interface Place {
   business_status: string
   status: string
   instagram: string
+  curation_score: number
+  photos: string[]
+  last_verified_at: string | null
 }
 
 export type PlaceCategory = 'cafe' | 'coffee_shop' | 'coworking' | 'tiers_lieu'
 
 export const CATEGORY_LABELS: Record<PlaceCategory, string> = {
-  cafe: 'Cafe',
+  cafe: 'Café',
   coffee_shop: 'Coffee Shop',
   coworking: 'Coworking',
   tiers_lieu: 'Tiers-lieu',

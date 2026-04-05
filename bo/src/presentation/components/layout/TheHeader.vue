@@ -2,7 +2,7 @@
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { Bell, LogOut } from 'lucide-vue-next'
-import { supabase } from '../../../infrastructure/api/client'
+import { supabaseAuth as supabase } from '../../../infrastructure/api/client'
 
 const route = useRoute()
 const router = useRouter()

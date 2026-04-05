@@ -34,7 +34,7 @@ function getPhotoUrl(row: any): string | undefined {
   return row.photo_url || undefined
 }
 
-const DAYS_FR = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi']
+const DAYS_FR = ['DIMANCHE', 'LUNDI', 'MARDI', 'MERCREDI', 'JEUDI', 'VENDREDI', 'SAMEDI']
 
 function parseTimeStr(t: string): number {
   const clean = t.replace(/\s/g, '')
@@ -82,10 +82,10 @@ function computeOpenStatus(openingHours?: any): { isOpen: boolean; nextOpen?: st
 
     const h = Math.floor(entry.openMin / 60)
     const m = entry.openMin % 60
-    const timeStr = `${h}h${m ? String(m).padStart(2, '0') : ''}`
-    if (offset === 0) return { isOpen: false, nextOpen: `Ouvre à ${timeStr}` }
-    if (offset === 1) return { isOpen: false, nextOpen: `Ouvre demain à ${timeStr}` }
-    return { isOpen: false, nextOpen: `Ouvre ${dayName} à ${timeStr}` }
+    const timeStr = `${h}H${m ? String(m).padStart(2, '0') : ''}`
+    if (offset === 0) return { isOpen: false, nextOpen: `OUVRE à ${timeStr}` }
+    if (offset === 1) return { isOpen: false, nextOpen: `OUVRE DEMAIN À ${timeStr}` }
+    return { isOpen: false, nextOpen: `OUVRE ${dayName} À ${timeStr}` }
   }
 
   return { isOpen: false }
@@ -95,8 +95,9 @@ function rowToPlace(row: any, index: number, mentions?: any[]): Place {
   const signals = row.signals || []
 
   let tag: string | undefined
-  if (index === 0) tag = 'Number one'
-  else if (index === 1) tag = 'Coup de coeur'
+  if (index === 0) tag = 'Deskovered #1'
+  else if (index === 1) tag = 'Deskovered #2'
+  else if (index === 2) tag = 'Deskovered #3'
 
   const seenBaseUrls = new Set<string>()
   const blogMentions: BlogMention[] = (mentions || []).filter((m: any) => {
@@ -129,6 +130,7 @@ function rowToPlace(row: any, index: number, mentions?: any[]): Place {
     googleReviewsCount: row.google_reviews_count,
     googleMapsUrl: row.google_maps_url,
     photoUrl: getPhotoUrl(row),
+    photos: (row.photos || []).map((p: string) => `${SUPABASE_STORAGE_URL}/${p}`),
     website: row.website,
     phone: row.phone,
     openingHours: row.opening_hours,
@@ -149,6 +151,7 @@ export class SupabasePlaceRepository implements PlaceRepository {
       .from('places')
       .select('*, blog_mentions(*)')
       .eq('status', 'approved')
+      .neq('business_status', 'CLOSED_PERMANENTLY')
 
     query = this.applyFilters(query, filters)
     query = this.applySort(query, sortBy)
@@ -167,6 +170,7 @@ export class SupabasePlaceRepository implements PlaceRepository {
       .from('places')
       .select('id,name,slug,place_type,city,city_key,arrondissement,latitude,longitude,signals,photo_url,photo_storage_path,business_status')
       .eq('status', 'approved')
+      .neq('business_status', 'CLOSED_PERMANENTLY')
 
     if (error) throw error
 
@@ -192,6 +196,7 @@ export class SupabasePlaceRepository implements PlaceRepository {
       .from('places')
       .select('*, blog_mentions(*)')
       .eq('status', 'approved')
+      .neq('business_status', 'CLOSED_PERMANENTLY')
       .eq('city_key', citySlug)
 
     query = this.applyFilters(query, filters)
@@ -221,6 +226,7 @@ export class SupabasePlaceRepository implements PlaceRepository {
       .from('places')
       .select('*, blog_mentions(*)')
       .eq('status', 'approved')
+      .neq('business_status', 'CLOSED_PERMANENTLY')
       .or(filters.join(','))
       .limit(30)
 
@@ -263,6 +269,7 @@ export class SupabasePlaceRepository implements PlaceRepository {
     if (filters.prises) query = query.contains('signals', ['prises'])
     if (filters.food) query = query.contains('signals', ['food'])
     if (filters.calme) query = query.contains('signals', ['calme'])
+    if (filters.terrasse) query = query.contains('signals', ['terrasse'])
     if (filters.query) {
       const q = filters.query.toLowerCase()
       const qNorm = q.normalize('NFD').replace(/[\u0300-\u036f]/g, '')

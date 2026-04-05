@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { usePlacesStore } from '../../stores/places'
 import type { PlaceCategory } from '../../core/domain/entities/Place'
 import { CATEGORY_LABELS } from '../../core/domain/entities/Place'
@@ -11,7 +12,9 @@ const store = usePlacesStore()
 
 const searchQuery = ref('')
 const categoryFilter = ref<PlaceCategory | ''>('')
-const statusFilter = ref<'all' | 'pending' | 'with_photo' | 'no_description' | 'to_enrich'>('all')
+const route = useRoute()
+
+const statusFilter = ref<'all' | 'pending' | 'with_photo' | 'no_photo' | 'no_description' | 'no_signals' | 'to_enrich'>((route.query.filter as any) || 'all')
 const currentPage = ref(1)
 const pageSize = 20
 
@@ -41,12 +44,16 @@ const filteredPlaces = computed(() => {
   if (statusFilter.value === 'pending') {
     result = result.filter(p => p.status === 'pending')
   } else if (statusFilter.value === 'with_photo') {
-    result = result.filter(p => p.photo_url)
+    result = result.filter(p => p.photo_url || p.photo_storage_path)
+  } else if (statusFilter.value === 'no_photo') {
+    result = result.filter(p => !p.photo_url && !p.photo_storage_path)
   } else if (statusFilter.value === 'no_description') {
     result = result.filter(p => !p.description || p.description.trim() === '')
+  } else if (statusFilter.value === 'no_signals') {
+    result = result.filter(p => !p.signals?.length)
   } else if (statusFilter.value === 'to_enrich') {
     result = result.filter(
-      p => !p.description || !p.photo_url || p.signals.length === 0
+      p => !p.description || (!p.photo_url && !p.photo_storage_path) || p.signals.length === 0
     )
   }
 
@@ -80,7 +87,7 @@ watch([searchQuery, categoryFilter, statusFilter], () => {
 
         <!-- Categorie -->
         <div class="min-w-[160px]">
-          <label class="block text-xs font-medium text-roast mb-1">Categorie</label>
+          <label class="block text-xs font-medium text-roast mb-1">Catégorie</label>
           <select
             v-model="categoryFilter"
             class="w-full rounded-lg border border-steam/30 bg-white px-3 py-2 text-sm text-espresso outline-none focus:border-primary"
@@ -103,7 +110,7 @@ watch([searchQuery, categoryFilter, statusFilter], () => {
             <option value="pending">🔶 En attente de validation</option>
             <option value="with_photo">Avec photo</option>
             <option value="no_description">Sans description</option>
-            <option value="to_enrich">A enrichir</option>
+            <option value="to_enrich">À enrichir</option>
           </select>
         </div>
       </div>

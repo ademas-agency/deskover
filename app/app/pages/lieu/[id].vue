@@ -12,8 +12,11 @@ function goBack() {
   }
 }
 
-const place = ref<any>(null)
-const loading = ref(true)
+const { data: place, status, refresh: refreshPlace } = await useAsyncData(
+  `lieu-${route.params.id}`,
+  () => getById(route.params.id as string)
+)
+const loading = computed(() => status.value === 'pending')
 const showSpeedTest = ref(false)
 const showContribute = ref(false)
 const isNearby = ref(false)
@@ -166,19 +169,16 @@ async function submitRating() {
   ratings.style = ''
 
   // Refresh place data
-  place.value = await getById(route.params.id as string)
+  await refreshPlace()
   setTimeout(() => { submitSuccess.value = false }, 3000)
 }
 
-onMounted(async () => {
-  place.value = await getById(route.params.id as string)
-  loading.value = false
-
-  // Check if user is near the place (< 30m)
+onMounted(() => {
+  // Check if user is near the place (< 30m) — client only
   if (navigator.geolocation && place.value) {
     navigator.geolocation.getCurrentPosition((pos) => {
       userCoords.value = { lat: pos.coords.latitude, lng: pos.coords.longitude }
-      const dist = haversine(pos.coords.latitude, pos.coords.longitude, place.value.latitude, place.value.longitude)
+      const dist = haversine(pos.coords.latitude, pos.coords.longitude, place.value!.latitude, place.value!.longitude)
       isNearby.value = dist < 30
     }, () => {}, { timeout: 5000 })
   }
@@ -226,6 +226,27 @@ function onVitalClick(label: string) {
 }
 
 const showShareToast = ref(false)
+const currentPhoto = ref(0)
+
+const allPhotos = computed(() => {
+  if (!place.value) return []
+  const photos: string[] = []
+  if (place.value.photoUrl) photos.push(place.value.photoUrl)
+  if (place.value.photos?.length) photos.push(...place.value.photos)
+  return photos.length ? photos : ['https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop']
+})
+
+let autoSlide: ReturnType<typeof setInterval> | null = null
+
+function startAutoSlide() {
+  if (allPhotos.value.length <= 1) return
+  autoSlide = setInterval(() => {
+    currentPhoto.value = (currentPhoto.value + 1) % allPhotos.value.length
+  }, 4000)
+}
+
+onMounted(() => startAutoSlide())
+onUnmounted(() => { if (autoSlide) clearInterval(autoSlide) })
 
 async function shareLieu() {
   if (!place.value) return
@@ -280,21 +301,25 @@ function categoryLabel(cat: string) {
 </script>
 
 <template>
-  <div v-if="place" class="min-h-screen bg-[var(--color-cream)] pb-28 lg:pb-0">
-    <!-- Header desktop -->
-    <DeskoverHeader class="hidden lg:block" />
+  <div class="min-h-screen bg-[var(--color-cream)]">
+  <div v-if="place" class="pb-28 lg:pb-0">
+    <!-- Header desktop only (wrapper needed: DeskoverHeader has multiple roots) -->
+    <div class="hidden lg:block">
+      <DeskoverHeader />
+    </div>
 
-    <!-- Photo hero -->
+    <!-- Photo hero / carrousel -->
     <div class="relative h-[260px] lg:h-[400px] overflow-hidden lg:container-deskover lg:mt-6 lg:rounded-2xl">
       <img
-        :src="place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop'"
+        :src="allPhotos[currentPhoto]"
         :alt="place.name"
-        class="w-full h-full object-cover"
+        class="w-full h-full object-cover transition-opacity duration-300"
+        :key="currentPhoto"
         style="border-radius: 0 0 24px 24px;"
       >
       <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent" style="border-radius: 0 0 24px 24px;" />
 
-      <!-- Header overlay (mobile only) -->
+      <!-- Header overlay -->
       <div class="absolute top-[52px] left-4 right-4 flex justify-between items-center lg:top-4">
         <button
           @click="goBack"
@@ -312,18 +337,15 @@ function categoryLabel(cat: string) {
         </div>
       </div>
 
-      <!-- Badges -->
-      <div class="absolute bottom-4 left-4 flex gap-2">
-        <div v-if="place.tag" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[var(--color-terracotta-500)] text-white text-[10px] font-bold uppercase tracking-wide">
-          <UIcon v-if="place.tag === 'Number one'" name="lucide:crown" class="w-3.5 h-3.5" />
-          <span>{{ place.tag }}</span>
-        </div>
-        <div
-          class="px-2.5 py-1.5 rounded-lg text-white text-[10px] font-bold uppercase backdrop-blur-md"
-          :class="place.isOpen ? 'bg-[var(--color-monstera)]/90' : 'bg-[var(--color-terracotta-500)]/90'"
-        >
-          {{ place.isOpen ? 'Ouvert' : 'Fermé' }}
-        </div>
+      <!-- Dots -->
+      <div v-if="allPhotos.length > 1" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
+        <button
+          v-for="(_, i) in allPhotos"
+          :key="i"
+          class="h-1.5 rounded-full transition-all duration-300 cursor-pointer"
+          :class="i === currentPhoto ? 'bg-white w-3' : 'bg-white/40 w-1.5'"
+          @click="currentPhoto = i; if (autoSlide) { clearInterval(autoSlide); startAutoSlide() }"
+        />
       </div>
     </div>
 
@@ -334,10 +356,29 @@ function categoryLabel(cat: string) {
       <div>
         <!-- Nom + catégorie -->
         <div class="px-4 pt-5 lg:px-0">
-          <h1 class="font-display text-[22px] lg:text-[28px] text-[var(--color-espresso)]">{{ place.name }}</h1>
+          <div class="flex items-start justify-between gap-3">
+            <h1 class="font-display text-[22px] lg:text-[28px] text-[var(--color-espresso)]">{{ place.name }}</h1>
+            <div
+              class="flex-shrink-0 mt-1 px-2.5 py-1.5 rounded-lg text-white text-[10px] font-bold"
+              :class="place.isOpen ? 'bg-[var(--color-monstera)]' : 'bg-[var(--color-terracotta-500)]'"
+            >
+              {{ place.isOpen ? 'Ouvert' : (place.nextOpen || 'Fermé') }}
+            </div>
+          </div>
           <p class="text-[13px] text-[var(--color-steam)] mt-1">
-            {{ categoryLabel(place.category) }} · {{ place.city }}
+            {{ categoryLabel(place.category) }} · {{ place.arrondissement ? `${place.city} ${place.arrondissement}e` : place.city }}
           </p>
+        </div>
+
+        <!-- Description -->
+        <p v-if="place.description" class="px-4 mt-3 text-[14px] text-[var(--color-roast)] leading-relaxed lg:px-0">
+          {{ place.description }}
+        </p>
+
+        <!-- Vitals -->
+        <div class="px-4 mt-5 lg:px-0">
+          <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-2.5">LES VITALS</div>
+          <PlaceVitals :vitals="place.vitals" size="lg" @vital-click="onVitalClick" />
         </div>
 
         <!-- Bouton itinéraire (mobile only) -->
@@ -350,12 +391,6 @@ function categoryLabel(cat: string) {
             <UIcon name="lucide:navigation" class="w-4 h-4 inline mr-2" />
             Itinéraire
           </a>
-        </div>
-
-        <!-- Vitals -->
-        <div class="px-4 mt-5 lg:px-0">
-          <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-2.5">LES VITALS</div>
-          <PlaceVitals :vitals="place.vitals" size="lg" @vital-click="onVitalClick" />
         </div>
 
         <!-- Infos (mobile only - desktop dans sidebar) -->
@@ -471,6 +506,10 @@ function categoryLabel(cat: string) {
     <!-- Footer desktop -->
     <DeskoverFooter class="hidden lg:block mt-12" />
 
+  </div>
+
+  <!-- Overlays — hors du v-if="place", client-only pour éviter les erreurs d'hydratation -->
+  <ClientOnly>
     <!-- Contribute Bottom Sheet -->
     <Teleport to="body">
       <Transition
@@ -481,7 +520,7 @@ function categoryLabel(cat: string) {
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
       >
-        <div v-if="showContribute" class="fixed inset-0 z-[100] bg-black/50" @click.self="showContribute = false">
+        <div v-if="showContribute && place" class="fixed inset-0 z-[100] bg-black/50" @click.self="showContribute = false">
           <Transition
             enter-active-class="transition duration-300 ease-out"
             enter-from-class="translate-y-full"
@@ -670,7 +709,7 @@ function categoryLabel(cat: string) {
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
       >
-        <div v-if="showSpeedTest" class="fixed inset-0 z-[100] bg-black/50" @click.self="showSpeedTest = false">
+        <div v-if="showSpeedTest && place" class="fixed inset-0 z-[100] bg-black/50" @click.self="showSpeedTest = false">
           <Transition
             enter-active-class="transition duration-300 ease-out"
             enter-from-class="translate-y-full"
@@ -759,5 +798,6 @@ function categoryLabel(cat: string) {
         </div>
       </Transition>
     </Teleport>
+  </ClientOnly>
   </div>
 </template>
