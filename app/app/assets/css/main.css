@@ -97,6 +97,14 @@ body::before {
 }
 @media (min-width: 1024px) {
   .container-deskover { padding-left: 3rem; padding-right: 3rem; }
+  .lg\:container-deskover {
+    width: 100%;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 3rem;
+    padding-right: 3rem;
+  }
 }
 
 /* Prose column for articles/editorial */
