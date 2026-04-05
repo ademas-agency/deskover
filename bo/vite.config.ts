@@ -113,7 +113,7 @@ function removePlaceFromArticles(placeId: string): string[] {
     // 1. Remove place ID from frontmatter places array
     content = content.replace(
       /^(---\n[\s\S]*?places:\s*\[)([\s\S]*?)(\][\s\S]*?---)/m,
-      (match, before, list, after) => {
+      (_match, before, list, after) => {
         const ids = list.split(',')
           .map((s: string) => s.trim())
           .filter((s: string) => s.length > 0 && !s.includes(placeId))
