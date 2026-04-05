@@ -506,12 +506,34 @@
     display: flex;
     flex-direction: column;
     position: relative;
+    overflow: hidden;
   }
 
   .post-split .split-top {
+    position: relative;
     flex: 1;
+    overflow: hidden;
+  }
+
+  .post-split .split-top-img {
+    position: absolute;
+    inset: 0;
     background-size: cover;
     background-position: center;
+    opacity: 0;
+    animation: splitFade 6s infinite;
+  }
+
+  .post-split .split-top-img:nth-child(1) { animation-delay: 0s; }
+  .post-split .split-top-img:nth-child(2) { animation-delay: 2s; }
+  .post-split .split-top-img:nth-child(3) { animation-delay: 4s; }
+
+  @keyframes splitFade {
+    0%   { opacity: 0; }
+    5%   { opacity: 1; }
+    33%  { opacity: 1; }
+    38%  { opacity: 0; }
+    100% { opacity: 0; }
   }
 
   .post-split .split-bottom {
@@ -799,6 +821,7 @@
 
   .carousel-slide.slide-split {
     padding: 0;
+    align-items: stretch;
   }
 
   .carousel-dots {
@@ -1034,10 +1057,14 @@
       <div class="badge">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
       </div>
-      <div class="split-top" style="background-image:url('https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=400&h=300&fit=crop');"></div>
+      <div class="split-top">
+        <div class="split-top-img" style="background-image:url('https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=400&h=300&fit=crop');"></div>
+        <div class="split-top-img" style="background-image:url('https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=400&h=300&fit=crop');"></div>
+        <div class="split-top-img" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop');"></div>
+      </div>
       <div class="split-bottom" style="background-image:url('https://images.unsplash.com/photo-1559925393-8be0ec4767c8?w=400&h=300&fit=crop');"></div>
       <div class="split-divider"></div>
-      <div class="split-text">14h / Aix-en-Provence</div>
+      <div class="split-text">14h / Aix</div>
       <div class="split-signature">&mdash; T.</div>
     </div>
 
@@ -1115,16 +1142,15 @@
 
     <!-- ===== RANG&Eacute;E 5 ===== -->
 
-    <!-- Post 8. Le split : Thomas &agrave; Orl&eacute;ans (reel split haut/bas) -->
-    <div class="ig-post post-split" onclick="openPost(8)">
+    <!-- Post 8. Le spot : La Recyclerie, Paris 18e (photo + overlay) -->
+    <div class="ig-post post-qg" onclick="openPost(8)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-18e/la-recyclerie.jpg');background-size:cover;background-position:center;">
       <div class="badge">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
       </div>
-      <div class="split-top" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop');"></div>
-      <div class="split-bottom" style="background-image:url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&h=300&fit=crop');"></div>
-      <div class="split-divider"></div>
-      <div class="split-text">9h / Orl&eacute;ans</div>
-      <div class="split-signature">&mdash; T.</div>
+      <div class="overlay">
+        <span class="place-name">La Recyclerie</span>
+        <span class="city">Paris 18e</span>
+      </div>
     </div>
 
     <!-- Post 7. Ton QG : Bordeaux (fond monstera) -->
@@ -1177,15 +1203,20 @@
 
     <!-- ===== RANG&Eacute;E 7 (bas - premiers publi&eacute;s) ===== -->
 
-    <!-- Post 1. Le spot : La Recyclerie, Paris 18e (photo + overlay) -->
-    <div class="ig-post post-qg" onclick="openPost(1)" style="background-image:url('https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos/paris-18e/la-recyclerie.jpg');background-size:cover;background-position:center;">
+    <!-- Post 1. Le split : Thomas &agrave; Orl&eacute;ans (reel split haut/bas) -->
+    <div class="ig-post post-split" onclick="openPost(1)">
       <div class="badge">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none"><rect x="1" y="1" width="16" height="16" rx="3" fill="rgba(255,255,255,0.9)"/><polygon points="7,5 13,9 7,13" fill="#2C2825"/></svg>
       </div>
-      <div class="overlay">
-        <span class="place-name">La Recyclerie</span>
-        <span class="city">Paris 18e</span>
+      <div class="split-top">
+        <div class="split-top-img" style="background-image:url('https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=400&h=300&fit=crop');"></div>
+        <div class="split-top-img" style="background-image:url('https://images.unsplash.com/photo-1497636577773-f1231844b336?w=400&h=300&fit=crop');"></div>
+        <div class="split-top-img" style="background-image:url('https://images.unsplash.com/photo-1442512595331-e89e73853f31?w=400&h=300&fit=crop');"></div>
       </div>
+      <div class="split-bottom" style="background-image:url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=400&h=300&fit=crop');"></div>
+      <div class="split-divider"></div>
+      <div class="split-text">9h / Orl&eacute;ans</div>
+      <div class="split-signature">&mdash; T.</div>
     </div>
 
     <!-- Post 2. Le duo : Ad&eacute; &amp; Thomas (photo, badge carrousel) -->
@@ -1247,16 +1278,17 @@ var FALLBACK = 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&
 var posts = [
   {
     id: 1,
-    pillar: 'Le spot',
-    title: 'La Recyclerie',
-    subtitle: 'Paris 18e',
-    imageType: 'photo',
-    image: BASE + 'paris-18e/la-recyclerie.jpg',
-    likes: 847,
-    comments: 23,
+    pillar: 'Le split',
+    title: 'Thomas \u00e0 Orl\u00e9ans',
+    subtitle: '',
+    imageType: 'cover',
+    coverBg: '#2C2825',
+    coverHTML: '<div style="display:flex;flex-direction:column;width:100%;height:100%;"><div style="flex:1;background:url(https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=375&fit=crop) center/cover;"></div><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:Anton,sans-serif;font-size:22px;color:#FAF7F2;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,0.5);z-index:2;">9h / ORL\u00c9ANS</div><div style="flex:1;background:url(https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=375&fit=crop) center/cover;"></div></div>',
+    likes: 489,
+    comments: 22,
     date: '7 avril 2026',
-    caption: 'La Recyclerie, Paris 18e.\n\nUne ancienne gare de la Petite Ceinture. Tu pousses la porte, il y a des plantes partout, des grandes tables en bois, et derri\u00e8re les fen\u00eatres les rails sont devenus un jardin.\n\nWiFi solide, prises sur les grandes tables, et tu peux rester toute la journ\u00e9e sans probl\u00e8me. Le caf\u00e9 est bon, la carte est locavore.\n\nUn de nos spots pr\u00e9f\u00e9r\u00e9s \u00e0 Paris.\n\nTu connais la Recyclerie ? Dis-nous en commentaire.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #parisremotework #cafeparis #paris18 #larecyclerie #deskover'
+    caption: '9h, Orl\u00e9ans. Mails, double espresso, et la journ\u00e9e peut commencer.\n\n- T.',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #orleansremotework #cafeorleans #bosseraorleans #deskover'
   },
   {
     id: 2,
@@ -1348,17 +1380,16 @@ var posts = [
   },
   {
     id: 8,
-    pillar: 'Le split',
-    title: 'Thomas \u00e0 Orl\u00e9ans',
-    subtitle: '',
-    imageType: 'cover',
-    coverBg: '#2C2825',
-    coverHTML: '<div style="display:flex;flex-direction:column;width:100%;height:100%;"><div style="flex:1;background:url(https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=375&fit=crop) center/cover;"></div><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:Anton,sans-serif;font-size:22px;color:#FAF7F2;text-transform:uppercase;text-shadow:0 1px 8px rgba(0,0,0,0.5);z-index:2;">9h / ORL\u00c9ANS</div><div style="flex:1;background:url(https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=375&fit=crop) center/cover;"></div></div>',
-    likes: 489,
-    comments: 22,
+    pillar: 'Le spot',
+    title: 'La Recyclerie',
+    subtitle: 'Paris 18e',
+    imageType: 'photo',
+    image: BASE + 'paris-18e/la-recyclerie.jpg',
+    likes: 847,
+    comments: 23,
     date: '20 avril 2026',
-    caption: '9h, Orl\u00e9ans. Mails, double espresso, et la journ\u00e9e peut commencer.\n\n- T.',
-    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #orleansremotework #cafeorleans #bosseraorleans #deskover'
+    caption: 'La Recyclerie, Paris 18e.\n\nUne ancienne gare de la Petite Ceinture. Tu pousses la porte, il y a des plantes partout, des grandes tables en bois, et derri\u00e8re les fen\u00eatres les rails sont devenus un jardin.\n\nWiFi solide, prises sur les grandes tables, et tu peux rester toute la journ\u00e9e sans probl\u00e8me. Le caf\u00e9 est bon, la carte est locavore.\n\nUn de nos spots pr\u00e9f\u00e9r\u00e9s \u00e0 Paris.\n\nTu connais la Recyclerie ? Dis-nous en commentaire.',
+    hashtags: '#remoteworkfrance #teletravail #travailaucafe #bosserdehors #freelancefrance #digitalnomade #coworkingfrance #cafewifi #cafepourbosser #outravailler #parisremotework #cafeparis #paris18 #larecyclerie #deskover'
   },
   {
     id: 9,

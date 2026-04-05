@@ -107,7 +107,7 @@ const articles = [
     <DeskoverHeader class="hidden lg:block" />
 
     <!-- HERO -->
-    <section class="relative h-[85vh] lg:h-[60vh] overflow-hidden lg:container-deskover lg:rounded-2xl lg:mt-4">
+    <section class="relative h-[85vh] lg:h-[50vh] overflow-hidden">
       <img
         src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=1200&fit=crop"
         alt="Intérieur café"
@@ -143,9 +143,11 @@ const articles = [
     </section>
 
     <!-- CLASSEMENT -->
-    <section class="bg-[var(--color-cream)] rounded-t-3xl -mt-6 relative z-10">
+    <section class="bg-[var(--color-cream)] rounded-t-3xl -mt-6 relative z-10 lg:rounded-none lg:mt-0">
       <!-- Filtres -->
-      <FilterChips :filters="activeFilters" @toggle="toggleFilter" />
+      <div class="lg:container-deskover">
+        <FilterChips :filters="activeFilters" @toggle="toggleFilter" />
+      </div>
 
       <!-- Titre -->
       <div class="px-4 pb-1 lg:container-deskover">
