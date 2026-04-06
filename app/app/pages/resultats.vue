@@ -218,6 +218,39 @@ async function submitEmail() {
   emailSent.value = true
 }
 
+// --- City guide articles ---
+const { data: cityArticles } = await useAsyncData(
+  'resultats-articles',
+  async () => {
+    if (!citySlug.value) return []
+    const { data } = await client
+      .from('articles')
+      .select('title, slug, city, cover_image, description')
+      .eq('published', true)
+      .eq('city_slug', citySlug.value)
+      .order('published_at', { ascending: false })
+      .limit(5)
+    return data || []
+  },
+  { watch: [citySlug] }
+)
+
+// --- City guide article ("Où travailler à...") ---
+const cityGuideArticle = computed(() => {
+  if (!cityArticles.value?.length) return null
+  return cityArticles.value.find(a => a.title?.toLowerCase().startsWith('où travailler')) || null
+})
+
+// --- Search link with current params ---
+const searchLink = computed(() => {
+  const params = new URLSearchParams()
+  for (const [k, v] of Object.entries(route.query)) {
+    if (v) params.set(k, String(v))
+  }
+  const qs = params.toString()
+  return `/search${qs ? '?' + qs : ''}`
+})
+
 // --- SEO ---
 useSeoMeta({
   title: () => searchQuery.value ? `Spots à ${searchQuery.value} — Deskover` : 'Résultats — Deskover',
@@ -231,14 +264,14 @@ useSeoMeta({
     <!-- Header mobile -->
     <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 pt-safe lg:hidden">
       <div class="flex items-center gap-3">
-        <NuxtLink to="/search" class="w-10 h-10 rounded-full bg-[var(--color-linen)] flex items-center justify-center flex-shrink-0">
+        <NuxtLink :to="searchLink" class="w-10 h-10 rounded-full bg-[var(--color-linen)] flex items-center justify-center flex-shrink-0">
           <UIcon name="lucide:chevron-left" class="w-5 h-5 text-[var(--color-espresso)]" />
         </NuxtLink>
         <div class="flex-1 min-w-0">
           <h1 class="font-display text-[18px] text-[var(--color-espresso)] truncate">{{ searchQuery || 'Résultats' }}</h1>
           <p class="text-[12px] text-[var(--color-steam)]">{{ places.length }} lieu{{ places.length > 1 ? 'x' : '' }} trouvé{{ places.length > 1 ? 's' : '' }}</p>
         </div>
-        <NuxtLink to="/search" class="w-10 h-10 rounded-full bg-[var(--color-linen)] flex items-center justify-center flex-shrink-0">
+        <NuxtLink :to="searchLink" class="w-10 h-10 rounded-full bg-[var(--color-linen)] flex items-center justify-center flex-shrink-0">
           <UIcon name="lucide:sliders-horizontal" class="w-5 h-5 text-[var(--color-espresso)]" />
         </NuxtLink>
       </div>
@@ -248,7 +281,7 @@ useSeoMeta({
     <div class="hidden lg:block pt-8 lg:container-deskover">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-4">
-          <NuxtLink to="/search" class="w-10 h-10 rounded-full bg-[var(--color-linen)] flex items-center justify-center">
+          <NuxtLink :to="searchLink" class="w-10 h-10 rounded-full bg-[var(--color-linen)] flex items-center justify-center">
             <UIcon name="lucide:chevron-left" class="w-5 h-5 text-[var(--color-espresso)]" />
           </NuxtLink>
           <div>
@@ -256,11 +289,16 @@ useSeoMeta({
             <p class="text-[13px] text-[var(--color-steam)] mt-0.5">{{ places.length }} lieu{{ places.length > 1 ? 'x' : '' }} trouvé{{ places.length > 1 ? 's' : '' }}</p>
           </div>
         </div>
-        <NuxtLink to="/search" class="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[var(--color-linen)] text-[var(--color-espresso)] text-sm font-semibold hover:bg-[var(--color-parchment)] transition-colors">
+        <NuxtLink :to="searchLink" class="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[var(--color-linen)] text-[var(--color-espresso)] text-sm font-semibold hover:bg-[var(--color-parchment)] transition-colors">
           <UIcon name="lucide:sliders-horizontal" class="w-4 h-4" />
           Modifier la recherche
         </NuxtLink>
       </div>
+    </div>
+
+    <!-- City intro (from "Où travailler à..." article) -->
+    <div v-if="cityGuideArticle?.description" class="px-5 pt-4 lg:container-deskover">
+      <p class="text-[14px] text-[var(--color-roast)] leading-relaxed">{{ cityGuideArticle.description }}</p>
     </div>
 
     <!-- Active filter chips -->
@@ -281,8 +319,8 @@ useSeoMeta({
 
     <!-- Bandeau filtres relaxes -->
     <div v-if="filtersRelaxed" class="px-5 pt-4 lg:container-deskover">
-      <div class="bg-amber-50 border border-amber-200 rounded-2xl px-4 py-3 flex items-start gap-3">
-        <UIcon name="lucide:info" class="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
+      <div class="bg-[var(--color-linen)] rounded-2xl px-4 py-3 flex items-start gap-3">
+        <UIcon name="lucide:info" class="w-5 h-5 text-[var(--color-steam)] flex-shrink-0 mt-0.5" />
         <p class="text-[13px] text-[var(--color-roast)] leading-relaxed">
           Peu de résultats avec tes critères — on t'affiche tous les spots à proximité. Les filtres ne sont pas forcément respectés.
         </p>
@@ -312,18 +350,41 @@ useSeoMeta({
       </NuxtLink>
     </div>
 
+    <!-- City guide articles -->
+    <div v-if="cityArticles?.length" class="px-4 mt-10 lg:container-deskover">
+      <h2 class="font-display text-xl text-[var(--color-espresso)] tracking-[0.04em]">GUIDE {{ searchQuery.toUpperCase() }}</h2>
+      <p class="text-[13px] text-[var(--color-roast)] mt-1.5 leading-relaxed mb-4">
+        Nos articles pour bien bosser {{ searchQuery ? `à ${searchQuery}` : 'dans cette ville' }}.
+      </p>
+      <div class="flex flex-col gap-2.5 md:grid md:grid-cols-3 md:gap-4">
+        <NuxtLink
+          v-for="article in cityArticles"
+          :key="article.slug"
+          :to="`/articles/${article.slug}`"
+          class="block relative rounded-2xl overflow-hidden h-[160px] shadow-[0_2px_12px_rgba(44,40,37,0.1)]"
+        >
+          <img :src="article.cover_image || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop'" :alt="article.title" class="absolute inset-0 w-full h-full object-cover">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+          <div class="absolute bottom-0 left-0 right-0 p-4">
+            <div class="text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--color-terracotta-300)] mb-1">{{ article.city?.toUpperCase() || 'GUIDE' }}</div>
+            <div class="text-[14px] font-bold text-white leading-snug">{{ article.title }}</div>
+          </div>
+        </NuxtLink>
+      </div>
+    </div>
+
     <!-- Empty state -->
     <div v-else class="px-5 pt-16 text-center lg:max-w-[500px] lg:mx-auto">
       <div class="w-20 h-20 rounded-full bg-[var(--color-linen)] flex items-center justify-center mx-auto">
         <UIcon name="lucide:map-pin-off" class="w-10 h-10 text-[var(--color-steam)]" />
       </div>
-      <h2 class="font-display text-[20px] text-[var(--color-espresso)] mt-5">Pas encore de spot{{ searchQuery ? ` a ${searchQuery}` : '' }}</h2>
-      <p class="text-[14px] text-[var(--color-roast)] mt-2 leading-relaxed">
-        On n'a pas encore référencé de lieux dans ce coin. Dis-nous que tu cherches, on s'en occupe !
-      </p>
+      <h2 class="font-display text-[20px] text-[var(--color-espresso)] mt-5">Pas encore de spot{{ searchQuery ? ` à ${searchQuery}` : '' }}</h2>
 
       <!-- Step 1: Send request -->
-      <div v-if="!requestSent" class="mt-6">
+      <div v-if="!requestSent" class="mt-4">
+        <p class="text-[14px] text-[var(--color-roast)] mb-5 leading-relaxed">
+          On n'a pas encore référencé de lieux dans ce coin.
+        </p>
         <button
           class="px-6 py-3.5 rounded-2xl text-sm font-bold bg-[var(--color-terracotta-500)] text-white shadow-[0_4px_16px_rgba(170,76,77,0.25)] active:scale-[0.98] transition-transform"
           :disabled="notifySubmitting"
@@ -331,28 +392,21 @@ useSeoMeta({
         >
           <span class="flex items-center gap-2">
             <UIcon name="lucide:search" class="w-4 h-4" />
-            {{ notifySubmitting ? 'Envoi...' : 'Je cherche un spot ici' }}
+            {{ notifySubmitting ? 'Envoi...' : `Je cherche un spot à ${searchQuery}` }}
           </span>
         </button>
       </div>
 
-      <!-- Step 2: Request sent, propose email -->
-      <div v-else-if="!emailSent" class="mt-6">
-        <div class="flex items-center justify-center gap-2 text-[var(--color-monstera)] mb-4">
+      <!-- Step 2: Request sent, show email field -->
+      <div v-else-if="!emailSent" class="mt-4">
+        <div class="flex items-center justify-center gap-2 text-[var(--color-monstera)] mb-5">
           <UIcon name="lucide:check-circle" class="w-5 h-5" />
           <span class="text-sm font-semibold">C'est noté, on va chercher !</span>
         </div>
-
-        <div v-if="!showEmailField">
-          <button
-            class="text-sm text-[var(--color-roast)] underline underline-offset-2"
-            @click="showEmailField = true"
-          >
-            Me prévenir quand on aura trouvé
-          </button>
-        </div>
-
-        <div v-else class="flex gap-2 max-w-[360px] mx-auto mt-2">
+        <p class="text-[14px] text-[var(--color-roast)] mb-3 leading-relaxed">
+          Laisse ton email pour qu'on te prévienne quand on aura trouvé.
+        </p>
+        <div class="flex gap-2 max-w-[360px] mx-auto">
           <input
             v-model="notifyEmail"
             type="email"
@@ -371,7 +425,7 @@ useSeoMeta({
       </div>
 
       <!-- Step 3: Email sent -->
-      <div v-else class="mt-6 flex items-center justify-center gap-2 text-[var(--color-monstera)]">
+      <div v-else class="mt-4 flex items-center justify-center gap-2 text-[var(--color-monstera)]">
         <UIcon name="lucide:check-circle" class="w-5 h-5" />
         <span class="text-sm font-semibold">On te prévient dès qu'on a trouvé !</span>
       </div>
