@@ -120,14 +120,6 @@ function timeAgo(date: string) {
           <div class="border-t border-steam/10 pt-4">
             <p class="text-sm text-roast whitespace-pre-wrap leading-relaxed">{{ selectedMessage.message }}</p>
           </div>
-          <a
-            v-if="selectedMessage.email"
-            :href="`mailto:${selectedMessage.email}?subject=Re: ${selectedMessage.subject || 'Deskover'}`"
-            class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-dark transition-colors"
-          >
-            <Mail :size="14" />
-            Répondre
-          </a>
         </div>
       </div>
     </div>
