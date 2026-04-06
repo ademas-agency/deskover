@@ -57,13 +57,6 @@ function timeAgo(date: string) {
 
 <template>
   <div class="space-y-6">
-    <div class="flex items-center justify-between">
-      <h1 class="text-xl font-bold text-espresso">
-        Messages
-        <BaseBadge v-if="unreadCount" variant="warning" class="ml-2">{{ unreadCount }} non lu{{ unreadCount > 1 ? 's' : '' }}</BaseBadge>
-      </h1>
-    </div>
-
     <div v-if="loading" class="text-center py-12">
       <div class="inline-block w-8 h-8 border-3 border-primary border-t-transparent rounded-full animate-spin" />
     </div>
@@ -107,8 +100,9 @@ function timeAgo(date: string) {
         <div v-else class="bg-white rounded-xl border border-steam/15 p-6 space-y-4">
           <div class="flex items-start justify-between">
             <div>
-              <h2 class="text-lg font-bold text-espresso">{{ selectedMessage.name }}</h2>
-              <a :href="`mailto:${selectedMessage.email}`" class="text-sm text-primary hover:underline">{{ selectedMessage.email }}</a>
+              <h2 class="text-lg font-bold text-espresso">{{ selectedMessage.subject || selectedMessage.name }}</h2>
+              <a v-if="selectedMessage.email" :href="`mailto:${selectedMessage.email}`" class="text-sm text-primary hover:underline">{{ selectedMessage.email }}</a>
+              <span v-else class="text-sm text-steam">Pas d'email renseigné</span>
             </div>
             <button
               class="w-8 h-8 rounded-full hover:bg-red-50 flex items-center justify-center text-steam hover:text-red-500 transition-colors"
@@ -127,6 +121,7 @@ function timeAgo(date: string) {
             <p class="text-sm text-roast whitespace-pre-wrap leading-relaxed">{{ selectedMessage.message }}</p>
           </div>
           <a
+            v-if="selectedMessage.email"
             :href="`mailto:${selectedMessage.email}?subject=Re: ${selectedMessage.subject || 'Deskover'}`"
             class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-white text-sm font-medium hover:bg-primary-dark transition-colors"
           >

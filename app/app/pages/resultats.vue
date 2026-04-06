@@ -183,38 +183,36 @@ const requestSent = ref(false)
 const emailSent = ref(false)
 const showEmailField = ref(false)
 
+function formatCriteria(): string {
+  const parts: string[] = []
+  if (isOpenOnly.value) parts.push('Ouvert maintenant')
+  if (searchFilters.value.wifi) parts.push('WiFi')
+  if (searchFilters.value.prises) parts.push('Prises')
+  if (searchFilters.value.food) parts.push('Food')
+  if (searchFilters.value.style) parts.push('Style')
+  if (searchFilters.value.category) parts.push('Type: ' + searchFilters.value.category)
+  if (searchFilters.value.gratuit) parts.push('Gratuit')
+  return parts.length ? parts.join(', ') : 'Aucun filtre'
+}
+
 async function submitRequest() {
-  notifySubmitting.value = true
-
-  const criteria: Record<string, any> = { ...searchFilters.value }
-  if (isOpenOnly.value) criteria.open = true
-
   await client.from('messages').insert({
-    name: 'Demande spot',
+    name: `Demande: ${searchQuery.value}`,
     email: '',
-    subject: `Demande de spots à ${searchQuery.value}`,
-    message: `Un utilisateur cherche des spots à ${searchQuery.value}.\nCritères: ${JSON.stringify(criteria)}`,
+    subject: `Demande de spots a ${searchQuery.value}`,
+    message: `Ville: ${searchQuery.value}\nFiltres: ${formatCriteria()}`,
   })
-
-  notifySubmitting.value = false
   requestSent.value = true
 }
 
 async function submitEmail() {
   if (!notifyEmail.value.trim()) return
-  notifySubmitting.value = true
-
-  const criteria: Record<string, any> = { ...searchFilters.value }
-  if (isOpenOnly.value) criteria.open = true
-
   await client.from('messages').insert({
-    name: notifyEmail.value.trim(),
+    name: `Alerte: ${searchQuery.value}`,
     email: notifyEmail.value.trim(),
-    subject: `Alerte spots à ${searchQuery.value}`,
-    message: `Prévenir ${notifyEmail.value.trim()} quand il y aura des spots à ${searchQuery.value}.\nCritères: ${JSON.stringify(criteria)}`,
+    subject: `Alerte spots a ${searchQuery.value}`,
+    message: `Ville: ${searchQuery.value}\nFiltres: ${formatCriteria()}\nPrevenir: ${notifyEmail.value.trim()}`,
   })
-
-  notifySubmitting.value = false
   emailSent.value = true
 }
 
@@ -381,7 +379,7 @@ useSeoMeta({
       <h2 class="font-display text-[20px] text-[var(--color-espresso)] mt-5">Pas encore de spot{{ searchQuery ? ` à ${searchQuery}` : '' }}</h2>
 
       <p class="text-[14px] text-[var(--color-roast)] mt-2 leading-relaxed">
-        On n'a pas encore référencé de lieux dans ce coin.
+        Clique ci-dessous pour qu'on en cherche pour toi.
       </p>
 
       <!-- Step 1: Send request -->
@@ -404,14 +402,14 @@ useSeoMeta({
           <span class="text-sm font-semibold">C'est noté, on va chercher !</span>
         </div>
         <p class="text-[14px] text-[var(--color-roast)] mb-3 leading-relaxed">
-          Laisse-nous ton email pour recevoir un message quand on aura trouvé
+          Saisis ton email pour recevoir un message quand on aura trouvé.
         </p>
         <div class="flex gap-2 max-w-[360px] mx-auto">
           <input
             v-model="notifyEmail"
             type="email"
             placeholder="ton@email.com"
-            class="flex-1 bg-white rounded-2xl px-4 py-3 text-[14px] text-[var(--color-espresso)] placeholder:text-[var(--color-steam)] outline-none shadow-[0_2px_8px_rgba(44,40,37,0.06)]"
+            class="flex-1 bg-white rounded-2xl px-4 py-3 text-[14px] text-[var(--color-espresso)] placeholder:text-[var(--color-steam)] outline-none shadow-[0_2px_8px_rgba(44,40,37,0.06)] autofill:bg-white autofill:shadow-[inset_0_0_0px_1000px_white]"
           >
           <button
             class="px-5 py-3 rounded-2xl text-sm font-bold transition-all"
