@@ -10,6 +10,7 @@ const client = useSupabaseClient()
 const searchQuery = computed(() => (route.query.q as string) || '')
 const searchLat = computed(() => route.query.lat ? parseFloat(route.query.lat as string) : null)
 const searchLng = computed(() => route.query.lng ? parseFloat(route.query.lng as string) : null)
+const searchPostcode = computed(() => (route.query.cp as string) || '')
 
 const searchFilters = computed<PlaceFilters>(() => {
   const f: PlaceFilters = {}
@@ -190,17 +191,22 @@ function formatCriteria(): string {
   if (searchFilters.value.prises) parts.push('Prises')
   if (searchFilters.value.food) parts.push('Food')
   if (searchFilters.value.style) parts.push('Style')
-  if (searchFilters.value.category) parts.push('Type: ' + searchFilters.value.category)
+  if (searchFilters.value.category) parts.push('Type\u00A0: ' + searchFilters.value.category)
   if (searchFilters.value.gratuit) parts.push('Gratuit')
   return parts.length ? parts.join(', ') : 'Aucun filtre'
 }
 
+function formatLocation(): string {
+  const cp = searchPostcode.value
+  return cp ? `${searchQuery.value} (${cp})` : searchQuery.value
+}
+
 async function submitRequest() {
   await client.from('messages').insert({
-    name: `Demande: ${searchQuery.value}`,
+    name: `Demande\u00A0: ${formatLocation()}`,
     email: '',
-    subject: `Demande de spots a ${searchQuery.value}`,
-    message: `Ville: ${searchQuery.value}\nFiltres: ${formatCriteria()}`,
+    subject: `Demande de spots à ${formatLocation()}`,
+    message: `${formatLocation()}\nFiltres\u00A0: ${formatCriteria()}`,
   })
   requestSent.value = true
 }
@@ -208,10 +214,10 @@ async function submitRequest() {
 async function submitEmail() {
   if (!notifyEmail.value.trim()) return
   await client.from('messages').insert({
-    name: `Alerte: ${searchQuery.value}`,
+    name: `Alerte\u00A0: ${formatLocation()}`,
     email: notifyEmail.value.trim(),
-    subject: `Alerte spots a ${searchQuery.value}`,
-    message: `Ville: ${searchQuery.value}\nFiltres: ${formatCriteria()}\nPrevenir: ${notifyEmail.value.trim()}`,
+    subject: `Alerte spots à ${formatLocation()}`,
+    message: `${formatLocation()}\nFiltres\u00A0: ${formatCriteria()}`,
   })
   emailSent.value = true
 }

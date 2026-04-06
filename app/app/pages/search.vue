@@ -2,14 +2,18 @@
 import type { Place } from '~/domain/models/Place'
 
 const { search, getAll } = usePlaces()
+const route = useRoute()
 const router = useRouter()
 
-const query = ref('')
+// Initialize from query params (when coming back from /resultats via "Modifier la recherche")
+const query = ref((route.query.q as string) || '')
 const results = ref<Place[]>([])
 const searching = ref(false)
 const hasSearched = ref(false)
 
-const mode = ref<'now' | 'later'>('now')
+const initMode = route.query.open ? 'now' : (route.query.day || route.query.from || route.query.to) ? 'later' : 'any'
+const mode = ref<'any' | 'now' | 'later'>(initMode)
+const showWhen = ref(false)
 
 // BAN autocomplete
 const suggestions = ref<any[]>([])
@@ -43,23 +47,33 @@ async function onQueryInput() {
   }, 300)
 }
 
+const selectedCoords = ref<{ lat: number; lng: number } | null>(
+  route.query.lat && route.query.lng
+    ? { lat: parseFloat(route.query.lat as string), lng: parseFloat(route.query.lng as string) }
+    : null
+)
+
+const selectedPostcode = ref('')
+
 function selectSuggestion(s: any) {
   query.value = s.city
+  selectedCoords.value = { lat: s.lat, lng: s.lng }
+  selectedPostcode.value = s.postcode || ''
   showSuggestions.value = false
 }
 
 const criteriaFilters = reactive({
-  wifi: false,
-  prises: false,
-  food: false,
-  style: false
+  wifi: !!route.query.wifi,
+  prises: !!route.query.prises,
+  food: !!route.query.food,
+  style: !!route.query.style
 })
 
-const categoryFilter = ref('')
-const accessFilter = ref('')
-const selectedDay = ref('')
-const timeFrom = ref('')
-const timeTo = ref('')
+const categoryFilter = ref((route.query.type as string) || '')
+const accessFilter = ref((route.query.access as string) || '')
+const selectedDay = ref((route.query.day as string) || '')
+const timeFrom = ref((route.query.from as string) || '')
+const timeTo = ref((route.query.to as string) || '')
 
 const categories = [
   { value: 'cafe', label: 'Café', icon: 'lucide:coffee' },
@@ -95,6 +109,11 @@ const timeSlots = ['7h', '8h', '9h', '10h', '11h', '12h', '13h', '14h', '15h', '
 function goToResults() {
   const params: Record<string, string> = {}
   if (query.value.trim()) params.q = query.value.trim()
+  if (selectedCoords.value) {
+    params.lat = String(selectedCoords.value.lat)
+    params.lng = String(selectedCoords.value.lng)
+  }
+  if (selectedPostcode.value) params.cp = selectedPostcode.value
   if (criteriaFilters.wifi) params.wifi = '1'
   if (criteriaFilters.prises) params.prises = '1'
   if (criteriaFilters.food) params.food = '1'
@@ -107,7 +126,7 @@ function goToResults() {
     if (timeFrom.value) params.from = timeFrom.value
     if (timeTo.value) params.to = timeTo.value
   }
-  router.push({ path: '/', query: params })
+  router.push({ path: '/resultats', query: params })
 }
 
 function toggleCriteria(key: string) {
@@ -179,30 +198,27 @@ useSeoMeta({
     </div>
 
     <div class="px-5 lg:px-8 lg:max-w-[680px] lg:mx-auto">
-      <!-- Mode: Maintenant / Plus tard -->
-      <div class="flex bg-[var(--color-linen)] rounded-2xl p-1 mt-1">
+      <!-- Pour quand -->
+      <h3 class="font-display text-[17px] text-[var(--color-espresso)] tracking-[0.06em] mt-1">POUR QUAND</h3>
+
+      <div class="grid grid-cols-2 gap-2 mt-3">
         <button
-          class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[13px] font-semibold transition-all duration-200"
-          :class="mode === 'now' ? 'bg-white text-[var(--color-espresso)] shadow-sm' : 'text-[var(--color-steam)]'"
-          @click="mode = 'now'"
+          class="flex flex-col items-center justify-center gap-1.5 rounded-2xl text-[12px] font-semibold transition-all duration-200 h-[72px]"
+          :class="mode === 'now' ? 'bg-[var(--color-terracotta-500)] text-white' : 'bg-white text-[var(--color-roast)] shadow-[0_2px_8px_rgba(44,40,37,0.06)]'"
+          @click="mode = mode === 'now' ? 'any' : 'now'"
         >
-          <UIcon name="lucide:locate" class="w-4 h-4" />
+          <UIcon name="lucide:locate" class="w-5 h-5" />
           Maintenant
         </button>
         <button
-          class="flex-1 flex items-center justify-center gap-2 py-3 rounded-xl text-[13px] font-semibold transition-all duration-200"
-          :class="mode === 'later' ? 'bg-white text-[var(--color-espresso)] shadow-sm' : 'text-[var(--color-steam)]'"
-          @click="mode = 'later'"
+          class="flex flex-col items-center justify-center gap-1.5 rounded-2xl text-[12px] font-semibold transition-all duration-200 h-[72px]"
+          :class="mode === 'later' ? 'bg-[var(--color-terracotta-500)] text-white' : 'bg-white text-[var(--color-roast)] shadow-[0_2px_8px_rgba(44,40,37,0.06)]'"
+          @click="mode = mode === 'later' ? 'any' : 'later'"
         >
-          <UIcon name="lucide:calendar" class="w-4 h-4" />
-          Plus tard
+          <UIcon name="lucide:calendar" class="w-5 h-5" />
+          Une autre date
         </button>
       </div>
-
-      <!-- Mode NOW -->
-      <p v-if="mode === 'now'" class="text-[12px] text-[var(--color-steam)] mt-3 italic">
-        Spots ouverts maintenant, autour de toi
-      </p>
 
       <!-- Mode LATER: day + time range -->
       <div v-if="mode === 'later'" class="mt-3">
@@ -220,26 +236,33 @@ useSeoMeta({
         </div>
 
         <!-- Time range -->
-        <p class="text-[10px] font-bold uppercase tracking-wide text-[var(--color-steam)] mt-3 mb-1.5">De</p>
-        <div class="flex gap-1.5 overflow-x-auto no-scrollbar -mx-5 px-5 lg:-mx-8 lg:px-8">
-          <button
-            v-for="t in timeSlots"
-            :key="'from-'+t"
-            class="flex-shrink-0 px-3 py-2 rounded-xl text-[11px] font-semibold transition-all"
-            :class="timeFrom === t ? 'bg-[var(--color-espresso)] text-white' : 'bg-white text-[var(--color-roast)]'"
-            @click="timeFrom = timeFrom === t ? '' : t"
-          >{{ t }}</button>
-        </div>
-
-        <p class="text-[10px] font-bold uppercase tracking-wide text-[var(--color-steam)] mt-2.5 mb-1.5">À</p>
-        <div class="flex gap-1.5 overflow-x-auto no-scrollbar -mx-5 px-5 lg:-mx-8 lg:px-8">
-          <button
-            v-for="t in timeSlots"
-            :key="'to-'+t"
-            class="flex-shrink-0 px-3 py-2 rounded-xl text-[11px] font-semibold transition-all"
-            :class="timeTo === t ? 'bg-[var(--color-espresso)] text-white' : 'bg-white text-[var(--color-roast)]'"
-            @click="timeTo = timeTo === t ? '' : t"
-          >{{ t }}</button>
+        <div class="flex gap-3 mt-3">
+          <div class="flex-1">
+            <p class="text-[10px] font-bold uppercase tracking-wide text-[var(--color-steam)] mb-1.5">De</p>
+            <div class="relative">
+              <select
+                v-model="timeFrom"
+                class="w-full appearance-none bg-white rounded-2xl px-4 py-3.5 pr-10 text-[15px] font-semibold text-[var(--color-espresso)] shadow-[0_2px_8px_rgba(44,40,37,0.06)] outline-none cursor-pointer"
+              >
+                <option value="">--</option>
+                <option v-for="t in timeSlots" :key="'from-'+t" :value="t">{{ t }}</option>
+              </select>
+              <UIcon name="lucide:chevron-down" class="w-4 h-4 text-[var(--color-steam)] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
+          </div>
+          <div class="flex-1">
+            <p class="text-[10px] font-bold uppercase tracking-wide text-[var(--color-steam)] mb-1.5">À</p>
+            <div class="relative">
+              <select
+                v-model="timeTo"
+                class="w-full appearance-none bg-white rounded-2xl px-4 py-3.5 pr-10 text-[15px] font-semibold text-[var(--color-espresso)] shadow-[0_2px_8px_rgba(44,40,37,0.06)] outline-none cursor-pointer"
+              >
+                <option value="">--</option>
+                <option v-for="t in timeSlots" :key="'to-'+t" :value="t">{{ t }}</option>
+              </select>
+              <UIcon name="lucide:chevron-down" class="w-4 h-4 text-[var(--color-steam)] absolute right-3.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+            </div>
+          </div>
         </div>
       </div>
 
@@ -309,6 +332,6 @@ useSeoMeta({
         <span class="font-display text-[15px] tracking-[0.06em]">VOIR LES LIEUX</span>
       </button>
     </div>
-    <FabCarte />
+    <!-- Pas de FabCarte ici pour ne pas cacher le CTA -->
   </div>
 </template>
