@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://deskover.fr/sitemap.xml
+Sitemap: https://www.deskover.fr/sitemap.xml

@@ -368,7 +368,7 @@ useSeoMeta({
   ogTitle: () => seoTitle.value,
   description: () => seoDescription.value,
   ogDescription: () => seoDescription.value,
-  ogImage: () => place.value?.photoUrl || 'https://deskover.fr/og-default.png',
+  ogImage: () => place.value?.photoUrl || 'https://www.deskover.fr/og-default.png',
   ogType: 'place',
   ogLocale: 'fr_FR',
   ogSiteName: 'Deskover'
@@ -381,7 +381,7 @@ const jsonLd = computed(() => {
     '@context': 'https://schema.org',
     '@type': p.category === 'coworking' ? 'CoworkingSpace' : 'CafeOrCoffeeShop',
     'name': p.name,
-    'url': `https://deskover.fr/lieu/${placeSlug}`,
+    'url': `https://www.deskover.fr/lieu/${placeSlug}`,
     'address': {
       '@type': 'PostalAddress',
       'streetAddress': p.address,
@@ -426,9 +426,9 @@ const jsonLd = computed(() => {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       'itemListElement': [
-        { '@type': 'ListItem', 'position': 1, 'name': 'Deskover', 'item': 'https://deskover.fr' },
-        { '@type': 'ListItem', 'position': 2, 'name': p.city, 'item': `https://deskover.fr/ville/${p.citySlug}` },
-        { '@type': 'ListItem', 'position': 3, 'name': p.name, 'item': `https://deskover.fr/lieu/${placeSlug}` }
+        { '@type': 'ListItem', 'position': 1, 'name': 'Deskover', 'item': 'https://www.deskover.fr' },
+        { '@type': 'ListItem', 'position': 2, 'name': p.city, 'item': `https://www.deskover.fr/ville/${p.citySlug}` },
+        { '@type': 'ListItem', 'position': 3, 'name': p.name, 'item': `https://www.deskover.fr/lieu/${placeSlug}` }
       ]
     }
   ]
@@ -436,7 +436,7 @@ const jsonLd = computed(() => {
 
 useHead({
   link: [
-    { rel: 'canonical', href: () => `https://deskover.fr/lieu/${placeSlug}` }
+    { rel: 'canonical', href: () => `https://www.deskover.fr/lieu/${placeSlug}` }
   ],
   script: [
     {

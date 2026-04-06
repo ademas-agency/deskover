@@ -179,7 +179,7 @@ useSeoMeta({
   ogTitle: () => article.value?.title || 'Article — Deskover',
   description: () => article.value?.description || '',
   ogDescription: () => article.value?.description || '',
-  ogImage: () => article.value?.cover_image || 'https://deskover.fr/og-default.png',
+  ogImage: () => article.value?.cover_image || 'https://www.deskover.fr/og-default.png',
   ogType: 'article',
   ogLocale: 'fr_FR',
   ogSiteName: 'Deskover'
@@ -194,22 +194,22 @@ const jsonLd = computed(() => {
       '@type': 'Article',
       'headline': a.title,
       'description': a.description,
-      'image': a.cover_image || 'https://deskover.fr/og-default.png',
-      'url': `https://deskover.fr/articles/${slug}`,
+      'image': a.cover_image || 'https://www.deskover.fr/og-default.png',
+      'url': `https://www.deskover.fr/articles/${slug}`,
       'datePublished': a.published_at,
       'dateModified': a.updated_at || a.published_at,
       'author': {
         '@type': 'Organization',
         'name': 'Deskover',
-        'url': 'https://deskover.fr'
+        'url': 'https://www.deskover.fr'
       },
       'publisher': {
         '@type': 'Organization',
         'name': 'Deskover',
-        'url': 'https://deskover.fr',
+        'url': 'https://www.deskover.fr',
         'logo': {
           '@type': 'ImageObject',
-          'url': 'https://deskover.fr/icon-512.png'
+          'url': 'https://www.deskover.fr/icon-512.png'
         }
       }
     },
@@ -217,9 +217,9 @@ const jsonLd = computed(() => {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       'itemListElement': [
-        { '@type': 'ListItem', 'position': 1, 'name': 'Deskover', 'item': 'https://deskover.fr' },
-        { '@type': 'ListItem', 'position': 2, 'name': 'Articles', 'item': 'https://deskover.fr/articles' },
-        { '@type': 'ListItem', 'position': 3, 'name': a.title, 'item': `https://deskover.fr/articles/${slug}` }
+        { '@type': 'ListItem', 'position': 1, 'name': 'Deskover', 'item': 'https://www.deskover.fr' },
+        { '@type': 'ListItem', 'position': 2, 'name': 'Articles', 'item': 'https://www.deskover.fr/articles' },
+        { '@type': 'ListItem', 'position': 3, 'name': a.title, 'item': `https://www.deskover.fr/articles/${slug}` }
       ]
     }
   ]
@@ -227,7 +227,7 @@ const jsonLd = computed(() => {
 
 useHead({
   link: [
-    { rel: 'canonical', href: () => `https://deskover.fr/articles/${slug}` }
+    { rel: 'canonical', href: () => `https://www.deskover.fr/articles/${slug}` }
   ],
   script: [
     {

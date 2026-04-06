@@ -164,7 +164,7 @@ useSeoMeta({
   ogTitle: () => `Où travailler à ${cityName.value} — Deskover`,
   description: () => `Les meilleurs cafés, coworkings et spots pour bosser à ${cityName.value}. WiFi, prises, ambiance — tout est noté par Deskover.`,
   ogDescription: () => `Les meilleurs spots pour bosser à ${cityName.value}, sélectionnés par Deskover.`,
-  ogImage: () => places.value?.[0]?.photoUrl || 'https://deskover.fr/og-default.png',
+  ogImage: () => places.value?.[0]?.photoUrl || 'https://www.deskover.fr/og-default.png',
   ogType: 'website',
   ogLocale: 'fr_FR',
   ogSiteName: 'Deskover'
@@ -174,7 +174,7 @@ const jsonLd = computed(() => {
   const items = (places.value || []).map((p, i) => ({
     '@type': 'ListItem',
     'position': i + 1,
-    'url': `https://deskover.fr/lieu/${p.slug || p.id}`,
+    'url': `https://www.deskover.fr/lieu/${p.slug || p.id}`,
     'name': p.name
   }))
 
@@ -184,7 +184,7 @@ const jsonLd = computed(() => {
       '@type': 'CollectionPage',
       'name': `Où travailler à ${cityName.value}`,
       'description': `Les meilleurs cafés, coworkings et spots pour bosser à ${cityName.value}.`,
-      'url': `https://deskover.fr/ville/${slug}`,
+      'url': `https://www.deskover.fr/ville/${slug}`,
       'mainEntity': {
         '@type': 'ItemList',
         'numberOfItems': items.length,
@@ -195,8 +195,8 @@ const jsonLd = computed(() => {
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       'itemListElement': [
-        { '@type': 'ListItem', 'position': 1, 'name': 'Deskover', 'item': 'https://deskover.fr' },
-        { '@type': 'ListItem', 'position': 2, 'name': cityName.value, 'item': `https://deskover.fr/ville/${slug}` }
+        { '@type': 'ListItem', 'position': 1, 'name': 'Deskover', 'item': 'https://www.deskover.fr' },
+        { '@type': 'ListItem', 'position': 2, 'name': cityName.value, 'item': `https://www.deskover.fr/ville/${slug}` }
       ]
     }
   ]
@@ -204,7 +204,7 @@ const jsonLd = computed(() => {
 
 useHead({
   link: [
-    { rel: 'canonical', href: () => `https://deskover.fr/ville/${slug}` }
+    { rel: 'canonical', href: () => `https://www.deskover.fr/ville/${slug}` }
   ],
   script: [
     {

@@ -8,7 +8,7 @@ export default defineNuxtConfig({
   ],
 
   site: {
-    url: 'https://deskover.fr',
+    url: 'https://www.deskover.fr',
     name: 'Deskover'
   },
 
@@ -51,7 +51,7 @@ export default defineNuxtConfig({
         { property: 'og:description', content: 'Les meilleurs spots pour bosser, sélectionnés pour toi.' },
         { property: 'og:type', content: 'website' },
         { name: 'google-site-verification', content: 'A4gym-1WU4NwHLqNi4MqvQI49W7845e2989tPtbD3PM' },
-        { property: 'og:image', content: 'https://deskover.fr/og-default.png' },
+        { property: 'og:image', content: 'https://www.deskover.fr/og-default.png' },
         { property: 'og:locale', content: 'fr_FR' },
         { property: 'og:site_name', content: 'Deskover' }
       ],
