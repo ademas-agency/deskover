@@ -132,19 +132,78 @@ useSeoMeta({
 })
 
 const supabase = useSupabaseClient()
-const { data: articles } = await useAsyncData('home-articles', async () => {
+const { data: allArticles } = await useAsyncData('home-articles', async () => {
   const { data } = await supabase
     .from('articles')
-    .select('title, slug, city, cover_image')
+    .select('title, slug, city, city_slug, cover_image')
     .eq('published', true)
     .order('published_at', { ascending: false })
-    .limit(5)
   return (data || []).map(a => ({
     title: a.title,
     slug: a.slug,
+    citySlug: a.city_slug,
     tag: a.city?.toUpperCase() || 'GUIDE',
     img: a.cover_image || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop'
   }))
+})
+
+// Pick 5 diverse articles: 1 local (nearest city) + 4 random from different cities
+const articles = computed(() => {
+  const all = allArticles.value || []
+  if (all.length === 0) return []
+
+  // Find the nearest city using loaded places
+  let localSlug: string | null = null
+  if (userCoords.value && rawPlaces.value?.length) {
+    const { lat, lng } = userCoords.value
+    let minDist = Infinity
+    for (const p of rawPlaces.value) {
+      const d = haversineKm(lat, lng, p.latitude, p.longitude)
+      if (d < minDist) {
+        minDist = d
+        localSlug = p.citySlug
+      }
+    }
+  }
+
+  const picked: typeof all = []
+  const usedSlugs = new Set<string>()
+
+  // 1. Local article first
+  if (localSlug) {
+    const local = all.find(a => a.citySlug === localSlug)
+    if (local) {
+      picked.push(local)
+      usedSlugs.add(local.slug)
+    }
+  }
+
+  // 2. Fill with random articles, favoring attractive cities
+  const featuredCities = new Set([
+    'paris', 'lyon', 'bordeaux', 'montpellier', 'nantes', 'toulouse',
+    'marseille', 'nice', 'strasbourg', 'lille', 'rennes', 'annecy',
+    'grenoble', 'aix-en-provence', 'tours', 'rouen', 'dijon'
+  ])
+  const remaining = all.filter(a => !usedSlugs.has(a.slug))
+  // Shuffle using seeded random (changes daily)
+  const today = new Date().toISOString().slice(0, 10)
+  const seed = Array.from(today).reduce((acc, c) => acc + c.charCodeAt(0), 0)
+  const shuffled = remaining
+    .map((a, i) => ({ a, sort: Math.sin(seed * (i + 1)) }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(x => x.a)
+  // Featured cities first, then the rest
+  const prioritized = [
+    ...shuffled.filter(a => featuredCities.has(a.citySlug)),
+    ...shuffled.filter(a => !featuredCities.has(a.citySlug))
+  ]
+
+  for (const a of prioritized) {
+    if (picked.length >= 5) break
+    picked.push(a)
+  }
+
+  return picked
 })
 </script>
 
