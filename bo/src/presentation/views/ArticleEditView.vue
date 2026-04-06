@@ -12,6 +12,7 @@ import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import TiptapImage from '@tiptap/extension-image'
 import TiptapLink from '@tiptap/extension-link'
+import { Markdown } from 'tiptap-markdown'
 import {
   ArrowLeft, Save, Bold, Italic, List, ListOrdered,
   Heading1, Heading2, Quote, ImageIcon, Link, Undo, Redo,
@@ -30,11 +31,16 @@ const editor = useEditor({
     StarterKit,
     TiptapImage,
     TiptapLink.configure({ openOnClick: false }),
+    Markdown.configure({
+      html: true,
+      transformPastedText: true,
+      transformCopiedText: true,
+    }),
   ],
   content: '',
   onUpdate: ({ editor: ed }) => {
     if (article.value) {
-      article.value.content = ed.getHTML()
+      article.value.content = ed.storage.markdown.getMarkdown()
     }
   },
 })
