@@ -343,9 +343,64 @@ useSeoMeta({
   ogSiteName: 'Deskover'
 })
 
+const jsonLd = computed(() => {
+  if (!place.value) return null
+  const p = place.value
+  const schema: Record<string, any> = {
+    '@context': 'https://schema.org',
+    '@type': p.category === 'coworking' ? 'CoworkingSpace' : 'CafeOrCoffeeShop',
+    'name': p.name,
+    'url': `https://deskover.fr/lieu/${route.params.id}`,
+    'address': {
+      '@type': 'PostalAddress',
+      'streetAddress': p.address,
+      'addressLocality': p.city,
+      'addressCountry': 'FR'
+    }
+  }
+  if (p.photoUrl) schema.image = p.photoUrl
+  if (p.phone) schema.telephone = p.phone
+  if (p.website) schema.url = p.website
+  if (p.latitude && p.longitude) {
+    schema.geo = {
+      '@type': 'GeoCoordinates',
+      'latitude': p.latitude,
+      'longitude': p.longitude
+    }
+  }
+  if (p.googleRating && p.googleReviewsCount) {
+    schema.aggregateRating = {
+      '@type': 'AggregateRating',
+      'ratingValue': p.googleRating,
+      'reviewCount': p.googleReviewsCount,
+      'bestRating': 5
+    }
+  }
+  if (p.openingHours) {
+    const dayMap: Record<string, string> = {
+      monday: 'Mo', tuesday: 'Tu', wednesday: 'We',
+      thursday: 'Th', friday: 'Fr', saturday: 'Sa', sunday: 'Su'
+    }
+    const specs: string[] = []
+    for (const [day, hours] of Object.entries(p.openingHours)) {
+      if (hours && hours !== 'Fermé' && dayMap[day]) {
+        specs.push(`${dayMap[day]} ${hours}`)
+      }
+    }
+    if (specs.length) schema.openingHours = specs
+  }
+  return schema
+})
+
 useHead({
   link: [
     { rel: 'canonical', href: () => `https://deskover.fr/lieu/${route.params.id}` }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: () => jsonLd.value ? JSON.stringify(jsonLd.value) : ''
+    }
   ]
 })
 </script>
