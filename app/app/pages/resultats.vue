@@ -380,31 +380,31 @@ useSeoMeta({
       </div>
       <h2 class="font-display text-[20px] text-[var(--color-espresso)] mt-5">Pas encore de spot{{ searchQuery ? ` à ${searchQuery}` : '' }}</h2>
 
+      <p class="text-[14px] text-[var(--color-roast)] mt-2 leading-relaxed">
+        On n'a pas encore référencé de lieux dans ce coin.
+      </p>
+
       <!-- Step 1: Send request -->
-      <div v-if="!requestSent" class="mt-4">
-        <p class="text-[14px] text-[var(--color-roast)] mb-5 leading-relaxed">
-          On n'a pas encore référencé de lieux dans ce coin.
-        </p>
+      <div v-if="!requestSent" class="mt-6">
         <button
           class="px-6 py-3.5 rounded-2xl text-sm font-bold bg-[var(--color-terracotta-500)] text-white shadow-[0_4px_16px_rgba(170,76,77,0.25)] active:scale-[0.98] transition-transform"
-          :disabled="notifySubmitting"
           @click="submitRequest"
         >
           <span class="flex items-center gap-2">
             <UIcon name="lucide:search" class="w-4 h-4" />
-            {{ notifySubmitting ? 'Envoi...' : `Je cherche un spot à ${searchQuery}` }}
+            Je cherche un spot{{ searchQuery ? ` à ${searchQuery}` : '' }}
           </span>
         </button>
       </div>
 
       <!-- Step 2: Request sent, show email field -->
-      <div v-else-if="!emailSent" class="mt-4">
+      <div v-else-if="!emailSent" class="mt-6">
         <div class="flex items-center justify-center gap-2 text-[var(--color-monstera)] mb-5">
           <UIcon name="lucide:check-circle" class="w-5 h-5" />
           <span class="text-sm font-semibold">C'est noté, on va chercher !</span>
         </div>
         <p class="text-[14px] text-[var(--color-roast)] mb-3 leading-relaxed">
-          Laisse ton email pour qu'on te prévienne quand on aura trouvé.
+          Laisse-nous ton email pour recevoir un message quand on aura trouvé
         </p>
         <div class="flex gap-2 max-w-[360px] mx-auto">
           <input
@@ -416,16 +416,16 @@ useSeoMeta({
           <button
             class="px-5 py-3 rounded-2xl text-sm font-bold transition-all"
             :class="notifyEmail.trim() ? 'bg-[var(--color-terracotta-500)] text-white' : 'bg-[var(--color-parchment)] text-[var(--color-steam)]'"
-            :disabled="!notifyEmail.trim() || notifySubmitting"
+            :disabled="!notifyEmail.trim()"
             @click="submitEmail"
           >
-            {{ notifySubmitting ? '...' : 'OK' }}
+            OK
           </button>
         </div>
       </div>
 
       <!-- Step 3: Email sent -->
-      <div v-else class="mt-4 flex items-center justify-center gap-2 text-[var(--color-monstera)]">
+      <div v-else class="mt-6 flex items-center justify-center gap-2 text-[var(--color-monstera)]">
         <UIcon name="lucide:check-circle" class="w-5 h-5" />
         <span class="text-sm font-semibold">On te prévient dès qu'on a trouvé !</span>
       </div>
