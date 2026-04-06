@@ -178,8 +178,15 @@ useSeoMeta({
       <div class="w-6" />
     </div>
 
+    <!-- Close button desktop -->
+    <div class="hidden lg:flex justify-end pt-6 lg:max-w-[600px] lg:mx-auto">
+      <NuxtLink to="/" class="w-10 h-10 rounded-full bg-[var(--color-parchment)] flex items-center justify-center hover:bg-[var(--color-steam)]/20 transition-colors">
+        <UIcon name="lucide:x" class="w-5 h-5 text-[var(--color-espresso)]" />
+      </NuxtLink>
+    </div>
+
     <!-- Step 1: Infos -->
-    <div v-if="step === 1" class="px-5 pt-6 lg:max-w-[600px] lg:mx-auto">
+    <div v-if="step === 1" class="px-5 pt-6 lg:pt-0 lg:max-w-[600px] lg:mx-auto">
       <h1 class="font-display text-[22px] text-[var(--color-espresso)]">Tu connais un bon spot ?</h1>
       <p class="text-[14px] text-[var(--color-roast)] mt-2">Ajoute-le en 30 secondes.</p>
 

@@ -32,6 +32,7 @@ export interface Place {
   business_status: string
   status: string
   instagram: string
+  conditions: string
   curation_score: number
   photos: string[]
   last_verified_at: string | null
@@ -59,4 +60,6 @@ export const SIGNAL_LABELS: Record<string, string> = {
   silencieux: 'Silencieux',
   musique: 'Musique',
   lumineux: 'Lumineux',
+  payant: 'Payant',
+  reservation: 'Sur réservation',
 }

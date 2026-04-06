@@ -21,6 +21,7 @@
     "@vite-pwa/nuxt": "^1.1.1",
     "maplibre-gl": "^5.22.0",
     "nuxt": "^4.4.2",
+    "nuxt-gtag": "^4.1.0",
     "tailwindcss": "^4.2.2"
   },
   "devDependencies": {

@@ -136,7 +136,7 @@ const topCities = computed(() => {
               <p class="text-xs text-steam">{{ article.city }}</p>
             </div>
             <BaseBadge :variant="article.status === 'published' ? 'success' : 'neutral'">
-              {{ article.status === 'published' ? 'Publie' : 'Brouillon' }}
+              {{ article.status === 'published' ? 'Publié' : 'Brouillon' }}
             </BaseBadge>
           </div>
         </div>

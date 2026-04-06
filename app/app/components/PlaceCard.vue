@@ -50,7 +50,7 @@ onUnmounted(() => { if (timer) clearInterval(timer) })
 </script>
 
 <template>
-  <article class="bg-white rounded-[20px] overflow-hidden shadow-[0_4px_16px_rgba(44,40,37,0.08)] cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(44,40,37,0.12)]">
+  <article class="bg-white rounded-[20px] overflow-hidden shadow-[0_4px_16px_rgba(44,40,37,0.08)] cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(44,40,37,0.12)] h-full flex flex-col">
     <!-- Image -->
     <div class="relative h-[200px] overflow-hidden">
       <img :src="allImages[current]" :alt="place.name" :key="current" class="w-full h-full object-cover transition-opacity duration-500">
@@ -74,11 +74,11 @@ onUnmounted(() => { if (timer) clearInterval(timer) })
       </div>
     </div>
     <!-- Body -->
-    <div class="p-[18px]">
+    <div class="p-[18px] flex-1 flex flex-col">
       <h2 class="font-display text-xl text-[var(--color-espresso)] tracking-[0.02em]">{{ place.name }}</h2>
-      <p class="text-xs text-[var(--color-steam)] mt-1">{{ place.type }}<template v-if="place.neighborhood"> · {{ place.neighborhood }}</template><template v-if="place.city"> · {{ place.city }}</template><template v-if="place.distance"> · {{ place.distance }}</template></p>
+      <p class="text-xs text-[var(--color-steam)] mt-1 line-clamp-2 pb-4">{{ place.type }}<template v-if="place.neighborhood"> · {{ place.neighborhood }}</template><template v-if="place.city"> · {{ place.city }}</template><template v-if="place.distance"> · {{ place.distance }}</template></p>
       <!-- Vitals -->
-      <PlaceVitals :vitals="place.vitals" class="mt-3.5" />
+      <PlaceVitals :vitals="place.vitals" class="mt-auto pt-4" />
     </div>
   </article>
 </template>

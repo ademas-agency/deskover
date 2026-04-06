@@ -36,6 +36,7 @@ function rowToPlace(row: any): Place {
     instagram: row.instagram_handle || '',
     curation_score: row.curation_score ?? 0,
     photos: row.photos || [],
+    conditions: row.conditions || '',
     last_verified_at: row.last_verified_at || null,
   }
 }
@@ -89,6 +90,7 @@ export class PlaceRepository {
       photo_storage_path: place.photo_storage_path || null,
       photo_url: place.photo_url || null,
       curation_score: place.curation_score,
+      conditions: place.conditions || null,
       photos: place.photos || [],
       last_verified_at: place.last_verified_at,
     }

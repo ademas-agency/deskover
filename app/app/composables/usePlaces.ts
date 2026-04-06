@@ -1,4 +1,4 @@
-import type { PlaceFilters, PlaceSortBy } from '~/domain/models/Place'
+import type { Place, PlaceFilters, PlaceSortBy } from '~/domain/models/Place'
 import type { PlaceRepository } from '~/domain/interfaces/PlaceRepository'
 import { SupabasePlaceRepository } from '~/infrastructure/repositories/SupabasePlaceRepository'
 
@@ -20,6 +20,7 @@ export function usePlaces() {
     getAllForMap: () => (repo as SupabasePlaceRepository).getAllForMap(),
     getById: (id: string) => repo.getById(id),
     getBySlug: (slug: string) => (repo as SupabasePlaceRepository).getBySlug(slug),
+    getSimilar: (place: Place, limit?: number) => (repo as SupabasePlaceRepository).getSimilar(place, limit),
     getByCity: (citySlug: string, filters?: PlaceFilters) => repo.getByCity(citySlug, filters),
     search: (query: string) => repo.search(query),
     getCities: () => repo.getCities()

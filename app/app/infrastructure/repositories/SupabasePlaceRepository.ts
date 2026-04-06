@@ -19,11 +19,26 @@ function signalToVitals(signals: string[]): Vital[] {
   const styleStatus: VitalStatus = has('ambiance') ? 'good' : has('calme') ? 'good' : 'medium'
   const styleValue = has('ambiance') ? 'Canon' : has('calme') ? 'Superbe' : 'Sympa'
 
+  const isPaid = has('payant')
+  const isResa = has('reservation')
+  let accesStatus: VitalStatus
+  let accesValue: string
+  if (!isPaid && !isResa) {
+    accesStatus = 'good'; accesValue = 'Gratuit'
+  } else if (isPaid && isResa) {
+    accesStatus = 'medium'; accesValue = 'Payant · Sur résa'
+  } else if (isResa) {
+    accesStatus = 'medium'; accesValue = 'Sur résa'
+  } else {
+    accesStatus = 'medium'; accesValue = 'Payant'
+  }
+
   return [
     { icon: 'lucide:wifi', label: 'WiFi', value: wifiValue, status: wifiStatus },
     { icon: 'lucide:zap', label: 'Prises', value: prisesValue, status: prisesStatus },
     { icon: 'lucide:utensils', label: 'Food', value: foodValue, status: foodStatus },
-    { icon: 'lucide:sparkles', label: 'Style', value: styleValue, status: styleStatus }
+    { icon: 'lucide:sparkles', label: 'Style', value: styleValue, status: styleStatus },
+    { icon: 'lucide:ticket', label: 'Accès', value: accesValue, status: accesStatus }
   ]
 }
 
@@ -143,6 +158,7 @@ function rowToPlace(row: any, index: number, mentions?: any[]): Place {
     nextOpen: computeOpenStatus(row.opening_hours).nextOpen,
     blogMentions,
     instagram: row.instagram_handle || undefined,
+    conditions: row.conditions || undefined,
     tag
   }
 }
@@ -193,6 +209,43 @@ export class SupabasePlaceRepository implements PlaceRepository {
     if (error || !data) return null
 
     return rowToPlace(data, 0, data.blog_mentions)
+  }
+
+  async getSimilar(place: Place, limit = 3): Promise<Place[]> {
+    // Find places in the same city with similar category, excluding the current one
+    let query = this.client
+      .from('places')
+      .select('*, blog_mentions(*)')
+      .eq('status', 'approved')
+      .neq('business_status', 'CLOSED_PERMANENTLY')
+      .neq('id', place.id)
+      .eq('city_key', place.citySlug)
+      .eq('place_type', place.category)
+      .order('curation_score', { ascending: false, nullsFirst: false })
+      .limit(limit)
+
+    const { data, error } = await query
+    if (error) throw error
+
+    // If not enough results in same category, fill with same city
+    let results = data || []
+    if (results.length < limit) {
+      const ids = [place.id, ...results.map((r: any) => r.id)]
+      const { data: extra } = await this.client
+        .from('places')
+        .select('*, blog_mentions(*)')
+        .eq('status', 'approved')
+        .neq('business_status', 'CLOSED_PERMANENTLY')
+        .eq('city_key', place.citySlug)
+        .not('id', 'in', `(${ids.join(',')})`)
+        .order('curation_score', { ascending: false, nullsFirst: false })
+        .limit(limit - results.length)
+      if (extra) results = [...results, ...extra]
+    }
+
+    return results.map((row: any, i: number) =>
+      rowToPlace(row, i, row.blog_mentions)
+    )
   }
 
   async getBySlug(slug: string): Promise<Place | null> {
@@ -286,6 +339,9 @@ export class SupabasePlaceRepository implements PlaceRepository {
     if (filters.food) query = query.contains('signals', ['food'])
     if (filters.calme) query = query.contains('signals', ['calme'])
     if (filters.terrasse) query = query.contains('signals', ['terrasse'])
+    if (filters.gratuit) {
+      query = query.not('signals', 'cs', '{"payant"}').not('signals', 'cs', '{"reservation"}')
+    }
     if (filters.query) {
       const q = filters.query.toLowerCase()
       const qNorm = q.normalize('NFD').replace(/[\u0300-\u036f]/g, '')

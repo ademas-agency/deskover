@@ -1,7 +1,7 @@
 <script setup lang="ts">
 const route = useRoute()
 const router = useRouter()
-const { getBySlug, getById } = usePlaces()
+const { getBySlug, getById, getSimilar } = usePlaces()
 
 const placeSlug = route.params.slug as string
 
@@ -23,6 +23,15 @@ const { data: place, status, refresh: refreshPlace } = await useAsyncData(
     return getById(placeSlug)
   }
 )
+const { data: similarPlaces } = await useAsyncData(
+  `similar-${placeSlug}`,
+  async () => {
+    if (!place.value) return []
+    return getSimilar(place.value, 3)
+  },
+  { watch: [place] }
+)
+
 const loading = computed(() => status.value === 'pending')
 const showSpeedTest = ref(false)
 const showContribute = ref(false)
@@ -531,6 +540,10 @@ useHead({
         <div class="px-4 mt-5 lg:px-0">
           <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-2.5">LES VITALS</div>
           <PlaceVitals :vitals="place.vitals" size="lg" @vital-click="onVitalClick" />
+          <p v-if="place.conditions" class="text-[13px] text-[var(--color-steam)] mt-2.5 italic">
+            <UIcon name="lucide:info" class="w-3.5 h-3.5 inline mr-1" />
+            {{ place.conditions }}
+          </p>
         </div>
 
         <!-- Bouton itinéraire (mobile only) -->
@@ -587,7 +600,7 @@ useHead({
         </div>
 
         <!-- Séparateur -->
-        <div class="text-center py-5 text-[var(--color-steam)] text-xl tracking-[4px]">· · ·</div>
+        <div class="text-center py-5 text-[var(--color-steam)] text-xl tracking-[4px] font-xl font-extrabold">· · ·</div>
 
         <!-- Vu dans -->
         <div v-if="place.blogMentions.length" class="px-4 lg:px-0">
@@ -674,6 +687,32 @@ useHead({
 
     </div>
 
+    <!-- Tu devrais aussi aimer -->
+    <div v-if="similarPlaces?.length" class="px-4 mt-8 pb-4 lg:container-deskover">
+      <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-4">TU DEVRAIS AUSSI AIMER</div>
+      <div class="flex flex-col gap-4 md:grid md:grid-cols-3 md:gap-5">
+        <NuxtLink
+          v-for="sp in similarPlaces"
+          :key="sp.id"
+          :to="`/lieu/${sp.slug || sp.id}`"
+          class="block"
+        >
+          <PlaceCard :place="{
+            name: sp.name,
+            type: sp.category === 'coffee_shop' ? 'Coffee Shop' : sp.category === 'cafe' ? 'Café' : sp.category === 'coworking' ? 'Coworking' : sp.category === 'tiers_lieu' ? 'Tiers-lieu' : sp.category,
+            neighborhood: '',
+            city: sp.address || sp.city,
+            distance: '',
+            isOpen: sp.isOpen ?? true,
+            nextOpen: sp.nextOpen,
+            image: sp.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop',
+            images: sp.photos || [],
+            vitals: sp.vitals
+          }" />
+        </NuxtLink>
+      </div>
+    </div>
+
     <!-- CTA sticky (mobile only) -->
     <div class="fixed bottom-0 left-0 right-0 p-4 pb-9 bg-gradient-to-t from-[var(--color-cream)] via-[var(--color-cream)] to-transparent z-50 lg:hidden">
       <button
@@ -703,7 +742,7 @@ useHead({
         leave-from-class="opacity-100"
         leave-to-class="opacity-0"
       >
-        <div v-if="showContribute && place" class="fixed inset-0 z-[100] bg-black/50" @click.self="showContribute = false">
+        <div v-if="showContribute && place" class="fixed inset-0 z-[100] bg-black/50 lg:flex lg:items-center lg:justify-center" @click.self="showContribute = false">
           <Transition
             enter-active-class="transition duration-300 ease-out"
             enter-from-class="translate-y-full"
@@ -712,7 +751,7 @@ useHead({
             leave-from-class="translate-y-0"
             leave-to-class="translate-y-full"
           >
-            <div v-if="showContribute" class="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl max-h-[92vh] overflow-y-auto">
+            <div v-if="showContribute" class="absolute bottom-0 left-0 right-0 bg-white rounded-t-3xl max-h-[92vh] overflow-y-auto lg:relative lg:max-w-[520px] lg:w-full lg:rounded-2xl lg:max-h-[85vh]">
               <!-- Handle -->
               <div class="flex justify-center pt-3 pb-1">
                 <div class="w-10 h-1 rounded-full bg-[var(--color-parchment)]" />
@@ -720,7 +759,7 @@ useHead({
 
               <!-- Header -->
               <div class="flex items-center justify-between px-5 pb-3">
-                <h3 class="font-display text-base text-[var(--color-espresso)] tracking-[0.05em]">{{ place.name }}</h3>
+                <h3 class="font-display text-base text-[var(--color-espresso)] tracking-[0.05em]">Ton avis sur {{ place.name }}</h3>
                 <button @click="showContribute = false" class="w-8 h-8 rounded-full bg-[var(--color-linen)] flex items-center justify-center">
                   <UIcon name="lucide:x" class="w-4 h-4 text-[var(--color-steam)]" />
                 </button>

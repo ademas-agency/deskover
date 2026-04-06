@@ -49,7 +49,7 @@ const iconSize = (size: string) => {
       <!-- Label -->
       <span class="text-[9px] uppercase tracking-[0.06em] text-[var(--color-steam)]" :class="size === 'lg' && 'text-[10px]'">{{ vital.label }}</span>
       <!-- Value -->
-      <span class="font-bold" :class="[size === 'lg' ? 'text-xs' : 'text-[11px]', statusColor(vital.status)]">{{ vital.value }}</span>
+      <span class="font-bold text-center leading-tight" :class="[size === 'lg' ? 'text-xs' : 'text-[11px]', statusColor(vital.status)]">{{ vital.value }}</span>
     </div>
   </div>
 </template>

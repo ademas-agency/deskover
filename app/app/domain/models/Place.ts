@@ -51,6 +51,9 @@ export interface Place {
   nextOpen?: string
   businessStatus?: string
 
+  // Conditions d'accès
+  conditions?: string
+
   // Press
   blogMentions: BlogMention[]
 
@@ -74,6 +77,7 @@ export interface PlaceFilters {
   style?: boolean
   calme?: boolean
   terrasse?: boolean
+  gratuit?: boolean
   query?: string
 }
 

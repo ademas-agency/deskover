@@ -124,7 +124,7 @@ function addLink() {
               class="w-full rounded-lg border border-steam/30 bg-white px-3 py-2 text-sm text-espresso outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
             >
               <option value="draft">Brouillon</option>
-              <option value="published">Publie</option>
+              <option value="published">Publié</option>
             </select>
           </div>
           <BaseInput

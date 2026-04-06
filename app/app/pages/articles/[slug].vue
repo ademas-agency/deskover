@@ -448,7 +448,8 @@ useHead({
   text-align: center;
   color: var(--color-steam);
   font-family: 'Plus Jakarta Sans', sans-serif;
-  font-size: 16px;
+  font-size: 32px;
+  font-weight: 700;
   letter-spacing: 4px;
   margin-bottom: 32px;
   text-transform: none;
@@ -463,7 +464,6 @@ useHead({
 }
 
 .article-body > div > p {
-  padding: 0 20px;
   margin-top: 8px;
   font-size: 15px;
   color: var(--color-roast);
@@ -485,6 +485,15 @@ useHead({
 
 .article-body > div > hr::after {
   content: '· · ·';
+  display: block;
+  text-align: center;
+  color: var(--color-steam);
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 32px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  margin-bottom: 32px;
+  text-transform: none;
 }
 
 .article-body > div > ul {

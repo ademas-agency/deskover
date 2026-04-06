@@ -1,5 +1,5 @@
 <template>
-  <footer class="bg-[var(--color-espresso)] rounded-t-3xl px-5 pt-10 pb-12 lg:rounded-none lg:px-0">
+  <footer class="bg-[var(--color-espresso)] rounded-t-3xl px-5 pt-10 pb-12 lg:rounded-none lg:px-8">
     <div class="lg:container-deskover">
       <!-- Mobile layout -->
       <div class="lg:hidden">

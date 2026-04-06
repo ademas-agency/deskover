@@ -815,8 +815,8 @@
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 20px 16px;
-    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.2) 60%, transparent 100%);
+    padding: 32px 20px;
+    background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0.3) 60%, transparent 100%);
   }
 
   .carousel-slide.slide-split {
@@ -1097,7 +1097,7 @@
     </div>
 
     <!-- Post 12. Pr&eacute;sentation : Ad&eacute; (L'efficace) -->
-    <div class="ig-post post-qg" onclick="openPost(12)" style="background-image:url('../app/public/img/thomas-cafe-2.jpeg');background-size:cover;background-position:center;">
+    <div class="ig-post post-qg" onclick="openPost(12)" style="background-image:url('../app/public/img/ade-cafe.png');background-size:cover;background-position:center;">
       <div style="position:absolute;bottom:0;left:0;right:0;padding:10px;background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,transparent 100%);">
         <div style="font-family:Anton;font-size:15px;color:white;text-transform:uppercase;">Ad&eacute;</div>
         <div style="font-family:'Plus Jakarta Sans';font-size:9px;color:rgba(255,255,255,0.8);">L'efficace</div>
@@ -1174,7 +1174,7 @@
     <!-- ===== RANG&Eacute;E 6 ===== -->
 
     <!-- Post 5. Pr&eacute;sentation : Thomas (L'esth&egrave;te) -->
-    <div class="ig-post post-qg" onclick="openPost(5)" style="background-image:url('../app/public/img/thomas-cafe-1.jpeg');background-size:cover;background-position:center;">
+    <div class="ig-post post-qg" onclick="openPost(5)" style="background-image:url('../app/public/img/thomas-cafe-2.png');background-size:cover;background-position:center;">
       <div style="position:absolute;bottom:0;left:0;right:0;padding:10px;background:linear-gradient(to top,rgba(0,0,0,0.65) 0%,transparent 100%);">
         <div style="font-family:Anton;font-size:15px;color:white;text-transform:uppercase;">Thomas</div>
         <div style="font-family:'Plus Jakarta Sans';font-size:9px;color:rgba(255,255,255,0.8);">L'esth&egrave;te</div>
@@ -1344,7 +1344,7 @@ var posts = [
     title: 'Thomas',
     subtitle: 'L\'esth\u00e8te',
     imageType: 'photo',
-    image: '../app/public/img/thomas-cafe-1.jpeg',
+    image: '../app/public/img/thomas-cafe-2.png',
     likes: 634,
     comments: 28,
     date: '14 avril 2026',
@@ -1401,6 +1401,10 @@ var posts = [
     coverHTML: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#AA4C4D;text-transform:uppercase;letter-spacing:2px;">Le verdict d\'Ad\u00e9</span><span style="font-family:Anton,sans-serif;font-size:36px;color:white;margin-top:12px;line-height:1.05;text-transform:uppercase;">WiFi de<br>comp\u00e9t\'</span>',
     slides: [
       { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:9px;color:#AA4C4D;text-transform:uppercase;letter-spacing:2px;">LE VERDICT D\'AD\u00c9</span><span style="font-family:Anton,sans-serif;font-size:24px;color:white;margin-top:12px;text-transform:uppercase;">WIFI DE COMP\u00c9T\'</span>' },
+      { type: 'photo', image: 'https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=600&h=750&fit=crop', name: 'LA PERMANENCE', city: 'Paris 5e \u2014 WiFi fibre, stable toute la journ\u00e9e' },
+      { type: 'photo', image: BASE + 'paris-5e/le-nuage-cafe.jpg', name: 'LE NUAGE CAF\u00c9', city: 'Paris 5e \u2014 D\u00e9bit rapide, id\u00e9al visio' },
+      { type: 'photo', image: BASE + 'paris/le-pavillon-des-canaux.jpg', name: 'PAVILLON DES CANAUX', city: 'Paris 19e \u2014 WiFi solide, grande capacit\u00e9' },
+      { type: 'photo', image: BASE + 'paris-18e/la-recyclerie.jpg', name: 'LA RECYCLERIE', city: 'Paris 18e \u2014 Connexion fiable, test\u00e9e' },
       { type: 'cover', bg: '#FAF7F2', html: '<span style="font-family:Plus Jakarta Sans,sans-serif;font-size:14px;color:#2C2825;">La liste compl\u00e8te sur</span><span style="font-family:Anton,sans-serif;font-size:18px;color:#AA4C4D;margin-top:12px;">deskover.fr</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:11px;color:#A89888;margin-top:10px;">- A.</span>' }
     ],
     likes: 634,
@@ -1450,7 +1454,7 @@ var posts = [
     title: 'Ad\u00e9',
     subtitle: 'L\'efficace',
     imageType: 'photo',
-    image: '../app/public/img/thomas-cafe-2.jpeg',
+    image: '../app/public/img/ade-cafe.png',
     likes: 712,
     comments: 35,
     date: '27 avril 2026',
@@ -1480,6 +1484,10 @@ var posts = [
     coverHTML: '<div style="display:flex;flex-direction:column;width:100%;height:100%;"><div style="flex:1;background:#AA4C4D;display:flex;align-items:center;justify-content:center;"><span style="font-family:Anton,sans-serif;font-size:24px;color:white;text-transform:uppercase;">Caf\u00e9</span></div><div style="height:2px;background:white;position:relative;"><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.15);font-family:Plus Jakarta Sans,sans-serif;font-size:13px;font-weight:600;color:#6B5B4E;">vs</div></div><div style="flex:1;background:#FAF7F2;display:flex;align-items:center;justify-content:center;"><span style="font-family:Anton,sans-serif;font-size:24px;color:#2C2825;text-transform:uppercase;">Coworking</span></div></div>',
     slides: [
       { type: 'split', topBg: '#AA4C4D', topText: 'CAF\u00c9', topColor: 'white', bottomBg: '#FAF7F2', bottomText: 'COWORKING', bottomColor: '#2C2825', label: 'LE MATCH', vsSize: 28 },
+      { type: 'split', topBg: '#FAF7F2', topText: '2-5 euros (une conso)', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: '15-30 euros/jour', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'PRIX' },
+      { type: 'split', topBg: '#FAF7F2', topText: 'Vivante, bruits de fond', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Studieuse, calme', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'AMBIANCE' },
+      { type: 'split', topBg: '#FAF7F2', topText: 'Variable selon le caf\u00e9', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Pro, rapide, stable', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'WIFI' },
+      { type: 'split', topBg: '#FAF7F2', topText: 'Caf\u00e9, viennoiseries, lunch', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Machine \u00e0 caf\u00e9, distributeur', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'FOOD' },
       { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Anton,sans-serif;font-size:16px;color:white;text-transform:uppercase;">ET TOI ?</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:13px;color:#A89888;margin-top:12px;line-height:1.5;">Team caf\u00e9 ou team coworking ?</span>' }
     ],
     likes: 1203,
@@ -1557,6 +1565,10 @@ var posts = [
     coverHTML: '<div style="display:flex;flex-direction:column;width:100%;height:100%;"><div style="flex:1;background:#5B7A5E;display:flex;align-items:center;justify-content:center;"><span style="font-family:Anton,sans-serif;font-size:24px;color:white;text-transform:uppercase;">Paris 11e</span></div><div style="height:2px;background:white;position:relative;"><div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:32px;height:32px;border-radius:50%;background:white;display:flex;align-items:center;justify-content:center;box-shadow:0 1px 4px rgba(0,0,0,0.15);font-family:Plus Jakarta Sans,sans-serif;font-size:13px;font-weight:600;color:#6B5B4E;">vs</div></div><div style="flex:1;background:#FAF7F2;display:flex;align-items:center;justify-content:center;"><span style="font-family:Anton,sans-serif;font-size:24px;color:#2C2825;text-transform:uppercase;">Paris 3e</span></div></div>',
     slides: [
       { type: 'split', topBg: '#5B7A5E', topText: 'PARIS 11E', topColor: 'white', bottomBg: '#FAF7F2', bottomText: 'PARIS 3E', bottomColor: '#2C2825', label: 'LE MATCH DES ARRONDISSEMENTS', vsSize: 28 },
+      { type: 'split', topBg: '#FAF7F2', topText: 'Oberkampf, \u00e9nergie', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Marais, calme', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'AMBIANCE' },
+      { type: 'split', topBg: '#FAF7F2', topText: 'Caf\u00e9s partout, turn-over', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Hubsy, spots fix\u00e9s', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'SPOTS' },
+      { type: 'split', topBg: '#FAF7F2', topText: 'Chang\u00e9 de spot \u00e0 midi', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Pos\u00e9 toute la journ\u00e9e', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'RYTHME' },
+      { type: 'split', topBg: '#FAF7F2', topText: 'Street food, bistrots', topColor: '#2C2825', topFont: 'Plus Jakarta Sans', topFontSize: '13px', bottomBg: '#F3EDE4', bottomText: 'Brunch spots, terrasses', bottomColor: '#2C2825', bottomFont: 'Plus Jakarta Sans', bottomFontSize: '13px', label: 'PAUSE D\u00c9J' },
       { type: 'cover', bg: '#2C2825', html: '<span style="font-family:Anton,sans-serif;font-size:16px;color:white;text-transform:uppercase;">ET TOI ?</span><span style="font-family:Plus Jakarta Sans,sans-serif;font-size:13px;color:#A89888;margin-top:12px;line-height:1.5;">Tu bosses o\u00f9 \u00e0 Paris ?</span>' }
     ],
     likes: 945,
@@ -1596,8 +1608,8 @@ function buildSlideHTML(slide) {
       overlayContent = slide.overlayHTML;
     } else {
       overlayContent = '<div class="slide-photo-overlay">' +
-        '<div style="font-family:Anton,sans-serif;font-size:14px;color:white;text-transform:uppercase;">' + slide.name + '</div>' +
-        '<div style="font-family:Plus Jakarta Sans,sans-serif;font-size:10px;color:#AA4C4D;margin-top:2px;">' + slide.city + '</div>' +
+        '<div style="font-family:Anton,sans-serif;font-size:18px;color:white;text-transform:uppercase;">' + slide.name + '</div>' +
+        '<div style="font-family:Plus Jakarta Sans,sans-serif;font-size:12px;color:rgba(255,255,255,0.8);margin-top:4px;">' + slide.city + '</div>' +
       '</div>';
     }
     return '<div class="carousel-slide slide-photo">' +

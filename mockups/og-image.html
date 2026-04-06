@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Anton&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap');
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    .og {
+      width: 1200px;
+      height: 630px;
+      background: url('https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=1200&h=630&fit=crop') center/cover no-repeat;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Dark overlay */
+    .og::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(17, 17, 17, 0.55);
+    }
+
+    /* Grain texture */
+    .og::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      opacity: 0.03;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 256px 256px;
+    }
+
+
+    .content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .content {
+      position: relative;
+      z-index: 2;
+    }
+
+    .logo {
+      font-family: 'Anton', sans-serif;
+      font-size: 72px;
+      color: white;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .divider {
+      width: 60px;
+      height: 3px;
+      background: rgba(255,255,255,0.4);
+      border-radius: 2px;
+    }
+
+    .tagline {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 28px;
+      font-weight: 600;
+      color: white;
+      max-width: 600px;
+      line-height: 1.4;
+    }
+
+    .subtitle {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 18px;
+      color: rgba(255,255,255,0.6);
+      font-weight: 400;
+    }
+
+
+    /* Domain */
+    .domain {
+      position: absolute;
+      bottom: 24px;
+      right: 40px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 16px;
+      color: rgba(255,255,255,0.5);
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      z-index: 2;
+    }
+  </style>
+</head>
+<body>
+  <div class="og">
+    <div class="content">
+      <div class="logo">DESKOVER</div>
+      <div class="divider"></div>
+      <div class="tagline">Les meilleurs spots pour bosser</div>
+      <div class="subtitle">Cafes, coworkings & tiers-lieux en France</div>
+    </div>
+
+    <div class="domain">deskover.fr</div>
+  </div>
+</body>
+</html>

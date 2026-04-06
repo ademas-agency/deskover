@@ -95,7 +95,7 @@ function formatDate(dateStr: string): string {
           >
             <option value="all">Tous</option>
             <option value="draft">Brouillons</option>
-            <option value="published">Publies</option>
+            <option value="published">Publiés</option>
           </select>
         </div>
       </div>
@@ -129,7 +129,7 @@ function formatDate(dateStr: string): string {
             </td>
             <td class="px-6 py-4">
               <BaseBadge :variant="article.status === 'published' ? 'success' : 'neutral'">
-                {{ article.status === 'published' ? 'Publie' : 'Brouillon' }}
+                {{ article.status === 'published' ? 'Publié' : 'Brouillon' }}
               </BaseBadge>
             </td>
             <td class="px-6 py-4">

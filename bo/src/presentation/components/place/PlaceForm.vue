@@ -35,6 +35,7 @@ watch(() => props.place, (newVal) => {
 const allSignals = [
   'wifi', 'prises', 'calme', 'food', 'terrasse', 'laptop_friendly',
   'pas_cher', 'grandes_tables', 'ambiance', 'silencieux', 'musique', 'lumineux',
+  'payant', 'reservation',
 ]
 
 const categories: PlaceCategory[] = ['cafe', 'coffee_shop', 'coworking', 'tiers_lieu']
@@ -551,6 +552,22 @@ function handleSave() {
         >
           {{ SIGNAL_LABELS[signal] || signal }}
         </button>
+      </div>
+    </BaseCard>
+
+    <!-- Conditions d'accès -->
+    <BaseCard title="Conditions d'accès">
+      <div class="space-y-1">
+        <label class="block text-sm font-medium text-roast">Détail des conditions (tarif, réservation, etc.)</label>
+        <textarea
+          v-model="form.conditions"
+          rows="2"
+          class="w-full rounded-lg border border-steam/30 bg-white px-3 py-2 text-sm text-espresso placeholder-steam outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 resize-y"
+          placeholder="Ex: Pass journée 15€, réservation sur leur site..."
+        />
+        <p class="text-xs text-steam">
+          Affiché sous les Vitals sur la fiche lieu. Laisse vide si c'est un café classique (consommation uniquement).
+        </p>
       </div>
     </BaseCard>
 
