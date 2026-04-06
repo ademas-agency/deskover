@@ -96,9 +96,10 @@ onMounted(() => {
       const el = document.createElement('div')
       el.style.cursor = 'pointer'
 
-      if (p.photoUrl) {
+      const thumb = p.thumbUrl || p.photoUrl
+      if (thumb) {
         el.innerHTML = `<div style="width:44px;height:56px;border-radius:8px;overflow:hidden;border:2px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,0.2);background:${color};">
-          <img src="${p.photoUrl}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+          <img src="${thumb}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
           <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;">${p.name.charAt(0)}</div>
         </div>`
       } else {
@@ -333,7 +334,7 @@ useHead({
           <div class="mx-5 mt-8 bg-[var(--color-terracotta-500)] rounded-2xl p-5 lg:mx-0 mb-8">
             <div class="font-display text-lg text-white">TU CONNAIS UN SPOT ?</div>
             <div class="text-sm text-white/80 mt-1.5">Contribue en 10 secondes et aide la communauté.</div>
-            <NuxtLink to="/search" class="inline-block bg-white text-[var(--color-terracotta-500)] text-[13px] font-bold px-5 py-3 rounded-xl mt-3.5">
+            <NuxtLink to="/ajouter" class="inline-block bg-white text-[var(--color-terracotta-500)] text-[13px] font-bold px-5 py-3 rounded-xl mt-3.5">
               Ajouter un lieu
             </NuxtLink>
           </div>

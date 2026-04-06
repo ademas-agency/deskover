@@ -87,9 +87,10 @@ function createMarkers(filteredPlaces: Place[]) {
       const el = document.createElement('div')
       el.style.cursor = 'pointer'
 
-      if (p.photoUrl) {
+      const thumb = p.thumbUrl || p.photoUrl
+      if (thumb) {
         el.innerHTML = `<div style="width:${w}px;height:${h}px;border-radius:${radius}px;overflow:hidden;border:${isSelected ? 3 : 2}px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,${isSelected ? 0.4 : 0.2});background:${color};transition:all 0.15s;">
-          <img src="${p.photoUrl}" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+          <img src="${thumb}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
           <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;">${p.name.charAt(0)}</div>
         </div>`
       } else {
