@@ -185,9 +185,55 @@ useSeoMeta({
   ogSiteName: 'Deskover'
 })
 
+const jsonLd = computed(() => {
+  if (!article.value) return null
+  const a = article.value
+  return [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      'headline': a.title,
+      'description': a.description,
+      'image': a.cover_image || 'https://deskover.fr/og-default.png',
+      'url': `https://deskover.fr/articles/${slug}`,
+      'datePublished': a.published_at,
+      'dateModified': a.updated_at || a.published_at,
+      'author': {
+        '@type': 'Organization',
+        'name': 'Deskover',
+        'url': 'https://deskover.fr'
+      },
+      'publisher': {
+        '@type': 'Organization',
+        'name': 'Deskover',
+        'url': 'https://deskover.fr',
+        'logo': {
+          '@type': 'ImageObject',
+          'url': 'https://deskover.fr/icon-512.png'
+        }
+      }
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        { '@type': 'ListItem', 'position': 1, 'name': 'Deskover', 'item': 'https://deskover.fr' },
+        { '@type': 'ListItem', 'position': 2, 'name': 'Articles', 'item': 'https://deskover.fr/articles' },
+        { '@type': 'ListItem', 'position': 3, 'name': a.title, 'item': `https://deskover.fr/articles/${slug}` }
+      ]
+    }
+  ]
+})
+
 useHead({
   link: [
     { rel: 'canonical', href: () => `https://deskover.fr/articles/${slug}` }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: () => jsonLd.value ? JSON.stringify(jsonLd.value) : ''
+    }
   ]
 })
 </script>

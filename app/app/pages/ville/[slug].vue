@@ -170,9 +170,47 @@ useSeoMeta({
   ogSiteName: 'Deskover'
 })
 
+const jsonLd = computed(() => {
+  const items = (places.value || []).map((p, i) => ({
+    '@type': 'ListItem',
+    'position': i + 1,
+    'url': `https://deskover.fr/lieu/${p.id}`,
+    'name': p.name
+  }))
+
+  return [
+    {
+      '@context': 'https://schema.org',
+      '@type': 'CollectionPage',
+      'name': `Où travailler à ${cityName.value}`,
+      'description': `Les meilleurs cafés, coworkings et spots pour bosser à ${cityName.value}.`,
+      'url': `https://deskover.fr/ville/${slug}`,
+      'mainEntity': {
+        '@type': 'ItemList',
+        'numberOfItems': items.length,
+        'itemListElement': items
+      }
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        { '@type': 'ListItem', 'position': 1, 'name': 'Deskover', 'item': 'https://deskover.fr' },
+        { '@type': 'ListItem', 'position': 2, 'name': cityName.value, 'item': `https://deskover.fr/ville/${slug}` }
+      ]
+    }
+  ]
+})
+
 useHead({
   link: [
     { rel: 'canonical', href: () => `https://deskover.fr/ville/${slug}` }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: () => JSON.stringify(jsonLd.value)
+    }
   ]
 })
 </script>

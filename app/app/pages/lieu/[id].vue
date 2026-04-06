@@ -413,7 +413,18 @@ const jsonLd = computed(() => {
     }
     if (specs.length) schema.openingHours = specs
   }
-  return schema
+  return [
+    schema,
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      'itemListElement': [
+        { '@type': 'ListItem', 'position': 1, 'name': 'Deskover', 'item': 'https://deskover.fr' },
+        { '@type': 'ListItem', 'position': 2, 'name': p.city, 'item': `https://deskover.fr/ville/${p.citySlug}` },
+        { '@type': 'ListItem', 'position': 3, 'name': p.name, 'item': `https://deskover.fr/lieu/${route.params.id}` }
+      ]
+    }
+  ]
 })
 
 useHead({
