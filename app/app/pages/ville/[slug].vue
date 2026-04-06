@@ -314,7 +314,7 @@ useHead({
             v-for="(place, i) in places"
             :key="place.id"
             :to="`/lieu/${place.id}`"
-            class="block"
+            class="block h-full"
           >
             <PlaceCard
               :place="{

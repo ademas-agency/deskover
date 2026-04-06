@@ -126,9 +126,33 @@ const todayKey = computed(() => dayOrder[new Date().getDay() === 0 ? 6 : new Dat
 
 const formattedHours = computed(() => {
   if (!place.value?.openingHours) return []
+  const oh = place.value.openingHours
+
+  // Handle array format: ["lundi: 12:00 – 21:00", ...]
+  if (Array.isArray(oh)) {
+    const parsed = new Map<string, string>()
+    for (const entry of oh) {
+      const colonIdx = entry.indexOf(':')
+      if (colonIdx === -1) continue
+      const day = entry.substring(0, colonIdx).trim().toLowerCase()
+      const hours = entry.substring(colonIdx + 1).trim()
+      parsed.set(day, hours)
+    }
+    const dayMap: Record<string, string> = {
+      monday: 'lundi', tuesday: 'mardi', wednesday: 'mercredi',
+      thursday: 'jeudi', friday: 'vendredi', saturday: 'samedi', sunday: 'dimanche'
+    }
+    return dayOrder.map(d => ({
+      day: dayLabels[d],
+      hours: parsed.get(dayMap[d]) || 'Fermé',
+      isToday: d === todayKey.value
+    }))
+  }
+
+  // Handle object format: {monday: "12:00 – 21:00", ...}
   return dayOrder.map(d => ({
     day: dayLabels[d],
-    hours: place.value!.openingHours![d] || 'Fermé',
+    hours: oh[d] || 'Fermé',
     isToday: d === todayKey.value
   }))
 })

@@ -34,7 +34,7 @@ function getPhotoUrl(row: any): string | undefined {
   return row.photo_url || undefined
 }
 
-const DAYS_FR = ['DIMANCHE', 'LUNDI', 'MARDI', 'MERCREDI', 'JEUDI', 'VENDREDI', 'SAMEDI']
+const DAYS_FR = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi']
 
 function parseTimeStr(t: string): number {
   const clean = t.replace(/\s/g, '')
@@ -49,6 +49,10 @@ function parseDayEntry(entry: string): { day: string; openMin: number; closeMin:
   const day = entry.substring(0, colonIdx).trim().toLowerCase()
   const rest = entry.substring(colonIdx + 1).trim()
   if (rest.toLowerCase().includes('ferm')) return null
+  // "Ouvert 24h/24" means open all day
+  if (rest.toLowerCase().includes('24h') || rest.toLowerCase().includes('24 h')) {
+    return { day, openMin: 0, closeMin: 24 * 60 }
+  }
   // Split on – or - (em-dash or regular dash)
   const parts = rest.split(/[–\-]/).map(s => s.trim())
   if (parts.length < 2) return null
@@ -85,7 +89,7 @@ function computeOpenStatus(openingHours?: any): { isOpen: boolean; nextOpen?: st
     const timeStr = `${h}H${m ? String(m).padStart(2, '0') : ''}`
     if (offset === 0) return { isOpen: false, nextOpen: `OUVRE à ${timeStr}` }
     if (offset === 1) return { isOpen: false, nextOpen: `OUVRE DEMAIN À ${timeStr}` }
-    return { isOpen: false, nextOpen: `OUVRE ${dayName} À ${timeStr}` }
+    return { isOpen: false, nextOpen: `OUVRE ${dayName.toUpperCase()} À ${timeStr}` }
   }
 
   return { isOpen: false }

@@ -235,7 +235,7 @@ const articles = [
           v-for="place in (places || []).slice(0, 20)"
           :key="place.id"
           :to="`/lieu/${place.id}`"
-          class="block"
+          class="block h-full"
         >
           <PlaceCard :place="{
             name: place.name,
