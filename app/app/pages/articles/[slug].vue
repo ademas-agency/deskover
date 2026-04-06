@@ -108,7 +108,7 @@ onMounted(() => {
       }
 
       el.addEventListener('click', () => {
-        navigateTo(`/lieu/${p.id}`)
+        navigateTo(`/lieu/${p.slug || p.id}`)
       })
 
       new maplibregl.Marker({ element: el, anchor: 'center' })

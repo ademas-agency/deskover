@@ -89,7 +89,7 @@ function closeCard() {
 
 function goToPlace() {
   if (selectedPlace.value) {
-    router.push(`/lieu/${selectedPlace.value.id}`)
+    router.push(`/lieu/${selectedPlace.value.slug || selectedPlace.value.id}`)
   }
 }
 
@@ -174,7 +174,7 @@ const jsonLd = computed(() => {
   const items = (places.value || []).map((p, i) => ({
     '@type': 'ListItem',
     'position': i + 1,
-    'url': `https://deskover.fr/lieu/${p.id}`,
+    'url': `https://deskover.fr/lieu/${p.slug || p.id}`,
     'name': p.name
   }))
 
@@ -351,7 +351,7 @@ useHead({
           <NuxtLink
             v-for="(place, i) in places"
             :key="place.id"
-            :to="`/lieu/${place.id}`"
+            :to="`/lieu/${place.slug || place.id}`"
             class="block h-full"
           >
             <PlaceCard

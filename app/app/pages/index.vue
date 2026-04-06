@@ -234,7 +234,7 @@ const articles = [
         <NuxtLink
           v-for="place in (places || []).slice(0, 20)"
           :key="place.id"
-          :to="`/lieu/${place.id}`"
+          :to="`/lieu/${place.slug || place.id}`"
           class="block h-full"
         >
           <PlaceCard :place="{

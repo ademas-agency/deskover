@@ -22,7 +22,7 @@ function categoryLabel(cat: string) {
 <template>
   <NuxtLink
     v-if="place"
-    :to="`/lieu/${place.id}`"
+    :to="`/lieu/${place.slug || place.id}`"
     class="block mx-5 my-5 no-underline"
   >
     <article class="bg-white rounded-[20px] overflow-hidden shadow-[0_4px_16px_rgba(44,40,37,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(44,40,37,0.12)]">

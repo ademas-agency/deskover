@@ -195,6 +195,18 @@ export class SupabasePlaceRepository implements PlaceRepository {
     return rowToPlace(data, 0, data.blog_mentions)
   }
 
+  async getBySlug(slug: string): Promise<Place | null> {
+    const { data, error } = await this.client
+      .from('places')
+      .select('*, blog_mentions(*)')
+      .eq('slug', slug)
+      .single()
+
+    if (error || !data) return null
+
+    return rowToPlace(data, 0, data.blog_mentions)
+  }
+
   async getByCity(citySlug: string, filters?: PlaceFilters): Promise<Place[]> {
     let query = this.client
       .from('places')

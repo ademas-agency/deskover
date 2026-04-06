@@ -1,7 +1,9 @@
 <script setup lang="ts">
 const route = useRoute()
 const router = useRouter()
-const { getById } = usePlaces()
+const { getBySlug, getById } = usePlaces()
+
+const placeSlug = route.params.slug as string
 
 // Back navigation: use browser history to go back properly
 function goBack() {
@@ -13,8 +15,13 @@ function goBack() {
 }
 
 const { data: place, status, refresh: refreshPlace } = await useAsyncData(
-  `lieu-${route.params.id}`,
-  () => getById(route.params.id as string)
+  `lieu-${placeSlug}`,
+  async () => {
+    // Try slug first, fallback to id for backwards compatibility
+    const bySlug = await getBySlug(placeSlug)
+    if (bySlug) return bySlug
+    return getById(placeSlug)
+  }
 )
 const loading = computed(() => status.value === 'pending')
 const showSpeedTest = ref(false)
@@ -374,7 +381,7 @@ const jsonLd = computed(() => {
     '@context': 'https://schema.org',
     '@type': p.category === 'coworking' ? 'CoworkingSpace' : 'CafeOrCoffeeShop',
     'name': p.name,
-    'url': `https://deskover.fr/lieu/${route.params.id}`,
+    'url': `https://deskover.fr/lieu/${placeSlug}`,
     'address': {
       '@type': 'PostalAddress',
       'streetAddress': p.address,
@@ -421,7 +428,7 @@ const jsonLd = computed(() => {
       'itemListElement': [
         { '@type': 'ListItem', 'position': 1, 'name': 'Deskover', 'item': 'https://deskover.fr' },
         { '@type': 'ListItem', 'position': 2, 'name': p.city, 'item': `https://deskover.fr/ville/${p.citySlug}` },
-        { '@type': 'ListItem', 'position': 3, 'name': p.name, 'item': `https://deskover.fr/lieu/${route.params.id}` }
+        { '@type': 'ListItem', 'position': 3, 'name': p.name, 'item': `https://deskover.fr/lieu/${placeSlug}` }
       ]
     }
   ]
@@ -429,7 +436,7 @@ const jsonLd = computed(() => {
 
 useHead({
   link: [
-    { rel: 'canonical', href: () => `https://deskover.fr/lieu/${route.params.id}` }
+    { rel: 'canonical', href: () => `https://deskover.fr/lieu/${placeSlug}` }
   ],
   script: [
     {

@@ -150,7 +150,7 @@ function closeCard() {
 
 function goToPlace() {
   if (selectedPlace.value) {
-    router.push(`/lieu/${selectedPlace.value.id}?from=carte`)
+    router.push(`/lieu/${selectedPlace.value.slug || selectedPlace.value.id}?from=carte`)
   }
 }
 

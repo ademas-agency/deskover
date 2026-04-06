@@ -13,13 +13,13 @@ export default defineSitemapEventHandler(async () => {
   // Places
   const { data: places } = await supabase
     .from('places')
-    .select('id, updated_at')
+    .select('id, slug, updated_at')
     .eq('status', 'published')
 
   if (places) {
     for (const p of places) {
       urls.push({
-        loc: `/lieu/${p.id}`,
+        loc: `/lieu/${p.slug || p.id}`,
         lastmod: p.updated_at,
         priority: 0.8,
         changefreq: 'weekly'
