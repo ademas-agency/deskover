@@ -35,14 +35,15 @@ const filteredArticles = computed(() => {
   return result
 })
 
-function handleCreate() {
+async function handleCreate() {
   const article = store.createArticle()
+  await store.saveArticle(article)
   router.push({ name: 'article-edit', params: { slug: article.slug } })
 }
 
-function handleDelete(id: string) {
+async function handleDelete(id: string) {
   if (confirm('Supprimer cet article ?')) {
-    store.deleteArticle(id)
+    await store.deleteArticle(id)
   }
 }
 

@@ -56,9 +56,9 @@ function updateTitle(val: string) {
   }
 }
 
-function handleSave() {
+async function handleSave() {
   if (!article.value) return
-  store.saveArticle(article.value)
+  await store.saveArticle(article.value)
   notifications.success('Article sauvegarde avec succes')
 }
 

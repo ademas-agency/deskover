@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import type { Article } from '../core/domain/entities/Article'
-import { generateSlug } from '../core/domain/entities/Article'
+import { ArticleRepository } from '../infrastructure/repositories/ArticleRepository'
 
 export const useArticlesStore = defineStore('articles', () => {
   const articles = ref<Article[]>([])
@@ -18,12 +18,9 @@ export const useArticlesStore = defineStore('articles', () => {
   async function fetchArticles() {
     loading.value = true
     try {
-      const response = await fetch('/data/articles.json')
-      if (response.ok) {
-        articles.value = await response.json()
-      }
-    } catch {
-      // articles.json might not exist yet
+      articles.value = await ArticleRepository.getAll()
+    } catch (err) {
+      console.error('Failed to fetch articles:', err)
       articles.value = []
     } finally {
       loading.value = false
@@ -34,22 +31,20 @@ export const useArticlesStore = defineStore('articles', () => {
     return articles.value.find(a => a.slug === slug)
   }
 
-  function saveArticle(article: Article) {
-    const index = articles.value.findIndex(a => a.id === article.id)
+  async function saveArticle(article: Article) {
+    const saved = await ArticleRepository.save(article)
+    const index = articles.value.findIndex(a => a.id === saved.id)
     if (index >= 0) {
-      articles.value[index] = { ...article, updated_at: new Date().toISOString() }
+      articles.value[index] = saved
     } else {
-      articles.value.push({
-        ...article,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      })
+      articles.value.unshift(saved)
     }
+    return saved
   }
 
   function createArticle(): Article {
     const id = crypto.randomUUID()
-    const article: Article = {
+    return {
       id,
       title: 'Nouvel article',
       slug: 'nouvel-article-' + id.slice(0, 8),
@@ -61,11 +56,10 @@ export const useArticlesStore = defineStore('articles', () => {
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString(),
     }
-    articles.value.push(article)
-    return article
   }
 
-  function deleteArticle(id: string) {
+  async function deleteArticle(id: string) {
+    await ArticleRepository.delete(id)
     articles.value = articles.value.filter(a => a.id !== id)
   }
 
