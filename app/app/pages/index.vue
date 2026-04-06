@@ -2,6 +2,7 @@
 import type { PlaceFilters } from '~/domain/models/Place'
 
 const { getAll } = usePlaces()
+
 // Quick filter cards — editorial picks that combine filter + sort
 const quickFilters = [
   { key: 'recos', label: 'Nos recos', icon: 'lucide:sparkles', filter: {} as PlaceFilters, sort: 'relevance' as const },
@@ -10,6 +11,7 @@ const quickFilters = [
   { key: 'wifi', label: 'Meilleur WiFi', icon: 'lucide:wifi', filter: { wifi: true } as PlaceFilters, sort: 'relevance' as const },
   { key: 'calme', label: 'Bosser au calme', icon: 'lucide:volume-x', filter: { calme: true } as PlaceFilters, sort: 'relevance' as const },
   { key: 'terrasse', label: 'Terrasses', icon: 'lucide:sun', filter: { terrasse: true } as PlaceFilters, sort: 'relevance' as const },
+  { key: 'gratuit', label: 'Gratuit', icon: 'lucide:ticket', filter: { gratuit: true } as PlaceFilters, sort: 'relevance' as const },
   { key: 'food', label: 'Bien manger', icon: 'lucide:utensils', filter: { food: true } as PlaceFilters, sort: 'relevance' as const },
   { key: 'coworking', label: 'Coworkings', icon: 'lucide:building-2', filter: { category: 'coworking' } as PlaceFilters, sort: 'relevance' as const },
   { key: 'cafe', label: 'Cafés', icon: 'lucide:coffee', filter: { category: 'cafe' } as PlaceFilters, sort: 'relevance' as const },
@@ -29,6 +31,7 @@ const pageTitle = computed(() => {
     case 'wifi': return 'MEILLEUR WIFI'
     case 'calme': return 'BOSSER AU CALME'
     case 'terrasse': return 'TERRASSES'
+    case 'gratuit': return 'ACCÈS GRATUIT'
     case 'food': return 'BIEN MANGER'
     case 'ouvert': return 'OUVERT MAINTENANT'
     case 'coworking': return 'COWORKINGS'
@@ -44,6 +47,7 @@ const pageSubtitle = computed(() => {
     case 'wifi': return 'Du débit, du vrai.'
     case 'calme': return 'Zéro bruit de fond, concentration maximale.'
     case 'terrasse': return 'Aux beaux jours, on veut le combo boulot-soleil-café.'
+    case 'gratuit': return 'Pose-toi, commande un café, c\'est tout.'
     case 'food': return 'Parce qu\'on bosse mieux le ventre plein.'
     case 'ouvert': return 'Tu peux y aller, ces spots sont ouverts en ce moment.'
     case 'coworking': return 'Des vrais espaces pensés pour bosser, avec tout ce qu\'il faut.'
@@ -127,38 +131,21 @@ useSeoMeta({
   ogType: 'website',
 })
 
-const articles = [
-  {
-    title: 'Où travailler à Lyon',
-    slug: 'travailler-lyon',
-    tag: 'GUIDE',
-    img: 'https://images.unsplash.com/photo-1600093463592-8e36ae95ef56?w=600&h=400&fit=crop'
-  },
-  {
-    title: 'Où travailler à Bordeaux',
-    slug: 'travailler-bordeaux',
-    tag: 'GUIDE',
-    img: 'https://images.unsplash.com/photo-1521017432531-fbd92d768814?w=600&h=400&fit=crop'
-  },
-  {
-    title: 'Où travailler à Nantes',
-    slug: 'travailler-nantes',
-    tag: 'GUIDE',
-    img: 'https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?w=600&h=400&fit=crop'
-  },
-  {
-    title: 'Les meilleurs spots du Marais',
-    slug: 'travailler-paris-3e',
-    tag: 'PARIS',
-    img: 'https://images.unsplash.com/photo-1553531384-cc64ac80f931?w=600&h=400&fit=crop'
-  },
-  {
-    title: 'Où bosser dans le 11e',
-    slug: 'travailler-paris-11e',
-    tag: 'PARIS',
-    img: 'https://images.unsplash.com/photo-1453614512568-c4024d13c247?w=600&h=400&fit=crop'
-  }
-]
+const supabase = useSupabaseClient()
+const { data: articles } = await useAsyncData('home-articles', async () => {
+  const { data } = await supabase
+    .from('articles')
+    .select('title, slug, city, cover_image')
+    .eq('published', true)
+    .order('published_at', { ascending: false })
+    .limit(5)
+  return (data || []).map(a => ({
+    title: a.title,
+    slug: a.slug,
+    tag: a.city?.toUpperCase() || 'GUIDE',
+    img: a.cover_image || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop'
+  }))
+})
 </script>
 
 <template>
@@ -205,7 +192,7 @@ const articles = [
     <section class="bg-[var(--color-cream)] rounded-t-3xl -mt-6 relative z-10 lg:rounded-none lg:mt-0">
       <!-- Quick filters -->
       <div class="lg:container-deskover">
-        <div class="flex gap-2.5 overflow-x-auto no-scrollbar px-4 py-6 lg:flex-wrap lg:py-8">
+        <div class="flex gap-2.5 overflow-x-auto no-scrollbar py-6 lg:flex-wrap lg:py-8">
           <button
             v-for="qf in quickFilters"
             :key="qf.key"
@@ -254,7 +241,7 @@ const articles = [
       </div>
 
       <!-- Nos articles -->
-      <div class="px-4 mt-10 lg:container-deskover">
+      <div v-if="articles?.length" class="px-4 mt-10 lg:container-deskover">
         <h2 class="font-display text-xl text-[var(--color-espresso)] tracking-[0.04em]">À LIRE</h2>
         <p class="text-[13px] text-[var(--color-roast)] mt-1.5 leading-relaxed mb-5">
           Guides, conseils, retours d'expérience. Tout ce qu'on aurait aimé savoir avant de poser notre ordi.

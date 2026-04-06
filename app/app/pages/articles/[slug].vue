@@ -125,6 +125,23 @@ onMounted(() => {
   })
 })
 
+// Related articles (same city, different slug)
+const { data: relatedArticles } = await useAsyncData(
+  `related-articles-${slug}`,
+  async () => {
+    if (!article.value?.city_slug) return []
+    const { data } = await client
+      .from('articles')
+      .select('title, slug, city, cover_image')
+      .eq('published', true)
+      .eq('city_slug', article.value.city_slug)
+      .neq('slug', slug)
+      .order('published_at', { ascending: false })
+      .limit(3)
+    return data || []
+  }
+)
+
 const contentBlocks = computed(() => {
   if (!article.value?.content) return []
   const lines = article.value.content.split('\n')
@@ -313,18 +330,43 @@ useHead({
           </div>
 
           <!-- Encart contribution -->
-          <div class="mx-5 mt-8 bg-[var(--color-terracotta-500)] rounded-2xl p-5 lg:mx-0">
+          <div class="mx-5 mt-8 bg-[var(--color-terracotta-500)] rounded-2xl p-5 lg:mx-0 mb-8">
             <div class="font-display text-lg text-white">TU CONNAIS UN SPOT ?</div>
             <div class="text-sm text-white/80 mt-1.5">Contribue en 10 secondes et aide la communauté.</div>
             <NuxtLink to="/search" class="inline-block bg-white text-[var(--color-terracotta-500)] text-[13px] font-bold px-5 py-3 rounded-xl mt-3.5">
               Ajouter un lieu
             </NuxtLink>
           </div>
+
+          <!-- À lire aussi -->
+          <div v-if="relatedArticles?.length" class="px-5 mt-8 lg:px-0 mb-8">
+            <h2 class="font-display text-xl text-[var(--color-espresso)] tracking-[0.04em] mb-4">À LIRE AUSSI</h2>
+  
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+              <NuxtLink
+                v-for="related in relatedArticles"
+                :key="related.slug"
+                :to="`/articles/${related.slug}`"
+                class="block relative rounded-xl overflow-hidden h-[160px] shadow-[0_2px_8px_rgba(44,40,37,0.08)]"
+              >
+                <img
+                  :src="related.cover_image || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop'"
+                  :alt="related.title"
+                  class="absolute inset-0 w-full h-full object-cover"
+                >
+                <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
+                <div class="absolute bottom-0 left-0 right-0 p-3">
+                  <div class="text-[9px] font-bold uppercase tracking-[0.1em] text-[var(--color-terracotta-300)] mb-1">{{ (related.city || '').toUpperCase() }}</div>
+                  <div class="text-[13px] font-semibold text-white leading-snug">{{ related.title }}</div>
+                </div>
+              </NuxtLink>
+            </div>
+          </div>
         </div>
 
         <!-- Sidebar desktop (carte + lien ville) -->
         <aside class="hidden lg:block">
-          <div class="sticky top-[80px]">
+          <div class="sticky top-[80px] pb-8">
             <!-- Mini carte -->
             <div v-if="articlePlaces?.length" class="bg-white rounded-2xl overflow-hidden shadow-[0_2px_12px_rgba(44,40,37,0.06)]">
               <div ref="mapContainer" class="h-[280px] w-full" />
@@ -338,7 +380,7 @@ useHead({
             <NuxtLink
               v-if="article.city_slug"
               :to="`/ville/${article.city_slug}`"
-              class="flex items-center justify-between bg-[var(--color-linen)] px-4 py-3.5 rounded-[14px] mt-4"
+              class="flex items-center justify-between bg-[var(--color-linen)] px-4 py-3.5 rounded-[14px] mt-4 mb-8"
             >
               <div>
                 <div class="text-[10px] font-bold uppercase text-[var(--color-terracotta-500)] tracking-wide">Explorer</div>
