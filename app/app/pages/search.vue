@@ -117,6 +117,13 @@ function toggleCriteria(key: string) {
 function isActive(key: string) {
   return criteriaFilters[key as keyof typeof criteriaFilters]
 }
+
+useSeoMeta({
+  title: 'Rechercher un spot — Deskover',
+  ogTitle: 'Rechercher un spot — Deskover',
+  description: 'Trouve le spot idéal pour travailler : filtre par WiFi, prises, type de lieu, horaires. Cafés, coworkings et tiers-lieux partout en France.',
+  ogDescription: 'Trouve le spot idéal pour travailler : filtre par WiFi, prises, type de lieu, horaires.',
+})
 </script>
 
 <template>

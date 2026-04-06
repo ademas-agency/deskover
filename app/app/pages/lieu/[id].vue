@@ -316,6 +316,38 @@ function categoryLabel(cat: string) {
     default: return cat
   }
 }
+
+const seoTitle = computed(() => place.value ? `${place.value.name} — ${categoryLabel(place.value.category)} à ${place.value.city} | Deskover` : 'Deskover')
+const seoDescription = computed(() => {
+  if (!place.value) return ''
+  const parts = [`${place.value.name}, ${categoryLabel(place.value.category)} à ${place.value.city}.`]
+  if (place.value.vitals) {
+    const v = place.value.vitals
+    const tags: string[] = []
+    if (v.wifi && v.wifi !== 'Non') tags.push(`WiFi ${v.wifi}`)
+    if (v.prises && v.prises !== 'Non') tags.push(`Prises ${v.prises}`)
+    if (tags.length) parts.push(tags.join(', ') + '.')
+  }
+  parts.push('Avis, horaires et infos pratiques sur Deskover.')
+  return parts.join(' ')
+})
+
+useSeoMeta({
+  title: () => seoTitle.value,
+  ogTitle: () => seoTitle.value,
+  description: () => seoDescription.value,
+  ogDescription: () => seoDescription.value,
+  ogImage: () => place.value?.photoUrl || 'https://deskover.fr/og-default.png',
+  ogType: 'place',
+  ogLocale: 'fr_FR',
+  ogSiteName: 'Deskover'
+})
+
+useHead({
+  link: [
+    { rel: 'canonical', href: () => `https://deskover.fr/lieu/${route.params.id}` }
+  ]
+})
 </script>
 
 <template>

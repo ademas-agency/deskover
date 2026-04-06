@@ -119,6 +119,14 @@ onMounted(() => {
   }
 })
 
+useSeoMeta({
+  title: 'Deskover — Les meilleurs spots pour bosser',
+  ogTitle: 'Deskover — Les meilleurs spots pour bosser',
+  description: 'Deskover sélectionne les meilleurs cafés, coworkings et tiers-lieux pour travailler. WiFi, prises, ambiance — tout est noté.',
+  ogDescription: 'Les meilleurs cafés, coworkings et tiers-lieux pour travailler, sélectionnés pour toi.',
+  ogType: 'website',
+})
+
 const articles = [
   {
     title: 'Où travailler à Lyon',

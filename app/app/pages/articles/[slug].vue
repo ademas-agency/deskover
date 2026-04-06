@@ -174,11 +174,21 @@ function formatInline(text: string): string {
     .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2">$1</a>')
 }
 
+useSeoMeta({
+  title: () => article.value ? `${article.value.title} — Deskover` : 'Article — Deskover',
+  ogTitle: () => article.value?.title || 'Article — Deskover',
+  description: () => article.value?.description || '',
+  ogDescription: () => article.value?.description || '',
+  ogImage: () => article.value?.cover_image || 'https://deskover.fr/og-default.png',
+  ogType: 'article',
+  ogLocale: 'fr_FR',
+  ogSiteName: 'Deskover'
+})
+
 useHead({
-  title: () => article.value?.title || 'Article - Deskover',
-  meta: [
-    { name: 'description', content: () => article.value?.description || '' },
-  ],
+  link: [
+    { rel: 'canonical', href: () => `https://deskover.fr/articles/${slug}` }
+  ]
 })
 </script>
 

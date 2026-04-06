@@ -159,11 +159,21 @@ onMounted(() => {
   })
 })
 
+useSeoMeta({
+  title: () => `Où travailler à ${cityName.value} — Deskover`,
+  ogTitle: () => `Où travailler à ${cityName.value} — Deskover`,
+  description: () => `Les meilleurs cafés, coworkings et spots pour bosser à ${cityName.value}. WiFi, prises, ambiance — tout est noté par Deskover.`,
+  ogDescription: () => `Les meilleurs spots pour bosser à ${cityName.value}, sélectionnés par Deskover.`,
+  ogImage: () => places.value?.[0]?.photoUrl || 'https://deskover.fr/og-default.png',
+  ogType: 'website',
+  ogLocale: 'fr_FR',
+  ogSiteName: 'Deskover'
+})
+
 useHead({
-  title: () => `Où travailler à ${cityName.value} - Deskover`,
-  meta: [
-    { name: 'description', content: () => `Les meilleurs cafés, coworkings et spots pour bosser à ${cityName.value}. WiFi, prises, ambiance - tout est noté.` },
-  ],
+  link: [
+    { rel: 'canonical', href: () => `https://deskover.fr/ville/${slug}` }
+  ]
 })
 </script>
 

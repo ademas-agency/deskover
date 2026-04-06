@@ -157,6 +157,13 @@ async function submit() {
   submitting.value = false
   step.value = 3
 }
+
+useSeoMeta({
+  title: 'Ajouter un lieu — Deskover',
+  ogTitle: 'Ajouter un lieu — Deskover',
+  description: 'Tu connais un bon spot pour bosser ? Ajoute-le en 30 secondes sur Deskover et aide la communauté.',
+  ogDescription: 'Tu connais un bon spot pour bosser ? Ajoute-le en 30 secondes sur Deskover.',
+})
 </script>
 
 <template>
