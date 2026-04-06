@@ -92,6 +92,7 @@ export class PlaceRepository {
       curation_score: place.curation_score,
       conditions: place.conditions || null,
       photos: place.photos || [],
+      opening_hours: place.opening_hours || [],
       last_verified_at: place.last_verified_at,
     }
 
