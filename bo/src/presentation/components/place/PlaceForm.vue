@@ -651,18 +651,34 @@ function handleSave() {
       </div>
     </BaseCard>
 
-    <!-- Horaires (readonly) -->
-    <BaseCard v-if="form.opening_hours?.length" title="Horaires">
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-1">
+    <!-- Horaires -->
+    <BaseCard title="Horaires">
+      <div class="space-y-2">
         <div
-          v-for="hours in form.opening_hours"
-          :key="hours"
-          class="flex items-center gap-2 text-sm"
+          v-for="(hours, i) in (form.opening_hours || [])"
+          :key="i"
+          class="flex items-center gap-2"
         >
           <Clock :size="12" class="text-steam flex-shrink-0" />
-          <span class="text-roast">{{ hours }}</span>
+          <input
+            :value="hours"
+            class="flex-1 rounded-lg border border-steam/30 bg-white px-3 py-1.5 text-sm text-espresso outline-none focus:border-primary"
+            @input="form.opening_hours[i] = ($event.target as HTMLInputElement).value"
+          >
+          <button
+            class="w-7 h-7 rounded-full hover:bg-red-50 flex items-center justify-center text-steam hover:text-red-500 transition-colors"
+            @click="form.opening_hours.splice(i, 1)"
+          >
+            <span class="text-xs font-bold">x</span>
+          </button>
         </div>
       </div>
+      <button
+        class="mt-3 text-sm text-primary font-medium hover:underline"
+        @click="if (!form.opening_hours) form.opening_hours = []; form.opening_hours.push('jour: 09:00 – 18:00')"
+      >
+        + Ajouter un horaire
+      </button>
     </BaseCard>
 
     <!-- Blog mentions (readonly) -->
