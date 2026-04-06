@@ -48,7 +48,7 @@
 
       <!-- Desktop layout -->
       <div class="hidden lg:block pt-16 pb-12">
-        <div class="grid grid-cols-4 gap-12">
+        <div class="grid grid-cols-3 gap-12">
           <!-- Col 1: Logo + accroche -->
           <div>
             <div class="font-display text-lg text-[var(--color-terracotta-500)] tracking-[0.12em]">DESKOVER</div>
@@ -65,15 +65,18 @@
             </div>
           </div>
 
-          <!-- Col 2: Guides par ville -->
+          <!-- Col 2: À lire -->
           <div>
-            <div class="text-[10px] font-bold uppercase tracking-[0.12em] text-white/40 mb-4">Guides par ville</div>
-            <div class="grid grid-cols-2 gap-x-6 gap-y-2.5">
-              <NuxtLink v-for="city in cities" :key="city.slug" :to="`/articles/${city.slug}`" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">
-                {{ city.name }}
+            <div class="text-[10px] font-bold uppercase tracking-[0.12em] text-white/40 mb-4">À lire</div>
+            <div class="flex flex-col gap-2.5">
+              <NuxtLink v-for="city in cities.slice(0, 4)" :key="city.slug" :to="`/articles/${city.slug}`" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">
+                Bosser à {{ city.name }}
               </NuxtLink>
+              <NuxtLink to="/villes" class="inline-block mb-4 text-xs text-[var(--color-terracotta-500)] font-semibold hover:underline">Toutes les villes →</NuxtLink>
+              <NuxtLink to="/articles/cafe-ou-coworking" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">Café ou coworking ?</NuxtLink>
+              <NuxtLink to="/articles/bosser-en-terrasse-ete" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">Bosser en terrasse</NuxtLink>
             </div>
-            <NuxtLink to="/" class="inline-block mt-4 text-xs text-[var(--color-terracotta-500)] font-semibold hover:underline">Tous nos guides →</NuxtLink>
+            
           </div>
 
           <!-- Col 3: Deskover -->
@@ -85,17 +88,6 @@
               <NuxtLink to="/contact" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">Contact</NuxtLink>
               <NuxtLink to="/mentions-legales" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">Mentions légales</NuxtLink>
               <NuxtLink to="/confidentialite" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">Confidentialité</NuxtLink>
-            </div>
-          </div>
-
-          <!-- Col 4: Le guide -->
-          <div>
-            <div class="text-[10px] font-bold uppercase tracking-[0.12em] text-white/40 mb-4">Le guide</div>
-            <div class="flex flex-col gap-2.5">
-              <NuxtLink to="/articles/travailler-paris-11e" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">Bosser dans le 11e</NuxtLink>
-              <NuxtLink to="/articles/travailler-paris-3e" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">Bosser dans le Marais</NuxtLink>
-              <NuxtLink to="/articles/travailler-montpellier" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">Bosser à Montpellier</NuxtLink>
-              <NuxtLink to="/articles/travailler-lille" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">Bosser à Lille</NuxtLink>
             </div>
           </div>
         </div>

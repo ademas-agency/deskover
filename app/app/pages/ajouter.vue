@@ -171,18 +171,18 @@ useSeoMeta({
 
     <!-- Header mobile -->
     <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 pt-safe flex justify-between items-center lg:hidden">
-      <NuxtLink to="/" class="flex items-center">
+      <button @click="router.back()" class="flex items-center">
         <UIcon name="lucide:chevron-left" class="w-6 h-6 text-[var(--color-espresso)]" />
-      </NuxtLink>
+      </button>
       <span class="font-display text-sm text-[var(--color-espresso)] tracking-[0.12em]">AJOUTER UN LIEU</span>
       <div class="w-6" />
     </div>
 
     <!-- Close button desktop -->
     <div class="hidden lg:flex justify-end pt-6 lg:max-w-[600px] lg:mx-auto">
-      <NuxtLink to="/" class="w-10 h-10 rounded-full bg-[var(--color-parchment)] flex items-center justify-center hover:bg-[var(--color-steam)]/20 transition-colors">
+      <button @click="router.back()" class="w-10 h-10 rounded-full bg-[var(--color-parchment)] flex items-center justify-center hover:bg-[var(--color-steam)]/20 transition-colors">
         <UIcon name="lucide:x" class="w-5 h-5 text-[var(--color-espresso)]" />
-      </NuxtLink>
+      </button>
     </div>
 
     <!-- Step 1: Infos -->
@@ -286,12 +286,12 @@ useSeoMeta({
       <p class="text-[14px] text-[var(--color-roast)] mt-2 leading-relaxed">
         On vérifie les infos et {{ form.name }} sera visible très vite.
       </p>
-      <NuxtLink
-        to="/"
+      <button
+        @click="router.back()"
         class="inline-block mt-8 px-8 py-3.5 rounded-2xl bg-[var(--color-terracotta-500)] text-white text-sm font-bold"
       >
-        Retour à l'accueil
-      </NuxtLink>
+        Retour
+      </button>
     </div>
     <FabCarte />
   </div>

@@ -142,7 +142,7 @@ const { data: allArticles } = await useAsyncData('home-articles', async () => {
     title: a.title,
     slug: a.slug,
     citySlug: a.city_slug,
-    tag: a.city?.toUpperCase() || 'GUIDE',
+    tag: a.city?.toUpperCase() || null,
     img: a.cover_image || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop'
   }))
 })
@@ -192,15 +192,32 @@ const articles = computed(() => {
     .map((a, i) => ({ a, sort: Math.sin(seed * (i + 1)) }))
     .sort((a, b) => a.sort - b.sort)
     .map(x => x.a)
-  // Featured cities first, then the rest
-  const prioritized = [
-    ...shuffled.filter(a => featuredCities.has(a.citySlug)),
-    ...shuffled.filter(a => !featuredCities.has(a.citySlug))
+  // Mix lifestyle and city articles (alternate)
+  const lifestyle = shuffled.filter(a => !a.citySlug)
+  const cities = [
+    ...shuffled.filter(a => a.citySlug && featuredCities.has(a.citySlug)),
+    ...shuffled.filter(a => a.citySlug && !featuredCities.has(a.citySlug))
   ]
+  // Deduplicate cities: keep only 1 article per city
+  const seenCities = new Set<string>(localSlug ? [localSlug] : [])
+  const uniqueCities = cities.filter(a => {
+    if (seenCities.has(a.citySlug)) return false
+    seenCities.add(a.citySlug)
+    return true
+  })
 
-  for (const a of prioritized) {
-    if (picked.length >= 5) break
-    picked.push(a)
+  let li = 0, ci = 0
+  // Alternate: city, lifestyle, city, lifestyle, city, city
+  const pattern = ['city', 'lifestyle', 'city', 'lifestyle', 'city', 'city']
+  for (const type of pattern) {
+    if (picked.length >= 6) break
+    if (type === 'lifestyle' && li < lifestyle.length) {
+      picked.push(lifestyle[li++])
+    } else if (ci < uniqueCities.length) {
+      picked.push(uniqueCities[ci++])
+    } else if (li < lifestyle.length) {
+      picked.push(lifestyle[li++])
+    }
   }
 
   return picked
@@ -306,32 +323,54 @@ const articles = computed(() => {
           Guides, conseils, retours d'expérience. Tout ce qu'on aurait aimé savoir avant de poser notre ordi.
         </p>
 
-        <!-- Article principal (large) -->
-        <NuxtLink
-          :to="`/articles/${articles[0].slug}`"
-          class="block relative rounded-2xl overflow-hidden h-[220px] shadow-[0_2px_12px_rgba(44,40,37,0.1)]"
-        >
-          <img :src="articles[0].img" :alt="articles[0].title" class="absolute inset-0 w-full h-full object-cover">
-          <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-          <div class="absolute bottom-0 left-0 right-0 p-4">
-            <div class="text-[10px] font-bold uppercase tracking-[0.1em] text-[var(--color-terracotta-300)] mb-1.5">{{ articles[0].tag }}</div>
-            <div class="text-[16px] font-bold text-white leading-snug">{{ articles[0].title }}</div>
-          </div>
-        </NuxtLink>
+        <!-- Mobile: 1 grand + 2 petits -->
+        <!-- Desktop: magazine layout -->
 
-        <!-- Articles secondaires -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-2.5 mt-3">
+        <!-- Row 1: 1 grand (2/3) + 2 empilés (1/3) -->
+        <div class="flex flex-col gap-2.5 lg:grid lg:grid-cols-3 lg:gap-3">
           <NuxtLink
-            v-for="article in articles.slice(1)"
-            :key="article.slug + article.title"
+            v-if="articles[0]"
+            :to="`/articles/${articles[0].slug}`"
+            class="block relative rounded-2xl overflow-hidden h-[220px] lg:h-[340px] lg:col-span-2 shadow-[0_2px_12px_rgba(44,40,37,0.1)]"
+          >
+            <img :src="articles[0].img" :alt="articles[0].title" class="absolute inset-0 w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+            <div class="absolute bottom-0 left-0 right-0 p-5">
+              <div v-if="articles[0].tag" class="text-[10px] font-bold uppercase tracking-[0.1em] text-white/60 mb-1.5">{{ articles[0].tag }}</div>
+              <div class="text-[17px] lg:text-[20px] font-bold text-white leading-snug">{{ articles[0].title }}</div>
+            </div>
+          </NuxtLink>
+
+          <div class="grid grid-cols-2 gap-2.5 lg:grid-cols-1 lg:gap-3">
+            <NuxtLink
+              v-for="article in articles.slice(1, 3)"
+              :key="article.slug"
+              :to="`/articles/${article.slug}`"
+              class="block relative rounded-xl overflow-hidden h-[160px] shadow-[0_2px_8px_rgba(44,40,37,0.08)]"
+            >
+              <img :src="article.img" :alt="article.title" class="absolute inset-0 w-full h-full object-cover">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
+              <div class="absolute bottom-0 left-0 right-0 p-3">
+                <div v-if="article.tag" class="text-[9px] font-bold uppercase tracking-[0.1em] text-white/60 mb-1">{{ article.tag }}</div>
+                <div class="text-[13px] font-semibold text-white leading-snug">{{ article.title }}</div>
+              </div>
+            </NuxtLink>
+          </div>
+        </div>
+
+        <!-- Row 2: 3 cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-3 gap-2.5 lg:gap-3 mt-2.5 lg:mt-3">
+          <NuxtLink
+            v-for="article in articles.slice(3, 6)"
+            :key="article.slug"
             :to="`/articles/${article.slug}`"
-            class="block relative rounded-xl overflow-hidden h-[160px] shadow-[0_2px_8px_rgba(44,40,37,0.08)]"
+            class="block relative rounded-xl overflow-hidden h-[160px] lg:h-[180px] shadow-[0_2px_8px_rgba(44,40,37,0.08)]"
           >
             <img :src="article.img" :alt="article.title" class="absolute inset-0 w-full h-full object-cover">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
             <div class="absolute bottom-0 left-0 right-0 p-3">
-              <div class="text-[9px] font-bold uppercase tracking-[0.1em] text-[var(--color-terracotta-300)] mb-1">{{ article.tag }}</div>
-              <div class="text-[12px] font-semibold text-white leading-snug">{{ article.title }}</div>
+              <div v-if="article.tag" class="text-[9px] font-bold uppercase tracking-[0.1em] text-white/60 mb-1">{{ article.tag }}</div>
+              <div class="text-[13px] font-semibold text-white leading-snug">{{ article.title }}</div>
             </div>
           </NuxtLink>
         </div>
