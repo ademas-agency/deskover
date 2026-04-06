@@ -78,7 +78,7 @@ onUnmounted(() => { if (timer) clearInterval(timer) })
       <h2 class="font-display text-xl text-[var(--color-espresso)] tracking-[0.02em]">{{ place.name }}</h2>
       <p class="text-xs text-[var(--color-steam)] mt-1 line-clamp-2 pb-4">{{ place.type }}<template v-if="place.neighborhood"> · {{ place.neighborhood }}</template><template v-if="place.city"> · {{ place.city }}</template><template v-if="place.distance"> · {{ place.distance }}</template></p>
       <!-- Vitals -->
-      <PlaceVitals :vitals="place.vitals" class="mt-auto pt-4" />
+      <PlaceVitals :vitals="place.vitals" :max="4" class="mt-auto pt-4" />
     </div>
   </article>
 </template>

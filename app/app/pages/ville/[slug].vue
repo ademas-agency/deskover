@@ -300,7 +300,7 @@ useHead({
             </div>
             <!-- Vitals -->
             <div class="p-3">
-              <PlaceVitals :vitals="selectedPlace.vitals" size="sm" />
+              <PlaceVitals :vitals="selectedPlace.vitals" size="sm" :max="4" />
             </div>
             <!-- Close -->
             <button class="absolute top-2 right-2 w-7 h-7 rounded-full bg-black/20 backdrop-blur-md flex items-center justify-center" @click.stop="closeCard">

@@ -59,7 +59,7 @@ function categoryLabel(cat: string) {
           {{ categoryLabel(place.category) }} · {{ place.city }}
         </p>
         <!-- Vitals -->
-        <PlaceVitals :vitals="place.vitals" class="mt-3.5" />
+        <PlaceVitals :vitals="place.vitals" :max="4" class="mt-3.5" />
       </div>
     </article>
   </NuxtLink>

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+
 interface Vital {
   icon: string       // lucide icon name
   label: string      // "WIFI", "PRISES", "FOOD", "STYLE"
@@ -6,12 +8,16 @@ interface Vital {
   status: 'good' | 'medium' | 'none'
 }
 
-withDefaults(defineProps<{
+const props = withDefaults(defineProps<{
   vitals: Vital[]
   size?: 'sm' | 'md' | 'lg'
+  max?: number
 }>(), {
-  size: 'md'
+  size: 'md',
+  max: 0
 })
+
+const displayVitals = computed(() => props.max > 0 ? props.vitals.slice(0, props.max) : props.vitals)
 
 const emit = defineEmits<{
   'vital-click': [label: string]
@@ -37,7 +43,7 @@ const iconSize = (size: string) => {
 <template>
   <div class="bg-[var(--color-linen)] rounded-[14px] flex" :class="size === 'lg' ? 'py-4' : 'py-3.5'">
     <div
-      v-for="(vital, i) in vitals"
+      v-for="(vital, i) in displayVitals"
       :key="vital.label"
       class="flex-1 flex flex-col items-center gap-[3px] relative cursor-pointer"
       @click="emit('vital-click', vital.label)"

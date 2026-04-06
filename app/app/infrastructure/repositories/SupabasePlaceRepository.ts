@@ -36,8 +36,9 @@ function signalToVitals(signals: string[]): Vital[] {
   return [
     { icon: 'lucide:wifi', label: 'WiFi', value: wifiValue, status: wifiStatus },
     { icon: 'lucide:zap', label: 'Prises', value: prisesValue, status: prisesStatus },
+    { icon: 'lucide:ticket', label: 'Accès', value: accesValue, status: accesStatus },
     { icon: 'lucide:sparkles', label: 'Style', value: styleValue, status: styleStatus },
-    { icon: 'lucide:ticket', label: 'Accès', value: accesValue, status: accesStatus }
+    { icon: 'lucide:utensils', label: 'Food', value: foodValue, status: foodStatus }
   ]
 }
 
