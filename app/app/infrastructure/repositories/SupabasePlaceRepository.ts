@@ -26,9 +26,9 @@ function signalToVitals(signals: string[]): Vital[] {
   if (!isPaid && !isResa) {
     accesStatus = 'good'; accesValue = 'Gratuit'
   } else if (isPaid && isResa) {
-    accesStatus = 'medium'; accesValue = 'Payant · Sur résa'
+    accesStatus = 'medium'; accesValue = 'Résa'
   } else if (isResa) {
-    accesStatus = 'medium'; accesValue = 'Sur résa'
+    accesStatus = 'medium'; accesValue = 'Résa'
   } else {
     accesStatus = 'medium'; accesValue = 'Payant'
   }
@@ -36,7 +36,6 @@ function signalToVitals(signals: string[]): Vital[] {
   return [
     { icon: 'lucide:wifi', label: 'WiFi', value: wifiValue, status: wifiStatus },
     { icon: 'lucide:zap', label: 'Prises', value: prisesValue, status: prisesStatus },
-    { icon: 'lucide:utensils', label: 'Food', value: foodValue, status: foodStatus },
     { icon: 'lucide:sparkles', label: 'Style', value: styleValue, status: styleStatus },
     { icon: 'lucide:ticket', label: 'Accès', value: accesValue, status: accesStatus }
   ]
