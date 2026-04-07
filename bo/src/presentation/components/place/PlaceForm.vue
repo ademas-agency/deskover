@@ -1,5 +1,7 @@
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue'
+import { ref, watch, computed, onMounted } from 'vue'
+import { useEditor, EditorContent } from '@tiptap/vue-3'
+import StarterKit from '@tiptap/starter-kit'
 
 import type { Place, PlaceCategory } from '../../../core/domain/entities/Place'
 import { CATEGORY_LABELS, SIGNAL_LABELS } from '../../../core/domain/entities/Place'
@@ -28,8 +30,19 @@ const form = ref<Place>({ ...props.place })
 const uploading = ref(false)
 const photoError = ref('')
 
+const conditionsEditor = useEditor({
+  extensions: [StarterKit],
+  content: props.place.conditions || '',
+  onUpdate: ({ editor }) => {
+    form.value.conditions = editor.getHTML()
+  },
+})
+
 watch(() => props.place, (newVal) => {
   form.value = { ...newVal }
+  if (conditionsEditor.value) {
+    conditionsEditor.value.commands.setContent(newVal.conditions || '')
+  }
 }, { deep: true })
 
 const allSignals = [
@@ -558,13 +571,15 @@ function handleSave() {
     <!-- Conditions d'accès -->
     <BaseCard title="Conditions d'accès">
       <div class="space-y-1">
-        <label class="block text-sm font-medium text-roast">Détail des conditions (tarif, réservation, etc.)</label>
-        <textarea
-          v-model="form.conditions"
-          rows="2"
-          class="w-full rounded-lg border border-steam/30 bg-white px-3 py-2 text-sm text-espresso placeholder-steam outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 resize-y"
-          placeholder="Ex: Pass journée 15€, réservation sur leur site..."
-        />
+        <label class="block text-sm font-medium text-roast mb-1">Détail des conditions (tarif, réservation, etc.)</label>
+        <div class="border border-steam/30 rounded-lg overflow-hidden">
+          <div v-if="conditionsEditor" class="flex gap-1 p-1.5 border-b border-steam/15 bg-cream/50">
+            <button type="button" :class="['p-1 rounded text-xs', conditionsEditor.isActive('bold') ? 'bg-primary/10 text-primary' : 'text-roast hover:bg-linen']" @click="conditionsEditor.chain().focus().toggleBold().run()">B</button>
+            <button type="button" :class="['p-1 rounded text-xs italic', conditionsEditor.isActive('italic') ? 'bg-primary/10 text-primary' : 'text-roast hover:bg-linen']" @click="conditionsEditor.chain().focus().toggleItalic().run()">I</button>
+            <button type="button" :class="['p-1 rounded text-xs', conditionsEditor.isActive('bulletList') ? 'bg-primary/10 text-primary' : 'text-roast hover:bg-linen']" @click="conditionsEditor.chain().focus().toggleBulletList().run()">•</button>
+          </div>
+          <EditorContent :editor="conditionsEditor" class="bg-white [&_.tiptap]:px-3 [&_.tiptap]:py-2 [&_.tiptap]:text-sm [&_.tiptap]:text-espresso [&_.tiptap]:outline-none [&_.tiptap]:min-h-[60px] [&_.tiptap_ul]:list-disc [&_.tiptap_ul]:pl-5" />
+        </div>
         <p class="text-xs text-steam">
           Affiché sous les Vitals sur la fiche lieu. Laisse vide si c'est un café classique (consommation uniquement).
         </p>

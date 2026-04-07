@@ -542,7 +542,7 @@ useHead({
           <PlaceVitals :vitals="place.vitals" size="lg" @vital-click="onVitalClick" />
           <div v-if="place.conditions" class="mt-4">
             <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-1.5">AVANT DE TE DÉPLACER</div>
-            <p class="text-[14px] text-[var(--color-roast)] leading-relaxed whitespace-pre-line">{{ place.conditions }}</p>
+            <div class="text-[14px] text-[var(--color-roast)] leading-relaxed [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mt-1 [&_li]:mb-0.5 [&_strong]:text-[var(--color-espresso)] [&_p+p]:mt-1.5" v-html="place.conditions" />
           </div>
         </div>
 
