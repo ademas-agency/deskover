@@ -344,7 +344,7 @@ function categoryLabel(cat: string) {
           </div>
           <!-- Vitals -->
           <div class="p-3">
-            <PlaceVitals :vitals="selectedPlace.vitals" size="sm" :max="4" />
+            <PlaceVitals :vitals="selectedPlace.vitals" size="sm" />
           </div>
           <!-- Close -->
           <button class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-black/20 backdrop-blur-md flex items-center justify-center" @click.stop="closeCard">

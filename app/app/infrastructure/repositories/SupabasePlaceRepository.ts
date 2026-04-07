@@ -19,26 +19,15 @@ function signalToVitals(signals: string[]): Vital[] {
   const styleStatus: VitalStatus = has('ambiance') ? 'good' : has('calme') ? 'good' : 'medium'
   const styleValue = has('ambiance') ? 'Canon' : has('calme') ? 'Superbe' : 'Sympa'
 
-  const isPaid = has('payant')
-  const isResa = has('reservation')
-  let accesStatus: VitalStatus
-  let accesValue: string
-  if (!isPaid && !isResa) {
-    accesStatus = 'good'; accesValue = 'Gratuit'
-  } else if (isPaid && isResa) {
-    accesStatus = 'medium'; accesValue = 'Résa'
-  } else if (isResa) {
-    accesStatus = 'medium'; accesValue = 'Résa'
-  } else {
-    accesStatus = 'medium'; accesValue = 'Payant'
-  }
+  const isPaid = has('payant') || has('reservation')
+  const accesStatus: VitalStatus = isPaid ? 'medium' : 'good'
+  const accesValue = isPaid ? 'Payant' : 'Gratuit'
 
   return [
     { icon: 'lucide:wifi', label: 'WiFi', value: wifiValue, status: wifiStatus },
     { icon: 'lucide:zap', label: 'Prises', value: prisesValue, status: prisesStatus },
     { icon: 'lucide:ticket', label: 'Accès', value: accesValue, status: accesStatus },
-    { icon: 'lucide:sparkles', label: 'Style', value: styleValue, status: styleStatus },
-    { icon: 'lucide:utensils', label: 'Food', value: foodValue, status: foodStatus }
+    { icon: 'lucide:sparkles', label: 'Style', value: styleValue, status: styleStatus }
   ]
 }
 

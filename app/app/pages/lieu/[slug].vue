@@ -540,10 +540,10 @@ useHead({
         <div class="px-4 mt-5 lg:px-0">
           <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-2.5">LES VITALS</div>
           <PlaceVitals :vitals="place.vitals" size="lg" @vital-click="onVitalClick" />
-          <p v-if="place.conditions" class="text-[13px] text-[var(--color-steam)] mt-2.5 italic">
-            <UIcon name="lucide:info" class="w-3.5 h-3.5 inline mr-1" />
-            {{ place.conditions }}
-          </p>
+          <div v-if="place.conditions" class="mt-4">
+            <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-1.5">AVANT DE TE DÉPLACER</div>
+            <p class="text-[14px] text-[var(--color-roast)] leading-relaxed">{{ place.conditions }}</p>
+          </div>
         </div>
 
         <!-- Bouton itinéraire (mobile only) -->
