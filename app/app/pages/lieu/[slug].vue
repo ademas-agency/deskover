@@ -544,6 +544,18 @@ useHead({
             <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-1.5">AVANT DE TE DÉPLACER</div>
             <div class="text-[14px] text-[var(--color-roast)] leading-relaxed [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mt-1 [&_li]:mb-0.5 [&_strong]:text-[var(--color-espresso)] [&_p+p]:mt-1.5" v-html="place.conditions" />
           </div>
+
+          <div v-if="place.foodType || place.foodDescription || place.menuUrl" class="mt-4">
+            <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-1.5">RESTAURATION</div>
+            <div v-if="place.foodType" class="text-[13px] font-semibold text-[var(--color-espresso)] mb-1">
+              {{ { boissons: 'Boissons uniquement', snacks: 'Boissons + snacks', dejeuner: 'Déjeuner / plats', complet: 'Restauration complète', buffet: 'Buffet / libre-service' }[place.foodType] || place.foodType }}
+            </div>
+            <div v-if="place.foodDescription" class="text-[14px] text-[var(--color-roast)] leading-relaxed [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mt-1 [&_li]:mb-0.5 [&_strong]:text-[var(--color-espresso)] [&_p+p]:mt-1.5" v-html="place.foodDescription" />
+            <a v-if="place.menuUrl" :href="place.menuUrl" target="_blank" class="inline-flex items-center gap-1.5 text-[13px] font-semibold text-[var(--color-terracotta-500)] mt-2 hover:underline">
+              <UIcon name="lucide:external-link" class="w-3.5 h-3.5" />
+              Voir le menu
+            </a>
+          </div>
         </div>
 
         <!-- Bouton itinéraire (mobile only) -->

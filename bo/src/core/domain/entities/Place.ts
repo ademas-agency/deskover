@@ -33,6 +33,9 @@ export interface Place {
   status: string
   instagram: string
   conditions: string
+  food_type: string
+  food_description: string
+  menu_url: string
   curation_score: number
   photos: string[]
   last_verified_at: string | null

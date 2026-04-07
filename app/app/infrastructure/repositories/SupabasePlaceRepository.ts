@@ -156,6 +156,9 @@ function rowToPlace(row: any, index: number, mentions?: any[]): Place {
     blogMentions,
     instagram: row.instagram_handle || undefined,
     conditions: row.conditions || undefined,
+    foodType: row.food_type || undefined,
+    foodDescription: row.food_description || undefined,
+    menuUrl: row.menu_url || undefined,
     tag
   }
 }

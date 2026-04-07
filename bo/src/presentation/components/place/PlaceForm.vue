@@ -38,10 +38,21 @@ const conditionsEditor = useEditor({
   },
 })
 
+const foodEditor = useEditor({
+  extensions: [StarterKit],
+  content: props.place.food_description || '',
+  onUpdate: ({ editor }) => {
+    form.value.food_description = editor.getHTML()
+  },
+})
+
 watch(() => props.place, (newVal) => {
   form.value = { ...newVal }
   if (conditionsEditor.value) {
     conditionsEditor.value.commands.setContent(newVal.conditions || '')
+  }
+  if (foodEditor.value) {
+    foodEditor.value.commands.setContent(newVal.food_description || '')
   }
 }, { deep: true })
 
@@ -580,9 +591,43 @@ function handleSave() {
           </div>
           <EditorContent :editor="conditionsEditor" class="bg-white [&_.tiptap]:px-3 [&_.tiptap]:py-2 [&_.tiptap]:text-sm [&_.tiptap]:text-espresso [&_.tiptap]:outline-none [&_.tiptap]:min-h-[60px] [&_.tiptap_ul]:list-disc [&_.tiptap_ul]:pl-5" />
         </div>
-        <p class="text-xs text-steam">
-          Affiché sous les Vitals sur la fiche lieu. Laisse vide si c'est un café classique (consommation uniquement).
-        </p>
+      </div>
+    </BaseCard>
+
+    <!-- Restauration -->
+    <BaseCard title="Restauration">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="space-y-1">
+          <label class="block text-sm font-medium text-roast">Type de restauration</label>
+          <select
+            v-model="form.food_type"
+            class="w-full rounded-lg border border-steam/30 bg-white px-3 py-2 text-sm text-espresso outline-none focus:border-primary"
+          >
+            <option value="">Non renseigné</option>
+            <option value="boissons">Boissons uniquement</option>
+            <option value="snacks">Boissons + snacks</option>
+            <option value="dejeuner">Déjeuner / plats</option>
+            <option value="complet">Restauration complète</option>
+            <option value="buffet">Buffet / libre-service</option>
+          </select>
+        </div>
+        <BaseInput
+          v-model="form.menu_url"
+          label="Lien vers le menu"
+          placeholder="https://..."
+        />
+      </div>
+      <div class="mt-4 space-y-1">
+        <label class="block text-sm font-medium text-roast mb-1">Description</label>
+        <div class="border border-steam/30 rounded-lg overflow-hidden">
+          <div v-if="foodEditor" class="flex gap-1 p-1.5 border-b border-steam/15 bg-cream/50">
+            <button type="button" :class="['p-1 rounded text-xs', foodEditor.isActive('bold') ? 'bg-primary/10 text-primary' : 'text-roast hover:bg-linen']" @click="foodEditor.chain().focus().toggleBold().run()">B</button>
+            <button type="button" :class="['p-1 rounded text-xs italic', foodEditor.isActive('italic') ? 'bg-primary/10 text-primary' : 'text-roast hover:bg-linen']" @click="foodEditor.chain().focus().toggleItalic().run()">I</button>
+            <button type="button" :class="['p-1 rounded text-xs', foodEditor.isActive('bulletList') ? 'bg-primary/10 text-primary' : 'text-roast hover:bg-linen']" @click="foodEditor.chain().focus().toggleBulletList().run()">•</button>
+          </div>
+          <EditorContent :editor="foodEditor" class="bg-white [&_.tiptap]:px-3 [&_.tiptap]:py-2 [&_.tiptap]:text-sm [&_.tiptap]:text-espresso [&_.tiptap]:outline-none [&_.tiptap]:min-h-[60px] [&_.tiptap_ul]:list-disc [&_.tiptap_ul]:pl-5" />
+        </div>
+        <p class="text-xs text-steam">Ex: Carte de snacks et boissons chaudes, plat du jour le midi à 12€...</p>
       </div>
     </BaseCard>
 

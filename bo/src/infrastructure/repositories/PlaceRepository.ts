@@ -37,6 +37,9 @@ function rowToPlace(row: any): Place {
     curation_score: row.curation_score ?? 0,
     photos: row.photos || [],
     conditions: row.conditions || '',
+    food_type: row.food_type || '',
+    food_description: row.food_description || '',
+    menu_url: row.menu_url || '',
     last_verified_at: row.last_verified_at || null,
   }
 }
@@ -91,6 +94,9 @@ export class PlaceRepository {
       photo_url: place.photo_url || null,
       curation_score: place.curation_score,
       conditions: place.conditions || null,
+      food_type: place.food_type || null,
+      food_description: place.food_description || null,
+      menu_url: place.menu_url || null,
       photos: place.photos || [],
       opening_hours: place.opening_hours || [],
       last_verified_at: place.last_verified_at,

@@ -55,6 +55,11 @@ export interface Place {
   // Conditions d'accès
   conditions?: string
 
+  // Restauration
+  foodType?: string
+  foodDescription?: string
+  menuUrl?: string
+
   // Press
   blogMentions: BlogMention[]
 
