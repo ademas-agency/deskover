@@ -1,4 +1,5 @@
 <script setup lang="ts">
+const router = useRouter()
 const client = useSupabaseClient()
 
 const form = reactive({
@@ -48,13 +49,20 @@ useHead({
 <template>
   <div class="min-h-screen bg-[var(--color-cream)]">
 
-    <!-- Header sticky mobile -->
+    <!-- Header mobile -->
     <div class="sticky top-0 z-50 bg-[var(--color-cream)] shadow-[0_1px_8px_rgba(44,40,37,0.06)] px-5 py-4 pt-safe flex justify-between items-center lg:hidden">
-      <NuxtLink to="/" class="flex items-center">
+      <button @click="router.back()" class="flex items-center">
         <UIcon name="lucide:chevron-left" class="w-6 h-6 text-[var(--color-espresso)]" />
-      </NuxtLink>
+      </button>
       <span class="font-display text-sm text-[var(--color-espresso)] tracking-[0.12em]">CONTACT</span>
       <div class="w-6" />
+    </div>
+
+    <!-- Close button desktop -->
+    <div class="hidden lg:flex justify-end pt-6 lg:max-w-[600px] lg:mx-auto">
+      <button @click="router.back()" class="w-10 h-10 rounded-full bg-[var(--color-parchment)] flex items-center justify-center hover:bg-[var(--color-steam)]/20 transition-colors">
+        <UIcon name="lucide:x" class="w-5 h-5 text-[var(--color-espresso)]" />
+      </button>
     </div>
 
     <!-- Contenu -->
