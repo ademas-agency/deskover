@@ -77,7 +77,11 @@ export default defineNuxtConfig({
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico', sizes: 'any' },
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'manifest', href: '/manifest.json' },
-        { rel: 'apple-touch-icon', href: '/icon-192.png' }
+        { rel: 'apple-touch-icon', href: '/icon-192.png' },
+        { rel: 'preconnect', href: 'https://kxfmpalgzbtiiboeceww.supabase.co' },
+        { rel: 'dns-prefetch', href: 'https://kxfmpalgzbtiiboeceww.supabase.co' },
+        { rel: 'preconnect', href: 'https://www.googletagmanager.com' },
+        { rel: 'dns-prefetch', href: 'https://region1.google-analytics.com' }
       ]
     },
     pageTransition: { name: 'page', mode: 'out-in' }

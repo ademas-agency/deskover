@@ -369,8 +369,8 @@ useHead({
                 isOpen: place.isOpen ?? true,
                 nextOpen: place.nextOpen,
                 tag: i === 0 ? 'Deskovered #1' : i === 1 ? 'Deskovered #2' : i === 2 ? 'Deskovered #3' : undefined,
-                image: place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop',
-                images: place.photos || [],
+                image: place.cardUrl || place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop',
+                images: [],
                 vitals: place.vitals,
               }"
             />

@@ -347,8 +347,8 @@ useSeoMeta({
           distance: place.distance || '',
           isOpen: place.isOpen ?? true,
           nextOpen: place.nextOpen,
-          image: place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop',
-          images: place.photos || [],
+          image: place.cardUrl || place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop',
+          images: [],
           vitals: place.vitals
         }" />
       </NuxtLink>

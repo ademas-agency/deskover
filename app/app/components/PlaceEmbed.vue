@@ -31,6 +31,7 @@ function categoryLabel(cat: string) {
         <img
           :src="place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop'"
           :alt="place.name"
+          loading="lazy"
           class="w-full h-full object-cover object-center"
         >
         <!-- Status badge -->

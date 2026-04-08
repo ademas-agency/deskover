@@ -41,6 +41,7 @@ export interface Place {
 
   // Media
   photoUrl?: string
+  cardUrl?: string
   thumbUrl?: string
   website?: string
   phone?: string

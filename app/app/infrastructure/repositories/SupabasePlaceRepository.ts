@@ -38,6 +38,13 @@ function getPhotoUrl(row: any): string | undefined {
   return row.photo_url || undefined
 }
 
+function getCardUrl(row: any): string | undefined {
+  if (row.photo_storage_path) {
+    return `${SUPABASE_STORAGE_URL.replace('/object/public/', '/render/image/public/')}/${row.photo_storage_path}?width=400&height=300&resize=cover&quality=75`
+  }
+  return row.photo_url || undefined
+}
+
 function getThumbUrl(row: any): string | undefined {
   if (row.photo_storage_path) {
     return `${SUPABASE_STORAGE_URL.replace('/object/public/', '/render/image/public/')}/${row.photo_storage_path}?width=100&height=100&resize=cover`
@@ -145,6 +152,7 @@ function rowToPlace(row: any, index: number, mentions?: any[]): Place {
     googleReviewsCount: row.google_reviews_count,
     googleMapsUrl: row.google_maps_url,
     photoUrl: getPhotoUrl(row),
+    cardUrl: getCardUrl(row),
     thumbUrl: getThumbUrl(row),
     photos: (row.photos || []).map((p: string) => `${SUPABASE_STORAGE_URL}/${p}`),
     website: row.website,
