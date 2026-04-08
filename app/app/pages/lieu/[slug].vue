@@ -587,7 +587,7 @@ useHead({
             <div class="absolute rounded-[12px] overflow-hidden shadow-md cursor-pointer" style="left:0; top:8%; width:58%; height:84%;" @click="openLightbox(0)">
               <img :src="allPhotos[0]" :alt="`Photo 1 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
             </div>
-            <div class="absolute rounded-[12px] overflow-hidden cursor-pointer" style="right:0; top:0; width:54%; height:92%; border:3px solid white; box-shadow:0 8px 24px rgba(0,0,0,0.15); z-index:10;" @click="openLightbox(1)">
+            <div class="absolute rounded-[12px] overflow-hidden cursor-pointer" style="right:0; top:0; width:54%; height:92%; border:6px solid white; box-shadow:0 8px 24px rgba(0,0,0,0.15); z-index:10;" @click="openLightbox(1)">
               <img :src="allPhotos[1]" :alt="`Photo 2 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
             </div>
           </div>
@@ -626,29 +626,30 @@ useHead({
           </div>
 
           <!-- 5+ photos : moodboard Pinterest 6 cases -->
+          <!-- border:6px white sur chaque photo — les bordures adjacentes créent 6px de séparation blanche -->
           <div v-else class="relative h-[490px] mx-4 lg:mx-0">
-            <!-- Photo 0 : gauche haut — coupe à 57%, bien plus bas que la droite (28%) -->
-            <div class="absolute overflow-hidden cursor-pointer" style="left:0; top:0; width:52%; height:57%;" @click="openLightbox(0)">
+            <!-- Photo 0 : gauche haut, coupe à 57% (décalage fort avec droite à 28%) -->
+            <div class="absolute overflow-hidden cursor-pointer" style="left:0; top:0; width:52%; height:57%; border:6px solid white;" @click="openLightbox(0)">
               <img :src="allPhotos[0]" :alt="`Photo 1 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
             </div>
-            <!-- Photo 1 : droite haut — courte (28%), crée le décalage fort avec la gauche -->
-            <div class="absolute overflow-hidden cursor-pointer" style="right:0; top:0; width:46%; height:28%;" @click="openLightbox(1)">
+            <!-- Photo 1 : droite haut, courte (28%) -->
+            <div class="absolute overflow-hidden cursor-pointer" style="right:0; top:0; width:54%; height:28%; border:6px solid white;" @click="openLightbox(1)">
               <img :src="allPhotos[1]" :alt="`Photo 2 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
             </div>
-            <!-- Photo 2 : droite milieu — haute (40%), 2% de gap avec Photo 1, coupe à 70% -->
-            <div class="absolute overflow-hidden cursor-pointer" style="right:0; top:30%; width:46%; height:40%;" @click="openLightbox(2)">
+            <!-- Photo 2 : droite milieu, flush avec Photo 1 (pas de gap, la bordure suffit) -->
+            <div class="absolute overflow-hidden cursor-pointer" style="right:0; top:26%; width:60%; height:40%; border:6px solid white;" @click="openLightbox(2)">
               <img :src="allPhotos[2]" :alt="`Photo 3 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
             </div>
-            <!-- Photo 3 : overlay centrale avec cadre blanc — enjambe les deux colonnes -->
-            <div class="absolute overflow-hidden cursor-pointer" style="left:22%; top:42%; width:44%; height:35%; border:5px solid white; box-shadow:0 10px 30px rgba(0,0,0,0.22); z-index:10;" @click="openLightbox(3)">
+            <!-- Photo 3 : overlay centrale — même border 3px + ombre pour effet superposé -->
+            <div class="absolute overflow-hidden cursor-pointer" style="left:22%; top:42%; width:44%; height:35%; border:6px solid white; box-shadow:0 10px 30px rgba(0,0,0,0.22); z-index:10;" @click="openLightbox(3)">
               <img :src="allPhotos[3]" :alt="`Photo 4 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
             </div>
-            <!-- Photo 4 : gauche bas — 2% de gap avec Photo 0 -->
-            <div class="absolute overflow-hidden cursor-pointer" style="left:0; top:59%; width:52%; height:41%;" @click="openLightbox(4)">
+            <!-- Photo 4 : gauche bas, flush avec Photo 0 -->
+            <div class="absolute overflow-hidden cursor-pointer" style="left:0; top:52%; width:60%; height:48%; border:6px solid white;" @click="openLightbox(4)">
               <img :src="allPhotos[4]" :alt="`Photo 5 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
             </div>
-            <!-- Photo 5 : droite bas — 2% de gap avec Photo 2 (coupe à 72%) -->
-            <div v-if="allPhotos.length >= 6" class="absolute overflow-hidden cursor-pointer" style="right:0; top:72%; width:46%; height:28%;" @click="openLightbox(5)">
+            <!-- Photo 5 : droite bas, flush avec Photo 2 -->
+            <div v-if="allPhotos.length >= 6" class="absolute overflow-hidden cursor-pointer" style="right:0; top:62%; width:46%; height:38%; border:6px solid white;" @click="openLightbox(5)">
               <img :src="allPhotos[5]" :alt="`Photo 6 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
               <div v-if="allPhotos.length > 6" class="absolute inset-0 bg-black/50 flex items-center justify-center">
                 <span class="text-white text-2xl font-bold">+{{ allPhotos.length - 6 }}</span>
@@ -665,7 +666,7 @@ useHead({
               <UIcon name="lucide:map-pin" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0 mt-0.5" />
               <div>
                 <a :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`" target="_blank" class="text-sm text-[var(--color-roast)]">{{ place.address }}</a>
-                <button @click="showMapModal = true" class="text-xs font-semibold text-[var(--color-terracotta-500)] mt-0.5 block">J'y vais →</button>
+                <button @click="showMapModal = true" class="text-sm font-semibold text-[var(--color-terracotta-500)] mt-0.5 block">J'y vais →</button>
               </div>
             </div>
             <div v-if="place.phone" class="flex items-center gap-3">
@@ -735,7 +736,7 @@ useHead({
                 <UIcon name="lucide:map-pin" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0 mt-0.5" />
                 <div>
                   <a :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`" target="_blank" class="text-sm text-[var(--color-roast)]">{{ place.address }}</a>
-                  <button @click="showMapModal = true" class="text-xs font-semibold text-[var(--color-terracotta-500)] mt-0.5 block">J'y vais →</button>
+                  <button @click="showMapModal = true" class="text-sm font-semibold text-[var(--color-terracotta-500)] mt-0.5 block">J'y vais →</button>
                 </div>
               </div>
               <div v-if="place.phone" class="flex items-center gap-3">
