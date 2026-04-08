@@ -28,7 +28,7 @@ export interface Place {
   phone: string
   photo_url: string
   photo_storage_path: string
-  opening_hours: Record<string, string> | string[]
+  opening_hours: string[]
   business_status: string
   status: string
   instagram: string

@@ -40,7 +40,7 @@ const editor = useEditor({
   content: '',
   onUpdate: ({ editor: ed }) => {
     if (article.value) {
-      article.value.content = ed.storage.markdown.getMarkdown()
+      article.value.content = (ed.storage as any).markdown.getMarkdown()
     }
   },
 })
