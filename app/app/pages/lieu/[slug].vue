@@ -388,7 +388,7 @@ const jsonLd = computed(() => {
   const p = place.value
   const schema: Record<string, any> = {
     '@context': 'https://schema.org',
-    '@type': p.category === 'coworking' ? 'CoworkingSpace' : 'CafeOrCoffeeShop',
+    '@type': p.category === 'coworking' ? 'LocalBusiness' : 'CafeOrCoffeeShop',
     'name': p.name,
     'url': `https://www.deskover.fr/lieu/${placeSlug}`,
     'address': {
