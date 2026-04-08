@@ -3,6 +3,19 @@ import maplibregl from 'maplibre-gl'
 import 'maplibre-gl/dist/maplibre-gl.css'
 import type { Place } from '~/domain/models/Place'
 
+useSeoMeta({
+  title: 'Carte des spots — Deskover',
+  ogTitle: 'Carte des spots — Deskover',
+  description: 'Explore la carte de tous les cafés, coworkings et tiers-lieux pour travailler en France. Trouve le spot le plus proche.',
+  ogDescription: 'Tous les spots pour bosser en France sur une carte interactive.',
+})
+
+useHead({
+  link: [
+    { rel: 'canonical', href: 'https://www.deskover.fr/carte' }
+  ]
+})
+
 const { getAllForMap } = usePlaces()
 const router = useRouter()
 

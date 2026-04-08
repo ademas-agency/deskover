@@ -66,7 +66,12 @@ export default defineNuxtConfig({
         { name: 'google-site-verification', content: 'A4gym-1WU4NwHLqNi4MqvQI49W7845e2989tPtbD3PM' },
         { property: 'og:image', content: 'https://www.deskover.fr/og-default.png' },
         { property: 'og:locale', content: 'fr_FR' },
-        { property: 'og:site_name', content: 'Deskover' }
+        { property: 'og:site_name', content: 'Deskover' },
+        { name: 'twitter:card', content: 'summary_large_image' },
+        { name: 'twitter:site', content: '@deskover_fr' },
+        { name: 'twitter:title', content: 'Deskover — Les meilleurs spots pour bosser' },
+        { name: 'twitter:description', content: 'Trouve le spot parfait pour bosser en 10 secondes. WiFi, prises, ambiance — on a tout testé, ville par ville.' },
+        { name: 'twitter:image', content: 'https://www.deskover.fr/og-default.png' }
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico', sizes: 'any' },

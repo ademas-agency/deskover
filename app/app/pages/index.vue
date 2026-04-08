@@ -129,6 +129,45 @@ useSeoMeta({
   description: 'Deskover sélectionne les meilleurs cafés, coworkings et tiers-lieux pour travailler. WiFi, prises, ambiance — tout est noté.',
   ogDescription: 'Les meilleurs cafés, coworkings et tiers-lieux pour travailler, sélectionnés pour toi.',
   ogType: 'website',
+  twitterCard: 'summary_large_image',
+  twitterTitle: 'Deskover — Les meilleurs spots pour bosser',
+  twitterDescription: 'Les meilleurs cafés, coworkings et tiers-lieux pour travailler, sélectionnés pour toi.'
+})
+
+useHead({
+  link: [
+    { rel: 'canonical', href: 'https://www.deskover.fr' }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify([
+        {
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          'name': 'Deskover',
+          'url': 'https://www.deskover.fr',
+          'description': 'Deskover sélectionne les meilleurs cafés, coworkings et tiers-lieux pour travailler.',
+          'potentialAction': {
+            '@type': 'SearchAction',
+            'target': 'https://www.deskover.fr/search?q={search_term_string}',
+            'query-input': 'required name=search_term_string'
+          }
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          'name': 'Deskover',
+          'url': 'https://www.deskover.fr',
+          'logo': 'https://www.deskover.fr/favicon.svg',
+          'sameAs': [
+            'https://www.instagram.com/deskover.fr',
+            'https://www.tiktok.com/@deskover'
+          ]
+        }
+      ])
+    }
+  ]
 })
 
 const supabase = useSupabaseClient()

@@ -168,7 +168,11 @@ useSeoMeta({
   ogImage: () => places.value?.[0]?.photoUrl || 'https://www.deskover.fr/og-default.png',
   ogType: 'website',
   ogLocale: 'fr_FR',
-  ogSiteName: 'Deskover'
+  ogSiteName: 'Deskover',
+  twitterCard: 'summary_large_image',
+  twitterTitle: () => `Où travailler à ${cityName.value} — Deskover`,
+  twitterDescription: () => `Les meilleurs spots pour bosser à ${cityName.value}, sélectionnés par Deskover.`,
+  twitterImage: () => places.value?.[0]?.photoUrl || 'https://www.deskover.fr/og-default.png'
 })
 
 const jsonLd = computed(() => {
