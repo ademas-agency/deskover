@@ -380,7 +380,11 @@ useSeoMeta({
   ogImage: () => place.value?.photoUrl || 'https://www.deskover.fr/og-default.png',
   ogType: 'place',
   ogLocale: 'fr_FR',
-  ogSiteName: 'Deskover'
+  ogSiteName: 'Deskover',
+  twitterCard: 'summary_large_image',
+  twitterTitle: () => seoTitle.value,
+  twitterDescription: () => seoDescription.value,
+  twitterImage: () => place.value?.photoUrl || 'https://www.deskover.fr/og-default.png'
 })
 
 const jsonLd = computed(() => {

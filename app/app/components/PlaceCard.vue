@@ -53,7 +53,7 @@ onUnmounted(() => { if (timer) clearInterval(timer) })
   <article class="bg-white rounded-[20px] overflow-hidden shadow-[0_4px_16px_rgba(44,40,37,0.08)] cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(44,40,37,0.12)] h-full flex flex-col">
     <!-- Image -->
     <div class="relative h-[200px] overflow-hidden">
-      <img :src="allImages[current]" :alt="place.name" :key="current" class="w-full h-full object-cover transition-opacity duration-500">
+      <img :src="allImages[current]" :alt="place.name" :key="current" loading="lazy" class="w-full h-full object-cover transition-opacity duration-500">
       <!-- Tag -->
       <div v-if="place.tag" class="absolute top-3 left-3 flex items-center gap-1.5 px-3 rounded-lg text-white text-[10px] font-bold uppercase tracking-wide leading-[28px]" :style="{ background: place.tag === 'Deskovered #1' ? '#AA4C4D' : 'rgba(170,76,77,0.85)' }">
         <span>{{ place.tag }}</span>

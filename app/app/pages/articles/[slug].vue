@@ -200,7 +200,11 @@ useSeoMeta({
   ogImage: () => article.value?.cover_image || 'https://www.deskover.fr/og-default.png',
   ogType: 'article',
   ogLocale: 'fr_FR',
-  ogSiteName: 'Deskover'
+  ogSiteName: 'Deskover',
+  twitterCard: 'summary_large_image',
+  twitterTitle: () => article.value?.title || 'Article — Deskover',
+  twitterDescription: () => article.value?.description || '',
+  twitterImage: () => article.value?.cover_image || 'https://www.deskover.fr/og-default.png'
 })
 
 const jsonLd = computed(() => {

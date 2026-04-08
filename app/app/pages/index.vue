@@ -129,6 +129,45 @@ useSeoMeta({
   description: 'Deskover sélectionne les meilleurs cafés, coworkings et tiers-lieux pour travailler. WiFi, prises, ambiance — tout est noté.',
   ogDescription: 'Les meilleurs cafés, coworkings et tiers-lieux pour travailler, sélectionnés pour toi.',
   ogType: 'website',
+  twitterCard: 'summary_large_image',
+  twitterTitle: 'Deskover — Les meilleurs spots pour bosser',
+  twitterDescription: 'Les meilleurs cafés, coworkings et tiers-lieux pour travailler, sélectionnés pour toi.'
+})
+
+useHead({
+  link: [
+    { rel: 'canonical', href: 'https://www.deskover.fr' }
+  ],
+  script: [
+    {
+      type: 'application/ld+json',
+      innerHTML: JSON.stringify([
+        {
+          '@context': 'https://schema.org',
+          '@type': 'WebSite',
+          'name': 'Deskover',
+          'url': 'https://www.deskover.fr',
+          'description': 'Deskover sélectionne les meilleurs cafés, coworkings et tiers-lieux pour travailler.',
+          'potentialAction': {
+            '@type': 'SearchAction',
+            'target': 'https://www.deskover.fr/search?q={search_term_string}',
+            'query-input': 'required name=search_term_string'
+          }
+        },
+        {
+          '@context': 'https://schema.org',
+          '@type': 'Organization',
+          'name': 'Deskover',
+          'url': 'https://www.deskover.fr',
+          'logo': 'https://www.deskover.fr/favicon.svg',
+          'sameAs': [
+            'https://www.instagram.com/deskover.fr',
+            'https://www.tiktok.com/@deskover'
+          ]
+        }
+      ])
+    }
+  ]
 })
 
 const supabase = useSupabaseClient()
@@ -231,6 +270,7 @@ const articles = computed(() => {
       <img
         src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=1200&fit=crop"
         alt="Intérieur café"
+        fetchpriority="high"
         class="w-full h-full object-cover"
       >
       <div class="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-[rgba(17,17,17,0.92)]" />
@@ -309,8 +349,8 @@ const articles = computed(() => {
             isOpen: place.isOpen ?? true,
             nextOpen: place.nextOpen,
             tag: place.tag,
-            image: place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop',
-            images: place.photos || [],
+            image: place.cardUrl || place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop',
+            images: [],
             vitals: place.vitals
           }" />
         </NuxtLink>
@@ -333,7 +373,7 @@ const articles = computed(() => {
             :to="`/articles/${articles[0].slug}`"
             class="block relative rounded-2xl overflow-hidden h-[220px] lg:h-[340px] lg:col-span-2 shadow-[0_2px_12px_rgba(44,40,37,0.1)]"
           >
-            <img :src="articles[0].img" :alt="articles[0].title" class="absolute inset-0 w-full h-full object-cover">
+            <img :src="articles[0].img" :alt="articles[0].title" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
             <div class="absolute bottom-0 left-0 right-0 p-5">
               <div v-if="articles[0].tag" class="text-[10px] font-bold uppercase tracking-[0.1em] text-white/60 mb-1.5">{{ articles[0].tag }}</div>
@@ -366,7 +406,7 @@ const articles = computed(() => {
             :to="`/articles/${article.slug}`"
             class="block relative rounded-xl overflow-hidden h-[160px] lg:h-[180px] shadow-[0_2px_8px_rgba(44,40,37,0.08)]"
           >
-            <img :src="article.img" :alt="article.title" class="absolute inset-0 w-full h-full object-cover">
+            <img :src="article.img" :alt="article.title" class="absolute inset-0 w-full h-full object-cover" loading="lazy">
             <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/25 to-transparent" />
             <div class="absolute bottom-0 left-0 right-0 p-3">
               <div v-if="article.tag" class="text-[9px] font-bold uppercase tracking-[0.1em] text-white/60 mb-1">{{ article.tag }}</div>
