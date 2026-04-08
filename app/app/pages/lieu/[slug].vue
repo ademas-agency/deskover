@@ -395,7 +395,8 @@ const jsonLd = computed(() => {
       '@type': 'PostalAddress',
       'streetAddress': p.address,
       'addressLocality': p.city,
-      'addressCountry': 'FR'
+      'addressCountry': 'FR',
+      ...(p.address.match(/\b\d{5}\b/) ? { postalCode: p.address.match(/\b\d{5}\b/)![0] } : {})
     }
   }
   if (p.photoUrl) schema.image = p.photoUrl
