@@ -105,7 +105,7 @@ function computeOpenStatus(openingHours?: any): { isOpen: boolean; nextOpen?: st
     const h = Math.floor(entry.openMin / 60)
     const m = entry.openMin % 60
     const timeStr = `${h}H${m ? String(m).padStart(2, '0') : ''}`
-    if (offset === 0) return { isOpen: false, nextOpen: `OUVRE à ${timeStr}` }
+    if (offset === 0) return { isOpen: false, nextOpen: `OUVRE À ${timeStr}` }
     if (offset === 1) return { isOpen: false, nextOpen: `OUVRE DEMAIN À ${timeStr}` }
     return { isOpen: false, nextOpen: `OUVRE ${dayName.toUpperCase()} À ${timeStr}` }
   }
