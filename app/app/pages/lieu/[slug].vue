@@ -240,6 +240,11 @@ onMounted(() => {
       isNearby.value = dist < 30
     }, () => {}, { timeout: 5000 })
   }
+  window.addEventListener('keydown', onLightboxKey)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', onLightboxKey)
 })
 
 function haversine(lat1: number, lon1: number, lat2: number, lon2: number): number {
@@ -284,27 +289,39 @@ function onVitalClick(label: string) {
 }
 
 const showShareToast = ref(false)
-const currentPhoto = ref(0)
 
+const lightboxOpen = ref(false)
+const lightboxIndex = ref(0)
+let touchStartX = 0
+
+function openLightbox(i: number) {
+  lightboxIndex.value = i
+  lightboxOpen.value = true
+}
+
+function lightboxPrev() {
+  lightboxIndex.value = (lightboxIndex.value - 1 + allPhotos.value.length) % allPhotos.value.length
+}
+
+function lightboxNext() {
+  lightboxIndex.value = (lightboxIndex.value + 1) % allPhotos.value.length
+}
+
+function onLightboxKey(e: KeyboardEvent) {
+  if (!lightboxOpen.value) return
+  if (e.key === 'Escape') lightboxOpen.value = false
+  if (e.key === 'ArrowLeft') lightboxPrev()
+  if (e.key === 'ArrowRight') lightboxNext()
+}
 const allPhotos = computed(() => {
   if (!place.value) return []
   const photos: string[] = []
-  if (place.value.photoUrl) photos.push(place.value.photoUrl)
   if (place.value.photos?.length) photos.push(...place.value.photos)
+  if (place.value.photoUrl) photos.push(place.value.photoUrl)
   return photos.length ? photos : ['https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop']
 })
 
-let autoSlide: ReturnType<typeof setInterval> | null = null
-
-function startAutoSlide() {
-  if (allPhotos.value.length <= 1) return
-  autoSlide = setInterval(() => {
-    currentPhoto.value = (currentPhoto.value + 1) % allPhotos.value.length
-  }, 4000)
-}
-
-onMounted(() => startAutoSlide())
-onUnmounted(() => { if (autoSlide) clearInterval(autoSlide) })
+const heroPhoto = computed(() => allPhotos.value[allPhotos.value.length - 1])
 
 async function shareLieu() {
   if (!place.value) return
@@ -465,13 +482,13 @@ useHead({
   <div class="min-h-screen bg-[var(--color-cream)]">
   <div v-if="place" class="pb-28 lg:pb-0">
 
-    <!-- Photo hero / carrousel -->
+    <!-- Photo hero -->
     <div class="relative h-[260px] lg:h-[400px] overflow-hidden">
       <img
-        :src="allPhotos[currentPhoto]"
+        :src="heroPhoto"
         :alt="place.name"
-        class="w-full h-full object-cover transition-opacity duration-300 rounded-b-[24px] lg:rounded-b-none"
-        :key="currentPhoto"
+        class="w-full h-full object-cover rounded-b-[24px] lg:rounded-b-none cursor-pointer"
+        @click="openLightbox(allPhotos.length - 1)"
       >
       <div class="absolute inset-0 bg-gradient-to-b from-black/30 to-transparent rounded-b-[24px] lg:rounded-b-none" />
 
@@ -503,16 +520,6 @@ useHead({
         </div>
       </div>
 
-      <!-- Dots -->
-      <div v-if="allPhotos.length > 1" class="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-1.5">
-        <button
-          v-for="(_, i) in allPhotos"
-          :key="i"
-          class="h-1.5 rounded-full transition-all duration-300 cursor-pointer"
-          :class="i === currentPhoto ? 'bg-white w-3' : 'bg-white/40 w-1.5'"
-          @click="currentPhoto = i; if (autoSlide) { clearInterval(autoSlide); startAutoSlide() }"
-        />
-      </div>
     </div>
 
     <!-- Desktop: 2 colonnes | Mobile: empilé -->
@@ -563,25 +570,31 @@ useHead({
           </div>
         </div>
 
-        <!-- Bouton itinéraire (mobile only) -->
-        <div class="px-4 mt-5 lg:hidden">
-          <a
-            :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`"
-            target="_blank"
-            class="block bg-[var(--color-espresso)] text-[var(--color-cream)] text-sm font-semibold py-3.5 rounded-[14px] text-center"
-          >
-            <UIcon name="lucide:navigation" class="w-4 h-4 inline mr-2" />
-            Itinéraire
-          </a>
+        <!-- Photos grid -->
+        <div v-if="allPhotos.length > 1" class="px-4 mt-5 lg:px-0">
+          <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-2.5">LE SPOT EN IMAGES</div>
+          <div class="flex gap-2 overflow-x-auto pb-1 -mx-4 px-4 lg:mx-0 lg:px-0 scrollbar-none">
+            <div
+              v-for="(photo, i) in allPhotos"
+              :key="i"
+              class="flex-shrink-0 w-[110px] h-[110px] rounded-[12px] overflow-hidden cursor-pointer"
+              @click="openLightbox(i)"
+            >
+              <img :src="photo" :alt="`Photo ${i + 1} — ${place.name}`" class="w-full h-full object-cover" />
+            </div>
+          </div>
         </div>
 
         <!-- Infos (mobile only - desktop dans sidebar) -->
         <div class="px-4 mt-5 lg:hidden">
           <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-3">INFOS</div>
           <div class="flex flex-col gap-4">
-            <div class="flex items-center gap-3">
-              <UIcon name="lucide:map-pin" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
-              <span class="text-sm text-[var(--color-roast)]">{{ place.address }}</span>
+            <div class="flex items-start gap-3">
+              <UIcon name="lucide:map-pin" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0 mt-0.5" />
+              <div>
+                <a :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`" target="_blank" class="text-sm text-[var(--color-roast)]">{{ place.address }}</a>
+                <a :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`" target="_blank" class="text-xs font-semibold text-[var(--color-terracotta-500)] mt-0.5 block">J'y vais →</a>
+              </div>
             </div>
             <div v-if="place.phone" class="flex items-center gap-3">
               <UIcon name="lucide:phone" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
@@ -646,9 +659,12 @@ useHead({
           <div class="bg-white rounded-2xl p-6 shadow-[0_2px_12px_rgba(44,40,37,0.06)]">
             <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-4">INFOS PRATIQUES</div>
             <div class="flex flex-col gap-4">
-              <div class="flex items-center gap-3">
-                <UIcon name="lucide:map-pin" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
-                <span class="text-sm text-[var(--color-roast)]">{{ place.address }}</span>
+              <div class="flex items-start gap-3">
+                <UIcon name="lucide:map-pin" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0 mt-0.5" />
+                <div>
+                  <a :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`" target="_blank" class="text-sm text-[var(--color-roast)]">{{ place.address }}</a>
+                  <a :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`" target="_blank" class="text-xs font-semibold text-[var(--color-terracotta-500)] mt-0.5 block">J'y vais →</a>
+                </div>
               </div>
               <div v-if="place.phone" class="flex items-center gap-3">
                 <UIcon name="lucide:phone" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0" />
@@ -680,15 +696,6 @@ useHead({
               </div>
             </div>
 
-            <!-- Bouton itinéraire desktop -->
-            <a
-              :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`"
-              target="_blank"
-              class="block bg-[var(--color-espresso)] text-[var(--color-cream)] text-sm font-semibold py-3 rounded-[14px] text-center mt-5"
-            >
-              <UIcon name="lucide:navigation" class="w-4 h-4 inline mr-2" />
-              Itinéraire
-            </a>
           </div>
 
           <!-- CTA Donner mon avis (desktop) -->
@@ -1038,5 +1045,50 @@ useHead({
       </Transition>
     </Teleport>
   </ClientOnly>
+
+  <!-- Lightbox -->
+  <div
+    v-if="lightboxOpen"
+    class="fixed inset-0 z-[200] bg-black flex flex-col"
+    @touchstart="touchStartX = $event.touches[0].clientX"
+    @touchend="$event.changedTouches[0].clientX - touchStartX > 50 ? lightboxPrev() : $event.changedTouches[0].clientX - touchStartX < -50 ? lightboxNext() : null"
+  >
+    <!-- Header -->
+    <div class="flex items-center justify-between px-4 py-3 flex-shrink-0">
+      <span class="text-white/60 text-sm font-medium">{{ lightboxIndex + 1 }} / {{ allPhotos.length }}</span>
+      <button @click="lightboxOpen = false" class="w-9 h-9 rounded-full bg-white/10 flex items-center justify-center">
+        <UIcon name="lucide:x" class="w-5 h-5 text-white" />
+      </button>
+    </div>
+
+    <!-- Image + flèches -->
+    <div class="flex-1 relative flex items-center justify-center px-4 min-h-0" @click="lightboxOpen = false">
+      <img
+        :src="allPhotos[lightboxIndex]"
+        :alt="`Photo ${lightboxIndex + 1} — ${place?.name}`"
+        class="max-w-full max-h-full object-contain rounded-lg"
+        @click.stop
+      />
+      <template v-if="allPhotos.length > 1">
+        <button @click.stop="lightboxPrev" class="absolute left-2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center">
+          <UIcon name="lucide:chevron-left" class="w-5 h-5 text-white" />
+        </button>
+        <button @click.stop="lightboxNext" class="absolute right-2 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center">
+          <UIcon name="lucide:chevron-right" class="w-5 h-5 text-white" />
+        </button>
+      </template>
+    </div>
+
+    <!-- Dots -->
+    <div v-if="allPhotos.length > 1" class="flex justify-center gap-1.5 py-4 flex-shrink-0">
+      <div
+        v-for="(_, i) in allPhotos"
+        :key="i"
+        class="h-1.5 rounded-full transition-all duration-200"
+        :class="i === lightboxIndex ? 'bg-white w-4' : 'bg-white/30 w-1.5'"
+      />
+    </div>
+  </div>
+
   </div>
 </template>
