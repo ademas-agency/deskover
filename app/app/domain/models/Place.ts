@@ -85,6 +85,7 @@ export interface PlaceFilters {
   calme?: boolean
   terrasse?: boolean
   gratuit?: boolean
+  insolite?: boolean
   query?: string
 }
 

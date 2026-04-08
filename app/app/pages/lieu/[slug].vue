@@ -289,16 +289,22 @@ function onVitalClick(label: string) {
 }
 
 const showShareToast = ref(false)
+const showMapModal = ref(false)
+const { public: { googleMapsApiKey } } = useRuntimeConfig()
+
+const mapsEmbedUrl = computed(() => {
+  if (!place.value) return ''
+  const { latitude, longitude } = place.value
+  return `https://www.google.com/maps/embed/v1/directions?key=${googleMapsApiKey}&origin=Current+Location&destination=${latitude},${longitude}&mode=walking&language=fr`
+})
 
 const lightboxOpen = ref(false)
 const lightboxIndex = ref(0)
 let touchStartX = 0
 
 function openLightbox(i: number) {
-  console.log('[Lightbox] openLightbox called, index:', i, 'allPhotos:', allPhotos.value)
   lightboxIndex.value = i
   lightboxOpen.value = true
-  console.log('[Lightbox] lightboxOpen is now:', lightboxOpen.value)
 }
 
 function lightboxPrev() {
@@ -572,17 +578,81 @@ useHead({
           </div>
         </div>
 
-        <!-- Photos grid -->
-        <div v-if="allPhotos.length > 1" class="px-4 mt-5 lg:px-0">
-          <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-2.5">LE SPOT EN IMAGES</div>
-          <div class="flex gap-2 overflow-x-auto pb-1 -mx-4 px-4 lg:mx-0 lg:px-0 scrollbar-none">
-            <div
-              v-for="(photo, i) in allPhotos"
-              :key="i"
-              class="flex-shrink-0 w-[110px] h-[110px] rounded-[12px] overflow-hidden cursor-pointer"
-              @click="openLightbox(i)"
-            >
-              <img :src="photo" :alt="`Photo ${i + 1} — ${place.name}`" class="w-full h-full object-cover" />
+        <!-- Photos moodboard -->
+        <div v-if="allPhotos.length > 1" class="mt-5">
+          <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-3 px-4 lg:px-0">LE SPOT EN IMAGES</div>
+
+          <!-- 2 photos : chevauchement gauche/droite -->
+          <div v-if="allPhotos.length === 2" class="relative h-[220px] mx-4 lg:mx-0">
+            <div class="absolute rounded-[12px] overflow-hidden shadow-md cursor-pointer" style="left:0; top:8%; width:58%; height:84%;" @click="openLightbox(0)">
+              <img :src="allPhotos[0]" :alt="`Photo 1 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <div class="absolute rounded-[12px] overflow-hidden cursor-pointer" style="right:0; top:0; width:54%; height:92%; border:3px solid white; box-shadow:0 8px 24px rgba(0,0,0,0.15); z-index:10;" @click="openLightbox(1)">
+              <img :src="allPhotos[1]" :alt="`Photo 2 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+          </div>
+
+          <!-- 3 photos : 2 fonds + 1 centrale superposée avec cadre blanc -->
+          <div v-else-if="allPhotos.length === 3" class="relative h-[240px] mx-4 lg:mx-0">
+            <div class="absolute rounded-[12px] overflow-hidden shadow-md cursor-pointer" style="left:0; top:8%; width:52%; height:84%;" @click="openLightbox(0)">
+              <img :src="allPhotos[0]" :alt="`Photo 1 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <div class="absolute rounded-[12px] overflow-hidden shadow-md cursor-pointer" style="right:0; top:8%; width:52%; height:84%;" @click="openLightbox(2)">
+              <img :src="allPhotos[2]" :alt="`Photo 3 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <div class="absolute rounded-[12px] overflow-hidden cursor-pointer" style="left:50%; transform:translateX(-50%); top:0; width:46%; height:100%; border:4px solid white; box-shadow:0 8px 28px rgba(0,0,0,0.18); z-index:10;" @click="openLightbox(1)">
+              <img :src="allPhotos[1]" :alt="`Photo 2 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+          </div>
+
+          <!-- 4 photos : composition moodboard diagonale -->
+          <div v-else-if="allPhotos.length === 4" class="relative h-[260px] mx-4 lg:mx-0">
+            <!-- Fond gauche -->
+            <div class="absolute rounded-[12px] overflow-hidden shadow-sm cursor-pointer" style="left:0; top:10%; width:40%; height:80%;" @click="openLightbox(0)">
+              <img :src="allPhotos[0]" :alt="`Photo 1 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <!-- Superposée centre-gauche (en haut) -->
+            <div class="absolute rounded-[12px] overflow-hidden cursor-pointer" style="left:22%; top:0; width:37%; height:68%; border:4px solid white; box-shadow:0 6px 24px rgba(0,0,0,0.16); z-index:10;" @click="openLightbox(1)">
+              <img :src="allPhotos[1]" :alt="`Photo 2 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <!-- Superposée centre-droit (en bas) -->
+            <div class="absolute rounded-[12px] overflow-hidden cursor-pointer" style="right:22%; bottom:0; width:37%; height:68%; border:4px solid white; box-shadow:0 6px 24px rgba(0,0,0,0.16); z-index:10;" @click="openLightbox(2)">
+              <img :src="allPhotos[2]" :alt="`Photo 3 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <!-- Fond droit -->
+            <div class="absolute rounded-[12px] overflow-hidden shadow-sm cursor-pointer" style="right:0; top:10%; width:40%; height:80%;" @click="openLightbox(3)">
+              <img :src="allPhotos[3]" :alt="`Photo 4 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+          </div>
+
+          <!-- 5+ photos : moodboard Pinterest 6 cases -->
+          <div v-else class="relative h-[490px] mx-4 lg:mx-0">
+            <!-- Photo 0 : gauche haut — coupe à 57%, bien plus bas que la droite (28%) -->
+            <div class="absolute overflow-hidden cursor-pointer" style="left:0; top:0; width:52%; height:57%;" @click="openLightbox(0)">
+              <img :src="allPhotos[0]" :alt="`Photo 1 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <!-- Photo 1 : droite haut — courte (28%), crée le décalage fort avec la gauche -->
+            <div class="absolute overflow-hidden cursor-pointer" style="right:0; top:0; width:46%; height:28%;" @click="openLightbox(1)">
+              <img :src="allPhotos[1]" :alt="`Photo 2 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <!-- Photo 2 : droite milieu — haute (40%), 2% de gap avec Photo 1, coupe à 70% -->
+            <div class="absolute overflow-hidden cursor-pointer" style="right:0; top:30%; width:46%; height:40%;" @click="openLightbox(2)">
+              <img :src="allPhotos[2]" :alt="`Photo 3 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <!-- Photo 3 : overlay centrale avec cadre blanc — enjambe les deux colonnes -->
+            <div class="absolute overflow-hidden cursor-pointer" style="left:22%; top:42%; width:44%; height:35%; border:5px solid white; box-shadow:0 10px 30px rgba(0,0,0,0.22); z-index:10;" @click="openLightbox(3)">
+              <img :src="allPhotos[3]" :alt="`Photo 4 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <!-- Photo 4 : gauche bas — 2% de gap avec Photo 0 -->
+            <div class="absolute overflow-hidden cursor-pointer" style="left:0; top:59%; width:52%; height:41%;" @click="openLightbox(4)">
+              <img :src="allPhotos[4]" :alt="`Photo 5 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
+            </div>
+            <!-- Photo 5 : droite bas — 2% de gap avec Photo 2 (coupe à 72%) -->
+            <div v-if="allPhotos.length >= 6" class="absolute overflow-hidden cursor-pointer" style="right:0; top:72%; width:46%; height:28%;" @click="openLightbox(5)">
+              <img :src="allPhotos[5]" :alt="`Photo 6 — ${place.name}`" class="w-full h-full object-cover" loading="lazy" />
+              <div v-if="allPhotos.length > 6" class="absolute inset-0 bg-black/50 flex items-center justify-center">
+                <span class="text-white text-2xl font-bold">+{{ allPhotos.length - 6 }}</span>
+              </div>
             </div>
           </div>
         </div>
@@ -595,7 +665,7 @@ useHead({
               <UIcon name="lucide:map-pin" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0 mt-0.5" />
               <div>
                 <a :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`" target="_blank" class="text-sm text-[var(--color-roast)]">{{ place.address }}</a>
-                <a :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`" target="_blank" class="text-xs font-semibold text-[var(--color-terracotta-500)] mt-0.5 block">J'y vais →</a>
+                <button @click="showMapModal = true" class="text-xs font-semibold text-[var(--color-terracotta-500)] mt-0.5 block">J'y vais →</button>
               </div>
             </div>
             <div v-if="place.phone" class="flex items-center gap-3">
@@ -665,7 +735,7 @@ useHead({
                 <UIcon name="lucide:map-pin" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0 mt-0.5" />
                 <div>
                   <a :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`" target="_blank" class="text-sm text-[var(--color-roast)]">{{ place.address }}</a>
-                  <a :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`" target="_blank" class="text-xs font-semibold text-[var(--color-terracotta-500)] mt-0.5 block">J'y vais →</a>
+                  <button @click="showMapModal = true" class="text-xs font-semibold text-[var(--color-terracotta-500)] mt-0.5 block">J'y vais →</button>
                 </div>
               </div>
               <div v-if="place.phone" class="flex items-center gap-3">
@@ -1047,6 +1117,38 @@ useHead({
       </Transition>
     </Teleport>
   </ClientOnly>
+
+  <!-- Modal carte -->
+  <div
+    v-if="showMapModal"
+    class="fixed inset-0 z-[200] bg-black/60 flex items-end lg:items-center lg:justify-center"
+    @click.self="showMapModal = false"
+  >
+    <div class="w-full bg-white rounded-t-3xl lg:rounded-2xl lg:max-w-2xl lg:w-full overflow-hidden">
+      <div class="flex items-center justify-between px-5 py-4 border-b border-[var(--color-parchment)]">
+        <span class="font-display text-sm text-[var(--color-espresso)] tracking-[0.05em]">{{ place?.name }}</span>
+        <button @click="showMapModal = false" class="w-8 h-8 rounded-full bg-[var(--color-linen)] flex items-center justify-center">
+          <UIcon name="lucide:x" class="w-4 h-4 text-[var(--color-steam)]" />
+        </button>
+      </div>
+      <iframe
+        :src="mapsEmbedUrl"
+        class="w-full h-[380px] lg:h-[460px] border-0"
+        allowfullscreen
+        loading="lazy"
+        referrerpolicy="no-referrer-when-downgrade"
+      />
+      <div class="px-5 py-4">
+        <a
+          :href="place?.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place?.latitude},${place?.longitude}`"
+          target="_blank"
+          class="block bg-[var(--color-espresso)] text-[var(--color-cream)] text-sm font-semibold py-3 rounded-[14px] text-center"
+        >
+          Ouvrir dans Google Maps
+        </a>
+      </div>
+    </div>
+  </div>
 
   <!-- Lightbox -->
   <div

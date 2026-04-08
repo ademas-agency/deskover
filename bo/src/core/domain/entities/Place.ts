@@ -65,4 +65,5 @@ export const SIGNAL_LABELS: Record<string, string> = {
   lumineux: 'Lumineux',
   payant: 'Payant',
   reservation: 'Sur réservation',
+  insolite: 'Insolite',
 }

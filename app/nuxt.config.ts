@@ -1,4 +1,10 @@
 export default defineNuxtConfig({
+  runtimeConfig: {
+    public: {
+      googleMapsApiKey: process.env.GOOGLE_MAPS_API_KEY
+    }
+  },
+
   modules: [
     '@nuxt/eslint',
     '@nuxt/ui',
@@ -89,6 +95,14 @@ export default defineNuxtConfig({
 
   routeRules: {
     '/': { prerender: true },
+    '/api/**': {
+      cors: true,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type',
+      }
+    }
   },
 
   compatibilityDate: '2025-01-15',

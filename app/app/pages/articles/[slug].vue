@@ -313,7 +313,7 @@ useHead({
           <!-- Chapeau -->
           <div class="px-5 pt-6 lg:px-0">
             <div class="text-[11px] font-bold uppercase tracking-[0.08em] text-[var(--color-terracotta-500)] mb-2.5">
-              GUIDE · {{ (article.city || '').toUpperCase() }}
+              GUIDE {{ (article.city ? '· ' + article.city : '').toUpperCase() }}
             </div>
             <h1 class="font-display text-[28px] lg:text-[44px] text-[var(--color-espresso)] leading-[1.05] uppercase">
               {{ article.title }}
@@ -335,13 +335,13 @@ useHead({
           </div>
 
           <!-- Encart contribution -->
-          <div class="mx-5 mt-8 bg-[var(--color-terracotta-500)] rounded-2xl p-5 lg:mx-0 mb-8">
+          <NuxtLink to="/ajouter" class="block mx-5 mt-8 bg-[var(--color-terracotta-500)] rounded-2xl p-5 lg:mx-0 mb-8">
             <div class="font-display text-lg text-white">TU CONNAIS UN SPOT ?</div>
             <div class="text-sm text-white/80 mt-1.5">Contribue en 10 secondes et aide la communauté.</div>
-            <NuxtLink to="/ajouter" class="inline-block bg-white text-[var(--color-terracotta-500)] text-[13px] font-bold px-5 py-3 rounded-xl mt-3.5">
+            <div class="inline-block bg-white text-[var(--color-terracotta-500)] text-[13px] font-bold px-5 py-3 rounded-xl mt-3.5">
               Ajouter un lieu
-            </NuxtLink>
-          </div>
+            </div>
+          </NuxtLink>
 
           <!-- À lire aussi -->
           <div v-if="relatedArticles?.length" class="px-5 mt-8 lg:px-0 mb-8">
@@ -412,7 +412,6 @@ useHead({
         </NuxtLink>
       </div>
 
-      <FabCarte />
       <DeskoverFooter />
     </template>
   </div>
@@ -425,7 +424,7 @@ useHead({
   font-size: 20px;
   color: var(--color-espresso);
   padding: 0 20px;
-  margin-top: 48px;
+  margin-top: 24px;
   text-transform: uppercase;
 }
 
@@ -470,6 +469,7 @@ useHead({
 
 .article-body > div > p {
   margin-top: 8px;
+  padding: 0 20px;
   font-size: 15px;
   color: var(--color-roast);
   line-height: 1.7;

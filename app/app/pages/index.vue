@@ -15,6 +15,7 @@ const quickFilters = [
   { key: 'food', label: 'Bien manger', icon: 'lucide:utensils', filter: { food: true } as PlaceFilters, sort: 'relevance' as const },
   { key: 'coworking', label: 'Coworkings', icon: 'lucide:building-2', filter: { category: 'coworking' } as PlaceFilters, sort: 'relevance' as const },
   { key: 'cafe', label: 'Cafés', icon: 'lucide:coffee', filter: { category: 'cafe' } as PlaceFilters, sort: 'relevance' as const },
+  { key: 'insolite', label: 'Insolite', icon: 'lucide:wand-2', filter: { insolite: true } as PlaceFilters, sort: 'relevance' as const },
 ]
 
 const activeQuickFilter = ref('recos')
@@ -36,6 +37,7 @@ const pageTitle = computed(() => {
     case 'ouvert': return 'OUVERT MAINTENANT'
     case 'coworking': return 'COWORKINGS'
     case 'cafe': return 'CAFÉS'
+    case 'insolite': return 'SPOTS INSOLITES'
     default: return 'NOS RECOS'
   }
 })
@@ -51,7 +53,8 @@ const pageSubtitle = computed(() => {
     case 'food': return 'Parce qu\'on bosse mieux le ventre plein.'
     case 'ouvert': return 'Tu peux y aller, ces spots sont ouverts en ce moment.'
     case 'coworking': return 'Des vrais espaces pensés pour bosser, avec tout ce qu\'il faut.'
-    case 'cafe': return 'L\'art de poser son laptop entre deux expressos.'
+    case 'cafe': return 'L\'art de poser son ordi entre deux expressos.'
+    case 'insolite': return 'Des spots qui sortent du lot. Ça change.'
     default: return ''
   }
 })
@@ -307,7 +310,7 @@ const articles = computed(() => {
     <!-- CLASSEMENT -->
     <section class="bg-[var(--color-cream)] rounded-t-3xl -mt-6 relative z-10 lg:rounded-none lg:mt-0">
       <!-- Quick filters -->
-      <div class="lg:container-deskover">
+      <div class="px-4 lg:container-deskover">
         <div class="flex gap-2.5 overflow-x-auto no-scrollbar py-6 lg:flex-wrap lg:py-8">
           <button
             v-for="qf in quickFilters"

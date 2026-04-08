@@ -58,7 +58,7 @@ watch(() => props.place, (newVal) => {
 
 const allSignals = [
   'wifi', 'prises', 'calme', 'food', 'terrasse', 'laptop_friendly',
-  'pas_cher', 'grandes_tables', 'ambiance', 'silencieux', 'musique', 'lumineux',
+  'pas_cher', 'grandes_tables', 'ambiance', 'silencieux', 'musique', 'lumineux', 'insolite',
   'payant', 'reservation',
 ]
 
@@ -156,6 +156,84 @@ const curationLabel = computed(() => {
   if (s >= -4) return { text: 'Rétrogradé', color: 'text-orange-600 bg-orange-50' }
   return { text: 'Très rétrogradé', color: 'text-red-600 bg-red-50' }
 })
+
+// --- Instagram feed ---
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000'
+
+interface InstaPhoto {
+  id: string
+  shortcode: string
+  thumbnail: string
+  url: string
+  caption: string
+  importing: boolean
+  imported: boolean
+}
+
+const instaPhotos = ref<InstaPhoto[]>([])
+const instaLoading = ref(false)
+const instaError = ref('')
+
+async function loadInstagramFeed() {
+  const username = form.value.instagram?.replace('@', '')
+  if (!username) return
+  instaLoading.value = true
+  instaError.value = ''
+  try {
+    const res = await fetch(`${API_URL}/api/instagram/${username}`)
+    if (!res.ok) throw new Error('Impossible de charger le feed')
+    const data = await res.json()
+    instaPhotos.value = data.map((p: any) => ({
+      ...p,
+      thumbnail: `${API_URL}/api/instagram/image?url=${encodeURIComponent(p.thumbnail)}`,
+      importing: false,
+      imported: false,
+    }))
+  } catch (e: any) {
+    instaError.value = e.message || 'Erreur Instagram'
+  } finally {
+    instaLoading.value = false
+  }
+}
+
+async function importInstaPhoto(photo: InstaPhoto) {
+  photo.importing = true
+  instaError.value = ''
+  try {
+    // Proxy l'image via Nuxt (contourne le CORS Instagram)
+    const res = await fetch(`${API_URL}/api/instagram/import`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ imageUrl: photo.url }),
+    })
+    if (!res.ok) throw new Error('Impossible de récupérer l\'image')
+    const blob = await res.blob()
+
+    // Upload direct Supabase depuis le BO
+    const cityKey = form.value.city_key || 'unknown'
+    const placeName = form.value.name ? form.value.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '') : 'lieu'
+    const idx = (form.value.photos || []).length + 1
+    const ext = blob.type.includes('png') ? 'png' : 'jpg'
+    const storagePath = `${cityKey}/${placeName}-insta-${idx}-${Date.now()}.${ext}`
+
+    const { error } = await supabase.storage
+      .from(BUCKET)
+      .upload(storagePath, blob, { upsert: true, contentType: blob.type })
+    if (error) throw new Error(error.message)
+
+    if (!form.value.photo_storage_path && !form.value.photo_url) {
+      form.value.photo_storage_path = storagePath
+    } else {
+      if (!form.value.photos) form.value.photos = []
+      form.value.photos.push(storagePath)
+    }
+    photo.imported = true
+  } catch (e: any) {
+    instaError.value = e.message || 'Erreur import'
+  } finally {
+    photo.importing = false
+  }
+}
 
 // --- Verification ---
 function markAsVerified() {
@@ -334,6 +412,7 @@ function handleSave() {
 
 <template>
   <form @submit.prevent="handleSave" class="space-y-6">
+    <div class="grid grid-cols-2 gap-6 items-start">
     <!-- Vérification manuelle -->
     <BaseCard title="Vérification">
       <div class="flex items-center justify-between">
@@ -405,6 +484,7 @@ function handleSave() {
         </p>
       </div>
     </BaseCard>
+    </div>
 
     <!-- Photos -->
     <BaseCard title="Photos">
@@ -428,8 +508,7 @@ function handleSave() {
           <div
             v-for="(photo, idx) in allPhotos"
             :key="photo.path || photo.url"
-            class="relative group rounded-xl overflow-hidden bg-linen"
-            style="aspect-ratio: 4/3;"
+            class="relative group rounded-xl overflow-hidden bg-linen aspect-square"
           >
             <img :src="photo.url" :alt="`Photo ${idx + 1}`" class="w-full h-full object-cover" />
 
@@ -511,85 +590,197 @@ function handleSave() {
         <p class="text-xs text-steam">
           Glisse-dépose des fichiers ou clique sur le bouton. Utilise les flèches pour réordonner. La première est la couverture.
         </p>
-      </div>
-    </BaseCard>
 
-    <!-- Informations principales -->
-    <BaseCard title="Informations principales">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <BaseInput
-          v-model="form.name"
-          label="Nom"
-        />
-        <div class="space-y-1">
-          <label class="block text-sm font-medium text-roast">Categorie</label>
-          <select
-            v-model="form.category"
-            class="w-full rounded-lg border border-steam/30 bg-white px-3 py-2 text-sm text-espresso outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
-          >
-            <option v-for="cat in categories" :key="cat" :value="cat">
-              {{ CATEGORY_LABELS[cat] }}
-            </option>
-          </select>
-        </div>
-        <BaseInput
-          v-model="form.address"
-          label="Adresse"
-        />
-        <BaseInput
-          v-model="form.city"
-          label="Ville"
-        />
-      </div>
-    </BaseCard>
-
-    <!-- Description -->
-    <BaseCard title="Description">
-      <div class="space-y-1">
-        <label class="block text-sm font-medium text-roast">Description du lieu</label>
-        <textarea
-          v-model="form.description"
-          rows="5"
-          class="w-full rounded-lg border border-steam/30 bg-white px-3 py-2 text-sm text-espresso placeholder-steam outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 resize-y"
-          placeholder="Decrivez ce lieu pour les travailleurs nomades..."
-        />
-        <p class="text-xs text-steam">
-          {{ form.description?.length || 0 }} caracteres
-        </p>
-      </div>
-    </BaseCard>
-
-    <!-- Signaux -->
-    <BaseCard title="Signaux">
-      <div class="flex flex-wrap gap-2">
-        <button
-          v-for="signal in allSignals"
-          :key="signal"
-          type="button"
-          :class="[
-            'px-3 py-1.5 rounded-lg text-sm font-medium transition-all border',
-            form.signals.includes(signal)
-              ? 'bg-primary text-white border-primary'
-              : 'bg-white text-roast border-steam/30 hover:border-primary/50',
-          ]"
-          @click="toggleSignal(signal)"
-        >
-          {{ SIGNAL_LABELS[signal] || signal }}
-        </button>
-      </div>
-    </BaseCard>
-
-    <!-- Conditions d'accès -->
-    <BaseCard title="Conditions d'accès">
-      <div class="space-y-1">
-        <label class="block text-sm font-medium text-roast mb-1">Détail des conditions (tarif, réservation, etc.)</label>
-        <div class="border border-steam/30 rounded-lg overflow-hidden">
-          <div v-if="conditionsEditor" class="flex gap-1 p-1.5 border-b border-steam/15 bg-cream/50">
-            <button type="button" :class="['p-1 rounded text-xs', conditionsEditor.isActive('bold') ? 'bg-primary/10 text-primary' : 'text-roast hover:bg-linen']" @click="conditionsEditor.chain().focus().toggleBold().run()">B</button>
-            <button type="button" :class="['p-1 rounded text-xs italic', conditionsEditor.isActive('italic') ? 'bg-primary/10 text-primary' : 'text-roast hover:bg-linen']" @click="conditionsEditor.chain().focus().toggleItalic().run()">I</button>
-            <button type="button" :class="['p-1 rounded text-xs', conditionsEditor.isActive('bulletList') ? 'bg-primary/10 text-primary' : 'text-roast hover:bg-linen']" @click="conditionsEditor.chain().focus().toggleBulletList().run()">•</button>
+        <!-- Instagram -->
+        <div class="border-t border-steam/20 pt-4 space-y-3">
+          <p class="text-xs font-semibold text-roast uppercase tracking-wide">Instagram</p>
+          <div v-if="form.instagram" class="space-y-3">
+            <div class="flex items-center gap-3">
+              <a
+                :href="`https://www.instagram.com/${form.instagram.replace('@', '')}/`"
+                target="_blank"
+                class="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+              >
+                <Instagram :size="16" />
+                @{{ form.instagram.replace('@', '') }}
+              </a>
+              <button
+                type="button"
+                :disabled="instaLoading"
+                class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-primary text-white hover:bg-primary/90 disabled:opacity-50 transition-colors"
+                @click="loadInstagramFeed"
+              >
+                <RefreshCw :size="12" :class="instaLoading ? 'animate-spin' : ''" />
+                {{ instaLoading ? 'Chargement…' : instaPhotos.length ? 'Actualiser' : 'Charger le feed' }}
+              </button>
+            </div>
+            <p v-if="instaError" class="text-xs text-red-500">{{ instaError }}</p>
+            <div v-if="instaPhotos.length" class="space-y-3">
+              <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                <div
+                  v-for="photo in instaPhotos"
+                  :key="photo.id"
+                  class="relative group aspect-square rounded-xl overflow-hidden bg-steam/20"
+                >
+                  <img :src="photo.thumbnail" :alt="photo.caption" class="w-full h-full object-cover" />
+                  <div class="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                    <button
+                      type="button"
+                      :disabled="photo.importing"
+                      class="px-2.5 py-1.5 rounded-lg text-xs font-bold bg-white text-espresso hover:bg-linen disabled:opacity-60 transition-colors"
+                      @click="importInstaPhoto(photo)"
+                    >
+                      {{ photo.importing ? '…' : 'Importer' }}
+                    </button>
+                  </div>
+                  <div v-if="photo.imported" class="absolute top-1.5 right-1.5">
+                    <CheckCircle :size="16" class="text-green-400" />
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          <EditorContent :editor="conditionsEditor" class="bg-white [&_.tiptap]:px-3 [&_.tiptap]:py-2 [&_.tiptap]:text-sm [&_.tiptap]:text-espresso [&_.tiptap]:outline-none [&_.tiptap]:min-h-[60px] [&_.tiptap_ul]:list-disc [&_.tiptap_ul]:pl-5" />
+          <p v-else class="text-xs text-steam">Renseigne le compte Instagram dans "Contact et liens" pour charger le feed.</p>
+        </div>
+      </div>
+    </BaseCard>
+
+    <!-- Le lieu -->
+    <BaseCard title="Le lieu">
+      <div class="space-y-4">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <BaseInput
+            v-model="form.name"
+            label="Nom"
+          />
+          <div class="space-y-1">
+            <label class="block text-sm font-medium text-roast">Categorie</label>
+            <select
+              v-model="form.category"
+              class="w-full rounded-lg border border-steam/30 bg-white px-3 py-2 text-sm text-espresso outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+            >
+              <option v-for="cat in categories" :key="cat" :value="cat">
+                {{ CATEGORY_LABELS[cat] }}
+              </option>
+            </select>
+          </div>
+          <BaseInput
+            v-model="form.address"
+            label="Adresse"
+          />
+          <BaseInput
+            v-model="form.city"
+            label="Ville"
+          />
+        </div>
+        <div class="space-y-1">
+          <label class="block text-sm font-medium text-roast">Description</label>
+          <textarea
+            v-model="form.description"
+            rows="4"
+            class="w-full rounded-lg border border-steam/30 bg-white px-3 py-2 text-sm text-espresso placeholder-steam outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 resize-y"
+            placeholder="Decrivez ce lieu pour les travailleurs nomades..."
+          />
+          <p class="text-xs text-steam">{{ form.description?.length || 0 }} caracteres</p>
+        </div>
+        <div class="border-t border-steam/20 pt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+          <!-- Contact -->
+          <div class="space-y-4">
+            <p class="text-xs font-semibold text-roast uppercase tracking-wide">Contact</p>
+            <BaseInput
+              v-model="form.website"
+              label="Site web"
+              placeholder="https://..."
+            />
+            <BaseInput
+              v-model="form.phone"
+              label="Téléphone"
+              placeholder="+33..."
+            />
+            <BaseInput
+              v-model="form.instagram"
+              label="Instagram"
+              placeholder="@nom_du_lieu"
+            />
+            <div class="space-y-1">
+              <label class="block text-sm font-medium text-roast">Google Maps</label>
+              <a
+                v-if="form.google_maps_url"
+                :href="form.google_maps_url"
+                target="_blank"
+                class="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
+              >
+                <ExternalLink :size="14" />
+                Voir sur Google Maps
+              </a>
+              <span v-else class="text-sm text-steam">Non disponible</span>
+            </div>
+          </div>
+          <!-- Horaires -->
+          <div class="space-y-3">
+            <p class="text-xs font-semibold text-roast uppercase tracking-wide">Horaires</p>
+            <div class="space-y-2">
+              <div
+                v-for="(hours, i) in (form.opening_hours || [])"
+                :key="i"
+                class="flex items-center gap-2"
+              >
+                <Clock :size="12" class="text-steam flex-shrink-0" />
+                <input
+                  :value="hours"
+                  class="flex-1 rounded-lg border border-steam/30 bg-white px-3 py-1.5 text-sm text-espresso outline-none focus:border-primary"
+                  @input="form.opening_hours[i] = ($event.target as HTMLInputElement).value"
+                >
+                <button
+                  type="button"
+                  class="w-7 h-7 rounded-full hover:bg-red-50 flex items-center justify-center text-steam hover:text-red-500 transition-colors"
+                  @click="form.opening_hours.splice(i, 1)"
+                >
+                  <span class="text-xs font-bold">×</span>
+                </button>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="text-sm text-primary font-medium hover:underline"
+              @click="if (!form.opening_hours) form.opening_hours = []; form.opening_hours.push('Lundi : 09:00 – 18:00')"
+            >
+              + Ajouter un horaire
+            </button>
+          </div>
+        </div>
+      </div>
+    </BaseCard>
+
+    <!-- Caractéristiques -->
+    <BaseCard title="Caractéristiques">
+      <div class="space-y-4">
+        <div class="flex flex-wrap gap-2">
+          <button
+            v-for="signal in allSignals"
+            :key="signal"
+            type="button"
+            :class="[
+              'px-3 py-1.5 rounded-lg text-sm font-medium transition-all border',
+              form.signals.includes(signal)
+                ? 'bg-primary text-white border-primary'
+                : 'bg-white text-roast border-steam/30 hover:border-primary/50',
+            ]"
+            @click="toggleSignal(signal)"
+          >
+            {{ SIGNAL_LABELS[signal] || signal }}
+          </button>
+        </div>
+        <div class="border-t border-steam/20 pt-4 space-y-1">
+          <label class="block text-sm font-medium text-roast mb-1">Conditions d'accès <span class="text-steam font-normal">(tarif, réservation, etc.)</span></label>
+          <div class="border border-steam/30 rounded-lg overflow-hidden">
+            <div v-if="conditionsEditor" class="flex gap-1 p-1.5 border-b border-steam/15 bg-cream/50">
+              <button type="button" :class="['p-1 rounded text-xs', conditionsEditor.isActive('bold') ? 'bg-primary/10 text-primary' : 'text-roast hover:bg-linen']" @click="conditionsEditor.chain().focus().toggleBold().run()">B</button>
+              <button type="button" :class="['p-1 rounded text-xs italic', conditionsEditor.isActive('italic') ? 'bg-primary/10 text-primary' : 'text-roast hover:bg-linen']" @click="conditionsEditor.chain().focus().toggleItalic().run()">I</button>
+              <button type="button" :class="['p-1 rounded text-xs', conditionsEditor.isActive('bulletList') ? 'bg-primary/10 text-primary' : 'text-roast hover:bg-linen']" @click="conditionsEditor.chain().focus().toggleBulletList().run()">•</button>
+            </div>
+            <EditorContent :editor="conditionsEditor" class="bg-white [&_.tiptap]:px-3 [&_.tiptap]:py-2 [&_.tiptap]:text-sm [&_.tiptap]:text-espresso [&_.tiptap]:outline-none [&_.tiptap]:min-h-[60px] [&_.tiptap_ul]:list-disc [&_.tiptap_ul]:pl-5" />
+          </div>
         </div>
       </div>
     </BaseCard>
@@ -631,61 +822,6 @@ function handleSave() {
       </div>
     </BaseCard>
 
-    <!-- Contact & liens -->
-    <BaseCard title="Contact et liens">
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <BaseInput
-          v-model="form.website"
-          label="Site web"
-          placeholder="https://..."
-        />
-        <BaseInput
-          v-model="form.phone"
-          label="Telephone"
-          placeholder="+33..."
-        />
-        <BaseInput
-          v-model="form.instagram"
-          label="Instagram"
-          placeholder="@nom_du_lieu"
-        />
-        <div class="space-y-1">
-          <label class="block text-sm font-medium text-roast">Google Maps</label>
-          <a
-            v-if="form.google_maps_url"
-            :href="form.google_maps_url"
-            target="_blank"
-            class="inline-flex items-center gap-1.5 text-sm text-primary hover:underline"
-          >
-            <ExternalLink :size="14" />
-            Voir sur Google Maps
-          </a>
-          <span v-else class="text-sm text-steam">Non disponible</span>
-        </div>
-      </div>
-    </BaseCard>
-
-    <!-- Instagram -->
-    <BaseCard title="Instagram">
-      <div class="space-y-4">
-        <BaseInput
-          v-model="form.instagram"
-          label="Compte Instagram"
-          placeholder="@nom_du_lieu"
-        />
-        <div v-if="form.instagram" class="rounded-xl bg-linen p-4">
-          <a
-            :href="`https://www.instagram.com/${form.instagram.replace('@', '')}/`"
-            target="_blank"
-            class="inline-flex items-center gap-2 text-sm text-primary hover:underline"
-          >
-            <Instagram :size="16" />
-            Voir le profil @{{ form.instagram.replace('@', '') }}
-          </a>
-        </div>
-      </div>
-    </BaseCard>
-
     <!-- Google infos (readonly) -->
     <BaseCard title="Informations Google">
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -709,36 +845,6 @@ function handleSave() {
           <p class="text-xs text-steam font-mono">{{ form.google_place_id }}</p>
         </div>
       </div>
-    </BaseCard>
-
-    <!-- Horaires -->
-    <BaseCard title="Horaires">
-      <div class="space-y-2">
-        <div
-          v-for="(hours, i) in (form.opening_hours || [])"
-          :key="i"
-          class="flex items-center gap-2"
-        >
-          <Clock :size="12" class="text-steam flex-shrink-0" />
-          <input
-            :value="hours"
-            class="flex-1 rounded-lg border border-steam/30 bg-white px-3 py-1.5 text-sm text-espresso outline-none focus:border-primary"
-            @input="form.opening_hours[i] = ($event.target as HTMLInputElement).value"
-          >
-          <button
-            class="w-7 h-7 rounded-full hover:bg-red-50 flex items-center justify-center text-steam hover:text-red-500 transition-colors"
-            @click="form.opening_hours.splice(i, 1)"
-          >
-            <span class="text-xs font-bold">x</span>
-          </button>
-        </div>
-      </div>
-      <button
-        class="mt-3 text-sm text-primary font-medium hover:underline"
-        @click="if (!form.opening_hours) form.opening_hours = []; form.opening_hours.push('jour: 09:00 – 18:00')"
-      >
-        + Ajouter un horaire
-      </button>
     </BaseCard>
 
     <!-- Blog mentions (readonly) -->

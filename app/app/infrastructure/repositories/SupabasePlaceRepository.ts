@@ -350,6 +350,7 @@ export class SupabasePlaceRepository implements PlaceRepository {
     if (filters.gratuit) {
       query = query.not('signals', 'cs', '{"payant"}').not('signals', 'cs', '{"reservation"}')
     }
+    if (filters.insolite) query = query.contains('signals', ['insolite'])
     if (filters.query) {
       const q = filters.query.toLowerCase()
       const qNorm = q.normalize('NFD').replace(/[\u0300-\u036f]/g, '')

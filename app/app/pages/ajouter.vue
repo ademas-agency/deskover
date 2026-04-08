@@ -293,6 +293,5 @@ useSeoMeta({
         Retour
       </button>
     </div>
-    <FabCarte />
   </div>
 </template>
