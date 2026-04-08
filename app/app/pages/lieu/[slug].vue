@@ -295,8 +295,10 @@ const lightboxIndex = ref(0)
 let touchStartX = 0
 
 function openLightbox(i: number) {
+  console.log('[Lightbox] openLightbox called, index:', i, 'allPhotos:', allPhotos.value)
   lightboxIndex.value = i
   lightboxOpen.value = true
+  console.log('[Lightbox] lightboxOpen is now:', lightboxOpen.value)
 }
 
 function lightboxPrev() {
