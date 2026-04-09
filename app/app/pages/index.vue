@@ -271,7 +271,7 @@ const articles = computed(() => {
     <!-- HERO -->
     <section class="relative h-[85vh] lg:h-[60vh] overflow-hidden">
       <img
-        src="https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=1200&fit=crop"
+        src="/img/hero-home.png"
         alt="Intérieur café"
         fetchpriority="high"
         class="w-full h-full object-cover"
@@ -280,7 +280,7 @@ const articles = computed(() => {
 
       <!-- Top bar overlay (mobile + desktop) -->
       <div class="absolute top-0 left-0 right-0 z-10">
-        <div class="flex items-center justify-between px-5 pt-safe lg:pt-6 lg:px-10 lg:container-deskover">
+        <div class="flex items-center justify-between px-10 pt-6 lg:container-deskover pointer-events-auto">
           <span class="font-display text-base text-white tracking-[0.15em]">DESKOVER</span>
           <NuxtLink to="/search">
             <UIcon name="lucide:search" class="w-[22px] h-[22px] text-white" />
@@ -295,7 +295,7 @@ const articles = computed(() => {
           SPOTS POUR<br>
           BOSSER
         </h1>
-        <p class="text-[13px] text-white/50 mt-3">Autour de toi, quand tu en as besoin</p>
+        <p class="text-[16px] text-white mt-3">Autour de toi, quand tu en as besoin</p>
 
         <!-- Scroll indicator -->
         <div class="flex flex-col items-center mt-5">
