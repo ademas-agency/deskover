@@ -13,6 +13,12 @@ function getThumb(place: Place): string | null {
   return place.photo_url || null
 }
 
+function getPhotoCount(place: Place): number {
+  const extras = place.photos?.length || 0
+  const hasMain = !!(place.photo_storage_path || place.photo_url)
+  return extras + (hasMain ? 1 : 0)
+}
+
 const props = defineProps<{
   places: Place[]
   currentPage: number
@@ -67,7 +73,7 @@ function getCategoryVariant(category: string): 'primary' | 'success' | 'warning'
             <th class="px-4 py-3 text-left text-xs font-semibold text-roast uppercase tracking-wider">Categorie</th>
             <th class="px-4 py-3 text-left text-xs font-semibold text-roast uppercase tracking-wider">Signaux</th>
             <th class="px-4 py-3 text-left text-xs font-semibold text-roast uppercase tracking-wider">Poids</th>
-            <th class="px-4 py-3 text-left text-xs font-semibold text-roast uppercase tracking-wider">Note</th>
+            <th class="px-4 py-3 text-left text-xs font-semibold text-roast uppercase tracking-wider">Photos</th>
             <th class="px-4 py-3"></th>
           </tr>
         </thead>
@@ -129,18 +135,30 @@ function getCategoryVariant(category: string): 'primary' | 'success' | 'warning'
                   place.curation_score > 0 ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-600'
                 ]"
               >
-                {{ place.curation_score > 0 ? '+' : '' }}{{ place.curation_score }}
+                {{ place.curation_score > 0 ? '+' : '' }}{{ Number(place.curation_score).toFixed(1) }}
               </span>
               <span v-else class="text-xs text-steam">0</span>
             </td>
             <td class="px-4 py-3">
-              <span v-if="place.google_rating" class="text-sm font-medium text-espresso">
-                {{ place.google_rating.toFixed(1) }}
+              <span
+                v-if="getPhotoCount(place)"
+                class="text-sm font-medium text-espresso"
+              >
+                {{ getPhotoCount(place) }}
               </span>
-              <span v-else class="text-xs text-steam">-</span>
+              <span v-else class="text-xs text-steam">0</span>
             </td>
             <td class="px-4 py-3 text-right">
-              <ExternalLink :size="14" class="text-steam" />
+              <a
+                :href="`https://www.deskover.fr/lieu/${place.slug}`"
+                target="_blank"
+                rel="noopener"
+                class="inline-flex p-1.5 text-steam hover:text-primary hover:bg-linen rounded-md transition-colors"
+                title="Voir sur Deskover"
+                @click.stop
+              >
+                <ExternalLink :size="14" />
+              </a>
             </td>
           </tr>
         </tbody>

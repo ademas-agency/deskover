@@ -6,14 +6,14 @@ const props = defineProps<{
 
 const emit = defineEmits<{
   close: []
-  submit: [ratings: { wifi: string; prises: string; food: string; style: string }, speedTest: { download: number; upload: number; ping: number } | null]
+  submit: [ratings: { wifi: string; prises: string; pricing: string; mood: string }, speedTest: { download: number; upload: number; ping: number } | null]
 }>()
 
 const ratings = reactive({
   wifi: '',
   prises: '',
-  food: '',
-  style: '',
+  pricing: '',
+  mood: '',
 })
 
 const hasRated = computed(() => Object.values(ratings).some(v => v !== ''))
@@ -100,8 +100,8 @@ async function runSpeedTest() {
 const optionColors: Record<string, Record<string, string>> = {
   wifi: { Faible: 'bg-[var(--color-terracotta-500)]', Bon: 'bg-[var(--color-edison)]', Rapide: 'bg-[var(--color-monstera)]' },
   prises: { Aucune: 'bg-[var(--color-terracotta-500)]', 'Quelques-unes': 'bg-[var(--color-edison)]', Plein: 'bg-[var(--color-monstera)]' },
-  food: { Boissons: 'bg-[var(--color-edison)]', Snacks: 'bg-[var(--color-edison)]', Repas: 'bg-[var(--color-monstera)]' },
-  style: { Cozy: 'bg-[var(--color-monstera)]', Design: 'bg-[var(--color-monstera)]', Canon: 'bg-[var(--color-monstera)]' },
+  pricing: { Gratuit: 'bg-[var(--color-monstera)]', Payant: 'bg-[var(--color-edison)]' },
+  mood: { Calme: 'bg-[var(--color-monstera)]', 'Animé': 'bg-[var(--color-edison)]' },
 }
 
 function ratingBtnClass(vital: string, opt: string, currentValue: string) {
@@ -138,6 +138,7 @@ function handleSubmit() {
 
 <template>
   <div class="bg-[var(--color-cream)]" :class="fullscreen ? 'min-h-screen' : 'rounded-t-3xl max-h-[92vh] overflow-y-auto'">
+    <div :class="fullscreen ? 'lg:max-w-[680px] lg:mx-auto lg:px-8' : ''">
     <!-- Handle (bottom sheet only) -->
     <div v-if="!fullscreen" class="flex justify-center pt-3 pb-1">
       <div class="w-10 h-1 rounded-full bg-[var(--color-parchment)]" />
@@ -228,41 +229,40 @@ function handleSubmit() {
         </div>
       </div>
 
-      <!-- Food -->
+      <!-- Tarif -->
       <div class="bg-[var(--color-linen)] rounded-2xl p-4">
         <div class="flex items-center gap-2.5 mb-3">
           <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center">
-            <UIcon name="lucide:utensils" class="w-5 h-5" :class="ratingIconActive('food')" />
+            <UIcon name="lucide:euro" class="w-5 h-5" :class="ratingIconActive('pricing')" />
           </div>
-          <span class="text-[13px] font-bold text-[var(--color-espresso)]">Food</span>
+          <span class="text-[13px] font-bold text-[var(--color-espresso)]">Accès</span>
         </div>
         <div class="flex gap-2">
           <button
-            v-for="opt in ['Boissons', 'Snacks', 'Repas']" :key="opt"
+            v-for="opt in ['Gratuit', 'Payant']" :key="opt"
             class="flex-1 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200"
-            :class="ratingBtnClass('food', opt, ratings.food)"
-            @click="ratings.food = ratings.food === opt ? '' : opt"
+            :class="ratingBtnClass('pricing', opt, ratings.pricing)"
+            @click="ratings.pricing = ratings.pricing === opt ? '' : opt"
           >{{ opt }}</button>
         </div>
       </div>
 
-      <!-- Style -->
+      <!-- Mood -->
       <div class="bg-[var(--color-linen)] rounded-2xl p-4">
         <div class="flex items-center gap-2.5 mb-3">
           <div class="w-9 h-9 rounded-xl bg-white flex items-center justify-center">
-            <UIcon name="lucide:sparkles" class="w-5 h-5" :class="ratingIconActive('style')" />
+            <UIcon name="lucide:activity" class="w-5 h-5" :class="ratingIconActive('mood')" />
           </div>
-          <span class="text-[13px] font-bold text-[var(--color-espresso)]">Style</span>
+          <span class="text-[13px] font-bold text-[var(--color-espresso)]">Mood</span>
         </div>
         <div class="flex gap-2">
           <button
-            v-for="opt in ['Cozy', 'Design', 'Canon']" :key="opt"
+            v-for="opt in ['Calme', 'Animé']" :key="opt"
             class="flex-1 py-2.5 rounded-xl text-xs font-semibold transition-all duration-200"
-            :class="ratingBtnClass('style', opt, ratings.style)"
-            @click="ratings.style = ratings.style === opt ? '' : opt"
+            :class="ratingBtnClass('mood', opt, ratings.mood)"
+            @click="ratings.mood = ratings.mood === opt ? '' : opt"
           >{{ opt }}</button>
         </div>
-        <p class="text-[10px] text-[var(--color-steam)] text-center mt-2 italic">Ne coche rien si tu penses que rien ne correspond</p>
       </div>
     </div>
 
@@ -278,6 +278,7 @@ function handleSubmit() {
         <slot name="submit-label">Envoyer</slot>
       </button>
       <slot name="footer" />
+    </div>
     </div>
   </div>
 </template>

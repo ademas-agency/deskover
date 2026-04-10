@@ -41,6 +41,7 @@ function rowToPlace(row: any): Place {
     food_description: row.food_description || '',
     menu_url: row.menu_url || '',
     last_verified_at: row.last_verified_at || null,
+    deskover_tested_at: row.deskover_tested_at || null,
   }
 }
 
@@ -100,6 +101,7 @@ export class PlaceRepository {
       photos: place.photos || [],
       opening_hours: place.opening_hours || [],
       last_verified_at: place.last_verified_at,
+      deskover_tested_at: place.deskover_tested_at,
     }
 
     const { error } = await supabase

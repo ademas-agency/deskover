@@ -19,9 +19,63 @@ const quickFilters = [
 ]
 
 const activeQuickFilter = ref('recos')
+const showGeoModal = ref(false)
+const showGeoHelp = ref(false)
+
+// Détection OS/navigateur pour les instructions géoloc
+const geoHelpOS = computed(() => {
+  if (!import.meta.client) return 'unknown'
+  const ua = navigator.userAgent
+  if (/iPad|iPhone|iPod/.test(ua)) return 'ios'
+  if (/Android/.test(ua)) return 'android'
+  return 'desktop'
+})
+const geoHelpBrowser = computed(() => {
+  if (!import.meta.client) return 'unknown'
+  const ua = navigator.userAgent
+  if (/Firefox\//.test(ua)) return 'firefox'
+  if (/Chrome\//.test(ua) && !/Edg\//.test(ua)) return 'chrome'
+  if (/Safari\//.test(ua)) return 'safari'
+  return 'unknown'
+})
 
 function setQuickFilter(key: string) {
+  // Si "proche" et pas de coords, vérifier la permission géoloc
+  if (key === 'proche' && !userCoords.value) {
+    tryGeolocOrShowModal()
+    return
+  }
   activeQuickFilter.value = activeQuickFilter.value === key ? 'recos' : key
+}
+
+async function tryGeolocOrShowModal() {
+  // Vérifier le statut de permission
+  if (navigator.permissions) {
+    try {
+      const status = await navigator.permissions.query({ name: 'geolocation' })
+      if (status.state === 'denied') {
+        showGeoModal.value = true
+        return
+      }
+    } catch { /* fallback: on essaie directement */ }
+  }
+
+  // Permission "prompt" ou inconnue : demander la géoloc
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        userCoords.value = { lat: pos.coords.latitude, lng: pos.coords.longitude }
+        activeQuickFilter.value = 'proche'
+      },
+      () => {
+        // Refusé ou erreur → afficher la modal
+        showGeoModal.value = true
+      },
+      { timeout: 8000 }
+    )
+  } else {
+    showGeoModal.value = true
+  }
 }
 
 const currentFilter = computed(() => quickFilters.find(f => f.key === activeQuickFilter.value) || quickFilters[0])
@@ -310,8 +364,8 @@ const articles = computed(() => {
     <!-- CLASSEMENT -->
     <section class="bg-[var(--color-cream)] rounded-t-3xl -mt-6 relative z-10 lg:rounded-none lg:mt-0">
       <!-- Quick filters -->
-      <div class="px-4 lg:container-deskover">
-        <div class="flex gap-2.5 overflow-x-auto no-scrollbar py-6 lg:flex-wrap lg:py-8">
+      <div class="lg:container-deskover">
+        <div class="flex gap-2.5 overflow-x-auto no-scrollbar py-6 pl-4 lg:flex-wrap lg:py-8 lg:pl-0">
           <button
             v-for="qf in quickFilters"
             :key="qf.key"
@@ -422,6 +476,104 @@ const articles = computed(() => {
       <!-- Footer -->
       <DeskoverFooter class="mt-8" />
     </section>
+
+    <!-- Modal géolocalisation -->
+    <Teleport to="body">
+      <div v-if="showGeoModal" class="fixed inset-0 z-[200] flex items-end lg:items-center justify-center">
+        <div class="absolute inset-0 bg-black/40" @click="showGeoModal = false" />
+        <div class="relative bg-white rounded-t-[20px] lg:rounded-[20px] p-6 pb-8 lg:pb-6 w-full lg:max-w-md mx-auto space-y-4">
+          <div class="flex justify-between items-start">
+            <div class="w-10 h-10 rounded-full bg-[var(--color-linen)] flex items-center justify-center">
+              <UIcon name="lucide:map-pin-off" class="w-5 h-5 text-[var(--color-terracotta-500)]" />
+            </div>
+            <button @click="showGeoModal = false" class="p-1 text-[var(--color-steam)]">
+              <UIcon name="lucide:x" class="w-5 h-5" />
+            </button>
+          </div>
+          <div>
+            <h3 class="font-display text-lg text-[var(--color-espresso)]">Active ta localisation</h3>
+            <p class="text-sm text-[var(--color-roast)] mt-2 leading-relaxed">
+              Pour te montrer les spots les plus proches, on a besoin de ta position.
+              Autorise la géolocalisation dans les réglages de ton navigateur puis réessaie.
+            </p>
+          </div>
+          <!-- Instructions détaillées par navigateur/OS -->
+          <div>
+            <button
+              class="text-sm font-medium text-[var(--color-terracotta-500)] flex items-center gap-1"
+              @click="showGeoHelp = !showGeoHelp"
+            >
+              Je ne sais pas comment faire
+              <UIcon :name="showGeoHelp ? 'lucide:chevron-up' : 'lucide:chevron-down'" class="w-4 h-4" />
+            </button>
+            <div v-if="showGeoHelp" class="mt-3 text-[13px] text-[var(--color-roast)] leading-relaxed space-y-3">
+              <!-- iPhone -->
+              <div v-if="geoHelpOS === 'ios'">
+                <p class="font-semibold text-[var(--color-espresso)]">Sur iPhone</p>
+                <ol class="list-decimal list-inside space-y-1 mt-1">
+                  <li>Ouvre <strong>Réglages</strong> > <strong>Confidentialité et sécurité</strong> > <strong>Service de localisation</strong></li>
+                  <li>Vérifie que le service est <strong>activé</strong> en haut</li>
+                  <li>Descends jusqu'à <strong>{{ geoHelpBrowser === 'chrome' ? 'Chrome' : 'Safari' }}</strong> et choisis <strong>Lorsque l'app est active</strong></li>
+                  <li>Reviens ici et recharge la page</li>
+                </ol>
+              </div>
+              <!-- Android -->
+              <div v-else-if="geoHelpOS === 'android'">
+                <p class="font-semibold text-[var(--color-espresso)]">Sur Android</p>
+                <ol class="list-decimal list-inside space-y-1 mt-1">
+                  <li>Appuie sur l'icône <strong>ⓘ</strong> à gauche de l'URL</li>
+                  <li>Appuie sur <strong>Autorisations</strong></li>
+                  <li>Active <strong>Position</strong></li>
+                  <li>Recharge la page</li>
+                </ol>
+              </div>
+              <!-- Chrome desktop -->
+              <div v-else-if="geoHelpBrowser === 'chrome'">
+                <p class="font-semibold text-[var(--color-espresso)]">Sur Chrome</p>
+                <ol class="list-decimal list-inside space-y-1 mt-1">
+                  <li>Clique sur l'icône <strong>ⓘ</strong> (ou le cadenas) à gauche de l'URL</li>
+                  <li>Clique sur <strong>Position</strong> et active le toggle</li>
+                  <li>Recharge la page</li>
+                </ol>
+              </div>
+              <!-- Firefox -->
+              <div v-else-if="geoHelpBrowser === 'firefox'">
+                <p class="font-semibold text-[var(--color-espresso)]">Sur Firefox</p>
+                <ol class="list-decimal list-inside space-y-1 mt-1">
+                  <li>Clique sur l'icône à gauche de l'URL</li>
+                  <li>Dans <strong>Permissions</strong>, autorise la <strong>Position</strong></li>
+                  <li>Recharge la page</li>
+                </ol>
+              </div>
+              <!-- Safari macOS -->
+              <div v-else-if="geoHelpBrowser === 'safari'">
+                <p class="font-semibold text-[var(--color-espresso)]">Sur Safari</p>
+                <ol class="list-decimal list-inside space-y-1 mt-1">
+                  <li>Va dans <strong>Safari</strong> > <strong>Réglages</strong> > <strong>Sites web</strong> > <strong>Position</strong></li>
+                  <li>Trouve <strong>deskover.fr</strong> et choisis <strong>Autoriser</strong></li>
+                  <li>Recharge la page</li>
+                </ol>
+              </div>
+              <!-- Fallback -->
+              <div v-else>
+                <p class="font-semibold text-[var(--color-espresso)]">Dans ton navigateur</p>
+                <ol class="list-decimal list-inside space-y-1 mt-1">
+                  <li>Cherche l'icône <strong>ⓘ</strong> ou le cadenas dans la barre d'adresse</li>
+                  <li>Autorise la <strong>Position</strong> pour ce site</li>
+                  <li>Recharge la page</li>
+                </ol>
+              </div>
+            </div>
+          </div>
+          <button
+            class="w-full py-3 rounded-xl bg-[var(--color-espresso)] text-white text-sm font-semibold"
+            @click="showGeoModal = false; showGeoHelp = false"
+          >
+            Compris
+          </button>
+        </div>
+      </div>
+    </Teleport>
   </div>
 </template>
 

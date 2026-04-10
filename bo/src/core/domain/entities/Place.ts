@@ -39,6 +39,7 @@ export interface Place {
   curation_score: number
   photos: string[]
   last_verified_at: string | null
+  deskover_tested_at: string | null
 }
 
 export type PlaceCategory = 'cafe' | 'coffee_shop' | 'coworking' | 'tiers_lieu'

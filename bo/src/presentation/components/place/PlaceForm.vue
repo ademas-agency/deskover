@@ -30,6 +30,138 @@ const form = ref<Place>({ ...props.place })
 const uploading = ref(false)
 const photoError = ref('')
 
+// --- Avis utilisateurs ---
+interface PlaceRating {
+  id: string
+  fingerprint: string
+  wifi: number | null
+  power: number | null
+  // Nouvelles colonnes
+  pricing: number | null
+  mood: number | null
+  created_at: string
+}
+
+const placeRatings = ref<PlaceRating[]>([])
+const ratingsLoading = ref(false)
+const ratingsError = ref('')
+
+// --- Speed tests ---
+interface SpeedTest {
+  id: string
+  fingerprint: string | null
+  download: number
+  upload: number
+  ping: number
+  created_at: string
+}
+
+const speedTests = ref<SpeedTest[]>([])
+const speedTestsLoading = ref(false)
+const speedTestsError = ref('')
+
+const speedTestsByUser = computed(() => {
+  // Regroupe par fingerprint, ordonne les groupes par date du plus récent test
+  const groups = new Map<string, SpeedTest[]>()
+  for (const t of speedTests.value) {
+    const key = t.fingerprint || '__anon__'
+    if (!groups.has(key)) groups.set(key, [])
+    groups.get(key)!.push(t)
+  }
+  return Array.from(groups.entries())
+    .map(([fingerprint, tests]) => ({
+      fingerprint,
+      tests: tests.sort((a, b) => +new Date(b.created_at) - +new Date(a.created_at)),
+      latest: tests[0].created_at,
+    }))
+    .sort((a, b) => +new Date(b.latest) - +new Date(a.latest))
+})
+
+async function loadSpeedTests(placeId: string) {
+  if (!placeId) return
+  speedTestsLoading.value = true
+  speedTestsError.value = ''
+  const { data, error } = await supabase
+    .from('speed_tests')
+    .select('id, fingerprint, download, upload, ping, created_at')
+    .eq('place_id', placeId)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    speedTestsError.value = error.message
+    speedTests.value = []
+  } else {
+    speedTests.value = (data as any) || []
+  }
+  speedTestsLoading.value = false
+}
+
+async function deleteSpeedTest(id: string) {
+  if (!confirm('Supprimer ce speed test ?')) return
+  await supabase.from('speed_tests').delete().eq('id', id)
+  speedTests.value = speedTests.value.filter(t => t.id !== id)
+}
+
+function speedQualityClass(download: number): string {
+  if (download >= 25) return 'bg-monstera/15 text-monstera'
+  if (download >= 10) return 'bg-edison/15 text-edison'
+  return 'bg-red-50 text-red-600'
+}
+
+function shortFingerprint(fp: string | null): string {
+  if (!fp) return 'Anonyme'
+  return fp.slice(0, 8)
+}
+
+const WIFI_LABELS: Record<number, string> = { 1: 'Faible', 2: 'Bon', 3: 'Rapide' }
+const POWER_LABELS: Record<number, string> = { 1: 'Aucune', 2: 'Quelques-unes', 3: 'Plein' }
+const PRICING_LABELS: Record<number, string> = { 1: 'Gratuit', 2: 'Payant' }
+const MOOD_LABELS: Record<number, string> = { 1: 'Calme', 2: 'Animé' }
+
+async function loadRatings(placeId: string) {
+  if (!placeId) return
+  ratingsLoading.value = true
+  ratingsError.value = ''
+  const { data, error } = await supabase
+    .from('ratings')
+    .select('*')
+    .eq('place_id', placeId)
+    .order('created_at', { ascending: false })
+
+  if (error) {
+    ratingsError.value = error.message
+    placeRatings.value = []
+  } else {
+    placeRatings.value = (data as any) || []
+  }
+  ratingsLoading.value = false
+}
+
+async function deleteRating(id: string) {
+  if (!confirm('Supprimer cet avis ?')) return
+  await supabase.from('ratings').delete().eq('id', id)
+  placeRatings.value = placeRatings.value.filter(r => r.id !== id)
+}
+
+function ratingValueColor(v: number | null): string {
+  if (v === null || v === undefined) return 'bg-steam/10 text-steam'
+  if (v >= 3) return 'bg-monstera/15 text-monstera'
+  if (v === 2) return 'bg-edison/15 text-edison'
+  return 'bg-red-50 text-red-600'
+}
+
+function ratingTimeAgo(date: string) {
+  const diff = Date.now() - new Date(date).getTime()
+  const minutes = Math.floor(diff / 60000)
+  if (minutes < 1) return "à l'instant"
+  if (minutes < 60) return `il y a ${minutes}min`
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `il y a ${hours}h`
+  const days = Math.floor(hours / 24)
+  if (days < 30) return `il y a ${days}j`
+  return `il y a ${Math.floor(days / 30)}mois`
+}
+
 const conditionsEditor = useEditor({
   extensions: [StarterKit],
   content: props.place.conditions || '',
@@ -54,7 +186,11 @@ watch(() => props.place, (newVal) => {
   if (foodEditor.value) {
     foodEditor.value.commands.setContent(newVal.food_description || '')
   }
-}, { deep: true })
+  if (newVal.id) {
+    loadRatings(newVal.id)
+    loadSpeedTests(newVal.id)
+  }
+}, { deep: true, immediate: true })
 
 const allSignals = [
   'wifi', 'prises', 'calme', 'food', 'terrasse', 'laptop_friendly',
@@ -240,6 +376,26 @@ function markAsVerified() {
   form.value.last_verified_at = new Date().toISOString()
 }
 
+// --- Validation Deskover (test sur place par l'équipe) ---
+function markAsDeskoverTested() {
+  form.value.deskover_tested_at = new Date().toISOString()
+}
+
+function clearDeskoverTested() {
+  form.value.deskover_tested_at = null
+}
+
+// Date input <input type="date"> attend "YYYY-MM-DD"
+const deskoverTestedDate = computed({
+  get() {
+    if (!form.value.deskover_tested_at) return ''
+    return new Date(form.value.deskover_tested_at).toISOString().slice(0, 10)
+  },
+  set(val: string) {
+    form.value.deskover_tested_at = val ? new Date(val).toISOString() : null
+  },
+})
+
 const verifiedAgo = computed(() => {
   if (!form.value.last_verified_at) return null
   const d = new Date(form.value.last_verified_at)
@@ -252,7 +408,9 @@ const verifiedAgo = computed(() => {
 })
 
 function bumpScore(delta: number) {
-  form.value.curation_score = Math.max(-10, Math.min(10, form.value.curation_score + delta))
+  // Pas de 0,1 — on round pour éviter les imprécisions float (0.1 + 0.2 ≠ 0.3)
+  const next = Math.max(-10, Math.min(10, form.value.curation_score + delta))
+  form.value.curation_score = Math.round(next * 10) / 10
 }
 
 // --- Gallery helpers ---
@@ -413,25 +571,68 @@ function handleSave() {
 <template>
   <form @submit.prevent="handleSave" class="space-y-6">
     <div class="grid grid-cols-2 gap-6 items-start">
-    <!-- Vérification manuelle -->
+    <!-- Vérification & Validation -->
     <BaseCard title="Vérification">
-      <div class="flex items-center justify-between">
+      <div class="space-y-5">
+        <!-- Vérification de la fiche -->
         <div>
-          <p v-if="form.last_verified_at" class="text-sm text-espresso">
-            <span class="font-semibold">Dernière vérification :</span>
-            {{ new Date(form.last_verified_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) }}
-            <span class="text-steam ml-1">({{ verifiedAgo }})</span>
-          </p>
-          <p v-else class="text-sm text-edison font-medium">Jamais vérifié</p>
+          <p class="text-xs font-semibold text-steam uppercase tracking-wide mb-2">Vérification de la fiche</p>
+          <div class="flex items-center justify-between gap-3">
+            <div>
+              <p v-if="form.last_verified_at" class="text-sm text-espresso">
+                <span class="font-semibold">Dernière vérification :</span>
+                {{ new Date(form.last_verified_at).toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' }) }}
+                <span class="text-steam ml-1">({{ verifiedAgo }})</span>
+              </p>
+              <p v-else class="text-sm text-edison font-medium">Jamais vérifié</p>
+            </div>
+            <button
+              type="button"
+              class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-monstera/10 text-monstera hover:bg-monstera/20 transition-colors"
+              @click="markAsVerified"
+            >
+              <CheckCircle :size="16" />
+              Marquer comme vérifié
+            </button>
+          </div>
         </div>
-        <button
-          type="button"
-          class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-monstera/10 text-monstera hover:bg-monstera/20 transition-colors"
-          @click="markAsVerified"
-        >
-          <CheckCircle :size="16" />
-          Marquer comme vérifié
-        </button>
+
+        <div class="border-t border-steam/15"></div>
+
+        <!-- Validation du lieu (test sur place par Deskover) -->
+        <div>
+          <p class="text-xs font-semibold text-steam uppercase tracking-wide mb-2">Validation du lieu</p>
+          <p class="text-xs text-steam mb-3">
+            Date à laquelle l'équipe Deskover est allée tester ce lieu sur place. Affiche un sceau « Validé par Deskover » sur la fiche.
+          </p>
+          <div class="flex items-end gap-3 flex-wrap">
+            <div class="flex-1 min-w-[200px]">
+              <label class="block text-xs font-semibold text-roast mb-1">Date du test sur place</label>
+              <input
+                v-model="deskoverTestedDate"
+                type="date"
+                class="w-full px-3 py-2 rounded-lg border border-steam/20 text-sm bg-cream/50 focus:outline-none focus:border-primary"
+              />
+            </div>
+            <button
+              type="button"
+              class="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium bg-primary/10 text-primary hover:bg-primary/20 transition-colors"
+              @click="markAsDeskoverTested"
+            >
+              <CheckCircle :size="16" />
+              Aujourd'hui
+            </button>
+            <button
+              v-if="form.deskover_tested_at"
+              type="button"
+              class="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium text-steam hover:text-red-500 hover:bg-red-50 transition-colors"
+              @click="clearDeskoverTested"
+            >
+              <Trash2 :size="14" />
+              Effacer
+            </button>
+          </div>
+        </div>
       </div>
     </BaseCard>
 
@@ -442,7 +643,7 @@ function handleSave() {
           <button
             type="button"
             class="w-10 h-10 rounded-lg border border-steam/30 bg-white hover:bg-red-50 hover:border-red-200 flex items-center justify-center transition-colors"
-            @click="bumpScore(-1)"
+            @click="bumpScore(-0.1)"
           >
             <ChevronDown :size="20" class="text-red-500" />
           </button>
@@ -452,7 +653,7 @@ function handleSave() {
               type="range"
               min="-10"
               max="10"
-              step="1"
+              step="0.1"
               v-model.number="form.curation_score"
               class="w-full accent-primary"
             />
@@ -466,14 +667,14 @@ function handleSave() {
           <button
             type="button"
             class="w-10 h-10 rounded-lg border border-steam/30 bg-white hover:bg-green-50 hover:border-green-200 flex items-center justify-center transition-colors"
-            @click="bumpScore(1)"
+            @click="bumpScore(0.1)"
           >
             <ChevronUp :size="20" class="text-green-500" />
           </button>
         </div>
 
         <div class="flex items-center gap-3">
-          <span class="text-2xl font-bold text-espresso tabular-nums">{{ form.curation_score }}</span>
+          <span class="text-2xl font-bold text-espresso tabular-nums">{{ Number(form.curation_score).toFixed(1) }}</span>
           <span :class="['text-xs font-semibold px-2.5 py-1 rounded-full', curationLabel.color]">
             {{ curationLabel.text }}
           </span>
@@ -485,6 +686,125 @@ function handleSave() {
       </div>
     </BaseCard>
     </div>
+
+    <!-- Avis utilisateurs -->
+    <BaseCard
+      :title="`Avis utilisateurs${placeRatings.length ? ' (' + placeRatings.length + ')' : ''}`"
+      collapsible
+    >
+      <div v-if="ratingsLoading" class="text-center py-6">
+        <div class="inline-block w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+      <p v-else-if="ratingsError" class="text-xs text-red-500">{{ ratingsError }}</p>
+      <div v-else-if="placeRatings.length === 0" class="text-sm text-steam py-2">
+        Aucun avis pour ce lieu pour l'instant.
+      </div>
+      <div v-else class="overflow-hidden border border-steam/15 rounded-lg">
+        <table class="w-full text-sm">
+          <thead class="bg-cream/50 border-b border-steam/15">
+            <tr class="text-left">
+              <th class="px-3 py-2 text-xs font-semibold text-roast uppercase tracking-wide">WiFi</th>
+              <th class="px-3 py-2 text-xs font-semibold text-roast uppercase tracking-wide">Prises</th>
+              <th class="px-3 py-2 text-xs font-semibold text-roast uppercase tracking-wide">Accès</th>
+              <th class="px-3 py-2 text-xs font-semibold text-roast uppercase tracking-wide">Mood</th>
+              <th class="px-3 py-2 text-xs font-semibold text-roast uppercase tracking-wide">Quand</th>
+              <th class="px-3 py-2"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="r in placeRatings" :key="r.id" class="border-b border-steam/10 last:border-0">
+              <td class="px-3 py-2">
+                <span v-if="r.wifi" :class="['text-xs font-semibold px-2 py-0.5 rounded-md', ratingValueColor(r.wifi)]">{{ WIFI_LABELS[r.wifi] }}</span>
+                <span v-else class="text-xs text-steam">—</span>
+              </td>
+              <td class="px-3 py-2">
+                <span v-if="r.power" :class="['text-xs font-semibold px-2 py-0.5 rounded-md', ratingValueColor(r.power)]">{{ POWER_LABELS[r.power] }}</span>
+                <span v-else class="text-xs text-steam">—</span>
+              </td>
+              <td class="px-3 py-2">
+                <span v-if="r.pricing" :class="['text-xs font-semibold px-2 py-0.5 rounded-md', ratingValueColor(r.pricing)]">{{ PRICING_LABELS[r.pricing] }}</span>
+                <span v-else class="text-xs text-steam">—</span>
+              </td>
+              <td class="px-3 py-2">
+                <span v-if="r.mood" :class="['text-xs font-semibold px-2 py-0.5 rounded-md', ratingValueColor(r.mood)]">{{ MOOD_LABELS[r.mood] }}</span>
+                <span v-else class="text-xs text-steam">—</span>
+              </td>
+              <td class="px-3 py-2 text-xs text-steam">{{ ratingTimeAgo(r.created_at) }}</td>
+              <td class="px-3 py-2 text-right">
+                <button
+                  type="button"
+                  class="w-7 h-7 rounded-full hover:bg-red-50 flex items-center justify-center text-steam hover:text-red-500 transition-colors"
+                  @click="deleteRating(r.id)"
+                >
+                  <Trash2 :size="14" />
+                </button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </BaseCard>
+
+    <!-- Speed tests WiFi -->
+    <BaseCard
+      :title="`Speed tests WiFi${speedTests.length ? ' (' + speedTests.length + ')' : ''}`"
+      collapsible
+    >
+      <div v-if="speedTestsLoading" class="text-center py-6">
+        <div class="inline-block w-5 h-5 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+      </div>
+      <p v-else-if="speedTestsError" class="text-xs text-red-500">{{ speedTestsError }}</p>
+      <div v-else-if="speedTests.length === 0" class="text-sm text-steam py-2">
+        Aucun speed test pour ce lieu pour l'instant.
+      </div>
+      <div v-else class="space-y-4">
+        <div
+          v-for="group in speedTestsByUser"
+          :key="group.fingerprint"
+          class="border border-steam/15 rounded-lg overflow-hidden"
+        >
+          <div class="flex items-center justify-between px-3 py-2 bg-cream/50 border-b border-steam/15">
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold text-roast">{{ shortFingerprint(group.fingerprint) }}</span>
+              <span class="text-xs text-steam">· {{ group.tests.length }} mesure{{ group.tests.length > 1 ? 's' : '' }}</span>
+            </div>
+            <span class="text-xs text-steam">Dernière {{ ratingTimeAgo(group.latest) }}</span>
+          </div>
+          <table class="w-full text-sm">
+            <thead class="bg-cream/30 border-b border-steam/10">
+              <tr class="text-left">
+                <th class="px-3 py-1.5 text-[10px] font-semibold text-roast uppercase tracking-wide">↓ Download</th>
+                <th class="px-3 py-1.5 text-[10px] font-semibold text-roast uppercase tracking-wide">↑ Upload</th>
+                <th class="px-3 py-1.5 text-[10px] font-semibold text-roast uppercase tracking-wide">Ping</th>
+                <th class="px-3 py-1.5 text-[10px] font-semibold text-roast uppercase tracking-wide">Quand</th>
+                <th class="px-3 py-1.5"></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr v-for="t in group.tests" :key="t.id" class="border-b border-steam/10 last:border-0">
+                <td class="px-3 py-2">
+                  <span :class="['text-xs font-semibold px-2 py-0.5 rounded-md font-mono', speedQualityClass(t.download)]">
+                    {{ t.download }} Mbps
+                  </span>
+                </td>
+                <td class="px-3 py-2 font-mono text-xs text-roast">{{ t.upload }} Mbps</td>
+                <td class="px-3 py-2 font-mono text-xs text-roast">{{ t.ping }}ms</td>
+                <td class="px-3 py-2 text-xs text-steam">{{ ratingTimeAgo(t.created_at) }}</td>
+                <td class="px-3 py-2 text-right">
+                  <button
+                    type="button"
+                    class="w-7 h-7 rounded-full hover:bg-red-50 flex items-center justify-center text-steam hover:text-red-500 transition-colors"
+                    @click="deleteSpeedTest(t.id)"
+                  >
+                    <Trash2 :size="14" />
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </BaseCard>
 
     <!-- Photos -->
     <BaseCard title="Photos">

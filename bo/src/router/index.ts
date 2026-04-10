@@ -45,6 +45,11 @@ const router = createRouter({
       name: 'messages',
       component: () => import('../presentation/views/MessagesView.vue'),
     },
+    {
+      path: '/avis',
+      name: 'ratings',
+      component: () => import('../presentation/views/RatingsView.vue'),
+    },
   ],
 })
 

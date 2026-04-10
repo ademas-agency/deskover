@@ -113,6 +113,45 @@ function computeOpenStatus(openingHours?: any): { isOpen: boolean; nextOpen?: st
   return { isOpen: false }
 }
 
+function timeAgoFr(date: string): string {
+  const diff = Date.now() - new Date(date).getTime()
+  const minutes = Math.floor(diff / 60000)
+  if (minutes < 1) return "à l'instant"
+  if (minutes < 60) return `il y a ${minutes}min`
+  const hours = Math.floor(minutes / 60)
+  if (hours < 24) return `il y a ${hours}h`
+  const days = Math.floor(hours / 24)
+  if (days < 30) return `il y a ${days}j`
+  return `il y a ${Math.floor(days / 30)}mois`
+}
+
+function buildSpeedTest(row: { download: number; upload: number; ping: number; created_at: string }) {
+  const download = Number(row.download)
+  let label: string, description: string, quality: number
+  if (download >= 25) {
+    label = 'Rapide'
+    description = 'WiFi rapide, nickel pour la visio et les gros fichiers.'
+    quality = 90
+  } else if (download >= 10) {
+    label = 'Bon'
+    description = 'WiFi correct pour bosser, OK en visio.'
+    quality = 60
+  } else {
+    label = 'Faible'
+    description = 'WiFi limite, à éviter pour la visio.'
+    quality = 30
+  }
+  return {
+    download,
+    upload: Number(row.upload),
+    ping: Number(row.ping),
+    label,
+    description,
+    quality,
+    ago: timeAgoFr(row.created_at)
+  }
+}
+
 function rowToPlace(row: any, index: number, mentions?: any[]): Place {
   const signals = row.signals || []
 
@@ -167,6 +206,7 @@ function rowToPlace(row: any, index: number, mentions?: any[]): Place {
     foodType: row.food_type || undefined,
     foodDescription: row.food_description || undefined,
     menuUrl: row.menu_url || undefined,
+    deskoverTestedAt: row.deskover_tested_at || undefined,
     tag
   }
 }
@@ -216,7 +256,23 @@ export class SupabasePlaceRepository implements PlaceRepository {
 
     if (error || !data) return null
 
-    return rowToPlace(data, 0, data.blog_mentions)
+    const place = rowToPlace(data, 0, data.blog_mentions)
+    await this.attachLatestSpeedTest(place)
+    return place
+  }
+
+  private async attachLatestSpeedTest(place: Place): Promise<void> {
+    const { data: speedRow } = await this.client
+      .from('speed_tests')
+      .select('download, upload, ping, created_at')
+      .eq('place_id', place.id)
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .maybeSingle()
+
+    if (speedRow) {
+      place.speedTest = buildSpeedTest(speedRow as any)
+    }
   }
 
   async getSimilar(place: Place, limit = 3): Promise<Place[]> {
@@ -265,7 +321,9 @@ export class SupabasePlaceRepository implements PlaceRepository {
 
     if (error || !data) return null
 
-    return rowToPlace(data, 0, data.blog_mentions)
+    const place = rowToPlace(data, 0, data.blog_mentions)
+    await this.attachLatestSpeedTest(place)
+    return place
   }
 
   async getByCity(citySlug: string, filters?: PlaceFilters): Promise<Place[]> {

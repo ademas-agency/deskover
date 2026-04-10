@@ -9,8 +9,8 @@ const form = reactive({
   category: '' as string,
   wifi: '',
   power: '',
-  noise: '',
-  comfort: '',
+  pricing: '',
+  mood: '',
 })
 
 const submitting = ref(false)
@@ -23,27 +23,6 @@ const categories = [
   { value: 'coworking', label: 'Coworking', icon: 'lucide:building-2' },
   { value: 'tiers_lieu', label: 'Tiers-lieu', icon: 'lucide:home' },
 ]
-
-const ratingOptions = {
-  wifi: ['Nul', 'Moyen', 'Bon'],
-  power: ['Aucune', 'Rares', 'Partout'],
-  noise: ['Bruyant', 'Ok', 'Calme'],
-  comfort: ['Bof', 'Correct', 'Top'],
-}
-
-const ratingIcons = {
-  wifi: 'lucide:wifi',
-  power: 'lucide:zap',
-  noise: 'lucide:ear',
-  comfort: 'lucide:armchair',
-}
-
-const ratingLabels = {
-  wifi: 'WiFi',
-  power: 'Prises',
-  noise: 'Bruit',
-  comfort: 'Confort',
-}
 
 // BAN autocomplete
 const suggestions = ref<any[]>([])
@@ -96,11 +75,11 @@ function getFingerprint() {
   return fp
 }
 
-function handleRatingSubmit(ratings: { wifi: string; prises: string; food: string; style: string }, speedTest: any) {
+function handleRatingSubmit(ratings: { wifi: string; prises: string; pricing: string; mood: string }, speedTest: any) {
   form.wifi = ratings.wifi
   form.power = ratings.prises
-  form.noise = ratings.food
-  form.comfort = ratings.style
+  form.pricing = ratings.pricing
+  form.mood = ratings.mood
   submit()
 }
 
@@ -111,8 +90,8 @@ async function submit() {
   const signals: string[] = []
   if (form.wifi === 'Rapide' || form.wifi === 'Bon') signals.push('wifi')
   if (form.power === 'Plein') signals.push('prises')
-  if (form.noise === 'Calme') signals.push('calme')
-  if (form.comfort === 'Top') signals.push('ambiance')
+  if (form.pricing === 'Payant') signals.push('payant')
+  if (form.mood === 'Calme') signals.push('calme')
 
   const citySlug = slugify(form.city)
 
@@ -138,19 +117,19 @@ async function submit() {
   }
 
   // Ajouter la notation initiale
-  if (data?.id && form.wifi) {
+  if (data?.id && (form.wifi || form.power || form.pricing || form.mood)) {
     const wifiMap: Record<string, number> = { 'Faible': 1, 'Bon': 2, 'Rapide': 3 }
     const powerMap: Record<string, number> = { 'Aucune': 1, 'Quelques-unes': 2, 'Plein': 3 }
-    const noiseMap: Record<string, number> = { 'Bruyant': 1, 'Ok': 2, 'Calme': 3 }
-    const comfortMap: Record<string, number> = { 'Bof': 1, 'Correct': 2, 'Top': 3 }
+    const pricingMap: Record<string, number> = { 'Gratuit': 1, 'Payant': 2 }
+    const moodMap: Record<string, number> = { 'Calme': 1, 'Animé': 2 }
 
     await client.from('ratings').insert({
       place_id: data.id,
       fingerprint: getFingerprint(),
-      wifi: wifiMap[form.wifi] || 2,
-      power: powerMap[form.power] || 2,
-      noise: noiseMap[form.noise] || 2,
-      comfort: comfortMap[form.comfort] || 2,
+      wifi: form.wifi ? wifiMap[form.wifi] : null,
+      power: form.power ? powerMap[form.power] : null,
+      pricing: form.pricing ? pricingMap[form.pricing] : null,
+      mood: form.mood ? moodMap[form.mood] : null,
     })
   }
 
@@ -179,14 +158,14 @@ useSeoMeta({
     </div>
 
     <!-- Close button desktop -->
-    <div class="hidden lg:flex justify-end pt-6 lg:max-w-[600px] lg:mx-auto">
+    <div class="hidden lg:flex justify-end pt-6 lg:max-w-[680px] lg:mx-auto lg:px-8">
       <button @click="router.back()" class="w-10 h-10 rounded-full bg-[var(--color-parchment)] flex items-center justify-center hover:bg-[var(--color-steam)]/20 transition-colors">
         <UIcon name="lucide:x" class="w-5 h-5 text-[var(--color-espresso)]" />
       </button>
     </div>
 
     <!-- Step 1: Infos -->
-    <div v-if="step === 1" class="px-5 pt-6 lg:pt-0 lg:max-w-[600px] lg:mx-auto">
+    <div v-if="step === 1" class="px-5 pt-6 lg:pt-0 lg:max-w-[680px] lg:mx-auto lg:px-8">
       <h1 class="font-display text-[22px] text-[var(--color-espresso)]">Tu connais un bon spot ?</h1>
       <p class="text-[14px] text-[var(--color-roast)] mt-2">Ajoute-le en 30 secondes.</p>
 
@@ -247,7 +226,7 @@ useSeoMeta({
     </div>
 
     <!-- CTA fixe en bas (étape 1) -->
-    <div v-if="step === 1" class="fixed bottom-0 left-0 right-0 p-4 pb-9 bg-gradient-to-t from-[var(--color-cream)] via-[var(--color-cream)] to-transparent z-40 lg:static lg:mt-8 lg:p-0 lg:bg-transparent lg:pb-0 lg:max-w-[600px] lg:mx-auto">
+    <div v-if="step === 1" class="fixed bottom-0 left-0 right-0 p-4 pb-9 bg-gradient-to-t from-[var(--color-cream)] via-[var(--color-cream)] to-transparent z-40 lg:static lg:mt-8 lg:p-0 lg:bg-transparent lg:pb-0 lg:max-w-[680px] lg:mx-auto lg:px-8">
       <button
         class="w-full py-3.5 rounded-2xl text-sm font-bold transition-all"
         :class="canGoStep2() ? 'bg-[var(--color-terracotta-500)] text-white' : 'bg-[var(--color-parchment)] text-[var(--color-steam)]'"
@@ -280,7 +259,7 @@ useSeoMeta({
     </div>
 
     <!-- Step 3: Confirmation -->
-    <div v-if="step === 3" class="px-5 pt-16 text-center lg:max-w-[600px] lg:mx-auto">
+    <div v-if="step === 3" class="px-5 pt-16 text-center lg:max-w-[680px] lg:mx-auto lg:px-8">
       <UIcon name="lucide:check-circle" class="w-12 h-12 text-[var(--color-monstera)] mx-auto" />
       <h2 class="font-display text-[22px] text-[var(--color-espresso)] mt-4">Merci pour ta suggestion</h2>
       <p class="text-[14px] text-[var(--color-roast)] mt-2 leading-relaxed">

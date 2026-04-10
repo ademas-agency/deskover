@@ -73,6 +73,20 @@ export interface Place {
   // Tags
   tag?: string
   distance?: string
+
+  // Speed test (dernière mesure du WiFi)
+  speedTest?: {
+    download: number
+    upload: number
+    ping: number
+    label: string
+    description: string
+    quality: number
+    ago: string
+  }
+
+  // Validé par Deskover : date à laquelle l'équipe est allée tester sur place
+  deskoverTestedAt?: string
 }
 
 export interface PlaceFilters {

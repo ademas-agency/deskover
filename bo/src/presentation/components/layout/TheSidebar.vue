@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import {
   LayoutDashboard,
@@ -7,22 +7,35 @@ import {
   Map,
   FileText,
   MessageSquare,
+  Star,
 } from 'lucide-vue-next'
+import { useRatingsNotificationsStore } from '../../../stores/ratingsNotifications'
 
 const route = useRoute()
+const ratingsNotifs = useRatingsNotificationsStore()
 
 const navigation = [
-  { name: 'Dashboard', path: '/', icon: LayoutDashboard },
-  { name: 'Lieux', path: '/places', icon: MapPin },
-  { name: 'Carte', path: '/map', icon: Map },
-  { name: 'Articles', path: '/articles', icon: FileText },
-  { name: 'Messages', path: '/messages', icon: MessageSquare },
+  { name: 'Dashboard', path: '/', icon: LayoutDashboard, badgeKey: null },
+  { name: 'Lieux', path: '/places', icon: MapPin, badgeKey: null },
+  { name: 'Carte', path: '/map', icon: Map, badgeKey: null },
+  { name: 'Articles', path: '/articles', icon: FileText, badgeKey: null },
+  { name: 'Messages', path: '/messages', icon: MessageSquare, badgeKey: null },
+  { name: 'Avis', path: '/avis', icon: Star, badgeKey: 'ratings' as const },
 ]
 
 function isActive(path: string): boolean {
   if (path === '/') return route.path === '/'
   return route.path.startsWith(path)
 }
+
+function badgeCount(key: string | null): number {
+  if (key === 'ratings') return ratingsNotifs.unreadCount
+  return 0
+}
+
+onMounted(() => {
+  ratingsNotifs.fetchUnreadCount()
+})
 </script>
 
 <template>
@@ -49,7 +62,13 @@ function isActive(path: string): boolean {
         ]"
       >
         <component :is="item.icon" :size="18" />
-        {{ item.name }}
+        <span class="flex-1">{{ item.name }}</span>
+        <span
+          v-if="badgeCount(item.badgeKey) > 0"
+          class="inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 rounded-full bg-primary text-white text-[10px] font-bold"
+        >
+          {{ badgeCount(item.badgeKey) }}
+        </span>
       </router-link>
     </nav>
 

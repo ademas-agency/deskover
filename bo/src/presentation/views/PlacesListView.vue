@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed, onMounted, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { usePlacesStore } from '../../stores/places'
 import type { PlaceCategory } from '../../core/domain/entities/Place'
 import { CATEGORY_LABELS } from '../../core/domain/entities/Place'
@@ -9,13 +9,15 @@ import BaseInput from '../components/ui/BaseInput.vue'
 import { Search, Filter } from 'lucide-vue-next'
 
 const store = usePlacesStore()
-
-const searchQuery = ref('')
-const categoryFilter = ref<PlaceCategory | ''>('')
 const route = useRoute()
+const router = useRouter()
 
+// Init from URL query (so refresh + back nav restore state)
+const searchQuery = ref((route.query.q as string) || '')
+const searchInput = ref(searchQuery.value) // valeur tapée, validée uniquement sur Entrée
+const categoryFilter = ref<PlaceCategory | ''>((route.query.cat as PlaceCategory) || '')
 const statusFilter = ref<'all' | 'pending' | 'with_photo' | 'no_photo' | 'no_description' | 'no_signals' | 'to_enrich'>((route.query.filter as any) || 'all')
-const currentPage = ref(1)
+const currentPage = ref(parseInt(route.query.page as string) || 1)
 const pageSize = 20
 
 onMounted(async () => {
@@ -23,6 +25,19 @@ onMounted(async () => {
     await store.fetchPlaces()
   }
 })
+
+// Sync state to URL (replace, no extra history entries)
+watch(
+  () => [searchQuery.value, categoryFilter.value, statusFilter.value, currentPage.value],
+  () => {
+    const query: Record<string, string> = {}
+    if (searchQuery.value) query.q = searchQuery.value
+    if (categoryFilter.value) query.cat = categoryFilter.value
+    if (statusFilter.value !== 'all') query.filter = statusFilter.value
+    if (currentPage.value > 1) query.page = String(currentPage.value)
+    router.replace({ query })
+  }
+)
 
 const filteredPlaces = computed(() => {
   let result = store.places
@@ -77,10 +92,11 @@ watch([searchQuery, categoryFilter, statusFilter], () => {
           <div class="relative">
             <Search :size="16" class="absolute left-3 top-1/2 -translate-y-1/2 text-steam" />
             <input
-              v-model="searchQuery"
+              v-model="searchInput"
               type="text"
-              placeholder="Nom ou ville..."
+              placeholder="Nom ou ville (Entrée pour valider)..."
               class="w-full rounded-lg border border-steam/30 bg-white pl-9 pr-3 py-2 text-sm text-espresso placeholder-steam outline-none focus:border-primary focus:ring-1 focus:ring-primary/20"
+              @keyup.enter="searchQuery = searchInput.trim()"
             />
           </div>
         </div>
