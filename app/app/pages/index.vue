@@ -8,7 +8,7 @@ const quickFilters = [
   { key: 'recos', label: 'Nos recos', icon: 'lucide:sparkles', filter: {} as PlaceFilters, sort: 'relevance' as const },
   { key: 'proche', label: 'Les plus proches', icon: 'lucide:map-pin', filter: {} as PlaceFilters, sort: 'distance' as const },
   { key: 'ouvert', label: 'Ouvert maintenant', icon: 'lucide:clock', filter: {} as PlaceFilters, sort: 'relevance' as const, openOnly: true },
-  { key: 'wifi', label: 'Meilleur WiFi', icon: 'lucide:wifi', filter: { wifi: true } as PlaceFilters, sort: 'relevance' as const },
+  { key: 'wifi', label: 'Meilleur WiFi', icon: 'lucide:wifi', filter: { wifi: true } as PlaceFilters, sort: 'wifi' as const },
   { key: 'calme', label: 'Bosser au calme', icon: 'lucide:volume-x', filter: { calme: true } as PlaceFilters, sort: 'relevance' as const },
   { key: 'terrasse', label: 'Terrasses', icon: 'lucide:sun', filter: { terrasse: true } as PlaceFilters, sort: 'relevance' as const },
   { key: 'gratuit', label: 'Gratuit', icon: 'lucide:ticket', filter: { gratuit: true } as PlaceFilters, sort: 'relevance' as const },
@@ -115,7 +115,7 @@ const pageSubtitle = computed(() => {
 
 const { data: rawPlaces, status } = await useAsyncData(
   'home-places',
-  () => getAll(currentFilter.value.filter),
+  () => getAll(currentFilter.value.filter, currentFilter.value.sort),
   { watch: [currentFilter] }
 )
 const loading = computed(() => status.value === 'pending')
@@ -139,6 +139,11 @@ function formatDistance(km: number): string {
 
 const places = computed(() => {
   let list = rawPlaces.value || []
+
+  // Deskovered tags only for "Nos recos"
+  if (activeQuickFilter.value !== 'recos') {
+    list = list.map(p => p.tag ? { ...p, tag: undefined } : p)
+  }
 
   // Filter open only
   if (currentFilter.value.openOnly) {

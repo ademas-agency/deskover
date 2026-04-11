@@ -19,7 +19,7 @@
     "@nuxtjs/sitemap": "8.0.11",
     "@nuxtjs/supabase": "^2.0.4",
     "@vite-pwa/nuxt": "^1.1.1",
-    "maplibre-gl": "^5.22.0",
+    "mapbox-gl": "^3.21.0",
     "nuxt": "^4.4.2",
     "nuxt-gtag": "^4.1.0",
     "tailwindcss": "^4.2.2"

@@ -1,7 +1,8 @@
 <script setup lang="ts">
-import maplibregl from 'maplibre-gl'
-import 'maplibre-gl/dist/maplibre-gl.css'
+import mapboxgl from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
 
+const { public: { mapboxToken } } = useRuntimeConfig()
 const route = useRoute()
 const slug = route.params.slug as string
 const client = useSupabaseClient()
@@ -68,27 +69,24 @@ onMounted(() => {
   const centerLng = (Math.min(...lngs) + Math.max(...lngs)) / 2
   const centerLat = (Math.min(...lats) + Math.max(...lats)) / 2
 
-  const map = new maplibregl.Map({
+  mapboxgl.accessToken = mapboxToken
+  const map = new mapboxgl.Map({
     container: mapContainer.value,
-    style: {
-      version: 8,
-      sources: {
-        carto: {
-          type: 'raster',
-          tiles: ['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png'],
-          tileSize: 256,
-          attribution: '&copy; OpenStreetMap &copy; CARTO'
-        }
-      },
-      layers: [{ id: 'carto', type: 'raster', source: 'carto', minzoom: 0, maxzoom: 20 }]
-    },
+    style: 'mapbox://styles/mapbox/light-v11',
     center: [centerLng, centerLat],
     zoom: 12,
     attributionControl: false,
-    interactive: true
+    interactive: true,
+    projection: 'mercator'
   })
 
-  map.addControl(new maplibregl.NavigationControl(), 'bottom-right')
+  map.addControl(new mapboxgl.NavigationControl(), 'bottom-right')
+
+  // Suppress known mapbox-gl v3 NaN LngLat rendering bug
+  map.on('error', (e) => {
+    if (e.error?.message?.includes('Invalid LngLat')) return
+    console.error(e.error)
+  })
 
   map.on('load', () => {
     placesWithCoords.forEach(p => {
@@ -112,14 +110,14 @@ onMounted(() => {
         navigateTo(`/lieu/${p.slug || p.id}`)
       })
 
-      new maplibregl.Marker({ element: el, anchor: 'center' })
+      new mapboxgl.Marker({ element: el, anchor: 'center' })
         .setLngLat([p.longitude, p.latitude])
         .addTo(map)
     })
 
     // Fit bounds if multiple places
     if (placesWithCoords.length > 1) {
-      const bounds = new maplibregl.LngLatBounds()
+      const bounds = new mapboxgl.LngLatBounds()
       placesWithCoords.forEach(p => bounds.extend([p.longitude, p.latitude]))
       map.fitBounds(bounds, { padding: 60, maxZoom: 14 })
     }

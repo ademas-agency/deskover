@@ -12,9 +12,11 @@ const props = withDefaults(defineProps<{
   vitals: Vital[]
   size?: 'sm' | 'md' | 'lg'
   max?: number
+  clickable?: string[]
 }>(), {
   size: 'md',
-  max: 0
+  max: 0,
+  clickable: () => []
 })
 
 const displayVitals = computed(() => props.max > 0 ? props.vitals.slice(0, props.max) : props.vitals)
@@ -45,7 +47,8 @@ const iconSize = (size: string) => {
     <div
       v-for="(vital, i) in displayVitals"
       :key="vital.label"
-      class="flex-1 flex flex-col items-center gap-[3px] relative cursor-pointer"
+      class="flex-1 flex flex-col items-center gap-[3px] relative"
+      :class="clickable.includes(vital.label) ? 'cursor-pointer active:scale-95 transition-transform' : ''"
       @click="emit('vital-click', vital.label)"
     >
       <!-- Separator -->
@@ -55,7 +58,7 @@ const iconSize = (size: string) => {
       <!-- Label -->
       <span class="text-[9px] uppercase tracking-[0.06em] text-[var(--color-steam)]" :class="size === 'lg' && 'text-[10px]'">{{ vital.label }}</span>
       <!-- Value -->
-      <span class="font-bold text-center leading-tight" :class="[size === 'lg' ? 'text-xs' : 'text-[11px]', statusColor(vital.status)]">{{ vital.value }}</span>
+      <span class="font-bold text-center leading-tight" :class="[size === 'lg' ? 'text-xs' : 'text-[11px]', statusColor(vital.status), clickable.includes(vital.label) ? 'border-b border-dotted border-current pb-px' : '']">{{ vital.value }}</span>
     </div>
   </div>
 </template>

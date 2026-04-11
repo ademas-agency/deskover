@@ -84,6 +84,7 @@ export interface Place {
     quality: number
     ago: string
   }
+  speedTestCount?: number
 
   // Validé par Deskover : date à laquelle l'équipe est allée tester sur place
   deskoverTestedAt?: string
@@ -103,4 +104,4 @@ export interface PlaceFilters {
   query?: string
 }
 
-export type PlaceSortBy = 'relevance' | 'distance' | 'rating'
+export type PlaceSortBy = 'relevance' | 'distance' | 'rating' | 'wifi'

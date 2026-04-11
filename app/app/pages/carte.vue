@@ -1,7 +1,9 @@
 <script setup lang="ts">
-import maplibregl from 'maplibre-gl'
-import 'maplibre-gl/dist/maplibre-gl.css'
+import mapboxgl from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
 import type { Place } from '~/domain/models/Place'
+
+const { public: { mapboxToken } } = useRuntimeConfig()
 
 useSeoMeta({
   title: 'Carte des spots — Deskover',
@@ -26,7 +28,8 @@ const selectedPlace = ref<Place | null>(null)
 const showCard = ref(false)
 const photoSlider = ref<HTMLElement | null>(null)
 const currentPhotoIdx = ref(0)
-let map: maplibregl.Map | null = null
+let map: mapboxgl.Map | null = null
+const placeMarkers: Map<string, mapboxgl.Marker> = new Map()
 
 const STORAGE_BASE = 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos'
 const FALLBACK_PHOTO = 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=300&fit=crop'
@@ -79,56 +82,168 @@ function getFilteredPlaces(): Place[] {
   })
 }
 
-const allMarkers: maplibregl.Marker[] = []
-let selectedMarkerId: string | null = null
+function buildGeoJSON(filteredPlaces: Place[]) {
+  return {
+    type: 'FeatureCollection' as const,
+    features: filteredPlaces
+      .filter(p => p.latitude != null && p.longitude != null && !isNaN(p.latitude) && !isNaN(p.longitude))
+      .map(p => ({
+        type: 'Feature' as const,
+        geometry: { type: 'Point' as const, coordinates: [p.longitude, p.latitude] },
+        properties: {
+          id: p.id,
+          category: p.category,
+          color: categoryColors[p.category] || '#AA4C4D'
+        }
+      }))
+  }
+}
 
-function createMarkers(filteredPlaces: Place[]) {
+function setupClusterLayers() {
   if (!map) return
-  // Remove old markers
-  allMarkers.forEach(m => m.remove())
-  allMarkers.length = 0
 
-  filteredPlaces
-    .filter(p => p.latitude && p.longitude)
-    .forEach(p => {
-      const color = categoryColors[p.category] || '#AA4C4D'
-      const isSelected = p.id === selectedMarkerId
-      const w = isSelected ? 56 : 44
-      const h = isSelected ? 72 : 56
-      const radius = 8
+  map.addSource('places', {
+    type: 'geojson',
+    data: buildGeoJSON(places.value),
+    cluster: true,
+    clusterMaxZoom: 14,
+    clusterRadius: 50
+  })
 
-      const el = document.createElement('div')
-      el.style.cursor = 'pointer'
+  // Cercles de clusters
+  map.addLayer({
+    id: 'clusters',
+    type: 'circle',
+    source: 'places',
+    filter: ['has', 'point_count'],
+    paint: {
+      'circle-color': '#AA4C4D',
+      'circle-radius': ['step', ['get', 'point_count'], 18, 10, 24, 50, 32],
+      'circle-stroke-width': 3,
+      'circle-stroke-color': '#fff',
+      'circle-opacity': 0.9
+    }
+  })
 
-      const thumb = p.thumbUrl || p.photoUrl
-      if (thumb) {
-        el.innerHTML = `<div style="width:${w}px;height:${h}px;border-radius:${radius}px;overflow:hidden;border:${isSelected ? 3 : 2}px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,${isSelected ? 0.4 : 0.2});background:${color};transition:all 0.15s;">
-          <img src="${thumb}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
-          <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;">${p.name.charAt(0)}</div>
-        </div>`
-      } else {
-        el.innerHTML = `<div style="width:${w}px;height:${h}px;border-radius:${radius}px;border:${isSelected ? 3 : 2}px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,${isSelected ? 0.4 : 0.2});background:${color};display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;transition:all 0.15s;">
-          ${p.name.charAt(0)}
-        </div>`
+  // Nombre dans les clusters
+  map.addLayer({
+    id: 'cluster-count',
+    type: 'symbol',
+    source: 'places',
+    filter: ['has', 'point_count'],
+    layout: {
+      'text-field': '{point_count_abbreviated}',
+      'text-size': 13,
+      'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular']
+    },
+    paint: {
+      'text-color': '#fff'
+    }
+  })
+
+  // Points individuels : markers HTML avec photo (invisible layer pour détection)
+  map.addLayer({
+    id: 'unclustered-point',
+    type: 'circle',
+    source: 'places',
+    filter: ['!', ['has', 'point_count']],
+    paint: {
+      'circle-color': 'transparent',
+      'circle-radius': 0
+    }
+  })
+
+  function updateMarkers() {
+    if (!map) return
+    const visibleIds = new Set<string>()
+
+    // Get unclustered features currently visible
+    const features = map.querySourceFeatures('places', { filter: ['!', ['has', 'point_count']] })
+
+    for (const f of features) {
+      const id = String(f.properties?.id)
+      if (!id || id === 'undefined') continue
+      visibleIds.add(id)
+
+      if (!placeMarkers.has(id)) {
+        const place = places.value.find(p => String(p.id) === id)
+        if (!place) continue
+        const color = categoryColors[place.category] || '#AA4C4D'
+        const el = document.createElement('div')
+        el.style.cursor = 'pointer'
+
+        const thumb = place.thumbUrl || place.photoUrl
+        if (thumb) {
+          el.innerHTML = `<div style="width:44px;height:56px;border-radius:8px;overflow:hidden;border:2px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,0.2);background:${color};">
+            <img src="${thumb}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+            <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;">${place.name.charAt(0)}</div>
+          </div>`
+        } else {
+          el.innerHTML = `<div style="width:44px;height:56px;border-radius:8px;border:2px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,0.2);background:${color};display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;">
+            ${place.name.charAt(0)}
+          </div>`
+        }
+
+        el.addEventListener('click', (evt) => {
+          evt.stopPropagation()
+          selectPlace(place)
+        })
+
+        const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
+          .setLngLat([place.longitude, place.latitude])
+          .addTo(map!)
+
+        placeMarkers.set(id, marker)
       }
+    }
 
-      el.addEventListener('click', () => {
-        selectedMarkerId = p.id
-        selectPlace(p)
-        createMarkers(filteredPlaces)
-      })
+    // Remove markers that are now clustered
+    for (const [id, marker] of placeMarkers) {
+      if (!visibleIds.has(id)) {
+        marker.remove()
+        placeMarkers.delete(id)
+      }
+    }
+  }
 
-      const marker = new maplibregl.Marker({ element: el, anchor: 'center' })
-        .setLngLat([p.longitude, p.latitude])
-        .addTo(map!)
+  map.on('render', updateMarkers)
 
-      allMarkers.push(marker)
-    })
+  // Click sur cluster
+  map.on('click', 'clusters', (e) => {
+    const features = map!.queryRenderedFeatures(e.point, { layers: ['clusters'] })
+    if (!features.length) return
+    const clusterId = features[0].properties?.cluster_id
+    if (clusterId == null) return
+    const coords = (features[0].geometry as GeoJSON.Point).coordinates
+    if (!coords || !isFinite(coords[0]) || !isFinite(coords[1])) return
+    const currentZoom = map!.getZoom()
+    map!.easeTo({ center: coords as [number, number], zoom: currentZoom + 2, duration: 500 })
+  })
+  map.on('click', 'cluster-count', (e) => {
+    const features = map!.queryRenderedFeatures(e.point, { layers: ['clusters'] })
+    if (!features.length) return
+    const clusterId = features[0].properties?.cluster_id
+    if (clusterId == null) return
+    const coords = (features[0].geometry as GeoJSON.Point).coordinates
+    if (!coords || !isFinite(coords[0]) || !isFinite(coords[1])) return
+    const currentZoom = map!.getZoom()
+    map!.easeTo({ center: coords as [number, number], zoom: currentZoom + 2, duration: 500 })
+  })
+
+  // Curseur pointer sur clusters
+  map.on('mouseenter', 'clusters', () => { map!.getCanvas().style.cursor = 'pointer' })
+  map.on('mouseleave', 'clusters', () => { map!.getCanvas().style.cursor = '' })
 }
 
 function applyMapFilters() {
   if (!map) return
-  createMarkers(getFilteredPlaces())
+  // Clear all markers (they'll be recreated on next render)
+  for (const [, marker] of placeMarkers) marker.remove()
+  placeMarkers.clear()
+  const source = map.getSource('places') as mapboxgl.GeoJSONSource
+  if (source) {
+    source.setData(buildGeoJSON(getFilteredPlaces()))
+  }
 }
 
 const categoryColors: Record<string, string> = {
@@ -139,22 +254,47 @@ const categoryColors: Record<string, string> = {
   library: '#6B5B4E'
 }
 
-function selectPlace(place: Place) {
-  selectedPlace.value = place
-  showCard.value = true
-  currentPhotoIdx.value = 0
-  if (map) {
-    map.flyTo({ center: [place.longitude, place.latitude], zoom: 15, duration: 600 })
-  }
-  nextTick(() => {
-    if (photoSlider.value) {
-      photoSlider.value.scrollLeft = 0
-      photoSlider.value.onscroll = () => {
-        const w = photoSlider.value!.clientWidth
-        if (w > 0) currentPhotoIdx.value = Math.round(photoSlider.value!.scrollLeft / w)
-      }
+function getPlacePhotos(place: Place): string[] {
+  const photos: string[] = []
+  if (place.photoUrl) photos.push(place.photoUrl)
+  if (place.photos?.length) {
+    for (const p of place.photos) {
+      if (!photos.includes(p)) photos.push(p)
     }
-  })
+  }
+  return photos.length > 0 ? photos : [FALLBACK_PHOTO]
+}
+
+function selectPlace(place: Place) {
+  // Preload first photo before showing the card
+  const photos = getPlacePhotos(place)
+  const img = new Image()
+  img.src = photos[0]
+
+  const show = () => {
+    selectedPlace.value = place
+    showCard.value = true
+    currentPhotoIdx.value = 0
+    if (map) {
+      map.easeTo({ center: [place.longitude, place.latitude], zoom: 15, duration: 600 })
+    }
+    nextTick(() => {
+      if (photoSlider.value) {
+        photoSlider.value.scrollLeft = 0
+        photoSlider.value.onscroll = () => {
+          const w = photoSlider.value!.clientWidth
+          if (w > 0) currentPhotoIdx.value = Math.round(photoSlider.value!.scrollLeft / w)
+        }
+      }
+    })
+  }
+
+  if (img.complete) {
+    show()
+  } else {
+    img.onload = show
+    img.onerror = show // show anyway if image fails
+  }
 }
 
 function closeCard() {
@@ -168,78 +308,57 @@ function goToPlace() {
   }
 }
 
-onMounted(async () => {
+onMounted(() => {
   if (!mapContainer.value) return
 
-  // Get user location first, fallback to Paris
-  let center: [number, number] = [2.352, 48.856]
-  let zoom = 12
+  // Wait for container to have dimensions before creating map
+  requestAnimationFrame(async () => {
+    if (!mapContainer.value) return
 
-  try {
-    const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
-      navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 })
-    })
-    center = [pos.coords.longitude, pos.coords.latitude]
-    zoom = 14
-  }
-  catch {
-    // Fallback to Paris
-  }
+    // Get user location first, fallback to Paris
+    let center: [number, number] = [2.352, 48.856]
+    let zoom = 12
 
-  map = new maplibregl.Map({
-    container: mapContainer.value,
-    style: {
-      version: 8,
-      sources: {
-        carto: {
-          type: 'raster',
-          tiles: ['https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png'],
-          tileSize: 256,
-          attribution: '&copy; OpenStreetMap &copy; CARTO'
-        }
-      },
-      layers: [{
-        id: 'carto',
-        type: 'raster',
-        source: 'carto',
-        minzoom: 0,
-        maxzoom: 20
-      }]
-    },
-    center,
-    zoom,
-    attributionControl: false
-  })
-
-  map.addControl(new maplibregl.NavigationControl(), 'bottom-right')
-  map.addControl(new maplibregl.GeolocateControl({
-    positionOptions: { enableHighAccuracy: true },
-    trackUserLocation: true
-  }), 'bottom-right')
-
-  // Also store source for filter logic
-  map.on('load', () => {
-    const geojson = {
-      type: 'FeatureCollection' as const,
-      features: places.value
-        .filter(p => p.latitude && p.longitude)
-        .map(p => ({
-          type: 'Feature' as const,
-          geometry: { type: 'Point' as const, coordinates: [p.longitude, p.latitude] },
-          properties: {
-            id: p.id,
-            category: p.category,
-            color: categoryColors[p.category] || '#AA4C4D',
-            hasWifi: p.signals.includes('wifi'),
-            hasPrises: p.signals.includes('prises'),
-            hasFood: p.signals.includes('food'),
-            hasCalme: p.signals.includes('calme')
-          }
-        }))
+    try {
+      const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 })
+      })
+      const lng = pos.coords.longitude
+      const lat = pos.coords.latitude
+      if (isFinite(lng) && isFinite(lat)) {
+        center = [lng, lat]
+        zoom = 14
+      }
     }
-    map!.addSource('places', { type: 'geojson', data: geojson })
+    catch {
+      // Fallback to Paris
+    }
 
-    createMarkers(places.value)
+    mapboxgl.accessToken = mapboxToken
+    map = new mapboxgl.Map({
+      container: mapContainer.value,
+      style: 'mapbox://styles/mapbox/light-v11',
+      center,
+      zoom,
+      attributionControl: false,
+      projection: 'mercator'
+    })
+
+    map.addControl(new mapboxgl.NavigationControl(), 'bottom-right')
+    map.addControl(new mapboxgl.GeolocateControl({
+      positionOptions: { enableHighAccuracy: true },
+      trackUserLocation: true
+    }), 'bottom-right')
+
+    // Suppress known mapbox-gl v3 NaN LngLat rendering bug
+    map.on('error', (e) => {
+      if (e.error?.message?.includes('Invalid LngLat')) return
+      console.error(e.error)
+    })
+
+    map.on('load', () => {
+      setupClusterLayers()
+    })
   })
 })
 

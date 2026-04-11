@@ -67,4 +67,5 @@ export const SIGNAL_LABELS: Record<string, string> = {
   payant: 'Payant',
   reservation: 'Sur réservation',
   insolite: 'Insolite',
+  wifi_captif: 'WiFi captif (portail)',
 }

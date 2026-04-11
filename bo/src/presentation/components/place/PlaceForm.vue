@@ -193,7 +193,7 @@ watch(() => props.place, (newVal) => {
 }, { deep: true, immediate: true })
 
 const allSignals = [
-  'wifi', 'prises', 'calme', 'food', 'terrasse', 'laptop_friendly',
+  'wifi', 'wifi_captif', 'prises', 'calme', 'food', 'terrasse', 'laptop_friendly',
   'pas_cher', 'grandes_tables', 'ambiance', 'silencieux', 'musique', 'lumineux', 'insolite',
   'payant', 'reservation',
 ]

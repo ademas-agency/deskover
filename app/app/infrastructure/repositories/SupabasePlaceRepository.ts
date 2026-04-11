@@ -7,8 +7,9 @@ const SUPABASE_STORAGE_URL = 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v
 function signalToVitals(signals: string[]): Vital[] {
   const has = (s: string) => signals.includes(s)
 
+  // WiFi : "Dispo" par défaut, affiné par attachLatestSpeedTest sur la fiche lieu
   const wifiStatus: VitalStatus = has('wifi') ? 'good' : 'none'
-  const wifiValue = has('wifi') ? 'Rapide' : 'Inconnu'
+  const wifiValue = has('wifi') ? 'Dispo' : 'Inconnu'
 
   const prisesStatus: VitalStatus = has('prises') ? 'good' : has('grandes_tables') ? 'medium' : 'none'
   const prisesValue = has('prises') ? 'Dispo' : has('grandes_tables') ? 'Rares' : 'Inconnu'
@@ -228,9 +229,14 @@ export class SupabasePlaceRepository implements PlaceRepository {
     const { data, error } = await query
     if (error) throw error
 
-    return (data || []).map((row: any, i: number) =>
+    const places = (data || []).map((row: any, i: number) =>
       rowToPlace(row, i, row.blog_mentions)
     )
+    await this.attachWifiLabels(places)
+    if (sortBy === 'wifi') {
+      places.sort((a, b) => ((b as any)._wifiDownload || 0) - ((a as any)._wifiDownload || 0))
+    }
+    return places
   }
 
   async getAllForMap(): Promise<Place[]> {
@@ -262,16 +268,81 @@ export class SupabasePlaceRepository implements PlaceRepository {
   }
 
   private async attachLatestSpeedTest(place: Place): Promise<void> {
-    const { data: speedRow } = await this.client
-      .from('speed_tests')
-      .select('download, upload, ping, created_at')
-      .eq('place_id', place.id)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle()
+    const [{ data: speedRow }, { count }] = await Promise.all([
+      this.client
+        .from('speed_tests')
+        .select('download, upload, ping, created_at')
+        .eq('place_id', place.id)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      this.client
+        .from('speed_tests')
+        .select('*', { count: 'exact', head: true })
+        .eq('place_id', place.id)
+    ])
 
+    place.speedTestCount = count || 0
+
+    const wifiVital = place.vitals.find(v => v.label === 'WiFi')
     if (speedRow) {
       place.speedTest = buildSpeedTest(speedRow as any)
+
+      // Update WiFi vital with actual measured speed
+      if (wifiVital) {
+        const dl = place.speedTest.download
+        if (dl >= 10) {
+          wifiVital.value = dl >= 25 ? 'Rapide' : 'Bon'
+          wifiVital.status = 'good'
+        } else {
+          wifiVital.value = 'Faible'
+          wifiVital.status = 'medium'
+        }
+      }
+    } else if (wifiVital && place.signals.includes('wifi')) {
+      // WiFi signalé (via articles/sources) mais pas de mesure
+      wifiVital.value = 'Bon'
+      wifiVital.status = 'good'
+    }
+  }
+
+  private async attachWifiLabels(places: Place[]): Promise<void> {
+    const ids = places.filter(p => p.signals.includes('wifi')).map(p => p.id)
+    if (!ids.length) return
+
+    // One query: get latest speed test per place using distinct on
+    const { data } = await this.client
+      .from('speed_tests')
+      .select('place_id, download')
+      .in('place_id', ids)
+      .order('place_id')
+      .order('created_at', { ascending: false })
+
+    // Keep only the latest per place_id
+    const latestByPlace = new Map<string, number>()
+    for (const row of (data || [])) {
+      if (!latestByPlace.has(row.place_id)) {
+        latestByPlace.set(row.place_id, Number(row.download))
+      }
+    }
+
+    for (const place of places) {
+      const wifiVital = place.vitals.find(v => v.label === 'WiFi')
+      if (!wifiVital) continue
+      const dl = latestByPlace.get(place.id)
+      ;(place as any)._wifiDownload = dl || 0
+      if (dl != null) {
+        if (dl >= 10) {
+          wifiVital.value = dl >= 25 ? 'Rapide' : 'Bon'
+          wifiVital.status = 'good'
+        } else {
+          wifiVital.value = 'Faible'
+          wifiVital.status = 'medium'
+        }
+      } else if (place.signals.includes('wifi')) {
+        wifiVital.value = 'Bon'
+        wifiVital.status = 'good'
+      }
     }
   }
 
@@ -307,9 +378,11 @@ export class SupabasePlaceRepository implements PlaceRepository {
       if (extra) results = [...results, ...extra]
     }
 
-    return results.map((row: any, i: number) =>
+    const places = results.map((row: any, i: number) =>
       rowToPlace(row, i, row.blog_mentions)
     )
+    await this.attachWifiLabels(places)
+    return places
   }
 
   async getBySlug(slug: string): Promise<Place | null> {
@@ -340,9 +413,11 @@ export class SupabasePlaceRepository implements PlaceRepository {
     const { data, error } = await query
     if (error) throw error
 
-    return (data || []).map((row: any, i: number) =>
+    const places = (data || []).map((row: any, i: number) =>
       rowToPlace(row, i, row.blog_mentions)
     )
+    await this.attachWifiLabels(places)
+    return places
   }
 
   async search(query: string): Promise<Place[]> {
@@ -375,9 +450,11 @@ export class SupabasePlaceRepository implements PlaceRepository {
       normalize(row.address || '').includes(qNorm)
     )
 
-    return results.map((row: any, i: number) =>
+    const places = results.map((row: any, i: number) =>
       rowToPlace(row, i, row.blog_mentions)
     )
+    await this.attachWifiLabels(places)
+    return places
   }
 
   async getCities(): Promise<{ name: string; slug: string; count: number }[]> {

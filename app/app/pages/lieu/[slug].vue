@@ -1,6 +1,10 @@
 <script setup lang="ts">
+import mapboxgl from 'mapbox-gl'
+import 'mapbox-gl/dist/mapbox-gl.css'
+
 const route = useRoute()
 const router = useRouter()
+const client = useSupabaseClient()
 const { getBySlug, getById, getSimilar } = usePlaces()
 
 const placeSlug = route.params.slug as string
@@ -32,6 +36,23 @@ const { data: similarPlaces } = await useAsyncData(
   { watch: [place] }
 )
 
+// Articles Deskover liés à la ville du lieu
+const { data: deskoverArticles } = await useAsyncData(
+  `lieu-articles-${placeSlug}`,
+  async () => {
+    if (!place.value?.citySlug) return []
+    const { data } = await client
+      .from('articles')
+      .select('title, slug, city')
+      .eq('published', true)
+      .eq('city_slug', place.value.citySlug)
+      .order('published_at', { ascending: false })
+      .limit(3)
+    return data || []
+  },
+  { watch: [place] }
+)
+
 const loading = computed(() => status.value === 'pending')
 const showSpeedTest = ref(false)
 const showContribute = ref(false)
@@ -39,6 +60,8 @@ const isNearby = ref(false)
 const userCoords = ref<{ lat: number; lng: number } | null>(null)
 const runningSpeedTest = ref(false)
 const speedTestResult = ref<{ download: number; upload: number; ping: number } | null>(null)
+
+const wifiCaptif = ref(false)
 
 // Contribution state
 const ratings = reactive({
@@ -219,12 +242,23 @@ async function submitRating() {
     return
   }
 
+  // If wifi_captif was flagged, add signal to place
+  if (wifiCaptif.value) {
+    const currentSignals = place.value.signals || []
+    if (!currentSignals.includes('wifi_captif')) {
+      await client.from('places').update({
+        signals: [...currentSignals, 'wifi_captif']
+      }).eq('id', place.value.id)
+    }
+  }
+
   submitSuccess.value = true
   showContribute.value = false
   ratings.wifi = ''
   ratings.prises = ''
   ratings.food = ''
   ratings.style = ''
+  wifiCaptif.value = false
 
   // Refresh place data
   await refreshPlace()
@@ -290,12 +324,110 @@ function onVitalClick(label: string) {
 
 const showShareToast = ref(false)
 const showMapModal = ref(false)
-const { public: { googleMapsApiKey } } = useRuntimeConfig()
+const { public: { mapboxToken } } = useRuntimeConfig()
+const modalMapContainer = ref<HTMLElement | null>(null)
+let modalMap: mapboxgl.Map | null = null
 
-const mapsEmbedUrl = computed(() => {
-  if (!place.value) return ''
-  const { latitude, longitude } = place.value
-  return `https://www.google.com/maps/embed/v1/directions?key=${googleMapsApiKey}&origin=Current+Location&destination=${latitude},${longitude}&mode=walking&language=fr`
+const routeInfo = ref<{ distance: string; duration: string } | null>(null)
+const routeLoading = ref(false)
+
+watch(showMapModal, async (open) => {
+  if (!open || !place.value) {
+    if (modalMap) { modalMap.remove(); modalMap = null }
+    routeInfo.value = null
+    return
+  }
+  await nextTick()
+  if (!modalMapContainer.value) return
+
+  routeLoading.value = true
+  routeInfo.value = null
+
+  mapboxgl.accessToken = mapboxToken
+  modalMap = new mapboxgl.Map({
+    container: modalMapContainer.value,
+    style: 'mapbox://styles/mapbox/light-v11',
+    projection: 'mercator',
+    center: [place.value.longitude, place.value.latitude],
+    zoom: 15,
+    attributionControl: false
+  })
+
+  // Destination marker
+  const destEl = document.createElement('div')
+  destEl.innerHTML = `<div style="width:40px;height:40px;border-radius:50%;background:#AA4C4D;border:3px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+  </div>`
+  new mapboxgl.Marker({ element: destEl, anchor: 'center' })
+    .setLngLat([place.value.longitude, place.value.latitude])
+    .addTo(modalMap)
+
+  modalMap.addControl(new mapboxgl.NavigationControl(), 'bottom-right')
+
+  // Suppress known mapbox-gl v3 NaN LngLat rendering bug
+  modalMap.on('error', (e) => {
+    if (e.error?.message?.includes('Invalid LngLat')) return
+    console.error(e.error)
+  })
+
+  // Get user position and draw route
+  const dest = place.value
+  modalMap.on('load', async () => {
+    try {
+      const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 8000 })
+      })
+      const userLng = pos.coords.longitude
+      const userLat = pos.coords.latitude
+
+      // User marker (blue dot)
+      const userEl = document.createElement('div')
+      userEl.innerHTML = `<div style="width:16px;height:16px;border-radius:50%;background:#4285F4;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>`
+      new mapboxgl.Marker({ element: userEl, anchor: 'center' })
+        .setLngLat([userLng, userLat])
+        .addTo(modalMap!)
+
+      // Fetch walking directions from Mapbox
+      const url = `https://api.mapbox.com/directions/v5/mapbox/walking/${userLng},${userLat};${dest.longitude},${dest.latitude}?geometries=geojson&overview=full&access_token=${mapboxToken}`
+      const res = await fetch(url)
+      const data = await res.json()
+
+      if (data.routes?.length) {
+        const route = data.routes[0]
+        const distKm = route.distance / 1000
+        const durMin = Math.round(route.duration / 60)
+        routeInfo.value = {
+          distance: distKm < 1 ? `${Math.round(route.distance)} m` : `${distKm.toFixed(1)} km`,
+          duration: durMin < 60 ? `${durMin} min` : `${Math.floor(durMin / 60)}h${String(durMin % 60).padStart(2, '0')}`
+        }
+
+        // Draw route line
+        modalMap!.addSource('route', {
+          type: 'geojson',
+          data: { type: 'Feature', properties: {}, geometry: route.geometry }
+        })
+        modalMap!.addLayer({
+          id: 'route-line',
+          type: 'line',
+          source: 'route',
+          layout: { 'line-join': 'round', 'line-cap': 'round' },
+          paint: { 'line-color': '#AA4C4D', 'line-width': 4, 'line-opacity': 0.7 }
+        })
+
+        // Fit bounds to show both user and destination
+        const bounds = new mapboxgl.LngLatBounds()
+        bounds.extend([userLng, userLat])
+        bounds.extend([dest.longitude, dest.latitude])
+        modalMap!.fitBounds(bounds, { padding: 60, maxZoom: 16 })
+      }
+    }
+    catch {
+      // Geolocation denied or failed — just show the place
+    }
+    finally {
+      routeLoading.value = false
+    }
+  })
 })
 
 const lightboxOpen = ref(false)
@@ -559,7 +691,7 @@ useHead({
         <!-- Vitals -->
         <div class="px-4 mt-5 lg:px-0">
           <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-2.5">LES VITALS</div>
-          <PlaceVitals :vitals="place.vitals" size="lg" @vital-click="onVitalClick" />
+          <PlaceVitals :vitals="place.vitals" size="lg" :clickable="['WiFi']" @vital-click="onVitalClick" />
           <div v-if="place.conditions" class="mt-4">
             <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-1.5">AVANT DE TE DÉPLACER</div>
             <div class="text-[14px] text-[var(--color-roast)] leading-relaxed [&_ul]:list-disc [&_ul]:pl-5 [&_ul]:mt-1 [&_li]:mb-0.5 [&_strong]:text-[var(--color-espresso)] [&_p+p]:mt-1.5" v-html="place.conditions" />
@@ -706,9 +838,10 @@ useHead({
         <div class="text-center py-5 text-[var(--color-steam)] text-xl tracking-[4px] font-xl font-extrabold">· · ·</div>
 
         <!-- Vu dans -->
-        <div v-if="place.blogMentions.length" class="px-4 lg:px-0">
+        <div v-if="place.blogMentions.length || deskoverArticles?.length" class="px-4 lg:px-0">
           <div class="font-display text-[13px] text-[var(--color-steam)] tracking-[0.1em] mb-2.5">VU DANS</div>
           <div class="flex flex-col gap-2.5">
+            <!-- Mentions presse externes -->
             <a
               v-for="mention in place.blogMentions.slice(0, 3)"
               :key="mention.url"
@@ -721,6 +854,17 @@ useHead({
               <div class="text-sm text-[var(--color-espresso)] font-semibold mt-1">{{ mention.title }}</div>
               <div class="text-xs text-[var(--color-terracotta-500)] mt-1.5">Lire l'article →</div>
             </a>
+            <!-- Articles Deskover -->
+            <NuxtLink
+              v-for="article in deskoverArticles?.slice(0, Math.max(1, Math.min(2, place.blogMentions.length)))"
+              :key="article.slug"
+              :to="`/articles/${article.slug}`"
+              class="block bg-white rounded-[14px] p-4 shadow-[0_2px_8px_rgba(44,40,37,0.06)] hover:shadow-[0_4px_12px_rgba(44,40,37,0.1)] transition-shadow"
+            >
+              <div class="text-[10px] text-[var(--color-terracotta-500)] font-bold uppercase">Deskover</div>
+              <div class="text-sm text-[var(--color-espresso)] font-semibold mt-1">{{ article.title }}</div>
+              <div class="text-xs text-[var(--color-terracotta-500)] mt-1.5">Lire notre guide →</div>
+            </NuxtLink>
           </div>
         </div>
       </div>
@@ -905,6 +1049,10 @@ useHead({
                       </div>
                     </div>
                     <p v-if="!speedTestResult && !runningSpeedTest" class="text-[10px] text-[var(--color-steam)] text-center mt-1.5 italic">Vérifie que tu es sur le WiFi du lieu, pas en partage de co.</p>
+                    <label class="flex items-center gap-2 mt-2.5 cursor-pointer">
+                      <input v-model="wifiCaptif" type="checkbox" class="w-4 h-4 rounded border-[var(--color-steam)] text-[var(--color-terracotta-500)] focus:ring-[var(--color-terracotta-500)]">
+                      <span class="text-[11px] text-[var(--color-roast)]">WiFi avec portail captif (email ou identifiant requis)</span>
+                    </label>
                   </template>
 
                   <!-- NOT NEARBY: manual buttons -->
@@ -918,6 +1066,10 @@ useHead({
                       >{{ opt }}</button>
                     </div>
                     <p class="text-[10px] text-[var(--color-steam)] text-center mt-2 italic">N'indique la qualité du WiFi que si tu as vraiment testé</p>
+                    <label class="flex items-center gap-2 mt-2.5 cursor-pointer">
+                      <input v-model="wifiCaptif" type="checkbox" class="w-4 h-4 rounded border-[var(--color-steam)] text-[var(--color-terracotta-500)] focus:ring-[var(--color-terracotta-500)]">
+                      <span class="text-[11px] text-[var(--color-roast)]">WiFi avec portail captif (email ou identifiant requis)</span>
+                    </label>
                   </template>
                 </div>
 
@@ -1069,11 +1221,19 @@ useHead({
                   </p>
                 </div>
 
+                <div v-if="place.signals.includes('wifi_captif')" class="w-full flex items-center gap-2 mt-3 px-1">
+                  <UIcon name="lucide:shield-alert" class="w-4 h-4 text-[var(--color-edison)] flex-shrink-0" />
+                  <p class="text-xs text-[var(--color-roast)]">Portail captif : email ou identifiant requis pour se connecter</p>
+                </div>
+
                 <div class="w-full h-1 bg-[var(--color-parchment)] rounded-full mt-4">
                   <div class="h-full bg-[var(--color-monstera)] rounded-full" :style="{ width: place.speedTest.quality + '%' }" />
                 </div>
 
-                <p class="text-xs text-[var(--color-steam)] mt-2">Dernière mesure {{ place.speedTest.ago }}</p>
+                <p class="text-xs text-[var(--color-steam)] mt-2">
+                  Dernière mesure {{ place.speedTest.ago }}
+                  · {{ place.speedTestCount || 1 }} mesure{{ (place.speedTestCount || 1) > 1 ? 's' : '' }}
+                </p>
 
                 <button
                   v-if="isNearby"
@@ -1093,10 +1253,18 @@ useHead({
                   <UIcon name="lucide:radar" class="w-10 h-10 text-[var(--color-steam)]" />
                 </div>
 
-                <p class="text-[15px] font-semibold text-[var(--color-espresso)] mt-5">Pas encore de mesure</p>
-                <p class="text-[13px] text-[var(--color-steam)] text-center mt-2 leading-relaxed px-4">
-                  Sois le premier à tester le WiFi de ce lieu et aide la communauté !
-                </p>
+                <template v-if="place.signals.includes('wifi')">
+                  <p class="text-[15px] font-semibold text-[var(--color-espresso)] mt-5">WiFi disponible</p>
+                  <p class="text-[13px] text-[var(--color-steam)] text-center mt-2 leading-relaxed px-4">
+                    Signalé par nos sources mais pas encore mesuré par Deskover. Sois le premier !
+                  </p>
+                </template>
+                <template v-else>
+                  <p class="text-[15px] font-semibold text-[var(--color-espresso)] mt-5">Pas encore de mesure</p>
+                  <p class="text-[13px] text-[var(--color-steam)] text-center mt-2 leading-relaxed px-4">
+                    Sois le premier à tester le WiFi de ce lieu et aide la communauté !
+                  </p>
+                </template>
 
                 <button
                   v-if="isNearby"
@@ -1105,7 +1273,7 @@ useHead({
                   Lancer le premier test
                 </button>
                 <p v-else class="text-xs text-[var(--color-steam)] mt-5 text-center">
-                  Rends-toi sur place pour lancer un test WiFi
+                  Tu dois être sur place pour lancer un test WiFi
                 </p>
 
                 <button @click="showSpeedTest = false" class="text-sm font-semibold text-[var(--color-terracotta-500)] mt-4 pb-2">
@@ -1132,20 +1300,27 @@ useHead({
           <UIcon name="lucide:x" class="w-4 h-4 text-[var(--color-steam)]" />
         </button>
       </div>
-      <iframe
-        :src="mapsEmbedUrl"
-        class="w-full h-[380px] lg:h-[460px] border-0"
-        allowfullscreen
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-      />
-      <div class="px-5 py-4">
+      <div ref="modalMapContainer" class="w-full h-[380px] lg:h-[460px]" />
+      <div class="px-5 py-4 flex flex-col gap-3">
+        <!-- Route info -->
+        <div v-if="routeLoading" class="flex items-center gap-2 text-sm text-[var(--color-steam)]">
+          <div class="w-4 h-4 border-2 border-[var(--color-terracotta-500)] border-t-transparent rounded-full animate-spin" />
+          Calcul de l'itinéraire...
+        </div>
+        <div v-else-if="routeInfo" class="flex items-center gap-3 text-sm">
+          <div class="flex items-center gap-1.5 text-[var(--color-espresso)] font-semibold">
+            <UIcon name="lucide:footprints" class="w-4 h-4 text-[var(--color-terracotta-500)]" />
+            {{ routeInfo.duration }}
+          </div>
+          <span class="text-[var(--color-steam)]">·</span>
+          <span class="text-[var(--color-roast)]">{{ routeInfo.distance }}</span>
+        </div>
         <a
-          :href="place?.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place?.latitude},${place?.longitude}`"
+          :href="`https://maps.apple.com/?daddr=${place?.latitude},${place?.longitude}&dirflg=w`"
           target="_blank"
           class="block bg-[var(--color-espresso)] text-[var(--color-cream)] text-sm font-semibold py-3 rounded-[14px] text-center"
         >
-          Ouvrir dans Google Maps
+          Ouvrir l'itinéraire
         </a>
       </div>
     </div>
