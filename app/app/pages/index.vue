@@ -477,7 +477,8 @@ const articles = computed(() => {
       <DeskoverFooter class="mt-8" />
     </section>
 
-    <!-- Modal géolocalisation -->
+    <!-- Modal géolocalisation (ClientOnly pour éviter hydration mismatch en SSR) -->
+    <ClientOnly>
     <Teleport to="body">
       <div v-if="showGeoModal" class="fixed inset-0 z-[200] flex items-end lg:items-center justify-center">
         <div class="absolute inset-0 bg-black/40" @click="showGeoModal = false" />
@@ -574,6 +575,7 @@ const articles = computed(() => {
         </div>
       </div>
     </Teleport>
+    </ClientOnly>
   </div>
 </template>
 
