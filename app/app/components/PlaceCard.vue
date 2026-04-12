@@ -38,7 +38,7 @@ function startRotation() {
   if (timer || allImages.value.length <= 1) return
   timer = setInterval(() => {
     current.value = (current.value + 1) % allImages.value.length
-  }, 5000)
+  }, 12000)
 }
 
 function stopRotation() {
@@ -142,13 +142,14 @@ function onClickCapture(e: MouseEvent) {
   <article class="bg-white rounded-[20px] overflow-hidden shadow-[0_4px_16px_rgba(44,40,37,0.08)] cursor-pointer transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(44,40,37,0.12)] h-full flex flex-col">
     <!-- Image -->
     <div
-      class="relative h-[200px] overflow-hidden select-none"
+      class="relative h-[200px] overflow-hidden select-none no-callout"
       @touchstart.passive="onTouchStart"
       @touchmove.passive="onTouchMove"
       @touchend="onTouchEnd"
       @click.capture="onClickCapture"
+      @contextmenu.prevent
     >
-      <img :src="allImages[current]" :alt="place.name" :key="current" loading="lazy" draggable="false" class="w-full h-full object-cover transition-opacity duration-500 pointer-events-none">
+      <img :src="allImages[current]" :alt="place.name" :key="current" loading="lazy" draggable="false" class="w-full h-full object-cover transition-opacity duration-500 pointer-events-none no-callout">
       <!-- Tag -->
       <div v-if="place.tag" class="absolute top-3 left-3 flex items-center gap-1.5 px-3 rounded-lg text-white text-[10px] font-bold uppercase tracking-wide leading-[28px]" :style="{ background: place.tag === 'Deskovered #1' ? '#AA4C4D' : 'rgba(170,76,77,0.85)' }">
         <UIcon name="lucide:crown" class="w-3 h-3" />
@@ -178,3 +179,12 @@ function onClickCapture(e: MouseEvent) {
     </div>
   </article>
 </template>
+
+<style scoped>
+.no-callout {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
+</style>
