@@ -19,6 +19,8 @@ const quickFilters = [
 ]
 
 const activeQuickFilter = ref('recos')
+// Filtre affiché (titre + cards) : ne change qu'après le fetch des données
+const displayFilter = ref('recos')
 const showGeoModal = ref(false)
 const showGeoHelp = ref(false)
 
@@ -39,12 +41,24 @@ const geoHelpBrowser = computed(() => {
   return 'unknown'
 })
 
-function setQuickFilter(key: string) {
+function setQuickFilter(key: string, evt?: MouseEvent) {
   // Si "proche" et pas de coords, vérifier la permission géoloc
   if (key === 'proche' && !userCoords.value) {
     tryGeolocOrShowModal()
     return
   }
+
+  // Scroll the clicked pill into center BEFORE updating the active class
+  // (avoids layout shift glitch from class change affecting scroll calc)
+  const btn = evt?.currentTarget as HTMLElement | undefined
+  if (btn) {
+    const container = btn.parentElement
+    if (container) {
+      const target = btn.offsetLeft + btn.offsetWidth / 2 - container.clientWidth / 2
+      container.scrollTo({ left: target, behavior: 'smooth' })
+    }
+  }
+
   activeQuickFilter.value = activeQuickFilter.value === key ? 'recos' : key
 }
 
@@ -79,9 +93,10 @@ async function tryGeolocOrShowModal() {
 }
 
 const currentFilter = computed(() => quickFilters.find(f => f.key === activeQuickFilter.value) || quickFilters[0])
+const displayedFilter = computed(() => quickFilters.find(f => f.key === displayFilter.value) || quickFilters[0])
 
 const pageTitle = computed(() => {
-  switch (activeQuickFilter.value) {
+  switch (displayFilter.value) {
     case 'proche': return 'LES PLUS PROCHES'
     case 'wifi': return 'MEILLEUR WIFI'
     case 'calme': return 'BOSSER AU CALME'
@@ -97,8 +112,10 @@ const pageTitle = computed(() => {
 })
 
 const pageSubtitle = computed(() => {
-  switch (activeQuickFilter.value) {
-    case 'recos': return 'Les pépites choisies par Deskover.'
+  switch (displayFilter.value) {
+    case 'recos': return userCity.value
+      ? `Les pépites sélectionnées par Deskover autour de ${userCity.value}.`
+      : 'Les pépites sélectionnées par Deskover.'
     case 'proche': return 'Pour ta réunion qui commence dans 10 minutes.'
     case 'wifi': return 'Du débit, du vrai.'
     case 'calme': return 'Zéro bruit de fond, concentration maximale.'
@@ -120,8 +137,27 @@ const { data: rawPlaces, status } = await useAsyncData(
 )
 const loading = computed(() => status.value === 'pending')
 
+// Sync displayFilter with activeQuickFilter only when data is ready
+watch(status, (s) => {
+  if (s === 'success') displayFilter.value = activeQuickFilter.value
+})
+
 // Geolocation: enrich with distance + sort by proximity client-side
 const userCoords = ref<{ lat: number; lng: number } | null>(null)
+const userCity = ref<string | null>(null)
+const { public: { mapboxToken } } = useRuntimeConfig()
+
+async function reverseGeocode(lng: number, lat: number) {
+  try {
+    const res = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${lng},${lat}.json?access_token=${mapboxToken}&types=place,locality&language=fr`)
+    const data = await res.json()
+    const feature = data.features?.[0]
+    if (feature?.text) userCity.value = feature.text
+  }
+  catch {
+    // ignore
+  }
+}
 
 function haversineKm(lat1: number, lon1: number, lat2: number, lon2: number): number {
   const R = 6371
@@ -141,12 +177,12 @@ const places = computed(() => {
   let list = rawPlaces.value || []
 
   // Deskovered tags only for "Nos recos"
-  if (activeQuickFilter.value !== 'recos') {
+  if (displayFilter.value !== 'recos') {
     list = list.map(p => p.tag ? { ...p, tag: undefined } : p)
   }
 
   // Filter open only
-  if (currentFilter.value.openOnly) {
+  if (displayedFilter.value.openOnly) {
     list = list.filter(p => p.isOpen !== false)
   }
 
@@ -162,13 +198,13 @@ const places = computed(() => {
 
   // Ne montrer que les lieux à moins de 10 km (sauf "Le plus proche" qui montre tout trié)
   const MAX_KM = 10
-  if (currentFilter.value.sort !== 'distance') {
+  if (displayedFilter.value.sort !== 'distance') {
     const nearby = withDist.filter(p => p._distKm <= MAX_KM)
     if (nearby.length >= 3) withDist = nearby
   }
 
   // Sort by distance only when "Le plus proche" is active
-  if (currentFilter.value.sort === 'distance') {
+  if (displayedFilter.value.sort === 'distance') {
     return withDist.sort((a, b) => a._distKm - b._distKm)
   }
 
@@ -178,7 +214,10 @@ const places = computed(() => {
 onMounted(() => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
-      (pos) => { userCoords.value = { lat: pos.coords.latitude, lng: pos.coords.longitude } },
+      (pos) => {
+        userCoords.value = { lat: pos.coords.latitude, lng: pos.coords.longitude }
+        reverseGeocode(pos.coords.longitude, pos.coords.latitude)
+      },
       () => {},
       { timeout: 5000 }
     )
@@ -378,7 +417,7 @@ const articles = computed(() => {
             :class="activeQuickFilter === qf.key
               ? 'bg-[var(--color-espresso)] text-white border-[var(--color-espresso)] shadow-[0_2px_8px_rgba(44,40,37,0.2)]'
               : 'bg-white text-[var(--color-roast)] border-[var(--color-parchment)]'"
-            @click="setQuickFilter(qf.key)"
+            @click="setQuickFilter(qf.key, $event)"
           >
             <UIcon :name="qf.icon" class="w-4 h-4" />
             {{ qf.label }}
@@ -389,7 +428,7 @@ const articles = computed(() => {
       <!-- Titre -->
       <div class="px-4 pb-1 lg:container-deskover">
         <h2 class="font-display text-xl text-[var(--color-espresso)] tracking-[0.04em]">{{ pageTitle }}</h2>
-        <p v-if="pageSubtitle" class="text-[13px] text-[var(--color-roast)] mt-1.5 leading-relaxed">{{ pageSubtitle }}</p>
+        <p class="text-[13px] text-[var(--color-roast)] mt-1.5 leading-tight min-h-[2.8em]">{{ pageSubtitle }}</p>
       </div>
 
       <FabCarte />
@@ -406,13 +445,13 @@ const articles = computed(() => {
             name: place.name,
             type: place.category === 'coffee_shop' ? 'Coffee Shop' : place.category === 'cafe' ? 'Café' : place.category === 'coworking' ? 'Coworking' : place.category === 'tiers_lieu' ? 'Tiers-lieu' : place.category,
             neighborhood: '',
-            city: place.address || place.city,
+            city: (place.address || place.city).replace(/,\s*France\s*$/i, ''),
             distance: place.distance || '',
             isOpen: place.isOpen ?? true,
             nextOpen: place.nextOpen,
             tag: place.tag,
-            image: place.cardUrl || place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop',
-            images: [],
+            image: place.cardUrl || place.photoUrl || place.photos?.[0] || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop',
+            images: place.photos || [],
             vitals: place.vitals
           }" />
         </NuxtLink>

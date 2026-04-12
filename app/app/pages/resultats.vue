@@ -3,7 +3,7 @@ import type { PlaceFilters } from '~/domain/models/Place'
 
 const route = useRoute()
 const router = useRouter()
-const { getAll, getByCity, getCities } = usePlaces()
+const { getAll, getByCity, getCities, getNearby } = usePlaces()
 const client = useSupabaseClient()
 
 // --- Read query params ---
@@ -107,8 +107,44 @@ function formatDistance(km: number): string {
 
 // --- Filter + proximity logic ---
 const CITY_RADIUS_KM = 30
+const EXPANDED_RADIUS_KM = 50
 const filtersRelaxed = ref(false)
 const expanded = ref(false)
+const userExpanded = ref(false)
+const expandedCoords = ref<{ lat: number; lng: number } | null>(null)
+const expandedPlaces = ref<any[]>([])
+const expanding = ref(false)
+const { public: { mapboxToken } } = useRuntimeConfig()
+
+async function expandSearch() {
+  expanding.value = true
+  try {
+    // Get center coords: use searchLat/Lng if available, else geocode searchQuery via Mapbox
+    let lat = searchLat.value
+    let lng = searchLng.value
+    if ((!lat || !lng) && searchQuery.value) {
+      const res = await fetch(`https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(searchQuery.value)}.json?country=FR&access_token=${mapboxToken}&limit=1`)
+      const data = await res.json()
+      const feat = data.features?.[0]
+      if (feat) {
+        lng = feat.center[0]
+        lat = feat.center[1]
+      }
+    }
+    if (!lat || !lng) {
+      expanding.value = false
+      return
+    }
+    expandedCoords.value = { lat, lng }
+    // Bounding-box fetch to get all places within the expanded radius
+    const nearby = await getNearby(lat, lng, EXPANDED_RADIUS_KM, searchFilters.value)
+    expandedPlaces.value = nearby
+    userExpanded.value = true
+  }
+  finally {
+    expanding.value = false
+  }
+}
 
 function normalize(s: string) {
   return s.toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')
@@ -125,9 +161,10 @@ function enrichWithDistance(items: typeof rawFiltered.value) {
   }))
 
   // If we matched a city via city_key, no need to filter by distance — Supabase already filtered
-  // If no city match and we have coords, filter by radius
+  // If no city match and we have coords, filter by radius (elargi si "Élargir la recherche" cliqué)
   if (!citySlug.value && hasGeo) {
-    enriched = enriched.filter(p => p._distKm <= CITY_RADIUS_KM)
+    const radius = userExpanded.value ? EXPANDED_RADIUS_KM : CITY_RADIUS_KM
+    enriched = enriched.filter(p => p._distKm <= radius)
   }
 
   if (hasGeo) {
@@ -140,6 +177,24 @@ function enrichWithDistance(items: typeof rawFiltered.value) {
 const places = computed(() => {
   filtersRelaxed.value = false
   expanded.value = false
+
+  // Expanded mode: user clicked "Élargir la recherche"
+  if (userExpanded.value && expandedCoords.value) {
+    const { lat, lng } = expandedCoords.value
+    const refCity = searchQuery.value
+    let results = expandedPlaces.value.map(p => {
+      const dist = haversineKm(lat, lng, p.latitude, p.longitude)
+      return {
+        ...p,
+        _distKm: dist,
+        distance: refCity ? `${formatDistance(dist)} de ${refCity}` : formatDistance(dist)
+      }
+    })
+    results = results.filter(p => p._distKm <= EXPANDED_RADIUS_KM)
+    if (isOpenOnly.value) results = results.filter(p => p.isOpen !== false)
+    results.sort((a, b) => a._distKm - b._distKm)
+    return results
+  }
 
   // Step 1: filter by proximity + Supabase filters
   let results = enrichWithDistance(rawFiltered.value)
@@ -273,7 +328,14 @@ useSeoMeta({
         </NuxtLink>
         <div class="flex-1 min-w-0">
           <h1 class="font-display text-[18px] text-[var(--color-espresso)] truncate">{{ searchQuery || 'Résultats' }}</h1>
-          <p class="text-[12px] text-[var(--color-steam)]">{{ places.length }} lieu{{ places.length > 1 ? 'x' : '' }} trouvé{{ places.length > 1 ? 's' : '' }}</p>
+          <p class="text-[12px] text-[var(--color-steam)]">
+            <template v-if="userExpanded">
+              {{ places.length }} lieu{{ places.length > 1 ? 'x' : '' }} à moins de 50 km{{ searchQuery ? ` de ${searchQuery}` : '' }}
+            </template>
+            <template v-else>
+              {{ places.length }} lieu{{ places.length > 1 ? 'x' : '' }} trouvé{{ places.length > 1 ? 's' : '' }}
+            </template>
+          </p>
         </div>
         <NuxtLink :to="searchLink" class="w-10 h-10 rounded-full bg-[var(--color-linen)] flex items-center justify-center flex-shrink-0">
           <UIcon name="lucide:sliders-horizontal" class="w-5 h-5 text-[var(--color-espresso)]" />
@@ -290,7 +352,14 @@ useSeoMeta({
           </NuxtLink>
           <div>
             <h1 class="font-display text-[28px] text-[var(--color-espresso)]">{{ searchQuery || 'Résultats' }}</h1>
-            <p class="text-[13px] text-[var(--color-steam)] mt-0.5">{{ places.length }} lieu{{ places.length > 1 ? 'x' : '' }} trouvé{{ places.length > 1 ? 's' : '' }}</p>
+            <p class="text-[13px] text-[var(--color-steam)] mt-0.5">
+              <template v-if="userExpanded">
+                {{ places.length }} lieu{{ places.length > 1 ? 'x' : '' }} à moins de 50 km{{ searchQuery ? ` de ${searchQuery}` : '' }}
+              </template>
+              <template v-else>
+                {{ places.length }} lieu{{ places.length > 1 ? 'x' : '' }} trouvé{{ places.length > 1 ? 's' : '' }}
+              </template>
+            </p>
           </div>
         </div>
         <NuxtLink :to="searchLink" class="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-[var(--color-linen)] text-[var(--color-espresso)] text-sm font-semibold hover:bg-[var(--color-parchment)] transition-colors">
@@ -343,12 +412,12 @@ useSeoMeta({
           name: place.name,
           type: categoryLabel(place.category),
           neighborhood: '',
-          city: place.address || place.city,
+          city: (place.address || place.city).replace(/,\s*France\s*$/i, ''),
           distance: place.distance || '',
           isOpen: place.isOpen ?? true,
           nextOpen: place.nextOpen,
-          image: place.cardUrl || place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop',
-          images: [],
+          image: place.cardUrl || place.photoUrl || place.photos?.[0] || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop',
+          images: place.photos || [],
           vitals: place.vitals
         }" />
       </NuxtLink>
@@ -378,13 +447,13 @@ useSeoMeta({
     </div>
 
     <!-- Empty state -->
-    <div v-else class="px-5 pt-16 text-center lg:max-w-[500px] lg:mx-auto">
+    <div v-if="!places.length" class="px-5 pt-16 text-center lg:max-w-[500px] lg:mx-auto">
       <div class="w-20 h-20 rounded-full bg-[var(--color-linen)] flex items-center justify-center mx-auto">
         <UIcon name="lucide:map-pin-off" class="w-10 h-10 text-[var(--color-steam)]" />
       </div>
       <h2 class="font-display text-[20px] text-[var(--color-espresso)] mt-5">Pas encore de spot{{ searchQuery ? ` à ${searchQuery}` : '' }}</h2>
 
-      <p class="text-[14px] text-[var(--color-roast)] mt-2 leading-relaxed">
+      <p v-if="!requestSent" class="text-[14px] text-[var(--color-roast)] mt-2 leading-relaxed">
         Clique ci-dessous pour qu'on en cherche pour toi.
       </p>
 
@@ -403,12 +472,8 @@ useSeoMeta({
 
       <!-- Step 2: Request sent, show email field -->
       <div v-else-if="!emailSent" class="mt-6">
-        <div class="flex items-center justify-center gap-2 text-[var(--color-monstera)] mb-5">
-          <UIcon name="lucide:check-circle" class="w-5 h-5" />
-          <span class="text-sm font-semibold">C'est noté, on va chercher !</span>
-        </div>
         <p class="text-[14px] text-[var(--color-roast)] mb-3 leading-relaxed">
-          Saisis ton email pour recevoir un message quand on aura trouvé.
+          On lance les recherches. <br>On te prévient quand on a trouvé ?
         </p>
         <div class="flex gap-2 max-w-[360px] mx-auto">
           <input
@@ -434,12 +499,14 @@ useSeoMeta({
         <span class="text-sm font-semibold">On te prévient dès qu'on a trouvé !</span>
       </div>
 
-      <NuxtLink
-        to="/"
-        class="inline-block mt-8 text-sm font-semibold text-[var(--color-terracotta-500)]"
+      <button
+        v-if="!userExpanded"
+        class="inline-block mt-8 text-sm font-semibold text-[var(--color-terracotta-500)] disabled:opacity-60"
+        :disabled="expanding"
+        @click="expandSearch"
       >
-        Voir tous les spots
-      </NuxtLink>
+        {{ expanding ? 'Recherche…' : 'Élargir la recherche' }}
+      </button>
     </div>
 
     <FabCarte />

@@ -54,6 +54,7 @@ const { data: deskoverArticles } = await useAsyncData(
 )
 
 const loading = computed(() => status.value === 'pending')
+const cleanAddress = computed(() => (place.value?.address || '').replace(/,\s*France\s*$/i, ''))
 const showSpeedTest = ref(false)
 const showContribute = ref(false)
 const isNearby = ref(false)
@@ -797,7 +798,7 @@ useHead({
             <div class="flex items-start gap-3">
               <UIcon name="lucide:map-pin" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0 mt-0.5" />
               <div>
-                <a :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`" target="_blank" class="text-sm text-[var(--color-roast)]">{{ place.address }}</a>
+                <a :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`" target="_blank" class="text-sm text-[var(--color-roast)]">{{ cleanAddress }}</a>
                 <button @click="showMapModal = true" class="text-sm font-semibold text-[var(--color-terracotta-500)] mt-0.5 block">J'y vais →</button>
               </div>
             </div>
@@ -879,7 +880,7 @@ useHead({
               <div class="flex items-start gap-3">
                 <UIcon name="lucide:map-pin" class="w-[18px] h-[18px] text-[var(--color-steam)] flex-shrink-0 mt-0.5" />
                 <div>
-                  <a :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`" target="_blank" class="text-sm text-[var(--color-roast)]">{{ place.address }}</a>
+                  <a :href="place.googleMapsUrl || `https://www.google.com/maps/search/?api=1&query=${place.latitude},${place.longitude}`" target="_blank" class="text-sm text-[var(--color-roast)]">{{ cleanAddress }}</a>
                   <button @click="showMapModal = true" class="text-sm font-semibold text-[var(--color-terracotta-500)] mt-0.5 block">J'y vais →</button>
                 </div>
               </div>

@@ -33,6 +33,8 @@ function rowToPlace(row: any): Place {
     opening_hours: row.opening_hours || [],
     business_status: row.business_status || '',
     status: row.status || '',
+    source: row.source || null,
+    created_at: row.created_at || null,
     instagram: row.instagram_handle || '',
     curation_score: row.curation_score ?? 0,
     photos: row.photos || [],

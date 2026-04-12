@@ -42,6 +42,7 @@ onMounted(async () => {
   const { data, error } = await supabase
     .from('ratings')
     .select('id, fingerprint, wifi, power, pricing, mood, created_at, place_id, place:places(id, name, city, slug)')
+    .or('source.is.null,source.neq.creation')
     .order('created_at', { ascending: false })
     .limit(500)
 

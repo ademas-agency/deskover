@@ -362,13 +362,13 @@ useHead({
                 name: place.name,
                 type: categoryLabel(place.category),
                 neighborhood: '',
-                city: place.address || place.city,
+                city: (place.address || place.city).replace(/,\s*France\s*$/i, ''),
                 distance: '',
                 isOpen: place.isOpen ?? true,
                 nextOpen: place.nextOpen,
                 tag: i === 0 ? 'Deskovered #1' : i === 1 ? 'Deskovered #2' : i === 2 ? 'Deskovered #3' : undefined,
-                image: place.cardUrl || place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop',
-                images: [],
+                image: place.cardUrl || place.photoUrl || place.photos?.[0] || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop',
+                images: place.photos || [],
                 vitals: place.vitals,
               }"
             />

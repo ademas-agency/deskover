@@ -31,6 +31,8 @@ export interface Place {
   opening_hours: string[]
   business_status: string
   status: string
+  source: string | null
+  created_at: string | null
   instagram: string
   conditions: string
   food_type: string

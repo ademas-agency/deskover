@@ -18,6 +18,8 @@ export function usePlaces() {
   return {
     getAll: (filters?: PlaceFilters, sortBy?: PlaceSortBy) => repo.getAll(filters, sortBy),
     getAllForMap: () => (repo as SupabasePlaceRepository).getAllForMap(),
+    getNearby: (lat: number, lng: number, radiusKm: number, filters?: PlaceFilters) =>
+      (repo as SupabasePlaceRepository).getNearby(lat, lng, radiusKm, filters),
     getById: (id: string) => repo.getById(id),
     getBySlug: (slug: string) => (repo as SupabasePlaceRepository).getBySlug(slug),
     getSimilar: (place: Place, limit?: number) => (repo as SupabasePlaceRepository).getSimilar(place, limit),

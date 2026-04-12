@@ -32,25 +32,31 @@ function signalToVitals(signals: string[]): Vital[] {
   ]
 }
 
+// Detect generic fallback URLs that shouldn't be used as a place's photo
+function isFallbackUrl(url?: string | null): boolean {
+  if (!url) return true
+  return /unsplash\.com\/photo-1554118811/.test(url)
+}
+
 function getPhotoUrl(row: any): string | undefined {
   if (row.photo_storage_path) {
     return `${SUPABASE_STORAGE_URL}/${row.photo_storage_path}`
   }
-  return row.photo_url || undefined
+  return !isFallbackUrl(row.photo_url) ? row.photo_url : undefined
 }
 
 function getCardUrl(row: any): string | undefined {
   if (row.photo_storage_path) {
     return `${SUPABASE_STORAGE_URL.replace('/object/public/', '/render/image/public/')}/${row.photo_storage_path}?width=400&height=300&resize=cover&quality=75`
   }
-  return row.photo_url || undefined
+  return !isFallbackUrl(row.photo_url) ? row.photo_url : undefined
 }
 
 function getThumbUrl(row: any): string | undefined {
   if (row.photo_storage_path) {
     return `${SUPABASE_STORAGE_URL.replace('/object/public/', '/render/image/public/')}/${row.photo_storage_path}?width=100&height=100&resize=cover`
   }
-  return row.photo_url || undefined
+  return !isFallbackUrl(row.photo_url) ? row.photo_url : undefined
 }
 
 const DAYS_FR = ['dimanche', 'lundi', 'mardi', 'mercredi', 'jeudi', 'vendredi', 'samedi']
@@ -239,6 +245,34 @@ export class SupabasePlaceRepository implements PlaceRepository {
     return places
   }
 
+  async getNearby(lat: number, lng: number, radiusKm: number, filters?: PlaceFilters): Promise<Place[]> {
+    // Bounding-box filter for efficiency; precise radius filter happens client-side
+    const dLat = radiusKm / 111
+    const dLng = radiusKm / (111 * Math.cos(lat * Math.PI / 180))
+
+    let query = this.client
+      .from('places')
+      .select('*, blog_mentions(*)')
+      .eq('status', 'approved')
+      .neq('business_status', 'CLOSED_PERMANENTLY')
+      .gte('latitude', lat - dLat)
+      .lte('latitude', lat + dLat)
+      .gte('longitude', lng - dLng)
+      .lte('longitude', lng + dLng)
+
+    query = this.applyFilters(query, filters)
+    query = query.limit(500)
+
+    const { data, error } = await query
+    if (error) throw error
+
+    const places = (data || []).map((row: any, i: number) =>
+      rowToPlace(row, i, row.blog_mentions)
+    )
+    await this.attachWifiLabels(places)
+    return places
+  }
+
   async getAllForMap(): Promise<Place[]> {
     const { data, error } = await this.client
       .from('places')
@@ -248,9 +282,11 @@ export class SupabasePlaceRepository implements PlaceRepository {
 
     if (error) throw error
 
-    return (data || []).map((row: any, i: number) =>
+    const places = (data || []).map((row: any, i: number) =>
       rowToPlace(row, i)
     )
+    await this.attachWifiLabels(places)
+    return places
   }
 
   async getById(id: string): Promise<Place | null> {

@@ -13,6 +13,7 @@ export const useRatingsNotificationsStore = defineStore('ratingsNotifications', 
       .from('ratings')
       .select('id', { count: 'exact', head: true })
       .gt('created_at', lastSeenAt.value)
+      .or('source.is.null,source.neq.creation')
 
     if (!error) unreadCount.value = count || 0
   }

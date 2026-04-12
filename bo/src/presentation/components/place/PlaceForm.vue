@@ -603,7 +603,7 @@ function handleSave() {
         <div>
           <p class="text-xs font-semibold text-steam uppercase tracking-wide mb-2">Validation du lieu</p>
           <p class="text-xs text-steam mb-3">
-            Date à laquelle l'équipe Deskover est allée tester ce lieu sur place. Affiche un sceau « Validé par Deskover » sur la fiche.
+            Date à laquelle l'équipe Deskover est allée tester ce lieu sur place.
           </p>
           <div class="flex items-end gap-3 flex-wrap">
             <div class="flex-1 min-w-[200px]">

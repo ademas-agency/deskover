@@ -16,6 +16,11 @@ const form = reactive({
 const submitting = ref(false)
 const error = ref('')
 const step = ref(1) // 1 = infos, 2 = critères, 3 = envoyé
+const createdPlaceId = ref<string | null>(null)
+const emailNotify = ref('')
+const emailSaved = ref(false)
+const emailSaving = ref(false)
+const emailError = ref('')
 
 const categories = [
   { value: 'cafe', label: 'Café', icon: 'lucide:coffee' },
@@ -111,12 +116,16 @@ async function submit() {
   }).select('id').single()
 
   if (err) {
-    error.value = 'Oups, une erreur est survenue.'
+    console.error('[ajouter] insert place error:', err)
+    error.value = `Erreur : ${err.message || 'inconnue'}`
     submitting.value = false
     return
   }
 
-  // Ajouter la notation initiale
+  createdPlaceId.value = data?.id || null
+
+  // Enregistrer les critères donnés par le créateur (marqué source='creation' pour
+  // ne pas polluer la vue Avis du BO)
   if (data?.id && (form.wifi || form.power || form.pricing || form.mood)) {
     const wifiMap: Record<string, number> = { 'Faible': 1, 'Bon': 2, 'Rapide': 3 }
     const powerMap: Record<string, number> = { 'Aucune': 1, 'Quelques-unes': 2, 'Plein': 3 }
@@ -130,11 +139,35 @@ async function submit() {
       power: form.power ? powerMap[form.power] : null,
       pricing: form.pricing ? pricingMap[form.pricing] : null,
       mood: form.mood ? moodMap[form.mood] : null,
+      source: 'creation',
     })
   }
 
   submitting.value = false
   step.value = 3
+}
+
+async function saveEmail() {
+  emailError.value = ''
+  const email = emailNotify.value.trim()
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    emailError.value = 'Email invalide'
+    return
+  }
+  if (!createdPlaceId.value) return
+
+  emailSaving.value = true
+  const { error: err } = await client
+    .from('places')
+    .update({ submitter_email: email })
+    .eq('id', createdPlaceId.value)
+
+  emailSaving.value = false
+  if (err) {
+    emailError.value = 'Oups, une erreur est survenue.'
+    return
+  }
+  emailSaved.value = true
 }
 
 useSeoMeta({
@@ -265,12 +298,34 @@ useSeoMeta({
       <p class="text-[14px] text-[var(--color-roast)] mt-2 leading-relaxed">
         On vérifie les infos et {{ form.name }} sera visible très vite.
       </p>
-      <button
-        @click="router.back()"
-        class="inline-block mt-8 px-8 py-3.5 rounded-2xl bg-[var(--color-terracotta-500)] text-white text-sm font-bold"
-      >
-        Retour
-      </button>
+
+      <!-- Email notification -->
+      <div v-if="!emailSaved" class="mt-8 bg-white rounded-2xl p-5 shadow-[0_2px_8px_rgba(44,40,37,0.06)] text-left">
+        <p class="text-[14px] font-semibold text-[var(--color-espresso)]">
+          Donne-nous ton email, on te prévient quand c'est validé.
+        </p>
+        <div class="flex gap-2 mt-3">
+          <input
+            v-model="emailNotify"
+            type="email"
+            placeholder="ton@email.com"
+            class="flex-1 bg-[var(--color-linen)] rounded-xl px-4 py-3 text-[14px] text-[var(--color-espresso)] placeholder:text-[var(--color-steam)] outline-none"
+            @keydown.enter="saveEmail"
+          >
+          <button
+            class="px-4 py-3 rounded-xl bg-[var(--color-terracotta-500)] text-white text-sm font-bold disabled:opacity-50"
+            :disabled="emailSaving || !emailNotify"
+            @click="saveEmail"
+          >
+            {{ emailSaving ? '...' : 'OK' }}
+          </button>
+        </div>
+        <p v-if="emailError" class="text-xs text-[var(--color-terracotta-500)] mt-2">{{ emailError }}</p>
+      </div>
+      <div v-else class="mt-8 flex items-center justify-center gap-2 text-[14px] text-[var(--color-monstera)]">
+        <UIcon name="lucide:check" class="w-4 h-4" />
+        C'est noté, on te prévient par email.
+      </div>
     </div>
   </div>
 </template>

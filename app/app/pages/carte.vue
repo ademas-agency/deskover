@@ -423,63 +423,23 @@ function categoryLabel(cat: string) {
       leave-to-class="translate-y-full opacity-0"
     >
       <div v-if="showCard && selectedPlace" class="absolute bottom-6 left-4 right-4 lg:left-auto lg:right-6 lg:w-[400px] z-20">
-        <div class="bg-white rounded-[20px] shadow-2xl overflow-hidden relative cursor-pointer" @click="goToPlace">
-          <!-- Photo slider -->
-          <div class="h-[180px] relative overflow-hidden">
-            <div
-              ref="photoSlider"
-              class="flex h-full overflow-x-auto snap-x snap-mandatory no-scrollbar"
-              @click.stop
-            >
-              <div
-                v-for="(photo, idx) in selectedPlacePhotos"
-                :key="idx"
-                class="w-full h-full flex-shrink-0 snap-center"
-                @click="goToPlace"
-              >
-                <img
-                  :src="photo"
-                  :alt="selectedPlace.name"
-                  class="w-full h-full object-cover"
-                >
-              </div>
-            </div>
-            <div class="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
-            <!-- Carousel arrows -->
-            <template v-if="selectedPlacePhotos.length > 1">
-              <button
-                class="absolute left-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center hover:bg-black/50 transition-colors"
-                @click.stop="currentPhotoIdx = (currentPhotoIdx - 1 + selectedPlacePhotos.length) % selectedPlacePhotos.length; photoSlider?.scrollTo({ left: currentPhotoIdx * photoSlider!.clientWidth, behavior: 'smooth' })"
-              >
-                <UIcon name="lucide:chevron-left" class="w-4 h-4 text-white" />
-              </button>
-              <button
-                class="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center hover:bg-black/50 transition-colors"
-                @click.stop="currentPhotoIdx = (currentPhotoIdx + 1) % selectedPlacePhotos.length; photoSlider?.scrollTo({ left: currentPhotoIdx * photoSlider!.clientWidth, behavior: 'smooth' })"
-              >
-                <UIcon name="lucide:chevron-right" class="w-4 h-4 text-white" />
-              </button>
-            </template>
-            <!-- Dots indicator -->
-            <div v-if="selectedPlacePhotos.length > 1" class="absolute bottom-12 left-0 right-0 flex justify-center gap-1.5 pointer-events-none">
-              <span
-                v-for="(_, idx) in selectedPlacePhotos"
-                :key="idx"
-                class="w-1.5 h-1.5 rounded-full"
-                :class="idx === currentPhotoIdx ? 'bg-white' : 'bg-white/50'"
-              />
-            </div>
-            <div class="absolute bottom-3 left-4 right-4 pointer-events-none">
-              <div class="font-display text-lg text-white leading-tight">{{ selectedPlace.name }}</div>
-              <div class="text-[11px] text-white/80 mt-0.5">{{ categoryLabel(selectedPlace.category) }} · {{ selectedPlace.city }}</div>
-            </div>
-          </div>
-          <!-- Vitals -->
-          <div class="p-3">
-            <PlaceVitals :vitals="selectedPlace.vitals" size="sm" />
-          </div>
+        <div class="relative" @click="goToPlace">
+          <PlaceCard
+            :place="{
+              name: selectedPlace.name,
+              type: categoryLabel(selectedPlace.category),
+              neighborhood: '',
+              city: selectedPlace.city,
+              distance: '',
+              isOpen: selectedPlace.isOpen ?? true,
+              nextOpen: selectedPlace.nextOpen,
+              image: selectedPlace.cardUrl || selectedPlace.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop',
+              images: selectedPlace.photos || [],
+              vitals: selectedPlace.vitals,
+            }"
+          />
           <!-- Close -->
-          <button class="absolute top-2.5 right-2.5 w-8 h-8 rounded-full bg-black/20 backdrop-blur-md flex items-center justify-center" @click.stop="closeCard">
+          <button class="absolute top-3 right-14 w-8 h-8 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center z-10" @click.stop="closeCard">
             <UIcon name="lucide:x" class="w-4 h-4 text-white" />
           </button>
         </div>
