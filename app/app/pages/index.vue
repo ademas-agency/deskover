@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import type { PlaceFilters } from '~/domain/models/Place'
 
-const { getAll } = usePlaces()
+const { getAll, getNearby } = usePlaces()
 
 // Quick filter cards — editorial picks that combine filter + sort
 const quickFilters = [
@@ -130,21 +130,81 @@ const pageSubtitle = computed(() => {
   }
 })
 
+// Single fetch (top 100 curated, sans filtre) — tous les filtres sont appliqués
+// client-side pour permettre la dédup "top 3 unique par filtre".
 const { data: rawPlaces, status } = await useAsyncData(
   'home-places',
-  () => getAll(currentFilter.value.filter, currentFilter.value.sort),
-  { watch: [currentFilter] }
+  () => getAll({}, 'relevance')
 )
 const loading = computed(() => status.value === 'pending')
 
-// Sync displayFilter with activeQuickFilter only when data is ready
+// Sync displayFilter avec activeQuickFilter (filtre purement client-side)
+watch(activeQuickFilter, (v) => {
+  if (status.value === 'success') displayFilter.value = v
+})
 watch(status, (s) => {
   if (s === 'success') displayFilter.value = activeQuickFilter.value
+})
+
+// Matches a place against a filter's criteria (client-side)
+function matchesFilter(p: any, key: string): boolean {
+  const qf = quickFilters.find(x => x.key === key)
+  const f = qf?.filter || {}
+  if (qf?.openOnly && p.isOpen === false) return false
+  if (f.wifi && !p.signals?.includes('wifi')) return false
+  if (f.prises && !p.signals?.includes('prises')) return false
+  if (f.food && !p.signals?.includes('food')) return false
+  if (f.calme && !p.signals?.includes('calme')) return false
+  if (f.terrasse && !p.signals?.includes('terrasse')) return false
+  if (f.insolite && !p.signals?.includes('insolite')) return false
+  if (f.gratuit && (p.signals?.includes('payant') || p.signals?.includes('reservation'))) return false
+  if (f.category && p.category !== f.category) return false
+  return true
+}
+
+// Top 3 unique par filtre : on parcourt les filtres dans un ordre de priorité,
+// chacun s'attribue ses 3 meilleurs lieux disponibles (non claim par un filtre prioritaire).
+// Map<placeId, filterKey> → ce lieu est top 3 de ce filtre.
+const topClaims = computed(() => {
+  const map = new Map<string, string>()
+  if (!rawPlaces.value?.length) return map
+
+  // Priorité : recos en premier (Deskovered #1/2/3), puis filtres "thématiques",
+  // puis catégories. 'proche' n'apparaît pas car il a son propre dataset.
+  const priority = ['recos', 'ouvert', 'wifi', 'calme', 'terrasse', 'food', 'coworking', 'cafe', 'gratuit', 'insolite']
+  const claimed = new Set<string>()
+
+  for (const key of priority) {
+    let pool = (rawPlaces.value || []).filter(p => matchesFilter(p, key))
+    // Pour le filtre 'wifi', on classe par débit avant d'attribuer
+    if (key === 'wifi') {
+      pool = [...pool].sort((a, b) => ((b as any)._wifiDownload || 0) - ((a as any)._wifiDownload || 0))
+    }
+    let taken = 0
+    for (const p of pool) {
+      if (claimed.has(p.id)) continue
+      map.set(p.id, key)
+      claimed.add(p.id)
+      taken++
+      if (taken >= 3) break
+    }
+  }
+  return map
 })
 
 // Geolocation: enrich with distance + sort by proximity client-side
 const userCoords = ref<{ lat: number; lng: number } | null>(null)
 const userCity = ref<string | null>(null)
+
+// Fetch dédié pour "Les plus proches" : prend dans TOUT le dataset (pas juste le top 100 curated)
+// Bounding-box large (50 km), tri par distance fait client-side
+const { data: nearestPlaces } = await useAsyncData(
+  'home-nearest',
+  () => userCoords.value
+    ? getNearby(userCoords.value.lat, userCoords.value.lng, 50)
+    : Promise.resolve([]),
+  { watch: [userCoords], server: false }
+)
 const { public: { mapboxToken } } = useRuntimeConfig()
 
 async function reverseGeocode(lng: number, lat: number) {
@@ -174,17 +234,44 @@ function formatDistance(km: number): string {
 }
 
 const places = computed(() => {
-  let list = rawPlaces.value || []
+  // "Les plus proches" : dataset géographique séparé, tri par distance, aucun autre filtre
+  if (displayedFilter.value.sort === 'distance' && userCoords.value && nearestPlaces.value?.length) {
+    const { lat, lng } = userCoords.value
+    return nearestPlaces.value
+      .map(p => ({
+        ...p,
+        tag: undefined,
+        _distKm: haversineKm(lat, lng, p.latitude, p.longitude),
+        distance: formatDistance(haversineKm(lat, lng, p.latitude, p.longitude)),
+      }))
+      .sort((a, b) => a._distKm - b._distKm)
+  }
 
-  // Deskovered tags only for "Nos recos"
-  if (displayFilter.value !== 'recos') {
+  const currentKey = displayFilter.value
+
+  // Filtrage client-side
+  let list = (rawPlaces.value || []).filter(p => matchesFilter(p, currentKey))
+
+  // Place d'abord les "top 3" claim de ce filtre (max 3), puis le reste
+  const claimedHere = list.filter(p => topClaims.value.get(p.id) === currentKey)
+  const rest = list.filter(p => topClaims.value.get(p.id) !== currentKey)
+  // Tri spécial pour le filtre wifi : par débit
+  if (currentKey === 'wifi') {
+    rest.sort((a, b) => ((b as any)._wifiDownload || 0) - ((a as any)._wifiDownload || 0))
+  }
+  list = [...claimedHere, ...rest]
+
+  // Deskovered tags pour "Nos recos" uniquement (positions 1-3)
+  if (currentKey === 'recos') {
+    list = list.map((p, i) => ({
+      ...p,
+      tag: i === 0 ? 'Deskovered #1' : i === 1 ? 'Deskovered #2' : i === 2 ? 'Deskovered #3' : undefined
+    }))
+  } else {
     list = list.map(p => p.tag ? { ...p, tag: undefined } : p)
   }
 
-  // Filter open only
-  if (displayedFilter.value.openOnly) {
-    list = list.filter(p => p.isOpen !== false)
-  }
+  // (le filtre openOnly est déjà appliqué via matchesFilter)
 
   // Enrich with distance if geoloc available
   if (!userCoords.value) return list
@@ -196,17 +283,10 @@ const places = computed(() => {
     distance: formatDistance(haversineKm(lat, lng, p.latitude, p.longitude)),
   }))
 
-  // Ne montrer que les lieux à moins de 10 km (sauf "Le plus proche" qui montre tout trié)
+  // Ne montrer que les lieux à moins de 10 km
   const MAX_KM = 10
-  if (displayedFilter.value.sort !== 'distance') {
-    const nearby = withDist.filter(p => p._distKm <= MAX_KM)
-    if (nearby.length >= 3) withDist = nearby
-  }
-
-  // Sort by distance only when "Le plus proche" is active
-  if (displayedFilter.value.sort === 'distance') {
-    return withDist.sort((a, b) => a._distKm - b._distKm)
-  }
+  const nearby = withDist.filter(p => p._distKm <= MAX_KM)
+  if (nearby.length >= 3) withDist = nearby
 
   return withDist
 })

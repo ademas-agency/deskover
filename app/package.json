@@ -30,5 +30,10 @@
     "typescript": "^6.0.2",
     "vue-tsc": "^3.2.6"
   },
+  "optionalDependencies": {
+    "@oxc-minify/binding-darwin-arm64": "0.117.0",
+    "@oxc-parser/binding-darwin-arm64": "0.117.0",
+    "@oxc-transform/binding-darwin-arm64": "0.117.0"
+  },
   "packageManager": "pnpm@10.33.0"
 }

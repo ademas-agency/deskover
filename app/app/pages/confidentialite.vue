@@ -1,7 +1,11 @@
 <script setup lang="ts">
 useHead({
   title: 'Politique de confidentialité - Deskover',
-  meta: [{ name: 'description', content: 'Comment Deskover traite tes données personnelles.' }]
+  meta: [
+    { name: 'description', content: 'Comment Deskover traite tes données personnelles.' },
+    { name: 'robots', content: 'noindex, follow' }
+  ],
+  link: [{ rel: 'canonical', href: 'https://www.deskover.fr/confidentialite' }]
 })
 </script>
 

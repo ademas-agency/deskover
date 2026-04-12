@@ -10,7 +10,7 @@ import BaseInput from '../ui/BaseInput.vue'
 import BaseButton from '../ui/BaseButton.vue'
 import BaseCard from '../ui/BaseCard.vue'
 import BaseBadge from '../ui/BaseBadge.vue'
-import { Save, ExternalLink, Star, Clock, Globe, Phone, Instagram, Upload, Trash2, RefreshCw, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ImageIcon, Crown, CheckCircle } from 'lucide-vue-next'
+import { Save, ExternalLink, Star, Clock, Globe, Phone, Instagram, Upload, Trash2, RefreshCw, ChevronUp, ChevronDown, ChevronLeft, ChevronRight, ImageIcon, Crown, CheckCircle, MapPin } from 'lucide-vue-next'
 
 const BUCKET = 'place-photos'
 const SUPABASE_STORAGE_BASE = `https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/${BUCKET}`
@@ -29,6 +29,118 @@ const emit = defineEmits<{
 const form = ref<Place>({ ...props.place })
 const uploading = ref(false)
 const photoError = ref('')
+
+// --- Enrichissement Google Places ---
+const enriching = ref(false)
+const enrichError = ref('')
+const enrichSuccess = ref('')
+const GOOGLE_KEY = import.meta.env.VITE_GOOGLE_MAPS_API_KEY
+
+const DAYS_FR = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche']
+
+async function enrichFromGoogle() {
+  enriching.value = true
+  enrichError.value = ''
+  enrichSuccess.value = ''
+  try {
+    let placeId = form.value.google_place_id
+    // Si pas de Place ID, le chercher via text search
+    if (!placeId) {
+      const query = `${form.value.name} ${form.value.address || ''} ${form.value.city || ''}`.trim()
+      const url = `https://places.googleapis.com/v1/places:searchText`
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Goog-Api-Key': GOOGLE_KEY,
+          'X-Goog-FieldMask': 'places.id,places.displayName'
+        },
+        body: JSON.stringify({ textQuery: query, languageCode: 'fr', regionCode: 'FR' })
+      })
+      const data = await res.json()
+      if (!data.places?.length) {
+        enrichError.value = 'Lieu introuvable sur Google'
+        return
+      }
+      placeId = data.places[0].id
+    }
+
+    // Fetch details
+    const detailsUrl = `https://places.googleapis.com/v1/places/${placeId}?languageCode=fr`
+    const fields = 'id,displayName,formattedAddress,location,rating,userRatingCount,businessStatus,websiteUri,nationalPhoneNumber,googleMapsUri,regularOpeningHours,photos'
+    const res = await fetch(detailsUrl, {
+      headers: {
+        'X-Goog-Api-Key': GOOGLE_KEY,
+        'X-Goog-FieldMask': fields
+      }
+    })
+    const d = await res.json()
+    if (d.error) {
+      enrichError.value = d.error.message || 'Erreur Google'
+      return
+    }
+
+    // Merge into form (don't overwrite user-edited values if they exist)
+    form.value.google_place_id = d.id
+    form.value.google_name = d.displayName?.text
+    if (d.formattedAddress && !form.value.address) form.value.address = d.formattedAddress
+    if (d.location) {
+      form.value.latitude = d.location.latitude
+      form.value.longitude = d.location.longitude
+    }
+    if (d.rating) form.value.google_rating = d.rating
+    if (d.userRatingCount) form.value.google_reviews_count = d.userRatingCount
+    if (d.businessStatus) form.value.business_status = d.businessStatus
+    if (d.websiteUri && !form.value.website) form.value.website = d.websiteUri
+    if (d.nationalPhoneNumber && !form.value.phone) form.value.phone = d.nationalPhoneNumber
+    if (d.googleMapsUri) form.value.google_maps_url = d.googleMapsUri
+
+    // Opening hours
+    if (d.regularOpeningHours?.weekdayDescriptions?.length) {
+      form.value.opening_hours = d.regularOpeningHours.weekdayDescriptions.map((desc: string) => {
+        // Google returns "mercredi: 09:00 – 19:00" style → normalize first letter
+        return desc.charAt(0).toUpperCase() + desc.slice(1)
+      })
+    }
+
+    enrichSuccess.value = 'Fiche enrichie — pense à enregistrer'
+    setTimeout(() => { enrichSuccess.value = '' }, 5000)
+  }
+  catch (err: any) {
+    enrichError.value = err?.message || 'Erreur réseau'
+  }
+  finally {
+    enriching.value = false
+  }
+}
+
+// --- Géocodage via BAN (Base Adresse Nationale, gratuit) ---
+const geocoding = ref(false)
+const geocodeError = ref('')
+const geocodeSuccess = ref(false)
+async function geocodeAddress() {
+  geocoding.value = true
+  geocodeError.value = ''
+  geocodeSuccess.value = false
+  try {
+    const query = [form.value.address, form.value.city].filter(Boolean).join(' ')
+    const res = await fetch(`https://api-adresse.data.gouv.fr/search/?q=${encodeURIComponent(query)}&limit=1`)
+    const data = await res.json()
+    const feat = data.features?.[0]
+    if (!feat) {
+      geocodeError.value = 'Adresse introuvable'
+      return
+    }
+    form.value.longitude = feat.geometry.coordinates[0]
+    form.value.latitude = feat.geometry.coordinates[1]
+    geocodeSuccess.value = true
+    setTimeout(() => { geocodeSuccess.value = false }, 3000)
+  } catch {
+    geocodeError.value = 'Erreur de géocodage'
+  } finally {
+    geocoding.value = false
+  }
+}
 
 // --- Avis utilisateurs ---
 interface PlaceRating {
@@ -992,6 +1104,33 @@ function handleSave() {
             v-model="form.city"
             label="Ville"
           />
+          <div class="grid grid-cols-2 gap-3">
+            <BaseInput
+              v-model.number="form.latitude"
+              label="Latitude"
+              type="number"
+              step="any"
+            />
+            <BaseInput
+              v-model.number="form.longitude"
+              label="Longitude"
+              type="number"
+              step="any"
+            />
+          </div>
+          <div class="flex items-center gap-2">
+            <BaseButton
+              variant="secondary"
+              size="sm"
+              :disabled="geocoding || !form.address"
+              @click="geocodeAddress"
+            >
+              <MapPin :size="14" />
+              {{ geocoding ? 'Géocodage…' : 'Géocoder l\'adresse' }}
+            </BaseButton>
+            <p v-if="geocodeError" class="text-xs text-red-500">{{ geocodeError }}</p>
+            <p v-else-if="geocodeSuccess" class="text-xs text-primary">Coordonnées mises à jour</p>
+          </div>
         </div>
         <div class="space-y-1">
           <label class="block text-sm font-medium text-roast">Description</label>
@@ -1144,7 +1283,7 @@ function handleSave() {
 
     <!-- Google infos (readonly) -->
     <BaseCard title="Informations Google">
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
         <div class="flex items-center gap-2">
           <Star :size="16" class="text-edison" />
           <span class="text-sm text-espresso font-semibold">
@@ -1162,8 +1301,21 @@ function handleSave() {
         </div>
         <div>
           <p class="text-xs text-roast">Place ID</p>
-          <p class="text-xs text-steam font-mono">{{ form.google_place_id }}</p>
+          <p class="text-xs text-steam font-mono truncate">{{ form.google_place_id || '—' }}</p>
         </div>
+      </div>
+      <div class="flex items-center gap-3 pt-3 border-t border-steam/15">
+        <BaseButton
+          variant="secondary"
+          size="sm"
+          :disabled="enriching || !form.name"
+          @click="enrichFromGoogle"
+        >
+          <RefreshCw :size="14" :class="enriching ? 'animate-spin' : ''" />
+          {{ enriching ? 'Enrichissement…' : 'Enrichir via Google Places' }}
+        </BaseButton>
+        <p v-if="enrichError" class="text-xs text-red-500">{{ enrichError }}</p>
+        <p v-else-if="enrichSuccess" class="text-xs text-primary">{{ enrichSuccess }}</p>
       </div>
     </BaseCard>
 

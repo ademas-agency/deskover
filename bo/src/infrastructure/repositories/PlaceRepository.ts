@@ -83,7 +83,7 @@ export class PlaceRepository {
   }
 
   static async save(place: Place): Promise<void> {
-    const payload = {
+    const payload: Record<string, unknown> = {
       name: place.name,
       address: place.address,
       city: place.city,
@@ -104,6 +104,19 @@ export class PlaceRepository {
       opening_hours: place.opening_hours || [],
       last_verified_at: place.last_verified_at,
       deskover_tested_at: place.deskover_tested_at,
+      google_place_id: place.google_place_id || null,
+      google_name: place.google_name || null,
+      google_rating: place.google_rating || null,
+      google_reviews_count: place.google_reviews_count || null,
+      google_maps_url: place.google_maps_url || null,
+      business_status: place.business_status || null,
+    }
+
+    // Include coords only if set (so we don't nuke existing values with 0)
+    if (place.latitude && place.longitude) {
+      payload.latitude = place.latitude
+      payload.longitude = place.longitude
+      payload.location = `SRID=4326;POINT(${place.longitude} ${place.latitude})`
     }
 
     const { error } = await supabase

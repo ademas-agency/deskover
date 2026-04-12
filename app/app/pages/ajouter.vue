@@ -80,11 +80,14 @@ function getFingerprint() {
   return fp
 }
 
+const pendingSpeedTest = ref<{ download: number; upload: number; ping: number } | null>(null)
+
 function handleRatingSubmit(ratings: { wifi: string; prises: string; pricing: string; mood: string }, speedTest: any) {
   form.wifi = ratings.wifi
   form.power = ratings.prises
   form.pricing = ratings.pricing
   form.mood = ratings.mood
+  pendingSpeedTest.value = speedTest || null
   submit()
 }
 
@@ -141,6 +144,17 @@ async function submit() {
       mood: form.mood ? moodMap[form.mood] : null,
       source: 'creation',
     })
+  }
+
+  // Enregistrer le speed test si l'utilisateur en a lancé un
+  if (data?.id && pendingSpeedTest.value) {
+    const { error: speedErr } = await client.from('speed_tests').insert({
+      place_id: data.id,
+      download: pendingSpeedTest.value.download,
+      upload: pendingSpeedTest.value.upload,
+      ping: pendingSpeedTest.value.ping,
+    })
+    if (speedErr) console.error('[ajouter] insert speed_test error:', speedErr)
   }
 
   submitting.value = false

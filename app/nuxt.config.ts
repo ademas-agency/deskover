@@ -95,7 +95,7 @@ export default defineNuxtConfig({
   },
 
   routeRules: {
-    '/': { prerender: true },
+    '/': { ssr: true, swr: 86400 }, // revalide toutes les 24h
     '/api/**': {
       cors: true,
       headers: {

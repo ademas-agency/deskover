@@ -406,7 +406,7 @@ useSeoMeta({
         v-for="place in places.slice(0, 30)"
         :key="place.id"
         :to="`/lieu/${place.slug || place.id}`"
-        class="block h-full"
+        class="block h-full no-callout"
       >
         <PlaceCard :place="{
           name: place.name,

@@ -142,3 +142,12 @@ body::before {
     rgba(44, 40, 37, 0.04) 48px
   );
 }
+
+/* Disable iOS long-press context menu on place card links */
+.no-callout,
+.no-callout * {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+}
