@@ -47,6 +47,7 @@ const categoryColors: Record<string, string> = {
 }
 
 const mapContainer = ref<HTMLElement | null>(null)
+const placeMarkers = new Map<string, mapboxgl.Marker>()
 const selectedPlace = ref<any>(null)
 const showCard = ref(false)
 const photoSlider = ref<HTMLElement | null>(null)
@@ -95,68 +96,152 @@ function goToPlace() {
 }
 
 onMounted(() => {
+  nextTick(() => initMap())
+})
+
+function initMap() {
   if (!mapContainer.value || !places.value.length) return
 
   const withCoords = places.value.filter(p => p.latitude && p.longitude)
   if (!withCoords.length) return
 
-  const lngs = withCoords.map(p => p.longitude)
-  const lats = withCoords.map(p => p.latitude)
-  const centerLng = (Math.min(...lngs) + Math.max(...lngs)) / 2
-  const centerLat = (Math.min(...lats) + Math.max(...lats)) / 2
+  const bounds = new mapboxgl.LngLatBounds()
+  withCoords.forEach(p => bounds.extend([p.longitude, p.latitude]))
+  const center = bounds.getCenter()
 
   mapboxgl.accessToken = mapboxToken
   const map = new mapboxgl.Map({
     container: mapContainer.value,
     style: 'mapbox://styles/mapbox/light-v11',
-    center: [centerLng, centerLat],
-    zoom: 14,
-    attributionControl: false,
-    projection: 'mercator'
+    projection: 'mercator',
+    center: [center.lng, center.lat],
+    zoom: 12,
+    attributionControl: false
   })
 
   map.addControl(new mapboxgl.NavigationControl(), 'bottom-right')
 
-  // Suppress known mapbox-gl v3 NaN LngLat rendering bug
-  map.on('error', (e) => {
-    if (e.error?.message?.includes('Invalid LngLat')) return
-    console.error(e.error)
-  })
-
   map.on('load', () => {
-    withCoords.forEach(p => {
-      const color = categoryColors[p.category] || '#AA4C4D'
-      const el = document.createElement('div')
-      el.style.cursor = 'pointer'
-
-      const thumb = p.thumbUrl || p.photoUrl
-      if (thumb) {
-        el.innerHTML = `<div style="width:44px;height:56px;border-radius:8px;overflow:hidden;border:2px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,0.2);background:${color};">
-          <img src="${thumb}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
-          <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;">${p.name.charAt(0)}</div>
-        </div>`
-      } else {
-        el.innerHTML = `<div style="width:44px;height:56px;border-radius:8px;border:2px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,0.2);background:${color};display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;">
-          ${p.name.charAt(0)}
-        </div>`
-      }
-
-      el.addEventListener('click', () => {
-        selectPlace(p, map)
-      })
-
-      new mapboxgl.Marker({ element: el, anchor: 'center' })
-        .setLngLat([p.longitude, p.latitude])
-        .addTo(map)
+    map.addSource('places', {
+      type: 'geojson',
+      data: {
+        type: 'FeatureCollection',
+        features: withCoords.map(p => ({
+          type: 'Feature' as const,
+          geometry: { type: 'Point' as const, coordinates: [p.longitude, p.latitude] },
+          properties: { id: p.id, color: categoryColors[p.category] || '#AA4C4D' }
+        }))
+      },
+      cluster: true,
+      clusterMaxZoom: 14,
+      clusterRadius: 50
     })
 
+    map.addLayer({
+      id: 'clusters',
+      type: 'circle',
+      source: 'places',
+      filter: ['has', 'point_count'],
+      paint: {
+        'circle-color': '#AA4C4D',
+        'circle-radius': ['step', ['get', 'point_count'], 18, 10, 24, 50, 32],
+        'circle-stroke-width': 3,
+        'circle-stroke-color': '#fff',
+        'circle-opacity': 0.9
+      }
+    })
+
+    map.addLayer({
+      id: 'cluster-count',
+      type: 'symbol',
+      source: 'places',
+      filter: ['has', 'point_count'],
+      layout: {
+        'text-field': '{point_count_abbreviated}',
+        'text-size': 13,
+        'text-font': ['DIN Pro Medium', 'Arial Unicode MS Regular']
+      },
+      paint: { 'text-color': '#fff' }
+    })
+
+    // Markers photo dynamiques pour les points non-clusterisés (même pattern que carte.vue)
+    function updateMarkers() {
+      if (!map) return
+      const visibleIds = new Set<string>()
+      const features = map.querySourceFeatures('places', { filter: ['!', ['has', 'point_count']] })
+
+      for (const f of features) {
+        const id = String(f.properties?.id)
+        if (!id || id === 'undefined') continue
+        visibleIds.add(id)
+
+        if (!placeMarkers.has(id)) {
+          const place = withCoords.find(p => String(p.id) === id)
+          if (!place) continue
+          const color = categoryColors[place.category] || '#AA4C4D'
+          const el = document.createElement('div')
+          el.style.cursor = 'pointer'
+
+          const thumb = place.thumbUrl || place.photoUrl
+          if (thumb) {
+            el.innerHTML = `<div style="width:44px;height:56px;border-radius:8px;overflow:hidden;border:2px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,0.2);background:${color};">
+              <img src="${thumb}" loading="lazy" style="width:100%;height:100%;object-fit:cover;display:block;" onerror="this.style.display='none';this.nextSibling.style.display='flex'">
+              <div style="display:none;width:100%;height:100%;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;">${place.name.charAt(0)}</div>
+            </div>`
+          } else {
+            el.innerHTML = `<div style="width:44px;height:56px;border-radius:8px;border:2px solid ${color};box-shadow:0 2px 8px rgba(0,0,0,0.2);background:${color};display:flex;align-items:center;justify-content:center;color:white;font-size:14px;font-weight:700;">
+              ${place.name.charAt(0)}
+            </div>`
+          }
+
+          el.addEventListener('click', (evt) => {
+            evt.stopPropagation()
+            selectPlace(place, map)
+          })
+
+          const marker = new mapboxgl.Marker({ element: el, anchor: 'center' })
+            .setLngLat([place.longitude, place.latitude])
+            .addTo(map!)
+
+          placeMarkers.set(id, marker)
+        }
+      }
+
+      // Supprimer les markers qui sont maintenant clusterisés
+      for (const [id, marker] of placeMarkers) {
+        if (!visibleIds.has(id)) {
+          marker.remove()
+          placeMarkers.delete(id)
+        }
+      }
+    }
+
+    map.on('render', updateMarkers)
+
+    // Click cluster → zoom pour déplier
+    map.on('click', 'clusters', (e) => {
+      const features = map.queryRenderedFeatures(e.point, { layers: ['clusters'] })
+      if (!features.length) return
+      const clusterId = features[0].properties!.cluster_id
+      const source = map.getSource('places') as mapboxgl.GeoJSONSource
+      source.getClusterExpansionZoom(clusterId, (err: any, zoom: any) => {
+        if (err) return
+        map.flyTo({
+          center: (features[0].geometry as GeoJSON.Point).coordinates as [number, number],
+          zoom,
+          duration: 500
+        })
+      })
+    })
+
+    map.on('mouseenter', 'clusters', () => { map.getCanvas().style.cursor = 'pointer' })
+    map.on('mouseleave', 'clusters', () => { map.getCanvas().style.cursor = '' })
+
     if (withCoords.length > 1) {
-      const bounds = new mapboxgl.LngLatBounds()
-      withCoords.forEach(p => bounds.extend([p.longitude, p.latitude]))
       map.fitBounds(bounds, { padding: 60, maxZoom: 15 })
     }
   })
-})
+}
 
 useSeoMeta({
   title: () => `Où travailler à ${cityName.value} — Deskover`,
@@ -253,10 +338,10 @@ useHead({
         leave-from-class="translate-y-0 opacity-100"
         leave-to-class="translate-y-full opacity-0"
       >
-        <div v-if="showCard && selectedPlace" class="absolute bottom-4 left-4 right-4 lg:left-auto lg:right-6 lg:w-[400px] z-20">
+        <div v-if="showCard && selectedPlace" class="absolute bottom-4 left-4 right-4 lg:left-6 lg:right-auto lg:w-[400px] z-20">
           <div class="bg-white rounded-[20px] shadow-2xl overflow-hidden relative cursor-pointer" @click="goToPlace">
-            <!-- Photo slider -->
-            <div class="h-[140px] relative overflow-hidden">
+            <!-- Photo slider — :key force le re-render des images sans toucher à la card -->
+            <div class="h-[140px] relative overflow-hidden" :key="selectedPlace.id">
               <div
                 ref="photoSlider"
                 class="flex h-full overflow-x-auto snap-x snap-mandatory no-scrollbar"
