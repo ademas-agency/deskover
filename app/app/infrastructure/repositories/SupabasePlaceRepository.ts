@@ -4,6 +4,40 @@ import type { Place, PlaceFilters, PlaceSortBy, Vital, VitalStatus, BlogMention 
 
 const SUPABASE_STORAGE_URL = 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos'
 
+// Hash 32-bit déterministe (FNV-1a) → seed stable depuis une chaîne
+function hashSeed(s: string): number {
+  let h = 0x811c9dc5
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i)
+    h = Math.imul(h, 0x01000193)
+  }
+  return h >>> 0
+}
+
+// PRNG mulberry32 : déterministe, rapide, qualité suffisante pour shuffle
+function mulberry32(seed: number) {
+  return function () {
+    seed |= 0
+    seed = (seed + 0x6d2b79f5) | 0
+    let t = seed
+    t = Math.imul(t ^ (t >>> 15), t | 1)
+    t ^= t + Math.imul(t ^ (t >>> 7), t | 61)
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296
+  }
+}
+
+// Pioche `count` éléments du pool via shuffle Fisher-Yates seedé par `seed`
+function pickDeterministic<T>(pool: T[], count: number, seed: string): T[] {
+  if (pool.length <= count) return pool.slice()
+  const rng = mulberry32(hashSeed(seed))
+  const arr = pool.slice()
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(rng() * (i + 1))
+    ;[arr[i], arr[j]] = [arr[j], arr[i]]
+  }
+  return arr.slice(0, count)
+}
+
 function signalToVitals(signals: string[]): Vital[] {
   const has = (s: string) => signals.includes(s)
 
@@ -383,8 +417,16 @@ export class SupabasePlaceRepository implements PlaceRepository {
   }
 
   async getSimilar(place: Place, limit = 3): Promise<Place[]> {
-    // Find places in the same city with similar category, excluding the current one
-    let query = this.client
+    // Stratégie : on récupère un pool large (top 20 par curation_score dans la
+    // même ville et catégorie), puis on en pioche `limit` via un shuffle
+    // déterministe basé sur le slug de la fiche courante. Ça garantit :
+    //   - de la diversité (pas les 3 mêmes recos pour tout le monde)
+    //   - de la stabilité (la même fiche affiche toujours les mêmes recos →
+    //     bon pour le SEO et la mémoire utilisateur)
+    const POOL_SIZE = 20
+    const seed = place.slug || place.id
+
+    let { data, error } = await this.client
       .from('places')
       .select('*, blog_mentions(*)')
       .eq('status', 'approved')
@@ -393,15 +435,16 @@ export class SupabasePlaceRepository implements PlaceRepository {
       .eq('city_key', place.citySlug)
       .eq('place_type', place.category)
       .order('curation_score', { ascending: false, nullsFirst: false })
-      .limit(limit)
+      .limit(POOL_SIZE)
 
-    const { data, error } = await query
     if (error) throw error
 
-    // If not enough results in same category, fill with same city
-    let results = data || []
-    if (results.length < limit) {
-      const ids = [place.id, ...results.map((r: any) => r.id)]
+    let pool = data || []
+
+    // Fallback : si moins de `limit` résultats dans la même catégorie, on
+    // élargit aux autres catégories de la même ville
+    if (pool.length < limit) {
+      const ids = [place.id, ...pool.map((r: any) => r.id)]
       const { data: extra } = await this.client
         .from('places')
         .select('*, blog_mentions(*)')
@@ -410,11 +453,12 @@ export class SupabasePlaceRepository implements PlaceRepository {
         .eq('city_key', place.citySlug)
         .not('id', 'in', `(${ids.join(',')})`)
         .order('curation_score', { ascending: false, nullsFirst: false })
-        .limit(limit - results.length)
-      if (extra) results = [...results, ...extra]
+        .limit(POOL_SIZE - pool.length)
+      if (extra) pool = [...pool, ...extra]
     }
 
-    const places = results.map((row: any, i: number) =>
+    const picked = pickDeterministic(pool, limit, seed)
+    const places = picked.map((row: any, i: number) =>
       rowToPlace(row, i, row.blog_mentions)
     )
     await this.attachWifiLabels(places)
