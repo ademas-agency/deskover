@@ -1,5 +1,7 @@
 .DS_Store
-.claude/
+.claude/*
+!.claude/commands/
+.claude/settings.local.json
 node_modules/
 .env
 .secrets/
