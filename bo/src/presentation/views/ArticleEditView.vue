@@ -57,10 +57,11 @@ onMounted(async () => {
   }
 })
 
-function updateTitle(val: string) {
+function updateTitle(val: string | number) {
   if (article.value) {
-    article.value.title = val
-    article.value.slug = generateSlug(val)
+    const str = String(val)
+    article.value.title = str
+    article.value.slug = generateSlug(str)
   }
 }
 
