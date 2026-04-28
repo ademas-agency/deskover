@@ -14,3 +14,7 @@ scripts/data/all-search-results.json
 scripts/data/raw-places.json
 scripts/data/articles.json
 app/public/data/enriched-places.json
+
+# Supabase CLI local artifacts
+supabase/.temp/
+supabase/.branches/

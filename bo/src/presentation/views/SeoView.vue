@@ -205,13 +205,31 @@ const topKeywords = computed(() => {
   return [...snapshot.value.queries].sort((a, b) => b.clicks - a.clicks).slice(0, 30)
 })
 
+// Score d'opportunité : volume × proximité du top 10
+// Plus tu as d'impressions et plus tu es proche de la position 1, plus c'est facile à transformer
+function opportunityScore(impressions: number, position: number): number {
+  if (position < 1) return 0
+  // Boost exponentiel pour les positions proches du top 10
+  const positionFactor = position <= 10 ? 0.3 : position <= 20 ? 1 : position <= 50 ? 0.5 : 0.1
+  return Math.round(impressions * positionFactor / Math.max(position, 1) * 10)
+}
+
 const keywordsToPush = computed(() => {
   if (!snapshot.value) return []
   return [...snapshot.value.queries]
-    .filter(q => q.position >= 5 && q.position <= 25 && q.impressions >= 30)
-    .map(q => ({ ...q, potentialClicks: Math.max(0, Math.round(q.impressions * 0.1) - q.clicks) }))
-    .sort((a, b) => b.potentialClicks - a.potentialClicks)
-    .slice(0, 15)
+    .filter(q => q.position >= 5 && q.position <= 30 && q.impressions >= 20)
+    .map(q => ({
+      ...q,
+      potentialClicks: Math.max(0, Math.round(q.impressions * 0.1) - q.clicks),
+      score: opportunityScore(q.impressions, q.position),
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 20)
+})
+
+// État "non classé" pour la recherche d'un mot-clé absent de nos données
+const keywordNotFound = computed(() => {
+  return selectedKeyword.value && !loadingHistory.value && keywordHistory.value.length === 0
 })
 
 // === PAGES ===
@@ -542,8 +560,17 @@ const tabs: { key: Tab; label: string; icon: any }[] = [
 
         <!-- Résultats du mot-clé sélectionné -->
         <div v-if="selectedKeyword && !loadingHistory" class="mt-6 space-y-4">
-          <div v-if="!keywordHistory.length" class="text-sm text-steam py-4 text-center">
-            Aucun historique trouvé pour ce mot-clé.
+          <div v-if="!keywordHistory.length" class="rounded-lg border border-edison/30 bg-edison/5 p-4">
+            <p class="text-sm font-semibold text-espresso">Pas encore positionnée sur "{{ selectedKeyword }}"</p>
+            <p class="text-xs text-roast mt-1.5 leading-relaxed">
+              Deskover n'a aucune impression Google sur ce mot-clé. Cela signifie que le site n'apparaît pas dans les SERPs pour cette requête, ou alors trop bas pour être trackable par Search Console.
+            </p>
+            <p class="text-xs text-roast mt-2 leading-relaxed">
+              <strong>Pour avoir le volume mensuel exact</strong> et savoir si ça vaut la peine d'écrire un article, il faudra brancher Google Ads Keyword Planner. En attendant, tu peux vérifier sur
+              <a :href="`https://trends.google.com/trends/explore?geo=FR&q=${encodeURIComponent(selectedKeyword)}`" target="_blank" rel="noopener" class="text-primary hover:underline">Google Trends</a>
+              ou
+              <a :href="`https://ads.google.com/aw/keywordplanner/home`" target="_blank" rel="noopener" class="text-primary hover:underline">Keyword Planner</a>.
+            </p>
           </div>
           <template v-else>
             <!-- Récap KPIs -->
@@ -595,36 +622,44 @@ const tabs: { key: Tab; label: string; icon: any }[] = [
       </BaseCard>
       </div>
 
-      <!-- Mots-clés à pousser -->
+      <!-- Top opportunités SEO -->
       <BaseCard v-if="keywordsToPush.length">
         <template #title>
           <div class="flex items-center gap-2">
             <Sparkles :size="16" class="text-edison" />
-            <span>Mots-clés à pousser</span>
+            <span>Top opportunités SEO</span>
             <BaseBadge variant="warning">{{ keywordsToPush.length }}</BaseBadge>
           </div>
         </template>
-        <p class="text-sm text-roast mb-3">Position 5-25, ≥30 impressions. Travailler le contenu/maillage de la page cible peut faire gagner ces clics.</p>
+        <p class="text-sm text-roast mb-3">
+          Mots-clés où Deskover a un score d'opportunité élevé : <strong>impressions × proximité du top 10</strong>. Plus tu es proche de la première page avec du volume, plus le travail SEO sera vite rentabilisé.
+        </p>
         <table class="w-full text-sm">
           <thead>
             <tr class="border-b border-steam/10 text-xs font-semibold text-roast uppercase">
               <th class="text-left py-2 pr-3">Requête</th>
+              <th class="text-right px-2">Score</th>
               <th class="text-right px-2">Position</th>
               <th class="text-right px-2">Impr.</th>
               <th class="text-right px-2">Clics</th>
-              <th class="text-right px-2">Gain potentiel</th>
+              <th class="text-right px-2">Gain estimé</th>
               <th class="text-right pl-2"></th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(q, i) in keywordsToPush" :key="i" class="border-b border-steam/5 even:bg-cream/30">
-              <td class="py-2.5 pr-3 font-medium text-espresso text-xs">{{ q.query }}</td>
-              <td class="text-right px-2"><BaseBadge variant="neutral">{{ formatPosition(q.position) }}</BaseBadge></td>
+              <td class="py-2.5 pr-3 font-medium text-espresso text-xs">
+                <span v-if="i < 3" class="inline-block w-5 text-edison font-bold">{{ ['🥇','🥈','🥉'][i] }}</span>
+                <span v-else class="inline-block w-5 text-steam text-[10px]">{{ i + 1 }}.</span>
+                {{ q.query }}
+              </td>
+              <td class="text-right px-2 font-bold text-edison">{{ q.score }}</td>
+              <td class="text-right px-2"><BaseBadge :variant="q.position <= 10 ? 'success' : q.position <= 20 ? 'warning' : 'neutral'">{{ formatPosition(q.position) }}</BaseBadge></td>
               <td class="text-right px-2 text-roast">{{ formatNumber(q.impressions) }}</td>
               <td class="text-right px-2 text-roast">{{ q.clicks }}</td>
               <td class="text-right px-2 font-semibold text-monstera">+{{ q.potentialClicks }}/mois</td>
               <td class="text-right pl-2">
-                <button class="text-xs text-primary hover:underline" @click="selectKeyword(q.query)">Voir courbe</button>
+                <button class="text-xs text-primary hover:underline" @click="selectKeyword(q.query)">Courbe</button>
               </td>
             </tr>
           </tbody>
