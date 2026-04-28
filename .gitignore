@@ -2,6 +2,8 @@
 .claude/
 node_modules/
 .env
+.secrets/
+scripts/seo/reports/
 scripts/data/photos/
 scripts/data/search-results/
 scripts/data/articles/
