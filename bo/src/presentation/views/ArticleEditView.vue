@@ -8,6 +8,8 @@ import { generateSlug } from '../../core/domain/entities/Article'
 import BaseInput from '../components/ui/BaseInput.vue'
 import BaseButton from '../components/ui/BaseButton.vue'
 import BaseCard from '../components/ui/BaseCard.vue'
+import ImageUploader from '../components/ui/ImageUploader.vue'
+import { supabase } from '../../infrastructure/api/client'
 import { useEditor, EditorContent } from '@tiptap/vue-3'
 import StarterKit from '@tiptap/starter-kit'
 import TiptapImage from '@tiptap/extension-image'
@@ -68,11 +70,27 @@ async function handleSave() {
   notifications.success('Article sauvegarde avec succes')
 }
 
-function addImage() {
-  const url = prompt('URL de l\'image :')
-  if (url && editor.value) {
-    editor.value.chain().focus().setImage({ src: url }).run()
+async function addImage() {
+  const input = document.createElement('input')
+  input.type = 'file'
+  input.accept = 'image/jpeg,image/png,image/webp'
+  input.onchange = async (e) => {
+    const file = (e.target as HTMLInputElement).files?.[0]
+    if (!file || !editor.value) return
+    const ext = file.name.split('.').pop()?.toLowerCase() || 'jpg'
+    const fileName = `inline/${crypto.randomUUID()}.${ext}`
+    const { error: upErr } = await supabase.storage
+      .from('article-covers')
+      .upload(fileName, file, { cacheControl: '3600', upsert: false })
+    if (upErr) {
+      const url = prompt(`Upload échoué (${upErr.message}). Coller une URL :`)
+      if (url) editor.value.chain().focus().setImage({ src: url }).run()
+      return
+    }
+    const { data: pub } = supabase.storage.from('article-covers').getPublicUrl(fileName)
+    editor.value.chain().focus().setImage({ src: pub.publicUrl }).run()
   }
+  input.click()
 }
 
 function addLink() {
@@ -128,20 +146,19 @@ function addLink() {
             </select>
           </div>
           <BaseInput
-            v-model="article.cover_photo"
-            label="Photo couverture (URL)"
-            placeholder="https://..."
-          />
-          <BaseInput
             v-model="article.meta_description"
             label="Meta description"
             placeholder="Description pour le SEO..."
           />
         </div>
 
-        <!-- Cover preview -->
-        <div v-if="article.cover_photo" class="mt-4 rounded-xl overflow-hidden h-40 bg-linen">
-          <img :src="article.cover_photo" :alt="article.title" class="w-full h-full object-cover" />
+        <!-- Cover image -->
+        <div class="mt-4">
+          <ImageUploader
+            :modelValue="article.cover_photo"
+            label="Image hero"
+            @update:modelValue="(v: string) => article && (article.cover_photo = v)"
+          />
         </div>
       </BaseCard>
 

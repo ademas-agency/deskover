@@ -1,6 +1,6 @@
 <script setup lang="ts">
 defineProps<{
-  variant?: 'primary' | 'success' | 'warning' | 'info' | 'neutral'
+  variant?: 'primary' | 'success' | 'warning' | 'danger' | 'info' | 'neutral'
 }>()
 </script>
 
@@ -12,6 +12,7 @@ defineProps<{
         'bg-primary/10 text-primary': variant === 'primary' || !variant,
         'bg-monstera/10 text-monstera': variant === 'success',
         'bg-edison/10 text-edison': variant === 'warning',
+        'bg-red-50 text-red-700': variant === 'danger',
         'bg-blue-50 text-blue-700': variant === 'info',
         'bg-linen text-roast': variant === 'neutral',
       },

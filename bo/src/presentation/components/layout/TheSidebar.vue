@@ -8,6 +8,7 @@ import {
   FileText,
   MessageSquare,
   Star,
+  TrendingUp,
 } from 'lucide-vue-next'
 import { useRatingsNotificationsStore } from '../../../stores/ratingsNotifications'
 
@@ -19,6 +20,7 @@ const navigation = [
   { name: 'Lieux', path: '/places', icon: MapPin, badgeKey: null },
   { name: 'Carte', path: '/map', icon: Map, badgeKey: null },
   { name: 'Articles', path: '/articles', icon: FileText, badgeKey: null },
+  { name: 'SEO', path: '/seo', icon: TrendingUp, badgeKey: null },
   { name: 'Messages', path: '/messages', icon: MessageSquare, badgeKey: null },
   { name: 'Avis', path: '/avis', icon: Star, badgeKey: 'ratings' as const },
 ]

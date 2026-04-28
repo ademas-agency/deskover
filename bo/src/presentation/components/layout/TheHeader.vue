@@ -27,6 +27,7 @@ const pageTitle = computed(() => {
     map: 'Carte',
     articles: 'Articles',
     'article-edit': 'Modifier l\'article',
+    seo: 'Dashboard SEO',
     messages: 'Messages',
     ratings: 'Avis',
   }
@@ -98,16 +99,20 @@ async function handleDelete() {
       <h2 class="text-lg font-bold text-espresso">{{ pageTitle }}</h2>
     </div>
 
-    <!-- Place edit : delete button -->
-    <button
-      v-if="isPlaceEdit && currentPlace"
-      @click="openDeleteConfirm"
-      class="px-3 py-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-1.5 text-sm font-medium"
-      title="Supprimer ce lieu"
-    >
-      <Trash2 :size="16" />
-      Supprimer
-    </button>
+    <div class="flex items-center gap-3">
+      <!-- Place edit : delete button -->
+      <button
+        v-if="isPlaceEdit && currentPlace"
+        @click="openDeleteConfirm"
+        class="px-3 py-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors flex items-center gap-1.5 text-sm font-medium"
+        title="Supprimer ce lieu"
+      >
+        <Trash2 :size="16" />
+        Supprimer
+      </button>
+      <!-- Slot pour actions spécifiques à la page (sélecteur de période SEO, etc.) -->
+      <div id="page-header-actions" class="flex items-center gap-2"></div>
+    </div>
   </header>
 
   <!-- Delete confirmation modal -->
