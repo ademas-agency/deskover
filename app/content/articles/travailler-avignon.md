@@ -127,6 +127,13 @@ Le spot exceptionnel pour les occasions spéciales où tu veux un cadre à la ha
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Avignon](/articles/terrasse-avignon). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour une flexibilité totale, jour et nuit** - L'étable cowork (24h/24, 7j/7, près de la gare TGV)

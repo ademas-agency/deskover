@@ -115,6 +115,13 @@ Un repaire idéal pour les âmes littéraires qui veulent bosser entourées de l
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Nantes](/articles/terrasse-nantes). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour du calme absolu** - Monsieur Machin (l'étage est une bulle de silence jusqu'à 17h)

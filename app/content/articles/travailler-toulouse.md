@@ -127,6 +127,13 @@ Un spot atypique pour ceux qui veulent bosser dans un environnement maker, entou
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Toulouse](/articles/terrasse-toulouse). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour un cadre lumineux et élégant** - La Fiancée (grandes fenêtres, vue sur Saint-Sernin)

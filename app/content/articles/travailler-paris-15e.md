@@ -127,6 +127,13 @@ Le coworking + escalade pour alterner boulot et sport.
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Paris 15e](/articles/terrasse-paris-15e). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour un cadre insolite** - Voie 15 (ancienne gare de la Petite Ceinture)

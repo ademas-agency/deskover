@@ -127,6 +127,13 @@ Pour les jours où tu veux juste un endroit simple et calme, sans chichis.
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Paris 5e](/articles/terrasse-paris-5e). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour une journée entière** - Le Nuage Café (vaste, bien équipé, ouvert 7j/7)

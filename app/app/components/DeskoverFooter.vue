@@ -24,7 +24,7 @@
             </NuxtLink>
             <NuxtLink to="/villes" class="inline-block mb-1 text-xs text-[var(--color-terracotta-500)] font-semibold">Toutes les villes →</NuxtLink>
             <NuxtLink to="/articles/cafe-ou-coworking" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">Café ou coworking ?</NuxtLink>
-            <NuxtLink to="/articles/bosser-en-terrasse-ete" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">Bosser en terrasse</NuxtLink>
+            <NuxtLink to="/themes/terrasse-ete" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">Bosser en terrasse cet été</NuxtLink>
           </div>
         </div>
 
@@ -73,9 +73,9 @@
               </NuxtLink>
               <NuxtLink to="/villes" class="inline-block mb-4 text-xs text-[var(--color-terracotta-500)] font-semibold hover:underline">Toutes les villes →</NuxtLink>
               <NuxtLink to="/articles/cafe-ou-coworking" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">Café ou coworking ?</NuxtLink>
-              <NuxtLink to="/articles/bosser-en-terrasse-ete" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">Bosser en terrasse</NuxtLink>
+              <NuxtLink to="/themes/terrasse-ete" class="text-[13px] text-white/60 hover:text-[var(--color-terracotta-500)] transition-colors">Bosser en terrasse cet été</NuxtLink>
             </div>
-            
+
           </div>
 
           <!-- Col 3: Deskover -->

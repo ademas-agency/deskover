@@ -119,6 +119,13 @@ Notre coup de coeur pour les matinées où tu veux du calme et un bon café dans
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Rennes](/articles/terrasse-rennes). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour un coworking à taille humaine avec communauté** - L'Espace BZH (ambiance conviviale, réseautage naturel)

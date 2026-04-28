@@ -127,6 +127,13 @@ Pour les sessions de deep work dans le silence, dans un des plus beaux bâtiment
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Strasbourg](/articles/terrasse-strasbourg). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour une journée entière sans prise de tête** - Coworking Anticafé (tu paies au temps, tout inclus)

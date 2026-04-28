@@ -123,6 +123,13 @@ Le bon plan pour les sessions de travail en extérieur quand la météo le perme
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Montpellier](/articles/terrasse-montpellier). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour un coworking pro et chaleureux** - Le Paon (appartement lumineux, cabine d'appels, ouvert le week-end)

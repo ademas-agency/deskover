@@ -127,6 +127,13 @@ Le plan B qui marche quand tu as besoin d'un endroit ouvert tard, climatisé, av
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Orléans](/articles/terrasse-orleans). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour bosser à toute heure, jour et nuit** - La Maison du Coworking ou Les coworcoeurs (24h/24, 7j/7)

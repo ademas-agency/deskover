@@ -127,6 +127,13 @@ Le spot atypique et gratuit pour bosser sur les Champs, entre deux rayons.
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Paris 8e](/articles/terrasse-paris-8e). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour alterner sport et travail** - Climbing District (coworking + escalade)

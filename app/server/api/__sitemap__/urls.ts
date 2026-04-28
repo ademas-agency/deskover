@@ -59,5 +59,12 @@ export default defineSitemapEventHandler(async () => {
     }
   }
 
+  // Hubs thématiques
+  urls.push({
+    loc: '/themes/terrasse-ete',
+    priority: 0.8,
+    changefreq: 'weekly'
+  })
+
   return urls
 })

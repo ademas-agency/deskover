@@ -103,6 +103,13 @@ Le bistrot de Charonne pour bosser en terrasse dans une des plus belles rues du 
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Paris 20e 20e](/articles/terrasse-paris-20e). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour bosser tôt et rester tard** - Les Pères Populaires (8h30-2h, ambiance bistrot)

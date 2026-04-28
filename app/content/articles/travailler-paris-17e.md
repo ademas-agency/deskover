@@ -127,6 +127,13 @@ Le petit café fleuri et vintage des Batignolles pour les pauses déjeuner de tr
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Paris 17e](/articles/terrasse-paris-17e). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour un café de quartier fiable** - Café Pimpin (WiFi, prises, ambiance cosy)

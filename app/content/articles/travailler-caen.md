@@ -111,6 +111,13 @@ La planque idéale pour bosser au calme dans un tout petit lieu de caractère, m
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Caen](/articles/terrasse-caen). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour une journée complète avec du caractère** - Arbuste café (vue château, terrasse, café top)

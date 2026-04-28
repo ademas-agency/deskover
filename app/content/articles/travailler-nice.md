@@ -127,6 +127,13 @@ Le bon plan pour les lève-tôt qui veulent un café sans prise de tête dès 7h
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Nice](/articles/terrasse-nice). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour du calme et du charme** -- Brume Coffee (ambiance feutrée, Vieux-Nice)

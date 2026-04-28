@@ -81,6 +81,13 @@ Le choix sûr pour un espace de travail pro, accessible à toute heure, dans le 
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Paris 1e](/articles/terrasse-paris-1e). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour une journée entière sans pression** - L'Anticafé Louvre (tu paies au temps, boissons incluses, 7j/7)

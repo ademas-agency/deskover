@@ -127,6 +127,13 @@ Un espace de travail bien situé pour les journées où tu veux rester dans le c
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Grenoble](/articles/terrasse-grenoble). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour une journée complète café + coworking** - L'Impertinence (deux salles + étage dédié)

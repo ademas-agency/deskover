@@ -127,6 +127,13 @@ Le café de musée avec terrasse parmi les sculptures pour bosser dans un cadre 
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Paris 14e](/articles/terrasse-paris-14e). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour la flexibilité 24h/24** - La Permanence (ouvert en permanence, prix doux)

@@ -127,6 +127,13 @@ Un spot atypique pour ceux qui veulent mélanger travail et vie culturelle dans 
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Lille](/articles/terrasse-lille). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour bosser gratos dans un cadre chouette** - Bazaar St So (accès libre, ouvert 7j/7)

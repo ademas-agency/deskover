@@ -119,6 +119,13 @@ Pour ceux qui ont besoin d'un poste de travail le week-end sans s'engager sur un
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Boulogne-Billancourt](/articles/terrasse-boulogne-billancourt). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour un cadre pro haut de gamme** - Multiburo (services premium, restauration, terrasse)

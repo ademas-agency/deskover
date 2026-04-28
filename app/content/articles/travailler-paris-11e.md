@@ -112,6 +112,13 @@ Le spot unique pour les parents qui veulent bosser sans être séparés de leur 
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Paris 11e 11e](/articles/terrasse-paris-11e). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour une journée complète de boulot** - Nomade Café (le QG des travailleurs nomades du 11e)

@@ -127,6 +127,13 @@ Pour les entrepreneurs qui veulent un espace neuf, pro et accessible à toute he
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Nancy](/articles/terrasse-nancy). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour bosser 24h/24** - L'atelier de la Pep', B'CoWorker, Le Kagibi ou BeePlex (tous accessibles en permanence)

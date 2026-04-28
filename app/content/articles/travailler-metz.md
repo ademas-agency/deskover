@@ -127,6 +127,13 @@ Un grand espace de coworking avec 180 postes et des salles de réunion, pour ceu
 
 ---
 
+
+<!-- TERRASSE_VILLE_LINK_START -->
+## Tu cherches une terrasse pour bosser ?
+
+Si tu veux bosser dehors cet été, on a fait une sélection dédiée : [les meilleures terrasses pour télétravailler à Metz](/articles/terrasse-metz). Cafés ombragés, coworkings avec rooftop, lobbys d'hôtel : on a trié les vrais bons spots pour la saison.
+<!-- TERRASSE_VILLE_LINK_END -->
+
 ## Le bon spot selon ton besoin
 
 - **Pour un coworking intimiste** - Le Poulailler (petit, chaleureux, ouvert 7j/7) ou Le Grenier (6 postes, calme absolu)
