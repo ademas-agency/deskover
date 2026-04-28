@@ -459,10 +459,11 @@ const allPhotos = computed(() => {
   const photos: string[] = []
   if (place.value.photos?.length) photos.push(...place.value.photos)
   if (place.value.photoUrl) photos.push(place.value.photoUrl)
-  return photos.length ? photos : ['https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop']
+  return photos
 })
 
 const heroPhoto = computed(() => allPhotos.value[allPhotos.value.length - 1])
+const hasHeroPhoto = computed(() => allPhotos.value.length > 0)
 
 async function shareLieu() {
   if (!place.value) return
@@ -625,7 +626,9 @@ useHead({
 
     <!-- Photo hero -->
     <div class="relative h-[260px] lg:h-[400px] overflow-hidden">
+      <PlacePhotoPlaceholder v-if="!hasHeroPhoto" :name="place.name" class="rounded-b-[24px] lg:rounded-b-none" />
       <img
+        v-else
         :src="heroPhoto"
         :alt="place.name"
         class="w-full h-full object-cover rounded-b-[24px] lg:rounded-b-none cursor-pointer"
@@ -947,7 +950,7 @@ useHead({
             distance: '',
             isOpen: sp.isOpen ?? true,
             nextOpen: sp.nextOpen,
-            image: sp.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop',
+            image: sp.photoUrl,
             images: sp.photos || [],
             vitals: sp.vitals
           }" />

@@ -20,6 +20,7 @@ useHead({
 
 const { getAllForMap } = usePlaces()
 const router = useRouter()
+const route = useRoute()
 
 const mapContainer = ref<HTMLElement | null>(null)
 const { data: placesData } = await useAsyncData('carte-places', () => getAllForMap())
@@ -31,36 +32,49 @@ const currentPhotoIdx = ref(0)
 let map: mapboxgl.Map | null = null
 const placeMarkers: Map<string, mapboxgl.Marker> = new Map()
 
-const STORAGE_BASE = 'https://kxfmpalgzbtiiboeceww.supabase.co/storage/v1/object/public/place-photos'
-const FALLBACK_PHOTO = 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=300&fit=crop'
 
-const selectedPlacePhotos = computed(() => {
-  if (!selectedPlace.value) return [FALLBACK_PHOTO]
-  const photos: string[] = []
-  if (selectedPlace.value.photoUrl) photos.push(selectedPlace.value.photoUrl)
-  if (selectedPlace.value.photos?.length) {
-    for (const p of selectedPlace.value.photos) {
-      if (!photos.includes(p)) photos.push(p)
-    }
-  }
-  return photos.length > 0 ? photos : [FALLBACK_PHOTO]
-})
+const initialActive = new Set(
+  (typeof route.query.filters === 'string' ? route.query.filters : '')
+    .split(',')
+    .filter(Boolean)
+)
 
 const mapFilters = ref([
-  { label: 'Meilleur WiFi', value: 'wifi', icon: 'lucide:wifi', active: false },
-  { label: 'Ouvert maintenant', value: 'ouvert', icon: 'lucide:clock', active: false },
-  { label: 'Bosser au calme', value: 'calme', icon: 'lucide:volume-x', active: false },
-  { label: 'Terrasses', value: 'terrasse', icon: 'lucide:sun', active: false },
-  { label: 'Bien manger', value: 'food', icon: 'lucide:utensils', active: false },
-  { label: 'Coworkings', value: 'coworking', icon: 'lucide:building-2', active: false },
-  { label: 'Cafés', value: 'cafe', icon: 'lucide:coffee', active: false },
-  { label: 'Prises', value: 'prises', icon: 'lucide:zap', active: false },
+  { label: 'Ouvert maintenant', value: 'ouvert', icon: 'lucide:clock', active: initialActive.has('ouvert') },
+  { label: 'Meilleur WiFi', value: 'wifi', icon: 'lucide:wifi', active: initialActive.has('wifi') },
+  { label: 'Bosser au calme', value: 'calme', icon: 'lucide:volume-x', active: initialActive.has('calme') },
+  { label: 'Terrasses', value: 'terrasse', icon: 'lucide:sun', active: initialActive.has('terrasse') },
+  { label: 'Gratuit', value: 'gratuit', icon: 'lucide:ticket', active: initialActive.has('gratuit') },
+  { label: 'Bien manger', value: 'food', icon: 'lucide:utensils', active: initialActive.has('food') },
+  { label: 'Coworkings', value: 'coworking', icon: 'lucide:building-2', active: initialActive.has('coworking') },
+  { label: 'Cafés', value: 'cafe', icon: 'lucide:coffee', active: initialActive.has('cafe') },
+  { label: 'Insolite', value: 'insolite', icon: 'lucide:wand-2', active: initialActive.has('insolite') },
 ])
 
-function toggleMapFilter(value: string) {
+function syncFiltersToUrl() {
+  if (!import.meta.client) return
+  const active = mapFilters.value.filter(f => f.active).map(f => f.value)
+  const url = new URL(window.location.href)
+  if (active.length) url.searchParams.set('filters', active.join(','))
+  else url.searchParams.delete('filters')
+  window.history.replaceState(window.history.state, '', url.toString())
+}
+
+function toggleMapFilter(value: string, evt?: MouseEvent) {
   const f = mapFilters.value.find(x => x.value === value)
   if (f) f.active = !f.active
   applyMapFilters()
+  syncFiltersToUrl()
+
+  // Scroll the clicked pill to center (like on home)
+  const btn = evt?.currentTarget as HTMLElement | undefined
+  if (btn) {
+    const container = btn.parentElement
+    if (container) {
+      const target = btn.offsetLeft + btn.offsetWidth / 2 - container.clientWidth / 2
+      container.scrollTo({ left: target, behavior: 'smooth' })
+    }
+  }
 }
 
 function getFilteredPlaces(): Place[] {
@@ -72,10 +86,11 @@ function getFilteredPlaces(): Place[] {
       if (a === 'cafe' && p.category !== 'cafe' && p.category !== 'coffee_shop') return false
       if (a === 'coworking' && p.category !== 'coworking') return false
       if (a === 'wifi' && !p.signals.includes('wifi')) return false
-      if (a === 'prises' && !p.signals.includes('prises')) return false
       if (a === 'food' && !p.signals.includes('food')) return false
       if (a === 'calme' && !p.signals.includes('calme')) return false
       if (a === 'terrasse' && !p.signals.includes('terrasse')) return false
+      if (a === 'insolite' && !p.signals.includes('insolite')) return false
+      if (a === 'gratuit' && (p.signals.includes('payant') || p.signals.includes('reservation'))) return false
       if (a === 'ouvert' && !p.isOpen) return false
     }
     return true
@@ -104,7 +119,7 @@ function setupClusterLayers() {
 
   map.addSource('places', {
     type: 'geojson',
-    data: buildGeoJSON(places.value),
+    data: buildGeoJSON(getFilteredPlaces()),
     cluster: true,
     clusterMaxZoom: 14,
     clusterRadius: 50
@@ -233,6 +248,13 @@ function setupClusterLayers() {
   // Curseur pointer sur clusters
   map.on('mouseenter', 'clusters', () => { map!.getCanvas().style.cursor = 'pointer' })
   map.on('mouseleave', 'clusters', () => { map!.getCanvas().style.cursor = '' })
+
+  // Click on empty map area closes the card
+  map.on('click', (e) => {
+    if (!showCard.value) return
+    const features = map!.queryRenderedFeatures(e.point, { layers: ['clusters', 'cluster-count'] })
+    if (features.length === 0) closeCard()
+  })
 }
 
 function applyMapFilters() {
@@ -262,15 +284,12 @@ function getPlacePhotos(place: Place): string[] {
       if (!photos.includes(p)) photos.push(p)
     }
   }
-  return photos.length > 0 ? photos : [FALLBACK_PHOTO]
+  return photos
 }
 
 function selectPlace(place: Place) {
-  // Preload first photo before showing the card
+  // Preload first photo before showing the card (skip if no photo)
   const photos = getPlacePhotos(place)
-  const img = new Image()
-  img.src = photos[0]
-
   const show = () => {
     selectedPlace.value = place
     showCard.value = true
@@ -289,6 +308,12 @@ function selectPlace(place: Place) {
     })
   }
 
+  if (photos.length === 0) {
+    show()
+    return
+  }
+  const img = new Image()
+  img.src = photos[0]
   if (img.complete) {
     show()
   } else {
@@ -308,31 +333,18 @@ function goToPlace() {
   }
 }
 
+const { coords: userCoords, requestLocation } = useUserLocation()
+
 onMounted(() => {
   if (!mapContainer.value) return
 
-  // Wait for container to have dimensions before creating map
-  requestAnimationFrame(async () => {
+  // Use cached coords if available, otherwise start on Paris and refine async
+  const cached = userCoords.value
+  const center: [number, number] = cached ? [cached.lng, cached.lat] : [2.352, 48.856]
+  const zoom = cached ? 14 : 12
+
+  requestAnimationFrame(() => {
     if (!mapContainer.value) return
-
-    // Get user location first, fallback to Paris
-    let center: [number, number] = [2.352, 48.856]
-    let zoom = 12
-
-    try {
-      const pos = await new Promise<GeolocationPosition>((resolve, reject) => {
-        navigator.geolocation.getCurrentPosition(resolve, reject, { timeout: 5000 })
-      })
-      const lng = pos.coords.longitude
-      const lat = pos.coords.latitude
-      if (isFinite(lng) && isFinite(lat)) {
-        center = [lng, lat]
-        zoom = 14
-      }
-    }
-    catch {
-      // Fallback to Paris
-    }
 
     mapboxgl.accessToken = mapboxToken
     map = new mapboxgl.Map({
@@ -359,6 +371,15 @@ onMounted(() => {
     map.on('load', () => {
       setupClusterLayers()
     })
+
+    // If no cached coords, ask location in background and recenter when resolved
+    if (!cached) {
+      requestLocation({ timeout: 5000 }).then((c) => {
+        if (c && map) {
+          map.easeTo({ center: [c.lng, c.lat], zoom: 14, duration: 800 })
+        }
+      })
+    }
   })
 })
 
@@ -406,7 +427,7 @@ function categoryLabel(cat: string) {
         :key="f.value"
         class="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl text-[13px] font-semibold transition-all duration-200 whitespace-nowrap border shadow-sm"
         :class="f.active ? 'bg-[var(--color-espresso)] text-white border-[var(--color-espresso)] shadow-[0_2px_8px_rgba(44,40,37,0.2)]' : 'bg-white text-[var(--color-roast)] border-[var(--color-parchment)]'"
-        @click="toggleMapFilter(f.value)"
+        @click="toggleMapFilter(f.value, $event)"
       >
         <UIcon :name="f.icon" class="w-4 h-4" />
         {{ f.label }}
@@ -433,13 +454,13 @@ function categoryLabel(cat: string) {
               distance: '',
               isOpen: selectedPlace.isOpen ?? true,
               nextOpen: selectedPlace.nextOpen,
-              image: selectedPlace.cardUrl || selectedPlace.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop',
+              image: selectedPlace.cardUrl || selectedPlace.photoUrl,
               images: selectedPlace.photos || [],
               vitals: selectedPlace.vitals,
             }"
           />
           <!-- Close -->
-          <button class="absolute top-3 right-14 w-8 h-8 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center z-10" @click.stop="closeCard">
+          <button class="absolute top-3 left-3 w-8 h-8 rounded-full bg-black/30 backdrop-blur-md flex items-center justify-center z-10" @click.stop="closeCard">
             <UIcon name="lucide:x" class="w-4 h-4 text-white" />
           </button>
         </div>

@@ -54,10 +54,8 @@ const photoSlider = ref<HTMLElement | null>(null)
 const currentPhotoIdx = ref(0)
 const router = useRouter()
 
-const FALLBACK_PHOTO = 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=300&fit=crop'
-
 const selectedPlacePhotos = computed(() => {
-  if (!selectedPlace.value) return [FALLBACK_PHOTO]
+  if (!selectedPlace.value) return []
   const photos: string[] = []
   if (selectedPlace.value.photoUrl) photos.push(selectedPlace.value.photoUrl)
   if (selectedPlace.value.photos?.length) {
@@ -65,7 +63,7 @@ const selectedPlacePhotos = computed(() => {
       if (!photos.includes(p)) photos.push(p)
     }
   }
-  return photos.length > 0 ? photos : [FALLBACK_PHOTO]
+  return photos
 })
 
 function selectPlace(place: any, map: mapboxgl.Map) {
@@ -342,7 +340,9 @@ useHead({
           <div class="bg-white rounded-[20px] shadow-2xl overflow-hidden relative cursor-pointer" @click="goToPlace">
             <!-- Photo slider — :key force le re-render des images sans toucher à la card -->
             <div class="h-[140px] relative overflow-hidden" :key="selectedPlace.id">
+              <PlacePhotoPlaceholder v-if="selectedPlacePhotos.length === 0" :name="selectedPlace.name" />
               <div
+                v-else
                 ref="photoSlider"
                 class="flex h-full overflow-x-auto snap-x snap-mandatory no-scrollbar"
                 @click.stop
@@ -452,7 +452,7 @@ useHead({
                 isOpen: place.isOpen ?? true,
                 nextOpen: place.nextOpen,
                 tag: i === 0 ? 'Deskovered #1' : i === 1 ? 'Deskovered #2' : i === 2 ? 'Deskovered #3' : undefined,
-                image: place.cardUrl || place.photoUrl || place.photos?.[0] || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop',
+                image: place.cardUrl || place.photoUrl || place.photos?.[0],
                 images: place.photos || [],
                 vitals: place.vitals,
               }"

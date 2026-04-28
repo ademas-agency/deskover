@@ -28,8 +28,10 @@ function categoryLabel(cat: string) {
     <article class="bg-white rounded-[20px] overflow-hidden shadow-[0_4px_16px_rgba(44,40,37,0.08)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(44,40,37,0.12)]">
       <!-- Image -->
       <div class="relative h-[300px] overflow-hidden">
+        <PlacePhotoPlaceholder v-if="!place.photoUrl" :name="place.name" />
         <img
-          :src="place.photoUrl || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=800&h=600&fit=crop'"
+          v-else
+          :src="place.photoUrl"
           :alt="place.name"
           loading="lazy"
           class="w-full h-full object-cover object-center"

@@ -18,9 +18,16 @@ const quickFilters = [
   { key: 'insolite', label: 'Insolite', icon: 'lucide:wand-2', filter: { insolite: true } as PlaceFilters, sort: 'relevance' as const },
 ]
 
-const activeQuickFilter = ref('recos')
+const route = useRoute()
+
+const validKeys = new Set(['recos', 'proche', 'ouvert', 'wifi', 'calme', 'terrasse', 'gratuit', 'food', 'coworking', 'cafe', 'insolite'])
+const initialFilter = typeof route.query.filter === 'string' && validKeys.has(route.query.filter)
+  ? route.query.filter
+  : 'recos'
+
+const activeQuickFilter = ref(initialFilter)
 // Filtre affiché (titre + cards) : ne change qu'après le fetch des données
-const displayFilter = ref('recos')
+const displayFilter = ref(initialFilter)
 const showGeoModal = ref(false)
 const showGeoHelp = ref(false)
 
@@ -75,18 +82,9 @@ async function tryGeolocOrShowModal() {
   }
 
   // Permission "prompt" ou inconnue : demander la géoloc
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        userCoords.value = { lat: pos.coords.latitude, lng: pos.coords.longitude }
-        activeQuickFilter.value = 'proche'
-      },
-      () => {
-        // Refusé ou erreur → afficher la modal
-        showGeoModal.value = true
-      },
-      { timeout: 8000 }
-    )
+  const c = await requestLocation({ timeout: 8000 })
+  if (c) {
+    activeQuickFilter.value = 'proche'
   } else {
     showGeoModal.value = true
   }
@@ -141,6 +139,11 @@ const loading = computed(() => status.value === 'pending')
 // Sync displayFilter avec activeQuickFilter (filtre purement client-side)
 watch(activeQuickFilter, (v) => {
   if (status.value === 'success') displayFilter.value = v
+  if (!import.meta.client) return
+  const url = new URL(window.location.href)
+  if (v && v !== 'recos') url.searchParams.set('filter', v)
+  else url.searchParams.delete('filter')
+  window.history.replaceState(window.history.state, '', url.toString())
 })
 watch(status, (s) => {
   if (s === 'success') displayFilter.value = activeQuickFilter.value
@@ -193,7 +196,7 @@ const topClaims = computed(() => {
 })
 
 // Geolocation: enrich with distance + sort by proximity client-side
-const userCoords = ref<{ lat: number; lng: number } | null>(null)
+const { coords: userCoords, requestLocation } = useUserLocation()
 const userCity = ref<string | null>(null)
 
 // Fetch dédié pour "Les plus proches" : prend dans TOUT le dataset (pas juste le top 100 curated)
@@ -291,17 +294,20 @@ const places = computed(() => {
   return withDist
 })
 
-onMounted(() => {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      (pos) => {
-        userCoords.value = { lat: pos.coords.latitude, lng: pos.coords.longitude }
-        reverseGeocode(pos.coords.longitude, pos.coords.latitude)
-      },
-      () => {},
-      { timeout: 5000 }
-    )
+onMounted(async () => {
+  // Scroll active filter chip into view (useful when restored from URL)
+  if (activeQuickFilter.value !== 'recos') {
+    await nextTick()
+    const btn = document.querySelector<HTMLElement>(`button[data-filter-key="${activeQuickFilter.value}"]`)
+    if (btn?.parentElement) {
+      const container = btn.parentElement
+      const target = btn.offsetLeft + btn.offsetWidth / 2 - container.clientWidth / 2
+      container.scrollTo({ left: Math.max(0, target), behavior: 'instant' as ScrollBehavior })
+    }
   }
+
+  const c = await requestLocation({ timeout: 5000 })
+  if (c) reverseGeocode(c.lng, c.lat)
 })
 
 useSeoMeta({
@@ -489,10 +495,11 @@ const articles = computed(() => {
     <section class="bg-[var(--color-cream)] rounded-t-3xl -mt-6 relative z-10 lg:rounded-none lg:mt-0">
       <!-- Quick filters -->
       <div class="lg:container-deskover">
-        <div class="flex gap-2.5 overflow-x-auto no-scrollbar py-6 pl-4 lg:flex-wrap lg:py-8 lg:pl-0">
+        <div class="flex gap-2.5 overflow-x-auto no-scrollbar py-6 px-4 lg:flex-wrap lg:py-8 lg:px-0">
           <button
             v-for="qf in quickFilters"
             :key="qf.key"
+            :data-filter-key="qf.key"
             class="flex-shrink-0 flex items-center gap-2 px-4 py-2.5 rounded-2xl text-[13px] font-semibold whitespace-nowrap border"
             :class="activeQuickFilter === qf.key
               ? 'bg-[var(--color-espresso)] text-white border-[var(--color-espresso)] shadow-[0_2px_8px_rgba(44,40,37,0.2)]'
@@ -530,7 +537,7 @@ const articles = computed(() => {
             isOpen: place.isOpen ?? true,
             nextOpen: place.nextOpen,
             tag: place.tag,
-            image: place.cardUrl || place.photoUrl || place.photos?.[0] || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop',
+            image: place.cardUrl || place.photoUrl || place.photos?.[0],
             images: place.photos || [],
             vitals: place.vitals
           }" />

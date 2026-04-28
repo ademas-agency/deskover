@@ -416,7 +416,7 @@ useSeoMeta({
           distance: place.distance || '',
           isOpen: place.isOpen ?? true,
           nextOpen: place.nextOpen,
-          image: place.cardUrl || place.photoUrl || place.photos?.[0] || 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?w=600&h=400&fit=crop',
+          image: place.cardUrl || place.photoUrl || place.photos?.[0],
           images: place.photos || [],
           vitals: place.vitals
         }" />

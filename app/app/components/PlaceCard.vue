@@ -17,7 +17,7 @@ interface Place {
   isOpen: boolean
   nextOpen?: string
   tag?: string
-  image: string
+  image?: string
   images?: string[]
   vitals: Vital[]
 }
@@ -27,9 +27,28 @@ const props = defineProps<{ place: Place }>()
 const allImages = computed(() => {
   const imgs: string[] = []
   if (props.place.image) imgs.push(props.place.image)
-  if (props.place.images?.length) imgs.push(...props.place.images)
-  return imgs.length ? imgs : [props.place.image]
+  if (props.place.images?.length) {
+    for (const img of props.place.images) {
+      if (!imgs.includes(img)) imgs.push(img)
+    }
+  }
+  return imgs
 })
+
+const failedSrcs = ref(new Set<string>())
+const allFailed = ref(false)
+
+function onImgError() {
+  failedSrcs.value.add(allImages.value[current.value])
+  const nextValid = allImages.value.findIndex((src, i) => i !== current.value && !failedSrcs.value.has(src))
+  if (nextValid !== -1) {
+    current.value = nextValid
+  } else {
+    allFailed.value = true
+  }
+}
+
+const showPlaceholder = computed(() => allImages.value.length === 0 || allFailed.value)
 
 const current = ref(0)
 let timer: ReturnType<typeof setInterval> | null = null
@@ -149,7 +168,8 @@ function onClickCapture(e: MouseEvent) {
       @click.capture="onClickCapture"
       @contextmenu.prevent
     >
-      <img :src="allImages[current]" :alt="place.name" :key="current" loading="lazy" draggable="false" class="w-full h-full object-cover transition-opacity duration-500 pointer-events-none no-callout">
+      <PlacePhotoPlaceholder v-if="showPlaceholder" :name="place.name" />
+      <img v-else :src="allImages[current]" :alt="place.name" :key="current" loading="lazy" draggable="false" class="w-full h-full object-cover transition-opacity duration-500 pointer-events-none no-callout" @error="onImgError">
       <!-- Tag -->
       <div v-if="place.tag" class="absolute top-3 left-3 flex items-center gap-1.5 px-3 rounded-lg text-white text-[10px] font-bold uppercase tracking-wide leading-[28px]" :style="{ background: place.tag === 'Deskovered #1' ? '#AA4C4D' : 'rgba(170,76,77,0.85)' }">
         <UIcon name="lucide:crown" class="w-3 h-3" />
