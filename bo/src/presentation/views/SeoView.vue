@@ -23,6 +23,15 @@ import {
   type Ga4Snapshot,
 } from '../../core/services/ga4Snapshots'
 import { fetchKeywordHistory, searchKeywords, type DailyPoint } from '../../core/services/queryHistory'
+import {
+  searchKeyword as searchKeywordPlanner,
+  fetchCachedMetrics,
+  competitionLabel,
+  competitionColor,
+  formatVolume,
+  type KeywordMetrics,
+  type KeywordIdea,
+} from '../../core/services/keywordPlanner'
 import { getImageStatus } from '../../core/services/articleImageStatus'
 import {
   getActiveTheme, getNextTheme, formatDateRange,
@@ -63,6 +72,7 @@ async function loadSnapshot() {
     ])
     previousSnapshot.value = prevGsc
     previousGa4Snapshot.value = prevGa4
+    preloadCachedMetrics()
   } finally {
     loading.value = false
   }
@@ -156,8 +166,13 @@ async function selectKeyword(kw: string) {
   keywordSearch.value = kw
   suggestions.value = []
   loadingHistory.value = true
+  clearPlanner()
   try {
     keywordHistory.value = await fetchKeywordHistory(kw)
+    // Tente une lecture du cache Keyword Planner sans déclencher d'appel API
+    const cached = await fetchCachedMetrics([kw])
+    const m = cached.get(kw.toLowerCase().trim())
+    if (m) plannerMetrics.value = m
   } finally {
     loadingHistory.value = false
     // Scroll vers la zone de recherche/courbe
@@ -172,6 +187,15 @@ function clearKeyword() {
   keywordSearch.value = ''
   keywordHistory.value = []
   suggestions.value = []
+  clearPlanner()
+}
+
+// Sélection + interrogation automatique de Keyword Planner (pour l'empty state)
+async function selectAndLookup(kw: string) {
+  await selectKeyword(kw)
+  if (!plannerMetrics.value) {
+    await lookupKeywordPlanner(kw)
+  }
 }
 
 const keywordChartSeries = computed(() => {
@@ -231,6 +255,54 @@ const keywordsToPush = computed(() => {
 const keywordNotFound = computed(() => {
   return selectedKeyword.value && !loadingHistory.value && keywordHistory.value.length === 0
 })
+
+// === KEYWORD PLANNER (Google Ads) ===
+const plannerMetrics = ref<KeywordMetrics | null>(null)
+const plannerRelated = ref<KeywordIdea[]>([])
+const plannerLoading = ref(false)
+const plannerError = ref<string | null>(null)
+const plannerCached = ref(false)
+const plannerFetchedAt = ref<string | null>(null)
+const cachedMetricsByKeyword = ref<Map<string, KeywordMetrics>>(new Map())
+
+async function lookupKeywordPlanner(keyword: string, force = false) {
+  plannerLoading.value = true
+  plannerError.value = null
+  try {
+    const res = await searchKeywordPlanner(keyword, { force })
+    if (!res.ok) {
+      plannerError.value = res.error
+      plannerMetrics.value = null
+      plannerRelated.value = []
+      return
+    }
+    plannerMetrics.value = res.metrics
+    plannerRelated.value = res.related || []
+    plannerCached.value = res.cached
+    plannerFetchedAt.value = res.fetchedAt
+  } catch (e) {
+    plannerError.value = (e as Error).message
+  } finally {
+    plannerLoading.value = false
+  }
+}
+
+function clearPlanner() {
+  plannerMetrics.value = null
+  plannerRelated.value = []
+  plannerError.value = null
+  plannerCached.value = false
+  plannerFetchedAt.value = null
+}
+
+// Précharge les volumes cachés pour les top mots-clés affichés (sans déclencher d'appel API)
+async function preloadCachedMetrics() {
+  if (!snapshot.value) return
+  const keywords = [
+    ...snapshot.value.queries.slice(0, 30).map(q => q.query),
+  ]
+  cachedMetricsByKeyword.value = await fetchCachedMetrics(keywords)
+}
 
 // === PAGES ===
 const topPagesByClicks = computed(() => {
@@ -538,8 +610,11 @@ const tabs: { key: Tab; label: string; icon: any }[] = [
             </button>
           </div>
 
-          <!-- Suggestions dropdown -->
-          <div v-if="suggestions.length && !selectedKeyword" class="absolute top-full left-0 right-0 mt-1 bg-white border border-steam/20 rounded-lg shadow-lg z-10 overflow-hidden">
+          <!-- Suggestions dropdown (uniquement quand on a des matches GSC) -->
+          <div
+            v-if="!selectedKeyword && suggestions.length"
+            class="absolute top-full left-0 right-0 mt-1 bg-white border border-steam/20 rounded-lg shadow-lg z-10 overflow-hidden"
+          >
             <button
               v-for="s in suggestions"
               :key="s.query"
@@ -553,8 +628,37 @@ const tabs: { key: Tab; label: string; icon: any }[] = [
               </span>
             </button>
           </div>
-          <div v-else-if="searchingKeywords" class="text-xs text-steam mt-2 flex items-center gap-2">
-            <Loader2 :size="12" class="animate-spin" /> Recherche...
+          <!-- Loading inline -->
+          <div v-if="!selectedKeyword && searchingKeywords && keywordSearch.trim().length >= 2" class="text-xs text-steam mt-2 flex items-center gap-2">
+            <Loader2 :size="12" class="animate-spin" /> Recherche…
+          </div>
+        </div>
+
+        <!-- Empty state inline (bloc complet, pas un dropdown) -->
+        <div
+          v-if="!selectedKeyword && !searchingKeywords && keywordSearch.trim().length >= 2 && suggestions.length === 0"
+          class="mt-4 rounded-lg border border-edison/30 bg-edison/5 p-4"
+        >
+          <div class="flex items-start gap-3">
+            <div class="rounded-full bg-edison/10 p-2 shrink-0">
+              <SearchIcon :size="16" class="text-edison" />
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="text-sm font-semibold text-espresso">Aucun résultat dans tes données Search Console</p>
+              <p class="text-xs text-roast mt-1 leading-relaxed">
+                Deskover n'a aucune impression Google sur "<span class="font-semibold">{{ keywordSearch.trim() }}</span>". Le site n'apparaît pas dans les SERPs pour cette requête, ou trop bas pour être trackable. Pour savoir si ça vaut la peine d'écrire un article, interroge Google Ads.
+              </p>
+              <div class="mt-3 flex flex-wrap items-center gap-2">
+                <button
+                  class="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary/90"
+                  @click="selectAndLookup(keywordSearch.trim())"
+                >
+                  <SearchIcon :size="12" />
+                  Interroger Google Ads
+                </button>
+                <a :href="`https://trends.google.com/trends/explore?geo=FR&q=${encodeURIComponent(keywordSearch.trim())}`" target="_blank" rel="noopener" class="text-xs text-primary hover:underline">Google Trends ↗</a>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -563,16 +667,112 @@ const tabs: { key: Tab; label: string; icon: any }[] = [
           <div v-if="!keywordHistory.length" class="rounded-lg border border-edison/30 bg-edison/5 p-4">
             <p class="text-sm font-semibold text-espresso">Pas encore positionnée sur "{{ selectedKeyword }}"</p>
             <p class="text-xs text-roast mt-1.5 leading-relaxed">
-              Deskover n'a aucune impression Google sur ce mot-clé. Cela signifie que le site n'apparaît pas dans les SERPs pour cette requête, ou alors trop bas pour être trackable par Search Console.
+              Deskover n'a aucune impression Google sur ce mot-clé. Le site n'apparaît pas dans les SERPs pour cette requête, ou trop bas pour être trackable par Search Console.
             </p>
-            <p class="text-xs text-roast mt-2 leading-relaxed">
-              <strong>Pour avoir le volume mensuel exact</strong> et savoir si ça vaut la peine d'écrire un article, il faudra brancher Google Ads Keyword Planner. En attendant, tu peux vérifier sur
-              <a :href="`https://trends.google.com/trends/explore?geo=FR&q=${encodeURIComponent(selectedKeyword)}`" target="_blank" rel="noopener" class="text-primary hover:underline">Google Trends</a>
-              ou
-              <a :href="`https://ads.google.com/aw/keywordplanner/home`" target="_blank" rel="noopener" class="text-primary hover:underline">Keyword Planner</a>.
-            </p>
+
+            <!-- Bouton + résultat Keyword Planner -->
+            <div v-if="!plannerMetrics && !plannerLoading" class="mt-3 flex flex-wrap items-center gap-2">
+              <button
+                class="inline-flex items-center gap-1.5 rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-white hover:bg-primary/90"
+                @click="lookupKeywordPlanner(selectedKeyword!)"
+              >
+                <SearchIcon :size="12" />
+                Volume Google Ads
+              </button>
+              <a :href="`https://trends.google.com/trends/explore?geo=FR&q=${encodeURIComponent(selectedKeyword)}`" target="_blank" rel="noopener" class="text-xs text-primary hover:underline">Google Trends ↗</a>
+            </div>
+            <div v-if="plannerLoading" class="mt-3 text-xs text-roast flex items-center gap-2">
+              <Loader2 :size="12" class="animate-spin" /> Interrogation Google Ads…
+            </div>
+            <div v-if="plannerError" class="mt-3 text-xs text-red-600">
+              {{ plannerError }}
+            </div>
+            <div v-if="plannerMetrics" class="mt-3 grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <div class="bg-white rounded-md border border-steam/15 p-2.5">
+                <p class="text-[10px] uppercase text-steam">Volume mensuel</p>
+                <p class="text-lg font-bold text-espresso mt-0.5">{{ formatVolume(plannerMetrics.avgMonthlySearches) }}</p>
+              </div>
+              <div class="bg-white rounded-md border border-steam/15 p-2.5">
+                <p class="text-[10px] uppercase text-steam">Concurrence</p>
+                <span class="inline-flex mt-1 px-2 py-0.5 rounded-full text-xs font-semibold ring-1 ring-inset" :class="competitionColor(plannerMetrics.competition)">
+                  {{ competitionLabel(plannerMetrics.competition) }}
+                </span>
+              </div>
+              <div class="bg-white rounded-md border border-steam/15 p-2.5">
+                <p class="text-[10px] uppercase text-steam">Indice (0-100)</p>
+                <p class="text-lg font-bold text-espresso mt-0.5">{{ plannerMetrics.competitionIndex ?? '—' }}</p>
+              </div>
+              <div class="bg-white rounded-md border border-steam/15 p-2.5">
+                <p class="text-[10px] uppercase text-steam">CPC haut de page</p>
+                <p class="text-sm font-semibold text-espresso mt-0.5">
+                  {{ plannerMetrics.highTopOfPageBidMicros != null ? `${(plannerMetrics.highTopOfPageBidMicros / 1_000_000).toFixed(2)} €` : '—' }}
+                </p>
+              </div>
+            </div>
+            <div v-if="plannerMetrics && plannerCached" class="mt-2 text-[10px] text-steam">
+              Données en cache (récupéré le {{ plannerFetchedAt ? new Date(plannerFetchedAt).toLocaleDateString('fr-FR') : '' }}).
+              <button class="text-primary hover:underline ml-1" @click="lookupKeywordPlanner(selectedKeyword!, true)">Rafraîchir</button>
+            </div>
+            <div v-if="plannerRelated.length" class="mt-4">
+              <p class="text-xs font-semibold text-espresso mb-2">Idées de mots-clés associés (top 10)</p>
+              <table class="w-full text-xs">
+                <thead>
+                  <tr class="border-b border-steam/10 text-[10px] uppercase text-roast">
+                    <th class="text-left py-1.5 pr-2">Mot-clé</th>
+                    <th class="text-right px-2">Volume/mois</th>
+                    <th class="text-right pl-2">Concurrence</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="r in plannerRelated.slice(0, 10)" :key="r.keyword" class="border-b border-steam/5 even:bg-cream/30">
+                    <td class="py-1.5 pr-2 text-espresso">
+                      <button class="hover:underline" @click="selectKeyword(r.keyword)">{{ r.keyword }}</button>
+                    </td>
+                    <td class="text-right px-2 font-semibold text-roast">{{ formatVolume(r.avg_monthly_searches) }}</td>
+                    <td class="text-right pl-2">
+                      <span class="inline-flex px-1.5 py-0.5 rounded-full text-[10px] font-semibold ring-1 ring-inset" :class="competitionColor(r.competition)">
+                        {{ competitionLabel(r.competition) }}
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
           <template v-else>
+            <!-- Volume Google Ads (au-dessus des KPIs GSC) -->
+            <div class="rounded-lg border border-edison/30 bg-edison/5 p-3 flex items-center justify-between gap-3">
+              <div class="flex items-center gap-3 flex-wrap">
+                <span class="text-xs font-semibold uppercase text-roast">Volume Google</span>
+                <template v-if="plannerMetrics">
+                  <span class="text-base font-bold text-espresso">{{ formatVolume(plannerMetrics.avgMonthlySearches) }}/mois</span>
+                  <span class="inline-flex px-2 py-0.5 rounded-full text-xs font-semibold ring-1 ring-inset" :class="competitionColor(plannerMetrics.competition)">
+                    {{ competitionLabel(plannerMetrics.competition) }}
+                  </span>
+                  <span v-if="plannerCached" class="text-[10px] text-steam">cache</span>
+                </template>
+                <span v-else-if="plannerLoading" class="text-xs text-roast flex items-center gap-1.5">
+                  <Loader2 :size="12" class="animate-spin" /> Chargement…
+                </span>
+                <span v-else-if="plannerError" class="text-xs text-red-600">{{ plannerError }}</span>
+                <span v-else class="text-xs text-steam">Pas encore interrogé</span>
+              </div>
+              <button
+                v-if="!plannerMetrics && !plannerLoading"
+                class="text-xs font-semibold text-primary hover:underline shrink-0"
+                @click="lookupKeywordPlanner(selectedKeyword!)"
+              >
+                Interroger Google Ads
+              </button>
+              <button
+                v-else-if="plannerMetrics"
+                class="text-xs text-primary hover:underline shrink-0"
+                @click="lookupKeywordPlanner(selectedKeyword!, true)"
+              >
+                Rafraîchir
+              </button>
+            </div>
+
             <!-- Récap KPIs -->
             <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
               <div class="bg-cream/40 rounded-lg p-3">
@@ -642,6 +842,7 @@ const tabs: { key: Tab; label: string; icon: any }[] = [
               <th class="text-right px-2">Position</th>
               <th class="text-right px-2">Impr.</th>
               <th class="text-right px-2">Clics</th>
+              <th class="text-right px-2">Vol. Google</th>
               <th class="text-right px-2">Gain estimé</th>
               <th class="text-right pl-2"></th>
             </tr>
@@ -657,6 +858,15 @@ const tabs: { key: Tab; label: string; icon: any }[] = [
               <td class="text-right px-2"><BaseBadge :variant="q.position <= 10 ? 'success' : q.position <= 20 ? 'warning' : 'neutral'">{{ formatPosition(q.position) }}</BaseBadge></td>
               <td class="text-right px-2 text-roast">{{ formatNumber(q.impressions) }}</td>
               <td class="text-right px-2 text-roast">{{ q.clicks }}</td>
+              <td class="text-right px-2">
+                <template v-if="cachedMetricsByKeyword.get(q.query.toLowerCase())">
+                  <span class="text-xs font-semibold text-roast">{{ formatVolume(cachedMetricsByKeyword.get(q.query.toLowerCase())!.avgMonthlySearches) }}</span>
+                  <span class="ml-1 inline-flex px-1 py-0.5 rounded text-[9px] font-bold ring-1 ring-inset" :class="competitionColor(cachedMetricsByKeyword.get(q.query.toLowerCase())!.competition)">
+                    {{ competitionLabel(cachedMetricsByKeyword.get(q.query.toLowerCase())!.competition).slice(0,1) }}
+                  </span>
+                </template>
+                <span v-else class="text-[10px] text-steam">—</span>
+              </td>
               <td class="text-right px-2 font-semibold text-monstera">+{{ q.potentialClicks }}/mois</td>
               <td class="text-right pl-2">
                 <button class="text-xs text-primary hover:underline" @click="selectKeyword(q.query)">Courbe</button>
