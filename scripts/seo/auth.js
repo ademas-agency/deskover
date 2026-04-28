@@ -12,7 +12,10 @@ const ROOT = path.resolve(__dirname, '../..');
 const CLIENT_FILE = path.join(ROOT, '.secrets/oauth-client.json');
 const TOKEN_FILE = path.join(ROOT, '.secrets/oauth-token.json');
 
-const SCOPES = ['https://www.googleapis.com/auth/webmasters.readonly'];
+const SCOPES = [
+  'https://www.googleapis.com/auth/webmasters.readonly',
+  'https://www.googleapis.com/auth/analytics.readonly',
+];
 
 function openBrowser(url) {
   const cmd =

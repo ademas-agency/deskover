@@ -4,10 +4,18 @@ import path from 'node:path';
 const ROOT = path.resolve(path.dirname(new URL(import.meta.url).pathname), '../../..');
 
 function loadExistingArticles() {
-  const articlesDir = path.join(ROOT, 'app/app/pages/articles');
-  if (!fs.existsSync(articlesDir)) return new Set();
+  const slugs = new Set();
+  // Source 1 : Markdown files dans app/content/articles (autoritaire)
+  const mdDir = path.join(ROOT, 'app/content/articles');
+  if (fs.existsSync(mdDir)) {
+    try {
+      for (const f of fs.readdirSync(mdDir)) {
+        if (f.endsWith('.md')) slugs.add(f.replace(/\.md$/, ''));
+      }
+    } catch {}
+  }
+  // Source 2 : cache JSON optionnel (fallback)
   const cached = path.join(ROOT, 'scripts/data/articles.json');
-  let slugs = new Set();
   try {
     if (fs.existsSync(cached)) {
       const data = JSON.parse(fs.readFileSync(cached, 'utf8'));
@@ -122,7 +130,10 @@ export function generateInsights(data) {
   for (const [city, d] of sortedCities.slice(0, 15)) {
     const hasArticle =
       existingArticles.has(`travailler-${city}`) ||
-      existingArticles.has(`travailler-dimanche-${city}`);
+      existingArticles.has(`travailler-dimanche-${city}`) ||
+      existingArticles.has(`terrasse-${city}`) ||
+      existingArticles.has(`cafes-travailler-${city}`) ||
+      existingArticles.has(`cafes-${city}`);
     if (!hasArticle && d.impressions >= 30) {
       contentSuggestions.push({
         type: 'create-article',
